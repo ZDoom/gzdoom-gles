@@ -9,6 +9,13 @@
 
 #include "i_module.h"
 
+// vanilla mingw is missing this type
+#if defined(__MINGW32__) && !defined(REFKNOWNFOLDERID)
+#define REFKNOWNFOLDERID const GUID &
+
+#define KF_FLAG_CREATE 0x00008000
+#endif
+
 extern FModule Kernel32Module;
 extern FModule Shell32Module;
 extern FModule User32Module;

@@ -54,6 +54,12 @@
 #include "d_main.h"
 #include "v_palette.h"
 
+// vanilla mingw is missing these
+#if defined(__MINGW32__) && !defined(PBM_SETMARQUEE)
+#define PBS_MARQUEE 0x8
+#define PBM_SETMARQUEE (WM_USER+10)
+#endif
+
 // MACROS ------------------------------------------------------------------
 
 // Hexen startup screen
