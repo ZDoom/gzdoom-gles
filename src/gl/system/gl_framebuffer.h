@@ -2,8 +2,12 @@
 #define __GL_FRAMEBUFFER
 
 #ifdef _WIN32
+#ifdef _MSC_VER
 #include "win32iface.h"
+#endif
 #include "win32gliface.h"
+#else
+#include "sdlglvideo.h"
 #endif
 
 #include <memory>
@@ -15,9 +19,11 @@ class FGLDebug;
 #ifdef _WIN32
 class OpenGLFrameBuffer : public Win32GLFrameBuffer
 {
+#ifdef _MSC_VER
 	typedef Win32GLFrameBuffer Super;
+#endif
 #else
-#include "sdlglvideo.h"
+//#include "sdlglvideo.h"
 class OpenGLFrameBuffer : public SDLGLFB
 {
 	typedef SDLGLFB Super;	//[C]commented, DECLARE_CLASS defines this in linux
