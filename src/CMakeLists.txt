@@ -1175,6 +1175,7 @@ set (PCH_SOURCES
 	intermission/intermission.cpp
 	intermission/intermission_parse.cpp
 	r_data/colormaps.cpp
+	r_data/gldefs.cpp
 	r_data/r_translate.cpp
 	r_data/sprites.cpp
 	r_data/voxels.cpp
