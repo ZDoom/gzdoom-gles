@@ -54,8 +54,6 @@
 
 CVAR(Bool, gl_light_models, true, CVAR_ARCHIVE)
 
-extern int modellightindex;
-
 VSMatrix FGLModelRenderer::GetViewToWorldMatrix()
 {
 	VSMatrix objectToWorldMatrix;
@@ -354,9 +352,9 @@ void FModelVertexBuffer::SetupFrame(FModelRenderer *renderer, unsigned int frame
 //
 //===========================================================================
 
-void gl_RenderModel(GLSprite * spr)
+void gl_RenderModel(GLSprite * spr, int mli)
 {
-	FGLModelRenderer renderer;
+	FGLModelRenderer renderer(mli);
 	renderer.RenderModel(spr->x, spr->y, spr->z, spr->modelframe, spr->actor);
 }
 
@@ -366,8 +364,8 @@ void gl_RenderModel(GLSprite * spr)
 //
 //===========================================================================
 
-void gl_RenderHUDModel(DPSprite *psp, float ofsX, float ofsY)
+void gl_RenderHUDModel(DPSprite *psp, float ofsX, float ofsY, int mli)
 {
-	FGLModelRenderer renderer;
+	FGLModelRenderer renderer(mli);
 	renderer.RenderHUDModel(psp, ofsX, ofsY);
 }
