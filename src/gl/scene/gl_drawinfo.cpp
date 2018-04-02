@@ -612,17 +612,6 @@ inline int GLDrawList::CompareSprites(SortNode * a,SortNode * b)
 //
 //
 //==========================================================================
-static GLDrawList * gd;
-int CompareSprite(const void * a,const void * b)
-{
-	return gd->CompareSprites(*(SortNode**)a,*(SortNode**)b);
-}
-
-//==========================================================================
-//
-//
-//
-//==========================================================================
 SortNode * GLDrawList::SortSpriteList(SortNode * head)
 {
 	SortNode * n;
@@ -635,8 +624,11 @@ SortNode * GLDrawList::SortSpriteList(SortNode * head)
 
 	sortspritelist.Clear();
 	for(count=0,n=head;n;n=n->next) sortspritelist.Push(n);
-	gd=this;
-	qsort(&sortspritelist[0],sortspritelist.Size(),sizeof(SortNode *),CompareSprite);
+	std::sort(sortspritelist.begin(), sortspritelist.end(), [=](SortNode *a, SortNode *b)
+	{
+		return CompareSprites(a, b);
+	});
+
 	for(i=0;i<sortspritelist.Size();i++)
 	{
 		sortspritelist[i]->next=NULL;
@@ -910,38 +902,20 @@ void GLDrawList::DrawDecals()
 // Sorting the drawitems first by texture and then by light level.
 //
 //==========================================================================
-static GLDrawList * sortinfo;
-
-static int diwcmp (const void *a, const void *b)
-{
-	const GLDrawItem * di1 = (const GLDrawItem *)a;
-	GLWall * w1=&sortinfo->walls[di1->index];
-
-	const GLDrawItem * di2 = (const GLDrawItem *)b;
-	GLWall * w2=&sortinfo->walls[di2->index];
-
-	if (w1->gltexture != w2->gltexture) return w1->gltexture - w2->gltexture;
-	return ((w1->flags & 3) - (w2->flags & 3));
-}
-
-static int difcmp (const void *a, const void *b)
-{
-	const GLDrawItem * di1 = (const GLDrawItem *)a;
-	GLFlat * w1=&sortinfo->flats[di1->index];
-
-	const GLDrawItem * di2 = (const GLDrawItem *)b;
-	GLFlat* w2=&sortinfo->flats[di2->index];
-
-	return w1->gltexture - w2->gltexture;
-}
-
 
 void GLDrawList::SortWalls()
 {
 	if (drawitems.Size() > 1)
 	{
-		sortinfo=this;
-		qsort(&drawitems[0], drawitems.Size(), sizeof(drawitems[0]), diwcmp);
+		std::sort(drawitems.begin(), drawitems.end(), [=](const GLDrawItem &a, const GLDrawItem &b) -> int
+		{
+			GLWall * w1 = &walls[a.index];
+			GLWall * w2 = &walls[b.index];
+
+			if (w1->gltexture != w2->gltexture) return w1->gltexture - w2->gltexture;
+			return ((w1->flags & 3) - (w2->flags & 3));
+
+		});
 	}
 }
 
@@ -949,8 +923,12 @@ void GLDrawList::SortFlats()
 {
 	if (drawitems.Size() > 1)
 	{
-		sortinfo=this;
-		qsort(&drawitems[0], drawitems.Size(), sizeof(drawitems[0]), difcmp);
+		std::sort(drawitems.begin(), drawitems.end(), [=](const GLDrawItem &a, const GLDrawItem &b)
+		{
+			GLFlat * w1 = &flats[a.index];
+			GLFlat* w2 = &flats[b.index];
+			return w1->gltexture - w2->gltexture;
+		});
 	}
 }
 
@@ -989,6 +967,8 @@ void GLDrawList::AddSprite(GLSprite * sprite)
 //
 // Try to reuse the lists as often as possible as they contain resources that
 // are expensive to create and delete.
+//
+// Note: If multithreading gets used, this class needs synchronization.
 //
 //==========================================================================
 
