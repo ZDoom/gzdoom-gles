@@ -67,7 +67,7 @@ EXTERN_CVAR(Bool, r_shadercolormaps)
 EXTERN_CVAR(Int, r_clearbuffer)
 
 CVAR(Bool, r_scene_multithreaded, false, 0);
-CVAR(Bool, r_models, true, 0);
+CVAR(Bool, r_models, false, 0);
 
 namespace swrenderer
 {
