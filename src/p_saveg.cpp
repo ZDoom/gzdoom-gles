@@ -995,7 +995,7 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 	arc("zones", level.Zones);
 	arc("lineportals", linePortals);
 	arc("sectorportals", level.sectorPortals);
-	if (arc.isReading()) P_CollectLinkedPortals();
+	if (arc.isReading()) P_FinalizePortals();
 
 	// [ZZ] serialize events
 	E_SerializeEvents(arc);
