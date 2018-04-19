@@ -352,7 +352,7 @@ void GLSprite::Draw(int pass)
 		if (gl_lights && GLRenderer->mLightCount && mDrawer->FixedColormap == CM_DEFAULT && !fullbright)
 		{
 			if (modelframe && !particle)
-				gl_SetDynModelLight(gl_light_sprites ? actor : NULL, dynlightindex);
+				dynlightindex = gl_SetDynModelLight(gl_light_sprites ? actor : NULL, dynlightindex);
 			else
 				gl_SetDynSpriteLight(gl_light_sprites ? actor : NULL, gl_light_particles ? particle : NULL);
 		}
@@ -524,6 +524,7 @@ inline void GLSprite::PutSprite(bool translucent)
 	{
 		list = GLDL_MODELS;
 	}
+	dynlightindex = -1;
 	gl_drawinfo->drawlists[list].AddSprite(this);
 }
 
