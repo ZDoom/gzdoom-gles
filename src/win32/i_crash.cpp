@@ -3442,6 +3442,7 @@ namespace
 	}
 }
 
+#ifndef __MINGW32__
 void VectoredTryCatch(void *data, void(*tryBlock)(void *data), void(*catchBlock)(void *data, const char *reason, bool fatal))
 {
 	DrawerExceptionSetJumpResult = false;
@@ -3459,3 +3460,11 @@ void VectoredTryCatch(void *data, void(*tryBlock)(void *data), void(*catchBlock)
 		RemoveVectoredExceptionHandler(DrawerExceptionHandlerHandle);
 	}
 }
+
+#else
+void VectoredTryCatch(void *data, void(*tryBlock)(void *data), void(*catchBlock)(void *data, const char *reason, bool fatal))
+{
+	tryBlock(data);
+}
+
+#endif
