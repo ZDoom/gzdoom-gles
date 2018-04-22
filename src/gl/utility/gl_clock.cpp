@@ -47,6 +47,7 @@
 #include <sys/sysctl.h>
 #endif
 
+#define __STDC_FORMAT_MACROS
 #include <inttypes.h>
 
 #include "i_system.h"
