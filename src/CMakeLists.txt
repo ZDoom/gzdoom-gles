@@ -266,6 +266,10 @@ if (NOT ZDOOM_USE_SSE2)
 	endif()
 endif()
 
+if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
+	option( USE_SSE2 "Use SSE2 instructions, requires P4 or later CPU." ON)
+endif()
+
 if( X64 )
 	set( HAVE_MMX 1 )
 else( X64 )
@@ -418,6 +422,11 @@ if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
 		set (CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s" )
 		set (CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} -s" )
 	endif()
+
+	if ( NOT USE_SSE2 )
+		add_definitions( -DNO_SSE )
+	endif()
+
 endif()
 
 # Check for thread_local keyword, it's optional at the moment
