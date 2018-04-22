@@ -471,6 +471,7 @@ const char *myasctime ()
 void DoCreatePath(const char *fn)
 {
 	char drive[_MAX_DRIVE];
+#ifndef __MINGW32__
 	char dir[_MAX_DIR];
 	_splitpath_s(fn, drive, sizeof drive, dir, sizeof dir, nullptr, 0, nullptr, 0);
 
@@ -510,6 +511,18 @@ void DoCreatePath(const char *fn)
 		DoCreatePath(path);
 		_mkdir(path);
 	}
+#else
+	char path[PATH_MAX];
+	char p[PATH_MAX];
+	int i;
+
+	_splitpath(fn,drive,path,NULL,NULL);
+	_makepath(p,drive,path,NULL,NULL);
+	i=(int)strlen(p);
+	if (p[i-1]=='/' || p[i-1]=='\\') p[i-1]=0;
+	if (*path) DoCreatePath(p);
+	_mkdir(p);
+#endif
 }
 
 void CreatePath(const char *fn)
