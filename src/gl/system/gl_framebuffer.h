@@ -19,9 +19,7 @@ class FGLDebug;
 #ifdef _WIN32
 class OpenGLFrameBuffer : public Win32GLFrameBuffer
 {
-#ifdef _MSC_VER
 	typedef Win32GLFrameBuffer Super;
-#endif
 #else
 //#include "sdlglvideo.h"
 class OpenGLFrameBuffer : public SDLGLFB
