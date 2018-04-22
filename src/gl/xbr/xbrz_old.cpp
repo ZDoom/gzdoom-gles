@@ -24,9 +24,11 @@
 #include <cmath>
 #include <algorithm>
 
+#ifndef __MINGW32__
 #if __cplusplus > 199711
 #define XBRZ_CXX11
 #endif // __cplusplus > 199711
+#endif
 
 namespace
 {
