@@ -213,7 +213,7 @@ void PolyRenderer::SetSceneViewport()
 	}
 }
 
-PolyPortalViewpoint PolyRenderer::SetupPerspectiveMatrix()
+PolyPortalViewpoint PolyRenderer::SetupPerspectiveMatrix(bool mirror)
 {
 	static bool bDidSetup = false;
 
@@ -245,6 +245,11 @@ PolyPortalViewpoint PolyRenderer::SetupPerspectiveMatrix()
 		Mat4f::Scale(1.0f, level.info->pixelstretch, 1.0f) *
 		Mat4f::SwapYZ() *
 		Mat4f::Translate((float)-Viewpoint.Pos.X, (float)-Viewpoint.Pos.Y, (float)-Viewpoint.Pos.Z);
+
+	portalViewpoint.Mirror = mirror;
+
+	if (mirror)
+		portalViewpoint.WorldToView = Mat4f::Scale(-1.0f, 1.0f, 1.0f) * portalViewpoint.WorldToView;
 
 	portalViewpoint.WorldToClip = Mat4f::Perspective(fovy, ratio, 5.0f, 65535.0f, Handedness::Right, ClipZRange::NegativePositiveW) * portalViewpoint.WorldToView;
 
