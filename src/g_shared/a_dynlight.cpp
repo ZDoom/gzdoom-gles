@@ -179,6 +179,7 @@ void ADynamicLight::BeginPlay()
 
 	specialf1 = DAngle(double(SpawnAngle)).Normalized360().Degrees;
 	visibletoplayer = true;
+	mShadowmapIndex = 1024;
 }
 
 //==========================================================================
