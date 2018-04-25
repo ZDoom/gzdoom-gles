@@ -66,7 +66,7 @@ extern HWND			Window;
 extern BOOL AppActive;
 
 extern "C" {
-    _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+    __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
     __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;	
 }
 
