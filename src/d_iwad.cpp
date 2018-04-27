@@ -197,6 +197,12 @@ void FIWadManager::ParseIWadInfo(const char *fn, const char *data, int datasize,
 						iwad->StartupType = FStartupInfo::StrifeStartup;
 					else iwad->StartupType = FStartupInfo::DefaultStartup;
 				}
+				else if (sc.Compare("StartupSong"))
+				{
+					sc.MustGetStringName("=");
+					sc.MustGetString();
+					iwad->Song = sc.String;
+				}
 				else
 				{
 					sc.ScriptError("Unknown keyword '%s'", sc.String);
@@ -769,6 +775,7 @@ const FIWADInfo *FIWadManager::FindIWAD(TArray<FString> &wadfiles, const char *i
 		DoomStartupInfo.FgColor = iwad_info->FgColor;
 	}
 	if (DoomStartupInfo.Type == 0) DoomStartupInfo.Type = iwad_info->StartupType;
+	if (DoomStartupInfo.Song.IsEmpty()) DoomStartupInfo.Song = iwad_info->Song;
 	I_SetIWADInfo();
 	return iwad_info;
 }
