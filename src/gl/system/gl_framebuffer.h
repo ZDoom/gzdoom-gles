@@ -2,9 +2,6 @@
 #define __GL_FRAMEBUFFER
 
 #ifdef _WIN32
-#ifdef _MSC_VER
-#include "win32iface.h"
-#endif
 #include "win32gliface.h"
 #else
 #include "sdlglvideo.h"

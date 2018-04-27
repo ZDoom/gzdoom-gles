@@ -3356,19 +3356,11 @@ void DisplayCrashLog ()
 
 namespace
 {
-#ifndef __MINGW32__
-	bool __declspec(thread) DrawerExceptionSetJumpResult;
-	CONTEXT __declspec(thread) DrawerExceptionSetJumpContext;
-	PVOID __declspec(thread) DrawerExceptionHandlerHandle;
-	const char __declspec(thread) *DrawerExceptionReason;
-	bool __declspec(thread) DrawerExceptionFatal;
-#else
-	bool __thread DrawerExceptionSetJumpResult;
-	CONTEXT __thread DrawerExceptionSetJumpContext;
-	PVOID __thread DrawerExceptionHandlerHandle;
-	const char __thread *DrawerExceptionReason;
-	bool __thread DrawerExceptionFatal;
-#endif
+	bool thread_local DrawerExceptionSetJumpResult;
+	CONTEXT thread_local DrawerExceptionSetJumpContext;
+	PVOID thread_local DrawerExceptionHandlerHandle;
+	const char thread_local *DrawerExceptionReason;
+	bool thread_local DrawerExceptionFatal;
 
 	LONG WINAPI DrawerExceptionHandler(_EXCEPTION_POINTERS *exceptionInfo)
 	{
