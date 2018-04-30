@@ -1372,7 +1372,7 @@ void D_DoAdvanceDemo (void)
 		{
 			Page->Unload ();
 		}
-		Page = TexMan[pagename];
+		Page = TexMan(pagename);
 	}
 }
 
