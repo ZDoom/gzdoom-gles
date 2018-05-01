@@ -62,7 +62,7 @@ public:
 	void DrawEndScene2D(sector_t * viewsector);
 	void RenderActorsInPortal(FGLLinePortal *glport);
 
-	void CheckViewArea(vertex_t *v1, vertex_t *v2, sector_t *frontsector, sector_t *backsector);
+	area_t CheckViewArea(vertex_t *v1, vertex_t *v2, sector_t *frontsector, sector_t *backsector);
 
 	sector_t *RenderViewpoint(AActor * camera, GL_IRECT * bounds, float fov, float ratio, float fovratio, bool mainview, bool toscreen);
 	void RenderView(player_t *player);

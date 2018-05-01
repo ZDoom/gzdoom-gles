@@ -1472,6 +1472,7 @@ void G_InitLevelLocals ()
 	level.Music = info->Music;
 	level.musicorder = info->musicorder;
 	level.MusicVolume = 1.f;
+	level.HasHeightSecs = false;
 
 	level.LevelName = level.info->LookupLevelName();
 	level.NextMap = info->NextMap;
