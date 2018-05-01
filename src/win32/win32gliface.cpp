@@ -80,6 +80,7 @@ PFNWGLSWAPINTERVALEXTPROC myWglSwapIntervalExtProc;
 
 
 
+CVAR(Bool, vid_activeinbackground, false, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 
 CUSTOM_CVAR(Bool, gl_debug, false, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
 {
@@ -1144,7 +1145,7 @@ void Win32GLFrameBuffer::InitializeState()
 
 bool Win32GLFrameBuffer::CanUpdate()
 {
-	if (!AppActive && IsFullscreen()) return false;
+	if (!AppActive && (IsFullscreen() || !vid_activeinbackground)) return false;
 	return true;
 }
 
