@@ -1392,6 +1392,7 @@ void P_SpawnSpecials (void)
 				{
 					level.sectors[s].heightsec = sec;
 					sec->e->FakeFloor.Sectors.Push(&level.sectors[s]);
+					level.sectors[s].MoreFlags |= (sec->MoreFlags & SECF_IGNOREHEIGHTSEC);	// copy this to the destination sector for easier checking.
 					level.sectors[s].AdjustFloorClip();
 				}
 				break;

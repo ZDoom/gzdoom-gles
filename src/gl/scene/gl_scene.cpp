@@ -125,7 +125,7 @@ void GLSceneDrawer::SetViewArea()
 	r_viewpoint.sector = R_PointInSubsector(r_viewpoint.Pos)->render_sector;
 
 	// Get the heightsec state from the render sector, not the current one!
-	if (r_viewpoint.sector->heightsec && !(r_viewpoint.sector->heightsec->MoreFlags & SECF_IGNOREHEIGHTSEC))
+	if (r_viewpoint.sector->GetHeightSec())
 	{
 		in_area = r_viewpoint.Pos.Z <= r_viewpoint.sector->heightsec->floorplane.ZatPoint(r_viewpoint.Pos) ? area_below :
 				(r_viewpoint.Pos.Z > r_viewpoint.sector->heightsec->ceilingplane.ZatPoint(r_viewpoint.Pos) &&
@@ -557,7 +557,7 @@ void GLSceneDrawer::DrawBlend(sector_t * viewsector)
 	{
 		if (!viewsector->e->XFloor.ffloors.Size())
 		{
-			if (viewsector->heightsec && !(viewsector->MoreFlags&SECF_IGNOREHEIGHTSEC))
+			if (viewsector->GetHeightSec())
 			{
 				switch (in_area)
 				{
