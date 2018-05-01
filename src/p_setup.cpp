@@ -4208,7 +4208,7 @@ void P_SetupLevel (const char *lumpname, int position)
 			{
 				if ((ff->flags & (FF_EXISTS | FF_RENDERPLANES)) == (FF_EXISTS | FF_RENDERPLANES))
 				{
-					s.MoreFlags |= SECF_IGNOREHEIGHTSEC;	// mark the heightsec inactive.
+					s.MoreFlags |= SECMF_IGNOREHEIGHTSEC;	// mark the heightsec inactive.
 				}
 			}
 		}
