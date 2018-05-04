@@ -405,20 +405,6 @@ void SDLGLFB::InitializeState()
 {
 }
 
-bool SDLGLFB::CanUpdate ()
-{
-	if (m_Lock != 1)
-	{
-		if (m_Lock > 0)
-		{
-			UpdatePending = true;
-			--m_Lock;
-		}
-		return false;
-	}
-	return true;
-}
-
 void SDLGLFB::SetGammaTable(uint16_t *tbl)
 {
 	if (m_supportsGamma)

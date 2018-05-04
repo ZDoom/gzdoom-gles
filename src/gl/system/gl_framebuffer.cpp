@@ -166,12 +166,6 @@ void OpenGLFrameBuffer::InitializeState()
 
 void OpenGLFrameBuffer::Update()
 {
-	if (!CanUpdate()) 
-	{
-		GLRenderer->Flush();
-		return;
-	}
-
 	Begin2D(false);
 
 	DrawRateStuff();
