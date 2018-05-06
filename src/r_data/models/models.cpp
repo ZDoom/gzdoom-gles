@@ -40,6 +40,7 @@
 #include "r_utility.h"
 #include "i_time.h"
 #include "r_data/models/models.h"
+#include "i_time.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable:4244) // warning C4244: conversion from 'double' to 'float', possible loss of data
@@ -276,6 +277,11 @@ void FModelRenderer::RenderFrameModels(const FSpriteModelFrame *smf,
 			ResetVertexBuffer();
 		}
 	}
+}
+
+double FModelRenderer::GetTimeFloat()
+{
+	return (double)I_msTime() * (double)TICRATE / 1000.;
 }
 
 /////////////////////////////////////////////////////////////////////////////
