@@ -65,6 +65,7 @@ void PeekThreadedErrorPane();
 
 EXTERN_CVAR(Bool, r_shadercolormaps)
 EXTERN_CVAR(Int, r_clearbuffer)
+EXTERN_CVAR(Int, r_debug_draw)
 
 CVAR(Bool, r_scene_multithreaded, false, 0);
 CVAR(Bool, r_models, false, 0);
@@ -101,7 +102,7 @@ namespace swrenderer
 		if (r_models)
 			PolyTriangleDrawer::ClearBuffers(viewport->RenderTarget);
 
-		if (r_clearbuffer != 0)
+		if (r_clearbuffer != 0 || r_debug_draw != 0)
 		{
 			if (!viewport->RenderTarget->IsBgra())
 			{
@@ -115,6 +116,7 @@ namespace swrenderer
 				for (int i = 0; i < size; i++)
 					dest[i] = bgracolor;
 			}
+			DrawerThreads::ResetDebugDrawPos();
 		}
 
 		RenderActorView(player->mo);
