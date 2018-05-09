@@ -330,13 +330,6 @@ static void AddLightDefaults(FLightDefaults *defaults)
       }
    }
 
-   // If the current renderer cannot handle attenuated lights we need to reduce the radius here to account for the far more bright lights this would create.
-   if (/*!Renderer->CanAttenuate() &&*/ (defaults->GetAttenuate()))
-   {
-	   defaults->SetArg(LIGHT_INTENSITY, defaults->GetArg(LIGHT_INTENSITY) * 2 / 3);
-	   defaults->SetArg(LIGHT_SECONDARY_INTENSITY, defaults->GetArg(LIGHT_SECONDARY_INTENSITY) * 2 / 3);
-   }
-
    LightDefaults.Push(defaults);
 }
 
