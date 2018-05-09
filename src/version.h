@@ -34,7 +34,7 @@
 #ifndef __VERSION_H__
 #define __VERSION_H__
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(_MSC_VER)
 #include "gitinfo.h"
 #endif // _WIN32
 
@@ -48,14 +48,14 @@ const char *GetVersionString();
 #ifdef GIT_DESCRIPTION
 #define VERSIONSTR GIT_DESCRIPTION
 #else
-#define VERSIONSTR "3.3pre"
+#define VERSIONSTR "3.4pre"
 #endif
 
 // The version as seen in the Windows resource
-#define RC_FILEVERSION 3,2,9999,0
-#define RC_PRODUCTVERSION 3,2,9999,0
+#define RC_FILEVERSION 3,3,9999,0
+#define RC_PRODUCTVERSION 3,3,9999,0
 #define RC_PRODUCTVERSION2 VERSIONSTR
-// These are for content versioning. The current state is '3.3'.
+// These are for content versioning. The current state is '3.4'.
 #define VER_MAJOR 3
 #define VER_MINOR 4
 #define VER_REVISION 0
