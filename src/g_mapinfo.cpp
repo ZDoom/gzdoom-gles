@@ -49,7 +49,6 @@
 #include "doomstat.h"
 #include "d_player.h"
 #include "autosegs.h"
-#include "version.h"
 #include "v_text.h"
 #include "g_levellocals.h"
 #include "events.h"
