@@ -234,7 +234,7 @@ bool LoadScriptFile (const char *name, bool include, int type)
 	{
 		if (type == 0)
 		{
-			Printf(TEXTCOLOR_RED "Could not find dialog file %s", name);
+			Printf(TEXTCOLOR_RED "Could not find dialog file %s\n", name);
 		}
 
 		return false;

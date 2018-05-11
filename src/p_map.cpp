@@ -3089,7 +3089,7 @@ void FSlide::SlideTraverse(const DVector2 &start, const DVector2 &end)
 		if (!in->isaline)
 		{
 			// should never happen
-			Printf("PTR_SlideTraverse: not a line?");
+			Printf("PTR_SlideTraverse: not a line?\n");
 			continue;
 		}
 
@@ -3446,7 +3446,7 @@ bool FSlide::BounceTraverse(const DVector2 &start, const DVector2 &end)
 
 		if (!in->isaline)
 		{
-			Printf("PTR_BounceTraverse: not a line?");
+			Printf("PTR_BounceTraverse: not a line?\n");
 			continue;
 		}
 
