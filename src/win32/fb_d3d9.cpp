@@ -175,7 +175,6 @@ void DoBlending (const PalEntry *from, PalEntry *to, int count, int r, int g, in
 
 extern HWND Window;
 extern IVideo *Video;
-extern BOOL AppActive;
 extern int SessionState;
 extern bool VidResizing;
 
