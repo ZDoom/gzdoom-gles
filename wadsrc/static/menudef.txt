@@ -726,6 +726,9 @@ OptionMenu "SWROptions" protected
 	Option "$DSPLYMNU_LINEARSKY",				"r_linearsky", "OnOff"
 	Option "$DSPLYMNU_GZDFULLBRIGHT",			"r_fullbrightignoresectorcolor", "OnOff"
 	Option "$DSPLYMNU_SCALEFUZZ",				"r_fuzzscale", "OnOff"
+	StaticText " "
+	ScaleSlider "$DSPLYMNU_SPRITECULL",			"r_sprite_distance_cull",	0.0, 8000.0, 500.0, "Disabled"
+	ScaleSlider "$DSPLYMNU_LINECULL",			"r_line_distance_cull",	0.0, 16000.0, 1000.0, "Disabled"
 }
 
 OptionMenu "VideoOptions" protected
