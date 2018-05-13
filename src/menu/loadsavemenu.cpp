@@ -137,12 +137,14 @@ int FSavegameManager::InsertSaveNode(FSaveGameNode *node)
 		unsigned int i;
 		for (i = 0; i < SaveGames.Size(); i++)
 		{
-			if (SaveGames[i]->bOldVersion || node->SaveTitle.CompareNoCase(SaveGames[i]->SaveTitle) <= 0)
+			//if (SaveGames[i]->bOldVersion || node->SaveTitle.CompareNoCase(SaveGames[i]->SaveTitle) <= 0)
+			if (node->Filename.CompareNoCase(SaveGames[i]->Filename) >= 0)
 			{
 				break;
 			}
 		}
 		SaveGames.Insert(i, node);
+
 		return i;
 	}
 }
