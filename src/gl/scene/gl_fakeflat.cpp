@@ -174,9 +174,9 @@ area_t GLSceneDrawer::CheckViewArea(vertex_t *v1, vertex_t *v2, sector_t *fronts
 
 		// allow some tolerance in case slopes are involved
 		if (cz1 <= fz1 + 1. / 100 && cz2 <= fz2 + 1. / 100)
-			in_area = area_below;
+			return area_below;
 		else
-			in_area = area_normal;
+			return area_normal;
 	}
 	return area_default;
 }
