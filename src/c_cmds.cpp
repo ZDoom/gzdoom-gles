@@ -77,6 +77,10 @@
 extern FILE *Logfile;
 extern bool insave;
 
+#ifdef __MINGW32__
+extern bool exiting; // for MinGW
+#endif
+
 CVAR (Bool, sv_cheats, false, CVAR_SERVERINFO | CVAR_LATCH)
 CVAR (Bool, sv_unlimited_pickup, false, CVAR_SERVERINFO)
 
@@ -100,11 +104,17 @@ bool CheckCheatmode (bool printmsg)
 
 CCMD (quit)
 {
+#ifdef __MINGW32__
+	exiting = true;
+#endif
 	if (!insave) exit (0);
 }
 
 CCMD (exit)
 {
+#ifdef __MINGW32__
+	exiting = true;
+#endif
 	if (!insave) exit (0);
 }
 
