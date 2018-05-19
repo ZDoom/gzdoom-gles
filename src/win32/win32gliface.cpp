@@ -1236,10 +1236,15 @@ void Win32GLFrameBuffer::ReleaseResources ()
 // 
 //
 //==========================================================================
+EXTERN_CVAR(Bool, vid_vsync);
+CUSTOM_CVAR(Bool, gl_control_tear, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
+{
+	vid_vsync.Callback();
+}
 
 void Win32GLFrameBuffer::SetVSync (bool vsync)
 {
-	if (myWglSwapIntervalExtProc != NULL) myWglSwapIntervalExtProc(vsync ? SwapInterval : 0);
+	if (myWglSwapIntervalExtProc != NULL) myWglSwapIntervalExtProc(vsync ? (gl_control_tear? SwapInterval : 1) : 0);
 }
 
 void Win32GLFrameBuffer::SwapBuffers()
