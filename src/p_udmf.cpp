@@ -1110,6 +1110,10 @@ public:
 				Flag(ld->flags, ML_3DMIDTEX_IMPASS, key);
 				continue;
 
+			case NAME_Revealed:
+				Flag(ld->flags, ML_REVEALED, key);
+				continue;
+
 			case NAME_MoreIds:
 				// delay parsing of the tag string until parsing of the sector is complete
 				// This ensures that the ID is always the first tag in the list.
