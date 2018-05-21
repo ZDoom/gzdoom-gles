@@ -669,7 +669,7 @@ void GLSceneDrawer::EndDrawScene(sector_t * viewsector)
 	// [BB] HUD models need to be rendered here. Make sure that
 	// DrawPlayerSprites is only called once. Either to draw
 	// HUD models or to draw the weapon sprites.
-	const bool renderHUDModel = gl_IsHUDModelForPlayerAvailable( players[consoleplayer].camera->player );
+	const bool renderHUDModel = IsHUDModelForPlayerAvailable( players[consoleplayer].camera->player );
 	if ( renderHUDModel )
 	{
 		// [BB] The HUD model should be drawn over everything else already drawn.
@@ -700,7 +700,7 @@ void GLSceneDrawer::EndDrawScene(sector_t * viewsector)
 
 void GLSceneDrawer::DrawEndScene2D(sector_t * viewsector)
 {
-	const bool renderHUDModel = gl_IsHUDModelForPlayerAvailable(players[consoleplayer].camera->player);
+	const bool renderHUDModel = IsHUDModelForPlayerAvailable(players[consoleplayer].camera->player);
 
 	// [BB] Only draw the sprites if we didn't render a HUD model before.
 	if (renderHUDModel == false)

@@ -749,7 +749,7 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 			// exclude vertically moving objects from this check.
 			if (!thing->Vel.isZero())
 			{
-				if (!gl_FindModelFrame(thing->GetClass(), spritenum, thing->frame, false))
+				if (!FindModelFrame(thing->GetClass(), spritenum, thing->frame, false))
 				{
 					return;
 				}
@@ -810,7 +810,7 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 		z += fz;
 	}
 
-	modelframe = isPicnumOverride ? nullptr : gl_FindModelFrame(thing->GetClass(), spritenum, thing->frame, !!(thing->flags & MF_DROPPED));
+	modelframe = isPicnumOverride ? nullptr : FindModelFrame(thing->GetClass(), spritenum, thing->frame, !!(thing->flags & MF_DROPPED));
 	if (!modelframe)
 	{
 		bool mirror;
