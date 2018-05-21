@@ -38,7 +38,7 @@
 #include "textures/textures.h"
 #include "vm.h"
 
-void gl_InitModels();
+void InitModels();
 
 // variables used to look up
 //	and range check thing_t sprites patches
@@ -1052,7 +1052,7 @@ void R_InitSprites ()
 	// [RH] Sort the skins, but leave base as skin 0
 	//qsort (&skins[PlayerClasses.Size ()], numskins-PlayerClasses.Size (), sizeof(FPlayerSkin), skinsorter);
 
-	gl_InitModels();
+	InitModels();
 }
 
 
