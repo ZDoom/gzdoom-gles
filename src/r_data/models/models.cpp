@@ -474,7 +474,7 @@ static unsigned FindModel(const char * path, const char * modelfile)
 //
 //===========================================================================
 
-void ParseModelDefLump(int Lump);
+static void ParseModelDefLump(int Lump);
 
 void InitModels()
 {
