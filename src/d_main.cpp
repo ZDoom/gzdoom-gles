@@ -2823,6 +2823,8 @@ void D_DoomMain (void)
 		restart++;
 		PClass::bShutdown = false;
 		PClass::bVMOperational = false;
+
+		gamestate = GS_STARTUP;
 	}
 	while (1);
 }
