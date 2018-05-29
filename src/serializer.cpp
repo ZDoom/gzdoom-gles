@@ -996,6 +996,11 @@ void FSerializer::ReadObjects(bool hubtravel)
 		{
 			DThinker::bSerialOverride = true;
 			r->mDObjects.Resize(ArraySize());
+			for (auto &p : r->mDObjects)
+			{
+				p = nullptr;
+			}
+
 			// First iteration: create all the objects but do nothing with them yet.
 			for (unsigned i = 0; i < r->mDObjects.Size(); i++)
 			{
@@ -1067,7 +1072,7 @@ void FSerializer::ReadObjects(bool hubtravel)
 			// nuke all objects we created here.
 			for (auto obj : r->mDObjects)
 			{
-				if (!(obj->ObjectFlags & OF_EuthanizeMe)) obj->Destroy();
+				if (obj != nullptr && !(obj->ObjectFlags & OF_EuthanizeMe)) obj->Destroy();
 			}
 			r->mDObjects.Clear();
 
