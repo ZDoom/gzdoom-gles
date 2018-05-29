@@ -458,7 +458,7 @@ if( NOT MSVC )
 endif()
 
 # Fix stat in v140_xp (broken in RTM and Update 1 so far)
-if( MSVC AND MSVC_VERSION EQUAL 1900 AND CMAKE_GENERATOR_TOOLSET STREQUAL "v140_xp" )
+if( MSVC AND ( CMAKE_GENERATOR_TOOLSET STREQUAL "v140_xp" OR CMAKE_GENERATOR_TOOLSET STREQUAL "v141_xp" ) )
 	add_definitions( -D_stat64i32=VS14Stat )
 endif()
 
