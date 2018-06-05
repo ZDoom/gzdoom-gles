@@ -34,6 +34,7 @@
 #include "g_level.h"
 #include "g_levellocals.h"
 #include "actorinlines.h"
+#include "r_data/models/models.h"
 
 #include "gl/system/gl_cvars.h"
 #include "gl/renderer/gl_renderer.h"
@@ -153,49 +154,6 @@ void gl_SetDynSpriteLight(AActor *thing, particle_t *particle)
 	{
 		gl_SetDynSpriteLight(NULL, particle->Pos.X, particle->Pos.Y, particle->Pos.Z, particle->subsector);
 	}
-}
-
-// Check if circle potentially intersects with node AABB
-static bool CheckBBoxCircle(float *bbox, float x, float y, float radiusSquared)
-{
-	float centerX = (bbox[BOXRIGHT] + bbox[BOXLEFT]) * 0.5f;
-	float centerY = (bbox[BOXBOTTOM] + bbox[BOXTOP]) * 0.5f;
-	float extentX = (bbox[BOXRIGHT] - bbox[BOXLEFT]) * 0.5f;
-	float extentY = (bbox[BOXBOTTOM] - bbox[BOXTOP]) * 0.5f;
-	float aabbRadiusSquared = extentX * extentX + extentY * extentY;
-	x -= centerX;
-	y -= centerY;
-	float dist = x * x + y * y;
-	return dist <= radiusSquared + aabbRadiusSquared;
-}
-
-template<typename Callback>
-void BSPNodeWalkCircle(void *node, float x, float y, float radiusSquared, const Callback &callback)
-{
-	while (!((size_t)node & 1))
-	{
-		node_t *bsp = (node_t *)node;
-
-		if (CheckBBoxCircle(bsp->bbox[0], x, y, radiusSquared))
-			BSPNodeWalkCircle(bsp->children[0], x, y, radiusSquared, callback);
-
-		if (!CheckBBoxCircle(bsp->bbox[1], x, y, radiusSquared))
-			return;
-
-		node = bsp->children[1];
-	}
-
-	subsector_t *sub = (subsector_t *)((uint8_t *)node - 1);
-	callback(sub);
-}
-
-template<typename Callback>
-void BSPWalkCircle(float x, float y, float radiusSquared, const Callback &callback)
-{
-	if (level.nodes.Size() == 0)
-		callback(&level.subsectors[0]);
-	else
-		BSPNodeWalkCircle(level.HeadNode(), x, y, radiusSquared, callback);
 }
 
 int gl_SetDynModelLight(AActor *self, int dynlightindex)
