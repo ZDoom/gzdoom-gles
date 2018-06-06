@@ -945,3 +945,4 @@ bool IsHUDModelForPlayerAvailable (player_t * player)
 	FSpriteModelFrame *smf = FindModelFrame(player->ReadyWeapon->GetClass(), state->sprite, state->GetFrame(), false);
 	return ( smf != nullptr );
 }
+
