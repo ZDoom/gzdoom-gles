@@ -267,7 +267,7 @@ if (NOT ZDOOM_USE_SSE2)
 endif()
 
 if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
-	option( USE_SSE2 "Use SSE2 instructions, requires P4 or later CPU." ON)
+	option( TC_USE_SSE2 "Use SSE2 instructions for software truecolor, requires P4 or later CPU." ON )
 endif()
 
 if( X64 )
@@ -417,7 +417,7 @@ if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
 		set (CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} -s" )
 	endif()
 
-	if ( NOT USE_SSE2 )
+	if ( NOT TC_USE_SSE2 )
 		add_definitions( -DNO_SSE )
 	endif()
 
@@ -1379,7 +1379,7 @@ if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
 	# Need to enable intrinsics for these files.
 	if( SSE_MATTERS )
 		set_source_files_properties( x86.cpp PROPERTIES COMPILE_FLAGS "-msse2 -mmmx" )
-		if( USE_SSE2 )
+		if( TC_USE_SSE2 )
 			set_source_files_properties(
 				gl/system/gl_swframebuffer.cpp
 				polyrenderer/poly_all.cpp
