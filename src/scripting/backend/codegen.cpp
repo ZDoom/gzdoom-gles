@@ -55,6 +55,7 @@
 #include "v_text.h"
 #include "w_wad.h"
 #include "math/cmath.h"
+#include "doomstat.h"
 
 inline PClass *PObjectPointer::PointedClass() const { return static_cast<PClassType*>(PointedType)->Descriptor; }
 
@@ -6864,8 +6865,13 @@ ExpEmit FxCVar::Emit(VMFunctionBuilder *build)
 
 	case CVAR_DummyBool:
 	{
+		int *pVal;
 		auto cv = static_cast<FFlagCVar *>(CVar);
-		build->Emit(OP_LKP, addr.RegNum, build->GetConstantAddress(&cv->ValueVar.Value));
+		auto &vcv = cv->ValueVar;
+		if (vcv == compatflags) pVal = &i_compatflags;
+		else if (vcv == compatflags2) pVal = &ii_compatflags2;
+		else pVal = &vcv.Value;
+		build->Emit(OP_LKP, addr.RegNum, build->GetConstantAddress(pVal));
 		build->Emit(OP_LW, dest.RegNum, addr.RegNum, nul);
 		build->Emit(OP_SRL_RI, dest.RegNum, dest.RegNum, cv->BitNum);
 		build->Emit(OP_AND_RK, dest.RegNum, dest.RegNum, build->GetConstantInt(1));
