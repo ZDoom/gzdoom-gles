@@ -68,7 +68,9 @@ EXTERN_CVAR(Int, r_clearbuffer)
 EXTERN_CVAR(Int, r_debug_draw)
 
 CVAR(Bool, r_scene_multithreaded, false, 0);
-CVAR(Bool, r_models, false, 0);
+CVAR(Bool, r_models, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
+
+bool r_modelscene = false;
 
 namespace swrenderer
 {
@@ -99,7 +101,9 @@ namespace swrenderer
 		float trueratio;
 		ActiveRatio(width, height, &trueratio);
 		viewport->SetViewport(MainThread(), width, height, trueratio);
-		if (r_models)
+
+		r_modelscene = r_models && Models.Size() > 0;
+		if (r_modelscene)
 			PolyTriangleDrawer::ClearBuffers(viewport->RenderTarget);
 
 		if (r_clearbuffer != 0 || r_debug_draw != 0)
@@ -161,7 +165,7 @@ namespace swrenderer
 
 		R_UpdateFuzzPosFrameStart();
 
-		if (r_models)
+		if (r_modelscene)
 			MainThread()->Viewport->SetupPolyViewport(MainThread());
 
 		FRenderViewpoint origviewpoint = MainThread()->Viewport->viewpoint;
@@ -177,7 +181,7 @@ namespace swrenderer
 
 		// Mirrors fail to restore the original viewpoint -- we need it for the HUD weapon to draw correctly.
 		MainThread()->Viewport->viewpoint = origviewpoint;
-		if (r_models)
+		if (r_modelscene)
 			MainThread()->Viewport->SetupPolyViewport(MainThread());
 
 		RenderPSprites();
@@ -375,7 +379,7 @@ namespace swrenderer
 		viewwindowy = y;
 		viewactive = true;
 		viewport->SetViewport(MainThread(), width, height, MainThread()->Viewport->viewwindow.WidescreenRatio);
-		if (r_models)
+		if (r_modelscene)
 			PolyTriangleDrawer::ClearBuffers(viewport->RenderTarget);
 
 		RenderActorView(actor, dontmaplines);
