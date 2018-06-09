@@ -54,7 +54,6 @@
 #include "vmbuilder.h"
 #include "v_text.h"
 #include "w_wad.h"
-#include "math/cmath.h"
 #include "doomstat.h"
 
 inline PClass *PObjectPointer::PointedClass() const { return static_cast<PClassType*>(PointedType)->Descriptor; }
