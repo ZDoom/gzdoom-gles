@@ -165,7 +165,14 @@ void PolyRenderer::RenderActorView(AActor *actor, bool dontmaplines)
 
 	r_modelscene = r_models && Models.Size() > 0;
 
-	ClearBuffers();
+	NextStencilValue = 0;
+	Threads.Clear();
+	Threads.MainThread()->SectorPortals.clear();
+	Threads.MainThread()->LinePortals.clear();
+	Threads.MainThread()->TranslucentObjects.clear();
+
+	PolyTriangleDrawer::ResizeBuffers(RenderTarget);
+	PolyTriangleDrawer::ClearStencil(Threads.MainThread()->DrawQueue, 0);
 	SetSceneViewport();
 
 	PolyPortalViewpoint mainViewpoint = SetupPerspectiveMatrix();
@@ -185,16 +192,6 @@ void PolyRenderer::RenderActorView(AActor *actor, bool dontmaplines)
 void PolyRenderer::RenderRemainingPlayerSprites()
 {
 	PlayerSprites.RenderRemainingSprites();
-}
-
-void PolyRenderer::ClearBuffers()
-{
-	Threads.Clear();
-	PolyTriangleDrawer::ClearBuffers(RenderTarget);
-	NextStencilValue = 0;
-	Threads.MainThread()->SectorPortals.clear();
-	Threads.MainThread()->LinePortals.clear();
-	Threads.MainThread()->TranslucentObjects.clear();
 }
 
 void PolyRenderer::SetSceneViewport()
