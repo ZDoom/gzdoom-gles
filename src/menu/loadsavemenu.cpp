@@ -123,38 +123,26 @@ DEFINE_ACTION_FUNCTION(FSavegameManager, RemoveSaveSlot)
 
 int FSavegameManager::InsertSaveNode(FSaveGameNode *node)
 {
-	if (SaveGames.Size() == 0 || node->bOldVersion)
+	if (SaveGames.Size() == 0)
+	{
+		return SaveGames.Push(node);
+	}
+
+	if (node->bOldVersion)
 	{ // Add node at bottom of list
 		return SaveGames.Push(node);
 	}
 	else
 	{	// Add node at top of list
-		unsigned int i = 0;
-		if (strstr(node->Filename.GetChars(),"save"))
+		unsigned int i;
+		for (i = 0; i < SaveGames.Size(); i++)
 		{
-			for (i; i < SaveGames.Size(); i++)
+			if (SaveGames[i]->bOldVersion || node->SaveTitle.CompareNoCase(SaveGames[i]->SaveTitle) <= 0)
 			{
-				//if (SaveGames[i]->bOldVersion || node->SaveTitle.CompareNoCase(SaveGames[i]->SaveTitle) <= 0)
-				if (strstr(SaveGames[i]->Filename.GetChars(),"save") && node->Filename.CompareNoCase(SaveGames[i]->Filename) >= 0)
-				{
-					break;
-				}
+				break;
 			}
 		}
-		else if (!strstr(node->Filename.GetChars(),"auto"))
-		{
-			for (i; strstr(SaveGames[i]->Filename.GetChars(),"auto") && i < SaveGames.Size(); i++)
-			{}
-			for (i; i < SaveGames.Size(); i++)
-			{
-				if (strstr(SaveGames[i]->Filename.GetChars(),"save") || (!strstr(SaveGames[i]->Filename.GetChars(),"save") && node->Filename.CompareNoCase(SaveGames[i]->Filename) <= 0))
-				{
-					break;
-				}
-			}	
-		}
 		SaveGames.Insert(i, node);
-
 		return i;
 	}
 }
