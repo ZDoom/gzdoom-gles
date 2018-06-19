@@ -854,14 +854,16 @@ bool Win32GLVideo::SetupPixelFormat(int multisample)
 
 		if (pfd.dwFlags & PFD_GENERIC_FORMAT)
 		{
-			I_Error("R_OPENGL: OpenGL driver not accelerated!");
+			vid_renderer = 0;
+			I_Error("R_OPENGL: OpenGL driver not accelerated! Falling back to software renderer.\n");
 			return false;
 		}
 	}
 
 	if (!::SetPixelFormat(m_hDC, pixelFormat, NULL))
 	{
-		I_Error("R_OPENGL: Couldn't set pixel format.\n");
+		vid_renderer = 0;
+		I_Error("R_OPENGL: Couldn't set pixel format. Reverting to software mode...\n");
 		return false;
 	}
 	return true;
@@ -917,7 +919,8 @@ bool Win32GLVideo::InitHardware (HWND Window, int multisample)
 			m_hRC = wglCreateContext(m_hDC);
 			if (m_hRC == NULL)
 			{
-				I_Error("R_OPENGL: Unable to create an OpenGL render context.\n");
+				vid_renderer = 0;
+				I_Error("R_OPENGL: Unable to create an OpenGL render context. Reverting to software mode...\n");
 				return false;
 			}
 		}
@@ -929,7 +932,8 @@ bool Win32GLVideo::InitHardware (HWND Window, int multisample)
 		}
 	}
 	// We get here if the driver doesn't support the modern context creation API which always means an old driver.
-	I_Error ("R_OPENGL: Unable to create an OpenGL render context. Insufficient driver support for context creation\n");
+	vid_renderer = 0;
+	I_Error ("R_OPENGL: Unable to create an OpenGL render context. Insufficient driver support for context creation. Reverting to software mode...\n");
 	return false;
 }
 
