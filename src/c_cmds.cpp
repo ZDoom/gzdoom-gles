@@ -456,7 +456,11 @@ CCMD(setinv)
 
 CCMD (gameversion)
 {
+#ifndef NO_SSE
 	Printf ("%s @ %s\nCommit %s\n", GetVersionString(), GetGitTime(), GetGitHash());
+#else
+	Printf ("%s NO SSE2 @ %s\nCommit %s\n", GetVersionString(), GetGitTime(), GetGitHash());
+#endif
 }
 
 CCMD (print)
