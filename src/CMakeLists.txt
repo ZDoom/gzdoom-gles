@@ -266,7 +266,7 @@ if (NOT ZDOOM_USE_SSE2)
 	endif()
 endif()
 
-if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
+if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE OR MSVC )
 	option( TC_USE_SSE2 "Use SSE2 instructions for software truecolor, requires P4 or later CPU." ON )
 endif()
 
@@ -417,12 +417,15 @@ if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
 		set (CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} -s" )
 	endif()
 
-	if ( NOT TC_USE_SSE2 )
-		add_definitions( -DNO_SSE )
-	endif()
-
 endif()
 
+if ( NOT TC_USE_SSE2 )
+	add_definitions( -DNO_SSE )
+	if ( MSVC )
+		set (CMAKE_CXX_FLAGS "/arch:IA32 ${CMAKE_CXX_FLAGS}")
+	endif()
+endif()
+	
 # Check for thread_local keyword, it's optional at the moment
 
 CHECK_CXX_SOURCE_COMPILES("thread_local int i; int main() { i = 0; }"
