@@ -28,6 +28,10 @@ uparrow +forward
 downarrow +back
 , +moveleft
 . +moveright
+w +forward
+s +back
+a +moveleft
+d +moveright
 mouse1 +attack
 mouse2 +strafe
 mouse3 +forward
