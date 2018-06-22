@@ -422,7 +422,7 @@ endif()
 if ( NOT TC_USE_SSE2 )
 	add_definitions( -DNO_SSE )
 	if ( MSVC )
-		set (CMAKE_CXX_FLAGS "/arch:IA32 ${CMAKE_CXX_FLAGS}")
+		set (CMAKE_CXX_FLAGS "/arch:IA32 /Oi- ${CMAKE_CXX_FLAGS}")
 	endif()
 endif()
 	
