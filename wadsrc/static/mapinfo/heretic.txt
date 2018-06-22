@@ -306,8 +306,20 @@ skill nightmare
 	DoubleAmmoFactor = 1.5
 	FastMonsters
 	DisableCheats
+	RespawnTime = 15
 	SpawnFilter = Nightmare
 	Name = "$MNU_BLACKPLAGUE"
+	MustConfirm
+}
+
+skill extreme_lzd
+{
+	AmmoFactor = 0.5
+	DamageFactor = 2
+	DisableCheats
+	SpawnFilter = Hard
+	Name = "$MNU_EXTREME"
+	MustConfirm
 }
 
 clearepisodes
