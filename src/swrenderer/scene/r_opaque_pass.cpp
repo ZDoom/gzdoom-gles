@@ -84,7 +84,7 @@ namespace
 	double line_distance_cull = 1e16;
 }
 
-CUSTOM_CVAR(Float, r_sprite_distance_cull, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
+CUSTOM_CVAR(Float, r_sprite_distance_cull, 4000, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 {
 	if (r_sprite_distance_cull > 0.0)
 	{
@@ -96,7 +96,7 @@ CUSTOM_CVAR(Float, r_sprite_distance_cull, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 	}
 }
 
-CUSTOM_CVAR(Float, r_line_distance_cull, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
+CUSTOM_CVAR(Float, r_line_distance_cull, 8000, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 {
 	if (r_line_distance_cull > 0.0)
 	{
