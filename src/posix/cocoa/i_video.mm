@@ -35,9 +35,6 @@
 
 #include "i_common.h"
 
-// Avoid collision between DObject class and Objective-C
-#define Class ObjectClass
-
 #include "bitmap.h"
 #include "c_dispatch.h"
 #include "doomstat.h"
@@ -64,8 +61,6 @@
 #include "gl/system/gl_interface.h"
 #include "gl/textures/gl_samplers.h"
 #include "gl/utility/gl_clock.h"
-
-#undef Class
 
 
 @implementation NSWindow(ExitAppOnClose)
