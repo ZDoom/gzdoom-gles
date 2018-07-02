@@ -50,7 +50,7 @@ const char *GetVersionString();
 // These are for content versioning. The current state is '3.4'.
 #define VER_MAJOR 3
 #define VER_MINOR 4
-#define VER_REVISION 1
+#define VER_REVISION 0
 
 // Version identifier for network games.
 // Bump it every time you do a release unless you're certain you
