@@ -44,6 +44,9 @@
 #include "r_data/r_translate.h"
 #include <vector>
 
+// 15 because 0th texture is our texture
+#define MAX_CUSTOM_HW_SHADER_TEXTURES 15
+
 enum MaterialShaderIndex
 {
 	SHADER_Default,
@@ -212,6 +215,8 @@ public:
 
 	int SourceLump;
 	FTextureID id;
+
+	FTexture *CustomShaderTextures[MAX_CUSTOM_HW_SHADER_TEXTURES] = { nullptr }; // Custom texture maps for custom hardware shaders
 
 	FString Name;
 	ETextureType UseType;	// This texture's primary purpose
