@@ -601,6 +601,7 @@ static const FDefaultShader defaultshaders[]=
 
 TArray<FString> usershaders;
 TArray<FString> usermaterials;
+TArray<FString> usershaderdefs;
 
 struct FEffectShader
 {
@@ -751,7 +752,7 @@ void FShaderCollection::CompileShaders(EPassType passType)
 		FString name = ExtractFileBase(usershaders[i]);
 		FName sfn = name;
 
-		FShader *shc = Compile(sfn, usershaders[i], usermaterials[i], "", true, passType);
+		FShader *shc = Compile(sfn, usershaders[i], usermaterials[i], usershaderdefs[i], true, passType);
 		mMaterialShaders.Push(shc);
 	}
 
