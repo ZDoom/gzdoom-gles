@@ -94,7 +94,7 @@ static bool CheckIfRaw(FileReader & data)
 			}
 			else if (ofs >= 64000-1)	// Need one byte for an empty column
 			{
-				free (foo);
+				M_Free (foo);
 				return true;
 			}
 			else
@@ -105,14 +105,14 @@ static bool CheckIfRaw(FileReader & data)
 				{
 					if (foo2[ofs] == 255)
 					{
-						free (foo);
+						M_Free (foo);
 						return true;
 					}
 					ofs += foo2[ofs+1] + 4;
 				}
 				if (ofs >= 64000)
 				{
-					free (foo);
+					M_Free (foo);
 					return true;
 				}
 			}
