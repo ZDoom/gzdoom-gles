@@ -57,6 +57,7 @@ void AddLightAssociation(const char *actor, const char *frame, const char *light
 void InitializeActorLights(TArray<FLightAssociation> &LightAssociations);
 
 extern TArray<FString> usershaders;
+extern TArray<FString> usermaterials;
 extern TDeletingArray<FLightDefaults *> LightDefaults;
 
 
@@ -1384,6 +1385,7 @@ class GLDefsParser
 			bool iwad = false;
 			int maplump = -1;
 			FString maplumpname;
+			FString materiallumpname = "shaders/glsl/material_normal.fp";
 			float speed = 1.f;
 
 			sc.MustGetString();
@@ -1398,6 +1400,11 @@ class GLDefsParser
 				{
 					sc.MustGetString();
 					maplumpname = sc.String;
+				}
+				else if (sc.Compare("material"))
+				{
+					sc.MustGetString();
+					materiallumpname = sc.String;
 				}
 				else if (sc.Compare("speed"))
 				{
@@ -1438,13 +1445,14 @@ class GLDefsParser
 				tex->gl_info.shaderspeed = speed;
 				for (unsigned i = 0; i < usershaders.Size(); i++)
 				{
-					if (!usershaders[i].CompareNoCase(maplumpname))
+					if (!usershaders[i].CompareNoCase(maplumpname) && !usermaterials[i].CompareNoCase(materiallumpname))
 					{
 						tex->gl_info.shaderindex = i + FIRST_USER_SHADER;
 						return;
 					}
 				}
 				tex->gl_info.shaderindex = usershaders.Push(maplumpname) + FIRST_USER_SHADER;
+				usermaterials.Push(materiallumpname);
 			}
 		}
 	}
