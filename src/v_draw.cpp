@@ -136,7 +136,7 @@ IMPLEMENT_CLASS(DShape2D, false, false)
 DEFINE_ACTION_FUNCTION(DShape2D, Clear)
 {
 	PARAM_SELF_PROLOGUE(DShape2D);
-	PARAM_INT(which);
+	PARAM_INT_DEF(which);
 
 	return 0;
 }
@@ -819,6 +819,10 @@ bool DCanvas::ParseDrawTextureTags(FTexture *img, double x, double y, uint32_t t
 
 		case DTA_RenderStyle:
 			parms->style.AsDWORD = ListGetInt(tags);
+			break;
+
+		case DTA_LegacyRenderStyle:	// mainly for ZScript which does not handle FRenderStyle that well.
+			parms->style = (ERenderStyle)ListGetInt(tags);
 			break;
 
 		case DTA_SpecialColormap:
