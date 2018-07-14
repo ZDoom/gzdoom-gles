@@ -1166,7 +1166,6 @@ set (PCH_SOURCES
 	textures/pngtexture.cpp
 	textures/rawpagetexture.cpp
 	textures/emptytexture.cpp
-	textures/backdroptexture.cpp
 	textures/shadertexture.cpp
 	textures/texture.cpp
 	textures/texturemanager.cpp

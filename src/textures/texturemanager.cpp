@@ -1007,7 +1007,6 @@ void FTextureManager::Init()
 	// Texture 0 is a dummy texture used to indicate "no texture"
 	AddTexture (new FDummyTexture);
 	// some special textures used in the game.
-	AddTexture(GetBackdropTexture());
 	AddTexture(CreateShaderTexture(false, false));
 	AddTexture(CreateShaderTexture(false, true));
 	AddTexture(CreateShaderTexture(true, false));
