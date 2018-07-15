@@ -1175,6 +1175,12 @@ class GLDefsParser
 		bool thiswad = false;
 		bool iwad = false;
 
+		UserShaderDesc usershader;
+		TArray<FString> texNameList;
+		TArray<FString> texNameIndex;
+		FString texnameDefs = "";
+		float speed = 1.f;
+
 		FTexture *textures[6];
 		const char *keywords[7] = { "brightmap", "normal", "specular", "metallic", "roughness", "ao", nullptr };
 		const char *notFound[6] = { "Brightmap", "Normalmap", "Specular texture", "Metallic texture", "Roughness texture", "Ambient occlusion texture" };
@@ -1223,6 +1229,62 @@ class GLDefsParser
 				sc.MustGetFloat();
 				if (tex)
 					tex->gl_info.SpecularLevel = (float)sc.Float;
+			}
+			else if (sc.Compare("speed"))
+			{
+				sc.MustGetFloat();
+				speed = float(sc.Float);
+			}
+			else if (sc.Compare("shader"))
+			{
+				sc.MustGetString();
+				usershader.shader = sc.String;
+			}
+			else if (sc.Compare("texture"))
+			{
+				sc.MustGetString();
+				FString textureName = sc.String;
+				for (FString &texName : texNameList)
+				{
+					if (!texName.Compare(textureName))
+					{
+						sc.ScriptError("Trying to redefine custom hardware shader texture '%s' in texture '%s'\n", textureName.GetChars(), tex ? tex->Name.GetChars() : "(null)");
+					}
+				}
+				sc.MustGetString();
+				bool okay = false;
+				for (int i = 0; i < MAX_CUSTOM_HW_SHADER_TEXTURES; i++)
+				{
+					if (!tex->CustomShaderTextures[i])
+					{
+						tex->CustomShaderTextures[i] = TexMan.FindTexture(sc.String, ETextureType::Any, FTextureManager::TEXMAN_TryAny);
+						if (!tex->CustomShaderTextures[i])
+						{
+							sc.ScriptError("Custom hardware shader texture '%s' not found in texture '%s'\n", sc.String, tex ? tex->Name.GetChars() : "(null)");
+						}
+
+						texNameList.Push(textureName);
+						texNameIndex.Push(i);
+						okay = true;
+						break;
+					}
+				}
+				if (!okay)
+				{
+					sc.ScriptError("Error: out of texture units in texture '%s'", tex ? tex->Name.GetChars() : "(null)");
+				}
+			}
+			else if (sc.Compare("define"))
+			{
+				sc.MustGetString();
+				FString defineName = sc.String;
+				FString defineValue = "";
+				if (sc.CheckToken('='))
+				{
+					sc.MustGetString();
+					defineValue = sc.String;
+				}
+				texnameDefs.AppendFormat("#define %s %s\n", defineName.GetChars(), defineValue.GetChars());
 			}
 			else
 			{
@@ -1278,6 +1340,49 @@ class GLDefsParser
 
 		if (disable_fullbright_specified)
 			tex->gl_info.bDisableFullbright = disable_fullbright;
+
+		if (usershader.shader.IsNotEmpty())
+		{
+			int firstUserTexture;
+			if (tex->gl_info.Normal && tex->gl_info.Specular)
+			{
+				usershader.shaderType = tex->gl_info.Brightmap ? SHADER_SpecularBrightmap : SHADER_Specular;
+				firstUserTexture = tex->gl_info.Brightmap ? 5 : 4;
+			}
+			else if (tex->gl_info.Normal && tex->gl_info.Metallic && tex->gl_info.Roughness && tex->gl_info.AmbientOcclusion)
+			{
+				usershader.shaderType = tex->gl_info.Brightmap ? SHADER_PBRBrightmap : SHADER_PBR;
+				firstUserTexture = tex->gl_info.Brightmap ? 7 : 6;
+			}
+			else
+			{
+				usershader.shaderType = tex->gl_info.Brightmap ? SHADER_Brightmap : SHADER_Default;
+				firstUserTexture = tex->gl_info.Brightmap ? 3 : 2;
+			}
+
+			for (unsigned int i = 0; i < texNameList.Size(); i++)
+			{
+				texnameDefs.AppendFormat("#define %s texture%d\n", texNameList[i].GetChars(), texNameIndex[i] + firstUserTexture);
+			}
+
+			if (tex->bWarped != 0)
+			{
+				Printf("Cannot combine warping with hardware shader on texture '%s'\n", tex->Name.GetChars());
+				return;
+			}
+			tex->gl_info.shaderspeed = speed;
+			for (unsigned i = 0; i < usershaders.Size(); i++)
+			{
+				if (!usershaders[i].shader.CompareNoCase(usershader.shader) &&
+					usershaders[i].shaderType == usershader.shaderType &&
+					!usershaders[i].defines.Compare(texnameDefs))
+				{
+					tex->gl_info.shaderindex = i + FIRST_USER_SHADER;
+					return;
+				}
+			}
+			tex->gl_info.shaderindex = usershaders.Push(usershader) + FIRST_USER_SHADER;
+		}
 	}
 
 
