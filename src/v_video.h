@@ -194,6 +194,26 @@ struct VMVa_List
 	int curindex;
 	int numargs;
 };
+
+// intermediate struct for fake shape drawing
+
+enum EClearWhich
+{
+	C_Verts = 1,
+	C_Coords = 2,
+	C_Indices = 4,
+};
+
+class DShape2D : public DObject
+{
+
+	DECLARE_CLASS(DShape2D,DObject)
+public:
+	TArray<int> mIndices;
+	TArray<DVector2> mVertices;
+	TArray<DVector2> mCoords;
+};
+
 //
 // VIDEO
 //
@@ -272,6 +292,8 @@ public:
 	bool SetTextureParms(DrawParms *parms, FTexture *img, double x, double y) const;
 	void DrawTexture (FTexture *img, double x, double y, int tags, ...);
 	void DrawTexture(FTexture *img, double x, double y, VMVa_List &);
+	void DrawShape(FTexture *img, DShape2D *shape, int tags, ...);
+	void DrawShape(FTexture *img, DShape2D *shape, VMVa_List &);
 	void FillBorder (FTexture *img);	// Fills the border around a 4:3 part of the screen on non-4:3 displays
 	void VirtualToRealCoords(double &x, double &y, double &w, double &h, double vwidth, double vheight, bool vbottom=false, bool handleaspect=true) const;
 

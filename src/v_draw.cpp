@@ -130,6 +130,45 @@ DEFINE_ACTION_FUNCTION(_Screen, PaletteColor)
 	ACTION_RETURN_INT(index);
 }
 
+// Dummy ZScript arbitrary textured shape drawing
+IMPLEMENT_CLASS(DShape2D, false, false)
+
+DEFINE_ACTION_FUNCTION(DShape2D, Clear)
+{
+	PARAM_SELF_PROLOGUE(DShape2D);
+	PARAM_INT(which);
+
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DShape2D, PushVertex)
+{
+	PARAM_SELF_PROLOGUE(DShape2D);
+	PARAM_FLOAT(x);
+	PARAM_FLOAT(y);
+
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DShape2D, PushCoord)
+{
+	PARAM_SELF_PROLOGUE(DShape2D);
+	PARAM_FLOAT(u);
+	PARAM_FLOAT(v);
+
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DShape2D, PushTriangle)
+{
+	PARAM_SELF_PROLOGUE(DShape2D);
+	PARAM_INT(a);
+	PARAM_INT(b);
+	PARAM_INT(c);
+
+	return 0;
+}
+
 void DCanvas::DrawTexture (FTexture *img, double x, double y, int tags_first, ...)
 {
 	Va_List tags;
@@ -183,6 +222,36 @@ void DCanvas::DrawTextureParms(FTexture *img, DrawParms &parms)
 		NetUpdate();
 	}
 }
+
+//==========================================================================
+//
+// Dummy ZScript arbitrary textured shape drawing functions
+//
+//==========================================================================
+
+void DCanvas::DrawShape(FTexture *img, DShape2D *shape, int tags_first, ...)
+{
+}
+
+void DCanvas::DrawShape(FTexture *img, DShape2D *shape, VMVa_List &args)
+{
+}
+
+DEFINE_ACTION_FUNCTION(_Screen, DrawShape)
+{
+	PARAM_PROLOGUE;
+	PARAM_INT(texid);
+	PARAM_BOOL(animate);
+	PARAM_POINTER(shape, DShape2D);
+
+	return 0;
+}
+
+//==========================================================================
+//
+// Clipping rect
+//
+//==========================================================================
 
 void DCanvas::SetClipRect(int x, int y, int w, int h)
 {
