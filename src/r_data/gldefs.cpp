@@ -1177,8 +1177,7 @@ class GLDefsParser
 
 		UserShaderDesc usershader;
 		TArray<FString> texNameList;
-		TArray<FString> texNameIndex;
-		FString texnameDefs = "";
+		TArray<int> texNameIndex;
 		float speed = 1.f;
 
 		FTexture *textures[6];
@@ -1284,7 +1283,7 @@ class GLDefsParser
 					sc.MustGetString();
 					defineValue = sc.String;
 				}
-				texnameDefs.AppendFormat("#define %s %s\n", defineName.GetChars(), defineValue.GetChars());
+				usershader.defines.AppendFormat("#define %s %s\n", defineName.GetChars(), defineValue.GetChars());
 			}
 			else
 			{
@@ -1362,7 +1361,7 @@ class GLDefsParser
 
 			for (unsigned int i = 0; i < texNameList.Size(); i++)
 			{
-				texnameDefs.AppendFormat("#define %s texture%d\n", texNameList[i].GetChars(), texNameIndex[i] + firstUserTexture);
+				usershader.defines.AppendFormat("#define %s texture%d\n", texNameList[i].GetChars(), texNameIndex[i] + firstUserTexture);
 			}
 
 			if (tex->bWarped != 0)
@@ -1375,7 +1374,7 @@ class GLDefsParser
 			{
 				if (!usershaders[i].shader.CompareNoCase(usershader.shader) &&
 					usershaders[i].shaderType == usershader.shaderType &&
-					!usershaders[i].defines.Compare(texnameDefs))
+					!usershaders[i].defines.Compare(usershader.defines))
 				{
 					tex->gl_info.shaderindex = i + FIRST_USER_SHADER;
 					return;
@@ -1492,8 +1491,7 @@ class GLDefsParser
 			UserShaderDesc desc;
 			desc.shaderType = SHADER_Default;
 			TArray<FString> texNameList;
-			TArray<FString> texNameIndex;
-			FString texnameDefs = "";
+			TArray<int> texNameIndex;
 			float speed = 1.f;
 
 			sc.MustGetString();
@@ -1576,7 +1574,7 @@ class GLDefsParser
 						sc.MustGetString();
 						defineValue = sc.String;
 					}
-					texnameDefs.AppendFormat("#define %s %s\n", defineName.GetChars(), defineValue.GetChars());
+					desc.defines.AppendFormat("#define %s %s\n", defineName.GetChars(), defineValue.GetChars());
 				}
 			}
 			if (!tex)
@@ -1598,7 +1596,7 @@ class GLDefsParser
 
 			for (unsigned int i = 0; i < texNameList.Size(); i++)
 			{
-				texnameDefs.AppendFormat("#define %s texture%d\n", texNameList[i].GetChars(), texNameIndex[i] + firstUserTexture);
+				desc.defines.AppendFormat("#define %s texture%d\n", texNameList[i].GetChars(), texNameIndex[i] + firstUserTexture);
 			}
 
 			if (desc.shader.IsNotEmpty())
@@ -1613,7 +1611,7 @@ class GLDefsParser
 				{
 					if (!usershaders[i].shader.CompareNoCase(desc.shader) &&
 						usershaders[i].shaderType == desc.shaderType &&
-						!usershaders[i].defines.Compare(texnameDefs))
+						!usershaders[i].defines.Compare(desc.defines))
 					{
 						tex->gl_info.shaderindex = i + FIRST_USER_SHADER;
 						return;
