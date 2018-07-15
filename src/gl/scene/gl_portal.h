@@ -99,7 +99,15 @@ public:
 	static bool	inskybox;
 
 private:
-	void DrawPortalStencil();
+
+	enum
+	{
+		STP_Stencil,
+		STP_DepthClear,
+		STP_DepthRestore,
+		STP_AllInOne
+	};
+	void DrawPortalStencil(int pass);
 
 	DVector3 savedviewpath[2];
 	DVector3 savedViewPos;
