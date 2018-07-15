@@ -54,6 +54,8 @@ EXTERN_CVAR(Int, gl_lightmode)
 EXTERN_CVAR(Bool, gl_precache)
 EXTERN_CVAR(Bool, gl_texture_usehires)
 
+extern TArray<UserShaderDesc> usershaders;
+
 //===========================================================================
 //
 // The GL texture maintenance class
@@ -443,12 +445,6 @@ FMaterial::FMaterial(FTexture * tx, bool expanded)
 	mShaderIndex = SHADER_Default;
 	tex = tx;
 
-	// TODO: apply custom shader object here
-	/* if (tx->CustomShaderDefinition)
-	{
-	}
-	else
-	*/
 	if (tx->bWarped)
 	{
 		mShaderIndex = tx->bWarped; // This picks SHADER_Warp1 or SHADER_Warp2
@@ -464,54 +460,55 @@ FMaterial::FMaterial(FTexture * tx, bool expanded)
 	}
 	else
 	{
-		if (tx->gl_info.shaderindex >= FIRST_USER_SHADER)
+		if (tx->gl_info.Normal && tx->gl_info.Specular)
 		{
-			for (auto &texture : tx->CustomShaderTextures)
+			for (auto &texture : { tx->gl_info.Normal, tx->gl_info.Specular })
 			{
 				if(texture == nullptr) continue;
 				ValidateSysTexture(texture, expanded);
 				mTextureLayers.Push({ texture, false });
 			}
-			mShaderIndex = tx->gl_info.shaderindex;
+			mShaderIndex = SHADER_Specular;
 		}
-		else
+		else if (tx->gl_info.Normal && tx->gl_info.Metallic && tx->gl_info.Roughness && tx->gl_info.AmbientOcclusion)
 		{
-			if (tx->gl_info.Normal && tx->gl_info.Specular)
+			for (auto &texture : { tx->gl_info.Normal, tx->gl_info.Metallic, tx->gl_info.Roughness, tx->gl_info.AmbientOcclusion })
 			{
-				for (auto &texture : { tx->gl_info.Normal, tx->gl_info.Specular })
-				{
-					ValidateSysTexture(texture, expanded);
-					mTextureLayers.Push({ texture, false });
-				}
-				mShaderIndex = SHADER_Specular;
+				ValidateSysTexture(texture, expanded);
+				mTextureLayers.Push({ texture, false });
 			}
-			else if (tx->gl_info.Normal && tx->gl_info.Metallic && tx->gl_info.Roughness && tx->gl_info.AmbientOcclusion)
-			{
-				for (auto &texture : { tx->gl_info.Normal, tx->gl_info.Metallic, tx->gl_info.Roughness, tx->gl_info.AmbientOcclusion })
-				{
-					ValidateSysTexture(texture, expanded);
-					mTextureLayers.Push({ texture, false });
-				}
-				mShaderIndex = SHADER_PBR;
-			}
+			mShaderIndex = SHADER_PBR;
+		}
 
-			tx->CreateDefaultBrightmap();
-			if (tx->gl_info.Brightmap != NULL)
+		tx->CreateDefaultBrightmap();
+		if (tx->gl_info.Brightmap)
+		{
+			ValidateSysTexture(tx->gl_info.Brightmap, expanded);
+			mTextureLayers.Push({ tx->gl_info.Brightmap, false} );
+			if (mShaderIndex == SHADER_Specular)
+				mShaderIndex = SHADER_SpecularBrightmap;
+			else if (mShaderIndex == SHADER_PBR)
+				mShaderIndex = SHADER_PBRBrightmap;
+			else
+				mShaderIndex = SHADER_Brightmap;
+		}
+
+		if (tx->gl_info.shaderindex >= FIRST_USER_SHADER)
+		{
+			const UserShaderDesc &usershader = usershaders[tx->gl_info.shaderindex - FIRST_USER_SHADER];
+			if (usershader.shaderType == mShaderIndex) // Only apply user shader if it matches the expected material
 			{
-				ValidateSysTexture(tx->gl_info.Brightmap, expanded);
-				FTextureLayer layer = {tx->gl_info.Brightmap, false};
-				mTextureLayers.Push(layer);
-				if (mShaderIndex == SHADER_Specular)
-					mShaderIndex = SHADER_SpecularBrightmap;
-				else if (mShaderIndex == SHADER_PBR)
-					mShaderIndex = SHADER_PBRBrightmap;
-				else
-					mShaderIndex = SHADER_Brightmap;
+				for (auto &texture : tx->CustomShaderTextures)
+				{
+					if (texture == nullptr) continue;
+					ValidateSysTexture(texture, expanded);
+					mTextureLayers.Push({ texture, false });
+				}
+				mShaderIndex = tx->gl_info.shaderindex;
 			}
 		}
 	}
 	mBaseLayer = ValidateSysTexture(tx, expanded);
-
 
 	mWidth = tx->GetWidth();
 	mHeight = tx->GetHeight();
