@@ -768,7 +768,12 @@ const FIWADInfo *FIWadManager::FindIWAD(TArray<FString> &wadfiles, const char *i
 	int iwadType = IdentifyVersion(wadfiles, iwad, basewad, optionalwad);
 	//gameiwad = iwadType;
 	const FIWADInfo *iwad_info = &mIWadInfos[iwadType];
-	if (DoomStartupInfo.Name.IsEmpty()) DoomStartupInfo.Name = iwad_info->Name;
+	if (DoomStartupInfo.Name.IsEmpty())
+	{
+		DoomStartupInfo.Name = iwad_info->Name;
+		if (iwad_info->gametype == GAME_Doom)
+			DoomStartupInfo.Name << " v" << VERSIONSTR;
+	}
 	if (DoomStartupInfo.BkColor == 0 && DoomStartupInfo.FgColor == 0)
 	{
 		DoomStartupInfo.BkColor = iwad_info->BkColor;
