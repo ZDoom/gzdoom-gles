@@ -783,7 +783,8 @@ void OpenGLSWFrameBuffer::Present()
 
 void OpenGLSWFrameBuffer::SetInitialState()
 {
-	if (gl.es || strstr(gl.vendorstring, "NVIDIA") == NULL) UseMappedMemBuffer = false;
+	if (gl.es || strstr(gl.vendorstring, "NVIDIA") == NULL || strstr(gl.vendorstring, "Intel") == NULL)
+		UseMappedMemBuffer = false;
 
 	AlphaBlendEnabled = false;
 	AlphaBlendOp = GL_FUNC_ADD;
