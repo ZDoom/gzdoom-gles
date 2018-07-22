@@ -58,7 +58,7 @@ namespace
 	bool isOutOfBounds(int x)
 	{
         if (vScaleTable[x].isCustom)
-            return ((vid_scale_customwidth < 80) || (vid_scale_customheight < 50));
+            return ((vid_scale_customwidth < 160) || (vid_scale_customheight < 100));
 		return (x < 0 || x >= NUMSCALEMODES || vScaleTable[x].isValid == false);
 	}
 }
