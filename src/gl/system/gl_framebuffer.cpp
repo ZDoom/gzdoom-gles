@@ -179,6 +179,8 @@ void OpenGLFrameBuffer::Update()
 	int initialHeight = IsFullscreen() ? VideoHeight : GetClientHeight();
 	int clientWidth = ViewportScaledWidth(initialWidth, initialHeight);
 	int clientHeight = ViewportScaledHeight(initialWidth, initialHeight);
+	if (clientWidth < 320) clientWidth = 320;
+	if (clientHeight < 200) clientHeight = 200;
 	if (clientWidth > 0 && clientHeight > 0 && (Width != clientWidth || Height != clientHeight))
 	{
 		// Do not call Resize here because it's only for software canvases
