@@ -30,7 +30,7 @@
 #include <condition_variable>
 
 // Use multiple threads when drawing
-EXTERN_CVAR(Bool, r_multithreaded)
+EXTERN_CVAR(Int, r_multithreaded)
 
 class PolyTriangleThreadData;
 
@@ -133,6 +133,7 @@ private:
 
 	static DrawerThreads *Instance();
 	
+	std::mutex threads_mutex;
 	std::vector<DrawerThread> threads;
 
 	std::mutex start_mutex;
@@ -165,7 +166,7 @@ public:
 	void Push(Types &&... args)
 	{
 		DrawerThreads *threads = DrawerThreads::Instance();
-		if (ThreadedRender && r_multithreaded)
+		if (r_multithreaded != 0)
 		{
 			void *ptr = AllocMemory(sizeof(T));
 			T *command = new (ptr)T(std::forward<Types>(args)...);
@@ -177,8 +178,6 @@ public:
 			command.Execute(&threads->single_core_thread);
 		}
 	}
-	
-	bool ThreadedRender = true;
 	
 private:
 	// Allocate memory valid for the duration of a command execution

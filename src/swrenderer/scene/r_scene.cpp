@@ -67,7 +67,7 @@ EXTERN_CVAR(Bool, r_shadercolormaps)
 EXTERN_CVAR(Int, r_clearbuffer)
 EXTERN_CVAR(Int, r_debug_draw)
 
-CVAR(Bool, r_scene_multithreaded, false, 0);
+CVAR(Int, r_scene_multithreaded, 0, 0);
 CVAR(Bool, r_models, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
 
 bool r_modelscene = false;
@@ -218,8 +218,10 @@ namespace swrenderer
 		if (numThreads == 0)
 			numThreads = 4;
 
-		if (!r_scene_multithreaded || !r_multithreaded)
+		if (r_scene_multithreaded == 0 || r_multithreaded == 0)
 			numThreads = 1;
+		else if (r_scene_multithreaded != 1)
+			numThreads = r_scene_multithreaded;
 
 		if (numThreads != (int)Threads.size())
 		{
