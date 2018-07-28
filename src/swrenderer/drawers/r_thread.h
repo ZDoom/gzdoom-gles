@@ -166,7 +166,7 @@ public:
 	void Push(Types &&... args)
 	{
 		DrawerThreads *threads = DrawerThreads::Instance();
-		if (r_multithreaded != 0)
+		if (ThreadedRender && r_multithreaded != 0)
 		{
 			void *ptr = AllocMemory(sizeof(T));
 			T *command = new (ptr)T(std::forward<Types>(args)...);
@@ -178,7 +178,9 @@ public:
 			command.Execute(&threads->single_core_thread);
 		}
 	}
-	
+
+	bool ThreadedRender = true;
+
 private:
 	// Allocate memory valid for the duration of a command execution
 	void *AllocMemory(size_t size);
