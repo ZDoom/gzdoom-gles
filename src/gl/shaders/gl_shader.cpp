@@ -465,7 +465,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 	normalmodelmatrix_index = glGetUniformLocation(hShader, "NormalModelMatrix");
 	quadmode_index = glGetUniformLocation(hShader, "uQuadMode");
 
-	if (!gl.legacyMode && !(gl.flags & RFL_SHADER_STORAGE_BUFFER))
+	if (!gl.legacyMode && lightbuffertype == GL_UNIFORM_BUFFER)
 	{
 		int tempindex = glGetUniformBlockIndex(hShader, "LightBufferUBO");
 		if (tempindex != -1) glUniformBlockBinding(hShader, tempindex, LIGHTBUF_BINDINGPOINT);
