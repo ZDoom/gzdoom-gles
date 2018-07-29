@@ -289,7 +289,7 @@ void gl_LoadExtensions()
 
 	int v;
 	
-	if (!gl.legacyMode && !(gl.flags & RFL_SHADER_STORAGE_BUFFER))
+	if (!gl.legacyMode)
 	{
 		glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &v);
 		gl.maxuniforms = v;
