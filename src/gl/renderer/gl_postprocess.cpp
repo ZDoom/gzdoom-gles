@@ -68,6 +68,8 @@
 #include "gl/stereo3d/gl_stereo3d.h"
 #include "r_videoscale.h"
 
+extern bool vid_hdr_active;
+
 //==========================================================================
 //
 // CVARs
@@ -855,6 +857,8 @@ void FGLRenderer::CopyToBackbuffer(const GL_IRECT *bounds, bool applyGamma)
 
 void FGLRenderer::DrawPresentTexture(const GL_IRECT &box, bool applyGamma)
 {
+	float invgamma;
+
 	glViewport(box.left, box.top, box.width, box.height);
 
 	GLRenderer->mBuffers->BindDitherTexture(1);
@@ -875,18 +879,27 @@ void FGLRenderer::DrawPresentTexture(const GL_IRECT &box, bool applyGamma)
 	mPresentShader->InputTexture.Set(0);
 	if (!applyGamma || framebuffer->IsHWGammaActive())
 	{
-		mPresentShader->InvGamma.Set(1.0f);
+		invgamma = 1.0f;
+		mPresentShader->InvGamma.Set(invgamma);
 		mPresentShader->Contrast.Set(1.0f);
 		mPresentShader->Brightness.Set(0.0f);
 		mPresentShader->Saturation.Set(1.0f);
 	}
 	else
 	{
-		mPresentShader->InvGamma.Set(1.0f / clamp<float>(Gamma, 0.1f, 4.f));
+		invgamma = 1.0f / clamp<float>(Gamma, 0.1f, 4.f);
+		mPresentShader->InvGamma.Set(invgamma);
 		mPresentShader->Contrast.Set(clamp<float>(vid_contrast, 0.1f, 3.f));
 		mPresentShader->Brightness.Set(clamp<float>(vid_brightness, -0.8f, 0.8f));
 		mPresentShader->Saturation.Set(clamp<float>(vid_saturation, -15.0f, 15.f));
 		mPresentShader->GrayFormula.Set(static_cast<int>(gl_satformula));
+	}
+	if (vid_hdr_active && framebuffer->IsFullscreen())
+	{
+		// Full screen exclusive mode treats a rgba16f frame buffer as linear.
+		// It probably will eventually in desktop mode too, but the DWM doesn't seem to support that.
+		invgamma *= 2.2f;
+		mPresentShader->InvGamma.Set(invgamma);
 	}
 	mPresentShader->Scale.Set(mScreenViewport.width / (float)mBuffers->GetWidth(), mScreenViewport.height / (float)mBuffers->GetHeight());
 	RenderScreenQuad();

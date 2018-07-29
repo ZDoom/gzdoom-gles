@@ -62,6 +62,7 @@
 #include "gl/system/gl_swframebuffer.h"
 
 extern HWND			Window;
+EXTERN_CVAR(Bool, vid_hdr)
 
 extern "C" {
     __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
@@ -70,6 +71,7 @@ extern "C" {
 
 void gl_CalculateCPUSpeed();
 extern int NewWidth, NewHeight, NewBits, DisplayBits;
+extern bool vid_hdr_active;
 
 // these get used before GLEW is initialized so we have to use separate pointers with different names
 PFNWGLCHOOSEPIXELFORMATARBPROC myWglChoosePixelFormatARB; // = (PFNWGLCHOOSEPIXELFORMATARBPROC)wglGetProcAddress("wglChoosePixelFormatARB");
@@ -734,12 +736,16 @@ bool Win32GLVideo::SetPixelFormat()
 //
 //==========================================================================
 
+static void append(std::vector<int> &list1, std::initializer_list<int> list2)
+{
+	list1.insert(list1.end(), list2);
+}
+
 bool Win32GLVideo::SetupPixelFormat(int multisample)
 {
-	int i;
 	int colorDepth;
 	HDC deskDC;
-	int attributes[28];
+	std::vector<int> attributes;
 	int pixelFormat;
 	unsigned int numFormats;
 	float attribsFloat[] = {0.0f, 0.0f};
@@ -751,59 +757,77 @@ bool Win32GLVideo::SetupPixelFormat(int multisample)
 	if (myWglChoosePixelFormatARB)
 	{
 	again:
-		attributes[0]	=	WGL_RED_BITS_ARB; //bits
-		attributes[1]	=	8;
-		attributes[2]	=	WGL_GREEN_BITS_ARB; //bits
-		attributes[3]	=	8;
-		attributes[4]	=	WGL_BLUE_BITS_ARB; //bits
-		attributes[5]	=	8;
-		attributes[6]	=	WGL_ALPHA_BITS_ARB;
-		attributes[7]	=	8;
-		attributes[8]	=	WGL_DEPTH_BITS_ARB;
-		attributes[9]	=	24;
-		attributes[10]	=	WGL_STENCIL_BITS_ARB;
-		attributes[11]	=	8;
-	
-		attributes[12]	=	WGL_DRAW_TO_WINDOW_ARB;	//required to be true
-		attributes[13]	=	true;
-		attributes[14]	=	WGL_SUPPORT_OPENGL_ARB;
-		attributes[15]	=	true;
-		attributes[16]	=	WGL_DOUBLE_BUFFER_ARB;
-		attributes[17]	=	true;
-	
+		append(attributes, { WGL_DEPTH_BITS_ARB, 24 });
+		append(attributes, { WGL_STENCIL_BITS_ARB, 8 });
+
+		//required to be true
+		append(attributes, { WGL_DRAW_TO_WINDOW_ARB, GL_TRUE });
+		append(attributes, { WGL_SUPPORT_OPENGL_ARB, GL_TRUE });
+		append(attributes, { WGL_DOUBLE_BUFFER_ARB, GL_TRUE });
+
 		if (multisample > 0)
 		{
-			attributes[18]	=	WGL_SAMPLE_BUFFERS_ARB;
-			attributes[19]	=	true;
-			attributes[20]	=	WGL_SAMPLES_ARB;
-			attributes[21]	=	multisample;
-			i = 22;
+			append(attributes, { WGL_SAMPLE_BUFFERS_ARB, GL_TRUE });
+			append(attributes, { WGL_SAMPLES_ARB, multisample });
 		}
-		else
-		{
-			i = 18;
-		}
-		
-		attributes[i++]	=	WGL_ACCELERATION_ARB;	//required to be FULL_ACCELERATION_ARB
-		attributes[i++]	=	WGL_FULL_ACCELERATION_ARB;
-	
+
+		append(attributes, { WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB }); //required to be FULL_ACCELERATION_ARB
+
 		if (vr_enable_quadbuffered)
 		{
 			// [BB] Starting with driver version 314.07, NVIDIA GeForce cards support OpenGL quad buffered
 			// stereo rendering with 3D Vision hardware. Select the corresponding attribute here.
-			attributes[i++] = WGL_STEREO_ARB;
-			attributes[i++] = true;
+			append(attributes, { WGL_STEREO_ARB, GL_TRUE });
 		}
-	
-		attributes[i++]	=	0;
-		attributes[i++]	=	0;
-	
-		if (!myWglChoosePixelFormatARB(m_hDC, attributes, attribsFloat, 1, &pixelFormat, &numFormats))
+
+		size_t bitsPos = attributes.size();
+
+		if (vid_hdr)
+		{
+			append(attributes, { WGL_RED_BITS_ARB, 16 });
+			append(attributes, { WGL_GREEN_BITS_ARB, 16 });
+			append(attributes, { WGL_BLUE_BITS_ARB, 16 });
+			append(attributes, { WGL_ALPHA_BITS_ARB, 16 });
+			append(attributes, { WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_FLOAT_ARB });
+		}
+		else
+		{
+			append(attributes, { WGL_RED_BITS_ARB, 8 });
+			append(attributes, { WGL_GREEN_BITS_ARB, 8 });
+			append(attributes, { WGL_BLUE_BITS_ARB, 8 });
+			append(attributes, { WGL_ALPHA_BITS_ARB, 8 });
+		}
+
+		append(attributes, { 0, 0 });
+
+		if (!myWglChoosePixelFormatARB(m_hDC, attributes.data(), attribsFloat, 1, &pixelFormat, &numFormats))
 		{
 			Printf("R_OPENGL: Couldn't choose pixel format. Retrying in compatibility mode\n");
 			goto oldmethod;
 		}
 	
+		if (vid_hdr && numFormats == 0) // This card/driver doesn't support the rgb16f pixel format. Fall back to 8bpc
+		{
+			Printf("R_OPENGL: This card/driver does not support RGBA16F. HDR will not work.\n");
+
+			attributes.erase(attributes.begin() + bitsPos, attributes.end());
+			append(attributes, { WGL_RED_BITS_ARB, 8 });
+			append(attributes, { WGL_GREEN_BITS_ARB, 8 });
+			append(attributes, { WGL_BLUE_BITS_ARB, 8 });
+			append(attributes, { WGL_ALPHA_BITS_ARB, 8 });
+			append(attributes, { 0, 0 });
+
+			if (!myWglChoosePixelFormatARB(m_hDC, attributes.data(), attribsFloat, 1, &pixelFormat, &numFormats))
+			{
+				Printf("R_OPENGL: Couldn't choose pixel format. Retrying in compatibility mode\n");
+				goto oldmethod;
+			}
+		}
+		else if (vid_hdr)
+		{
+			vid_hdr_active = true;
+		}
+
 		if (numFormats == 0)
 		{
 			if (vr_enable_quadbuffered)
