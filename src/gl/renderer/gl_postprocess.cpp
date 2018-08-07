@@ -828,6 +828,7 @@ void FGLRenderer::CopyToBackbuffer(const GL_IRECT *bounds, bool applyGamma)
 	if (FGLRenderBuffers::IsEnabled())
 	{
 		FGLPostProcessState savedState;
+		savedState.SaveTextureBindings(2);
 		mBuffers->BindOutputFB();
 
 		GL_IRECT box;
@@ -855,6 +856,8 @@ void FGLRenderer::CopyToBackbuffer(const GL_IRECT *bounds, bool applyGamma)
 void FGLRenderer::DrawPresentTexture(const GL_IRECT &box, bool applyGamma)
 {
 	glViewport(box.left, box.top, box.width, box.height);
+
+	GLRenderer->mBuffers->BindDitherTexture(1);
 
 	glActiveTexture(GL_TEXTURE0);
 	if (ViewportLinearScale())

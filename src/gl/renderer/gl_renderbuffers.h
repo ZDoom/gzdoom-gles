@@ -51,6 +51,8 @@ public:
 	void BindEyeTexture(int eye, int texunit);
 	void BindEyeFB(int eye, bool readBuffer = false);
 
+	void BindDitherTexture(int texunit);
+
 	void BindShadowMapFB();
 	void BindShadowMapTexture(int index);
 
@@ -144,6 +146,8 @@ private:
 	GLuint mShadowMapTexture = 0;
 	GLuint mShadowMapFB = 0;
 	int mCurrentShadowMapSize = 0;
+
+	PPGLTexture mDitherTexture;
 
 	static bool FailedCreate;
 	static bool BuffersActive;
