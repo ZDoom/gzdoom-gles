@@ -8,6 +8,7 @@ uniform float Contrast;
 uniform float Brightness;
 uniform float Saturation;
 uniform int GrayFormula;
+uniform float ColorScale;
 
 vec4 ApplyGamma(vec4 c)
 {
@@ -42,14 +43,16 @@ float DitherMatrix[64] = float[](
 	15.0 / 16.0 + HALFSTEP * 2,  7.0 / 16.0 + HALFSTEP * 2, 13.0 / 16.0 + HALFSTEP * 2,  5.0 / 16.0 + HALFSTEP * 2
 );
 
-vec4 Dither(vec4 c, float colorscale)
+vec4 Dither(vec4 c)
 {
+	if (ColorScale == 0.0)
+		return c;
 	ivec2 pos = ivec2(gl_FragCoord.xy) & 7;
 	float threshold = DitherMatrix[pos.x + (pos.y << 3)];
-	return vec4(floor(c.rgb * colorscale + threshold) / colorscale, c.a);
+	return vec4(floor(c.rgb * ColorScale + threshold) / ColorScale, c.a);
 }
 
 void main()
 {
-	FragColor = Dither(ApplyGamma(texture(InputTexture, TexCoord)), 255.0);
+	FragColor = Dither(ApplyGamma(texture(InputTexture, TexCoord)));
 }
