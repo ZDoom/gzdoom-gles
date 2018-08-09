@@ -157,7 +157,7 @@ EXTERN_CVAR(Float, vid_contrast)
 EXTERN_CVAR(Float, vid_saturation)
 EXTERN_CVAR(Int, gl_satformula)
 
-CVAR(Bool, gl_dither, false, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
+CVAR(Int, gl_dither_bpc, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
 
 void FGLRenderer::RenderScreenQuad()
 {
@@ -902,11 +902,11 @@ void FGLRenderer::DrawPresentTexture(const GL_IRECT &box, bool applyGamma)
 		// It probably will eventually in desktop mode too, but the DWM doesn't seem to support that.
 		invgamma *= 2.2f;
 		mPresentShader->InvGamma.Set(invgamma);
-		mPresentShader->ColorScale.Set(static_cast<float>(gl_dither ? 1023.0f : 0.0f));
+		mPresentShader->ColorScale.Set(static_cast<float>((gl_dither_bpc == -1) ? 1023.0f : (float)((1 << gl_dither_bpc) - 1)));
 	}
 	else
 	{
-		mPresentShader->ColorScale.Set(static_cast<float>(gl_dither ? 255.0f : 0.0f));
+		mPresentShader->ColorScale.Set(static_cast<float>((gl_dither_bpc == -1) ? 255.0f : (float)((1 << gl_dither_bpc) - 1)));
 	}
 	mPresentShader->Scale.Set(mScreenViewport.width / (float)mBuffers->GetWidth(), mScreenViewport.height / (float)mBuffers->GetHeight());
 	RenderScreenQuad();
