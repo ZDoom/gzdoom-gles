@@ -441,7 +441,7 @@ extern VMFrameStack GlobalVMStack;
 
 typedef std::pair<const class PType *, unsigned> FTypeAndOffset;
 
-typedef int(*JitFuncPtr)(VMFrameStack *stack, VMReturn *ret, int numret);
+typedef int(*JitFuncPtr)(VMFrameStack *stack, const void *vmregs, VMReturn *ret, int numret);
 
 class VMScriptFunction : public VMFunction
 {
