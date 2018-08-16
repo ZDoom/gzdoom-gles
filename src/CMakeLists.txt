@@ -406,6 +406,11 @@ if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
 		set( CMAKE_CXX_FLAGS "-Wno-unknown-pragmas -Wno-comment -Wno-format ${CMAKE_CXX_FLAGS}" )
 	endif()
 
+	# Add stack protection for MinGW.
+	if( MINGW )
+		set( CMAKE_CXX_FLAGS "-fstack-protector ${CMAKE_CXX_FLAGS}" )
+	endif()
+
 	# Detect FreeBSD and add flags
 	if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
 		set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC" )
