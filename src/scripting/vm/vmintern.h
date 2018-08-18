@@ -475,6 +475,7 @@ public:
 
 	bool JitCompiled = false;
 	JitFuncPtr JitFunc = nullptr;
+	VMOP* pcOnJitAbort = nullptr;
 
 	void InitExtra(void *addr);
 	void DestroyExtra(void *addr);
