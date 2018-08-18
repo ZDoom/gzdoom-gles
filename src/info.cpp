@@ -415,7 +415,7 @@ void PClassActor::RegisterIDs()
 
 PClassActor *PClassActor::GetReplacement(bool lookskill)
 {
-	FName skillrepname;
+	FName skillrepname = NAME_None;
 	
 	if (lookskill && AllSkills.Size() > (unsigned)gameskill)
 	{
@@ -477,7 +477,7 @@ DEFINE_ACTION_FUNCTION(AActor, GetReplacement)
 
 PClassActor *PClassActor::GetReplacee(bool lookskill)
 {
-	FName skillrepname;
+	FName skillrepname = NAME_None;
 	
 	if (lookskill && AllSkills.Size() > (unsigned)gameskill)
 	{

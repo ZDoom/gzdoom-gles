@@ -123,7 +123,7 @@ struct FIntermissionActionCast : public FIntermissionAction
 	typedef FIntermissionAction Super;
 
 	FString mName;
-	FName mCastClass;
+	FName mCastClass = NAME_None;
 	TArray<FCastSound> mCastSounds;
 
 	FIntermissionActionCast();
@@ -145,7 +145,7 @@ struct FIntermissionActionScroller : public FIntermissionAction
 
 struct FIntermissionDescriptor
 {
-	FName mLink;
+	FName mLink = NAME_None;
 	TDeletingArray<FIntermissionAction *> mActions;
 };
 

@@ -377,10 +377,9 @@ void ParseSplash (FScanner &sc)
 	int splashnum;
 	FSplashDef *splashdef;
 	bool isnew = false;
-	FName name;
 
 	sc.MustGetString ();
-	name = sc.String;
+	FName name = sc.String;
 	splashnum = (int)FindSplash (name);
 	if (splashnum < 0)
 	{
@@ -424,10 +423,9 @@ void ParseSplash (FScanner &sc)
 void ParseTerrain (FScanner &sc)
 {
 	int terrainnum;
-	FName name;
 
 	sc.MustGetString ();
-	name = sc.String;
+	FName name = sc.String;
 	terrainnum = (int)P_FindTerrain (name);
 	if (terrainnum < 0)
 	{

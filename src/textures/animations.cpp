@@ -792,6 +792,7 @@ void FTextureManager::ParseAnimatedDoor(FScanner &sc)
 
 	sc.MustGetString();
 	anim.BaseTexture = CheckForTexture (sc.String, ETextureType::Wall, texflags);
+	anim.OpenSound = anim.CloseSound = NAME_None;
 
 	if (!anim.BaseTexture.Exists())
 	{

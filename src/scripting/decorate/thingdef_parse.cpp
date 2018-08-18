@@ -1036,9 +1036,7 @@ PClassActor *CreateNewActor(const FScriptPosition &sc, FName typeName, FName par
 //==========================================================================
 static PClassActor *ParseActorHeader(FScanner &sc, Baggage *bag)
 {
-	FName typeName;
-	FName parentName;
-	FName replaceName;
+	FName replaceName = NAME_None;
 	bool native = false;
 	int DoomEdNum = -1;
 
@@ -1051,7 +1049,7 @@ static PClassActor *ParseActorHeader(FScanner &sc, Baggage *bag)
 		*colon++ = 0;
 	}
 
-	typeName = sc.String;
+	FName typeName = sc.String;
 
 	// Do some tweaking so that a definition like 'Actor:Parent' which is read as a single token is recognized as well
 	// without having resort to C-mode (which disallows periods in actor names.)
@@ -1078,7 +1076,7 @@ static PClassActor *ParseActorHeader(FScanner &sc, Baggage *bag)
 		sc.UnGet();
 	}
 
-	parentName = colon;
+	FName parentName = colon;
 
 	// Check for "replaces"
 	if (sc.CheckString ("replaces"))

@@ -9344,10 +9344,8 @@ ExpEmit FxFlopFunctionCall::Emit(VMFunctionBuilder *build)
 //==========================================================================
 
 FxVectorBuiltin::FxVectorBuiltin(FxExpression *self, FName name)
-	:FxExpression(EFX_VectorBuiltin, self->ScriptPosition)
+	:FxExpression(EFX_VectorBuiltin, self->ScriptPosition), Function(name), Self(self)
 {
-	Self = self;
-	Function = name;
 }
 
 FxVectorBuiltin::~FxVectorBuiltin()
@@ -11144,7 +11142,7 @@ ExpEmit FxRuntimeStateIndex::Emit(VMFunctionBuilder *build)
 FxMultiNameState::FxMultiNameState(const char *_statestring, const FScriptPosition &pos, PClassActor *checkclass)
 	:FxExpression(EFX_MultiNameState, pos)
 {
-	FName scopename;
+	FName scopename = NAME_None;
 	FString statestring = _statestring;
 	int scopeindex = statestring.IndexOf("::");
 
@@ -11152,10 +11150,6 @@ FxMultiNameState::FxMultiNameState(const char *_statestring, const FScriptPositi
 	{
 		scopename = FName(statestring, scopeindex, false);
 		statestring = statestring.Right(statestring.Len() - scopeindex - 2);
-	}
-	else
-	{
-		scopename = NAME_None;
 	}
 	names = MakeStateNameList(statestring);
 	names.Insert(0, scopename);

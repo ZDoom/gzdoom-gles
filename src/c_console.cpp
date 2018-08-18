@@ -1869,7 +1869,7 @@ struct TabData
 	FName TabName;
 
 	TabData()
-	: UseCount(0)
+	: UseCount(0), TabName(NAME_None)
 	{
 	}
 

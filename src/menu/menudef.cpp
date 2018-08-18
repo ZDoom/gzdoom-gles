@@ -668,11 +668,9 @@ static void ParseListMenu(FScanner &sc)
 
 static void ParseOptionValue(FScanner &sc)
 {
-	FName optname;
-
 	FOptionValues *val = new FOptionValues;
 	sc.MustGetString();
-	optname = sc.String;
+	FName optname = sc.String;
 	sc.MustGetStringName("{");
 	while (!sc.CheckString("}"))
 	{
@@ -700,11 +698,9 @@ static void ParseOptionValue(FScanner &sc)
 
 static void ParseOptionString(FScanner &sc)
 {
-	FName optname;
-
 	FOptionValues *val = new FOptionValues;
 	sc.MustGetString();
-	optname = sc.String;
+	FName optname = sc.String;
 	sc.MustGetStringName("{");
 	while (!sc.CheckString("}"))
 	{

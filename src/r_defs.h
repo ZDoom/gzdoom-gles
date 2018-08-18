@@ -583,7 +583,7 @@ struct FTransform
 
 struct secspecial_t
 {
-	FNameNoInit damagetype;		// [RH] Means-of-death for applied damage
+	FName damagetype;		// [RH] Means-of-death for applied damage
 	int damageamount;			// [RH] Damage to do while standing on floor
 	short special;
 	short damageinterval;	// Interval for damage application
@@ -1009,7 +1009,7 @@ public:
 	short		seqType;		// this sector's sound sequence
 
 	int			sky;
-	FNameNoInit	SeqName;		// Sound sequence name. Setting seqType non-negative will override this.
+	FName	SeqName;		// Sound sequence name. Setting seqType non-negative will override this.
 
 	DVector2	centerspot;		// origin for any sounds played by the sector
 	int 		validcount;		// if == validcount, already checked
@@ -1059,7 +1059,7 @@ public:
 	struct msecnode_t *touching_renderthings; // this is used to allow wide things to be rendered not only from their main sector.
 
 	double gravity;			// [RH] Sector gravity (1.0 is normal)
-	FNameNoInit damagetype;		// [RH] Means-of-death for applied damage
+	FName damagetype;		// [RH] Means-of-death for applied damage
 	int damageamount;			// [RH] Damage to do while standing on floor
 	short damageinterval;	// Interval for damage application
 	short leakydamage;		// chance of leaking through radiation suit
