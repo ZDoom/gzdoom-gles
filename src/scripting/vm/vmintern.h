@@ -441,7 +441,14 @@ extern VMFrameStack GlobalVMStack;
 
 typedef std::pair<const class PType *, unsigned> FTypeAndOffset;
 
-typedef int(*JitFuncPtr)(VMFrameStack *stack, const void *vmregs, VMReturn *ret, int numret);
+struct JitExceptionInfo
+{
+	int32_t reason; // EVMAbortException
+	int32_t args[3];
+	VMOP* pcOnJitAbort;
+};
+
+typedef int(*JitFuncPtr)(VMFrameStack *stack, const void *vmregs, VMReturn *ret, int numret, JitExceptionInfo *exceptInfo);
 
 class VMScriptFunction : public VMFunction
 {
@@ -475,7 +482,6 @@ public:
 
 	bool JitCompiled = false;
 	JitFuncPtr JitFunc = nullptr;
-	VMOP* pcOnJitAbort = nullptr;
 
 	void InitExtra(void *addr);
 	void DestroyExtra(void *addr);
