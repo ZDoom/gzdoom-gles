@@ -40,6 +40,7 @@
 #include "templates.h"
 #include "vmintern.h"
 #include "types.h"
+#include "jit.h"
 
 #ifdef __MINGW32__
 extern bool exiting; // for MinGW
@@ -81,6 +82,12 @@ VMScriptFunction::VMScriptFunction(FName name)
 
 VMScriptFunction::~VMScriptFunction()
 {
+	if (JitFunc)
+	{
+		JitCleanUp(this);
+		JitFunc = nullptr;
+	}
+
 	if (Code != NULL)
 	{
 		if (KonstS != NULL)
