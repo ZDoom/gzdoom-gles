@@ -104,7 +104,6 @@ protected:
 };
 
 TArray<FLightAssociation> LightAssociations;
-double lightSizeFactor = 1.;
 
 
 //==========================================================================
@@ -314,7 +313,7 @@ static void ParseTriple(FScanner &sc, float floatVal[3])
 }
 
 
-static void AddLightDefaults(FLightDefaults *defaults, double attnFactor)
+static void AddLightDefaults(FLightDefaults *defaults)
 {
    FLightDefaults *temp;
    unsigned int i;
@@ -329,12 +328,6 @@ static void AddLightDefaults(FLightDefaults *defaults, double attnFactor)
          LightDefaults.Delete(i);
          break;
       }
-   }
-
-   if (defaults->GetAttenuate())
-   {
-	   defaults->SetArg(LIGHT_INTENSITY, int(defaults->GetArg(LIGHT_INTENSITY) * attnFactor));
-	   defaults->SetArg(LIGHT_SECONDARY_INTENSITY, int(defaults->GetArg(LIGHT_SECONDARY_INTENSITY) * attnFactor));
    }
 
    LightDefaults.Push(defaults);
@@ -421,7 +414,7 @@ static void ParsePointLight(FScanner &sc)
 				sc.ScriptError("Unknown tag: %s\n", sc.String);
 			}
 		}
-		AddLightDefaults(defaults, lightSizeFactor);
+		AddLightDefaults(defaults);
 	}
 	else
 	{
@@ -517,7 +510,7 @@ static void ParsePulseLight(FScanner &sc)
 		}
 		defaults->OrderIntensities();
 
-		AddLightDefaults(defaults, lightSizeFactor);
+		AddLightDefaults(defaults);
 	}
 	else
 	{
@@ -612,7 +605,7 @@ void ParseFlickerLight(FScanner &sc)
 			}
 		}
 		defaults->OrderIntensities();
-		AddLightDefaults(defaults, lightSizeFactor);
+		AddLightDefaults(defaults);
 	}
 	else
 	{
@@ -712,7 +705,7 @@ void ParseFlickerLight2(FScanner &sc)
 			defaults->SetArg(LIGHT_SECONDARY_INTENSITY, defaults->GetArg(LIGHT_INTENSITY));
 			defaults->SetArg(LIGHT_INTENSITY, v);
 		}
-		AddLightDefaults(defaults, lightSizeFactor);
+		AddLightDefaults(defaults);
 	}
 	else
 	{
@@ -798,7 +791,7 @@ static void ParseSectorLight(FScanner &sc)
 				sc.ScriptError("Unknown tag: %s\n", sc.String);
 			}
 		}
-		AddLightDefaults(defaults, lightSizeFactor);
+		AddLightDefaults(defaults);
 	}
 	else
 	{
@@ -965,7 +958,6 @@ static const char *CoreKeywords[]=
    "detail",
    "#include",
    "material",
-   "lightsizefactor",
    nullptr
 };
 
@@ -988,8 +980,7 @@ enum
    TAG_HARDWARESHADER,
    TAG_DETAIL,
    TAG_INCLUDE,
-   TAG_MATERIAL,
-   TAG_LIGHTSIZEFACTOR,
+   TAG_MATERIAL
 };
 
 
@@ -1355,9 +1346,6 @@ static void DoParseDefs(FScanner &sc, int workingLump)
 			break;
 		case TAG_DETAIL:
 			gl_ParseDetailTexture(sc);
-			break;
-		case TAG_LIGHTSIZEFACTOR:
-			lightSizeFactor = ParseFloat(sc);
 			break;
 		case TAG_DISABLE_FB:
 			{
