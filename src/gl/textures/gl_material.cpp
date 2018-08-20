@@ -464,7 +464,6 @@ FMaterial::FMaterial(FTexture * tx, bool expanded)
 		{
 			for (auto &texture : { tx->gl_info.Normal, tx->gl_info.Specular })
 			{
-				if(texture == nullptr) continue;
 				ValidateSysTexture(texture, expanded);
 				mTextureLayers.Push({ texture, false });
 			}
