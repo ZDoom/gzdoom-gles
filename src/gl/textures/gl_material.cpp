@@ -715,6 +715,9 @@ void FMaterial::InitGlobalState()
 
 void FMaterial::Bind(int clampmode, int translation)
 {
+	if (tex->bHasCanvas) clampmode = CLAMP_CAMTEX;
+	else if ((tex->bWarped || tex->gl_info.shaderindex >= FIRST_USER_SHADER) && clampmode <= CLAMP_XY) clampmode = CLAMP_NONE;
+	
 	// avoid rebinding the same texture multiple times.
 	if (this == last && lastclamp == clampmode && translation == lasttrans) return;
 	last = this;
@@ -724,9 +727,6 @@ void FMaterial::Bind(int clampmode, int translation)
 	int usebright = false;
 	int maxbound = 0;
 	bool allowhires = tex->Scale.X == 1 && tex->Scale.Y == 1 && clampmode <= CLAMP_XY && !mExpanded;
-
-	if (tex->bHasCanvas) clampmode = CLAMP_CAMTEX;
-	else if (tex->bWarped && clampmode <= CLAMP_XY) clampmode = CLAMP_NONE;
 
 	const FHardwareTexture *gltexture = mBaseLayer->Bind(0, clampmode, translation, allowhires? tex:NULL);
 	if (gltexture != NULL)
