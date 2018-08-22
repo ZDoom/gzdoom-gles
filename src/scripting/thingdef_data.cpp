@@ -335,7 +335,7 @@ static FFlagDef ActorFlagDefs[]=
 	DEFINE_FLAG(RF, INVISIBLE, AActor, renderflags),
 	DEFINE_FLAG(RF, FORCEYBILLBOARD, AActor, renderflags),
 	DEFINE_FLAG(RF, FORCEXYBILLBOARD, AActor, renderflags),
-	DEFINE_FLAG(RF, ROLLSPRITE, AActor, renderflags), // [marrub] roll the sprite billboard 
+	DEFINE_FLAG(RF, ROLLSPRITE, AActor, renderflags), // [marrub] roll the sprite billboard
 			// [fgsfds] Flat sprites
 	DEFINE_FLAG(RF, FLATSPRITE, AActor, renderflags),
 	DEFINE_FLAG(RF, WALLSPRITE, AActor, renderflags),
@@ -601,7 +601,7 @@ FFlagDef *FindFlag (const PClass *type, const char *part1, const char *part2, bo
 
 //==========================================================================
 //
-// Gets the name of an actor flag 
+// Gets the name of an actor flag
 //
 //==========================================================================
 
@@ -1279,6 +1279,14 @@ DEFINE_ACTION_FUNCTION(FStringStruct, LastIndexOf)
 	PARAM_STRING(substr);
 	PARAM_INT_DEF(endIndex);
 	ACTION_RETURN_INT(self->LastIndexOf(substr, endIndex));
+}
+
+DEFINE_ACTION_FUNCTION(FStringStruct, RIndexOf)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FString);
+	PARAM_STRING(substr);
+	PARAM_INT_DEF(endIndex);
+	ACTION_RETURN_INT(self->RIndexOf(substr, endIndex));
 }
 
 DEFINE_ACTION_FUNCTION(FStringStruct, ToUpper)
