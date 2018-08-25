@@ -1154,7 +1154,6 @@ void GLHorizonPortal::DrawContents()
 	PortalAll.Clock();
 
 	FMaterial * gltexture;
-	PalEntry color;
 	player_t * player=&players[consoleplayer];
 	GLSectorPlane * sp = &origin->plane;
 

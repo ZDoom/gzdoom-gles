@@ -609,7 +609,6 @@ FMaterial::~FMaterial()
 
 bool FMaterial::TrimBorders(int *rect)
 {
-	PalEntry col;
 	int w;
 	int h;
 
