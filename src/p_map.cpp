@@ -3658,22 +3658,6 @@ bool P_BounceActor(AActor *mo, AActor *BlockingMobj, bool ontop)
 			mo->Angles.Yaw = angle;
 			mo->VelFromAngle(speed);
 			mo->PlayBounceSound(true);
-			if (mo->BounceFlags & BOUNCE_UseBounceState)
-			{
-				FName names[] = { NAME_Bounce, NAME_Actor, NAME_Creature };
-				FState *bouncestate;
-				int count = 2;
-
-				if ((BlockingMobj->flags & MF_SHOOTABLE) && !(BlockingMobj->flags & MF_NOBLOOD))
-				{
-					count = 3;
-				}
-				bouncestate = mo->FindState(count, names);
-				if (bouncestate != NULL)
-				{
-					mo->SetState(bouncestate);
-				}
-			}
 		}
 		else
 		{
@@ -3710,6 +3694,21 @@ bool P_BounceActor(AActor *mo, AActor *BlockingMobj, bool ontop)
 			{
 				if (!(mo->flags & MF_NOGRAVITY) && (mo->Vel.Z < 3.))
 					mo->BounceFlags &= ~BOUNCE_TypeMask;
+			}
+		}
+		if (mo->BounceFlags & BOUNCE_UseBounceState)
+		{
+			FName names[] = { NAME_Bounce, NAME_Actor, NAME_Creature };
+			FState *bouncestate;
+			int count = 2;
+ 			if ((BlockingMobj->flags & MF_SHOOTABLE) && !(BlockingMobj->flags & MF_NOBLOOD))
+			{
+				count = 3;
+			}
+			bouncestate = mo->FindState(count, names);
+			if (bouncestate != NULL)
+			{
+				mo->SetState(bouncestate);
 			}
 		}
 		return true;
