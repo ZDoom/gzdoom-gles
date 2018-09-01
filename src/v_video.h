@@ -268,6 +268,9 @@ public:
 	// Draws a line
 	virtual void DrawLine(int x0, int y0, int x1, int y1, int palColor, uint32_t realcolor);
 
+	// Draws a line with thickness
+	virtual void DrawThickLine(int x0, int y0, int x1, int y1, double thickness, uint32_t realcolor);
+
 	// Draws a single pixel
 	virtual void DrawPixel(int x, int y, int palcolor, uint32_t rgbcolor);
 

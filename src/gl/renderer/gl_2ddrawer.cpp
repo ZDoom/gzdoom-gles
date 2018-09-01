@@ -315,7 +315,7 @@ void F2DDrawer::AddFlatFill(int left, int top, int right, int bottom, FTexture *
 
 void F2DDrawer::AddLine(int x1, int y1, int x2, int y2, int palcolor, uint32_t color)
 {
-	PalEntry p = color ? (PalEntry)color : GPalette.BaseColors[palcolor];
+	PalEntry p = palcolor == -1 || color != 0 ? (PalEntry)color : GPalette.BaseColors[palcolor];
 	p.a = 255;
 	std::swap(p.r, p.b);
 
