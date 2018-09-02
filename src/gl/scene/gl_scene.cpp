@@ -862,23 +862,29 @@ sector_t * GLSceneDrawer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, f
 		gl_RenderState.ApplyMatrices();
 
 		ProcessScene(toscreen);
-		if (mainview && toscreen) EndDrawScene(lviewsector); // do not call this for camera textures.
-		if (mainview && FGLRenderBuffers::IsEnabled())
+		if (mainview)
 		{
-			GLRenderer->PostProcessScene(FixedColormap, [&]() { if (gl_bloom && FixedColormap == CM_DEFAULT) DrawEndScene2D(lviewsector); });
+			if (FGLRenderBuffers::IsEnabled()) PostProcess.Clock();
+			if (toscreen) EndDrawScene(lviewsector); // do not call this for camera textures.
 
-			// This should be done after postprocessing, not before.
-			GLRenderer->mBuffers->BindCurrentFB();
-			glViewport(GLRenderer->mScreenViewport.left, GLRenderer->mScreenViewport.top, GLRenderer->mScreenViewport.width, GLRenderer->mScreenViewport.height);
-
-			if (!toscreen)
+			if (FGLRenderBuffers::IsEnabled())
 			{
-				gl_RenderState.mViewMatrix.loadIdentity();
-				gl_RenderState.mProjectionMatrix.ortho(GLRenderer->mScreenViewport.left, GLRenderer->mScreenViewport.width, GLRenderer->mScreenViewport.height, GLRenderer->mScreenViewport.top, -1.0f, 1.0f);
-				gl_RenderState.ApplyMatrices();
-			}
+				GLRenderer->PostProcessScene(FixedColormap, [&]() { if (gl_bloom && FixedColormap == CM_DEFAULT) DrawEndScene2D(lviewsector); });
+				PostProcess.Unclock();
 
-			DrawBlend(lviewsector);
+				// This should be done after postprocessing, not before.
+				GLRenderer->mBuffers->BindCurrentFB();
+				glViewport(GLRenderer->mScreenViewport.left, GLRenderer->mScreenViewport.top, GLRenderer->mScreenViewport.width, GLRenderer->mScreenViewport.height);
+
+				if (!toscreen)
+				{
+					gl_RenderState.mViewMatrix.loadIdentity();
+					gl_RenderState.mProjectionMatrix.ortho(GLRenderer->mScreenViewport.left, GLRenderer->mScreenViewport.width, GLRenderer->mScreenViewport.height, GLRenderer->mScreenViewport.top, -1.0f, 1.0f);
+					gl_RenderState.ApplyMatrices();
+				}
+
+				DrawBlend(lviewsector);
+			}
 		}
 		GLRenderer->mDrawingScene2D = false;
 		if (!stereo3dMode.IsMono() && FGLRenderBuffers::IsEnabled())
