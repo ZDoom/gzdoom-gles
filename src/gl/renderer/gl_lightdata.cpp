@@ -167,13 +167,15 @@ void gl_GetRenderStyle(FRenderStyle style, bool drawopaque, bool allowcolorblend
 //
 //==========================================================================
 
-int gl_CalcLightLevel(int lightlevel, int rellight, bool weapon)
+int gl_CalcLightLevel(int lightlevel, int rellight, bool weapon, int blendfactor)
 {
 	int light;
 
 	if (lightlevel == 0) return 0;
 
-	if ((glset.lightmode & 2) && lightlevel < 192 && !weapon) 
+	bool darklightmode = (glset.lightmode & 2) || (glset.lightmode == 8 && blendfactor > 0);
+
+	if (darklightmode && lightlevel < 192 && !weapon) 
 	{
 		if (lightlevel > 100)
 		{
@@ -211,12 +213,13 @@ static PalEntry gl_CalcLightColor(int light, PalEntry pe, int blendfactor)
 {
 	int r,g,b;
 
-	if (glset.lightmode == 8)
+	if (blendfactor == 0)
 	{
-		return pe;
-	}
-	else if (blendfactor == 0)
-	{
+		if (glset.lightmode == 8)
+		{
+			return pe;
+		}
+
 		r = pe.r * light / 255;
 		g = pe.g * light / 255;
 		b = pe.b * light / 255;
@@ -248,10 +251,10 @@ void gl_SetColor(int sectorlightlevel, int rellight, bool fullbright, const FCol
 	}
 	else
 	{
-		int hwlightlevel = gl_CalcLightLevel(sectorlightlevel, rellight, weapon);
+		int hwlightlevel = gl_CalcLightLevel(sectorlightlevel, rellight, weapon, cm.BlendFactor);
 		PalEntry pe = gl_CalcLightColor(hwlightlevel, cm.LightColor, cm.BlendFactor);
 		gl_RenderState.SetColorAlpha(pe, alpha, cm.Desaturation);
-		gl_RenderState.SetSoftLightLevel(gl_ClampLight(sectorlightlevel + rellight));
+		gl_RenderState.SetSoftLightLevel(gl_ClampLight(sectorlightlevel + rellight), cm.BlendFactor);
 	}
 }
 
@@ -273,11 +276,14 @@ void gl_SetColor(int sectorlightlevel, int rellight, bool fullbright, const FCol
 //
 //==========================================================================
 
-float gl_GetFogDensity(int lightlevel, PalEntry fogcolor, int sectorfogdensity)
+float gl_GetFogDensity(int lightlevel, PalEntry fogcolor, int sectorfogdensity, int blendfactor)
 {
 	float density;
 
-	if (glset.lightmode & 4)
+	int lightmode = glset.lightmode;
+	if (lightmode == 8 && blendfactor > 0) lightmode = 2;	// The blendfactor feature does not work with software-style lighting.
+
+	if (lightmode & 4)
 	{
 		// uses approximations of Legacy's default settings.
 		density = level.fogdensity ? level.fogdensity : 18;
@@ -290,7 +296,7 @@ float gl_GetFogDensity(int lightlevel, PalEntry fogcolor, int sectorfogdensity)
 	else if ((fogcolor.d & 0xffffff) == 0)
 	{
 		// case 2: black fog
-		if (glset.lightmode != 8 && !(level.flags3 & LEVEL3_NOLIGHTFADE))
+		if ((lightmode != 8 || blendfactor > 0) && !(level.flags3 & LEVEL3_NOLIGHTFADE))
 		{
 			density = distfogtable[glset.lightmode != 0][gl_ClampLight(lightlevel)];
 		}
@@ -439,7 +445,7 @@ void gl_SetFog(int lightlevel, int rellight, bool fullbright, const FColormap *c
 	else if (cmap != NULL && !fullbright)
 	{
 		fogcolor = cmap->FadeColor;
-		fogdensity = gl_GetFogDensity(lightlevel, fogcolor, cmap->FogDensity);
+		fogdensity = gl_GetFogDensity(lightlevel, fogcolor, cmap->FogDensity, cmap->BlendFactor);
 		fogcolor.a=0;
 	}
 	else
@@ -460,9 +466,9 @@ void gl_SetFog(int lightlevel, int rellight, bool fullbright, const FColormap *c
 	}
 	else
 	{
-		if (glset.lightmode == 2 && fogcolor == 0)
+		if ((glset.lightmode == 2 || (glset.lightmode == 8) && cmap->BlendFactor > 0) && fogcolor == 0)
 		{
-			float light = gl_CalcLightLevel(lightlevel, rellight, false);
+			float light = gl_CalcLightLevel(lightlevel, rellight, false, cmap->BlendFactor);
 			gl_SetShaderLight(light, lightlevel);
 		}
 		else
@@ -481,7 +487,7 @@ void gl_SetFog(int lightlevel, int rellight, bool fullbright, const FColormap *c
 		gl_RenderState.SetFog(fogcolor, fogdensity);
 
 		// Korshun: fullbright fog like in software renderer.
-		if (glset.lightmode == 8 && glset.brightfog && fogdensity != 0 && fogcolor != 0)
+		if (glset.lightmode == 8 && cmap->BlendFactor == 0 && glset.brightfog && fogdensity != 0 && fogcolor != 0)
 		{
 			gl_RenderState.SetSoftLightLevel(255);
 		}

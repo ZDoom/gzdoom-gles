@@ -320,7 +320,7 @@ void GLSprite::Draw(int pass)
 			if (!gl_isBlack(Colormap.FadeColor))
 			{
 				float dist=Dist2(r_viewpoint.Pos.X, r_viewpoint.Pos.Y, x,y);
-				int fogd = gl_GetFogDensity(lightlevel, Colormap.FadeColor, Colormap.FogDensity);
+				int fogd = gl_GetFogDensity(lightlevel, Colormap.FadeColor, Colormap.FogDensity, Colormap.BlendFactor);
 
 				// this value was determined by trial and error and is scale dependent!
 				float factor = 0.05f + exp(-fogd*dist / 62500.f);

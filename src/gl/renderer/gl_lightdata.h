@@ -14,10 +14,10 @@ inline int gl_ClampLight(int lightlevel)
 void gl_GetRenderStyle(FRenderStyle style, bool drawopaque, bool allowcolorblending,
 					   int *tm, int *sb, int *db, int *be);
 
-int gl_CalcLightLevel(int lightlevel, int rellight, bool weapon);
+int gl_CalcLightLevel(int lightlevel, int rellight, bool weapon, int blendfactor);
 void gl_SetColor(int light, int rellight, bool fullbright, const FColormap &cm, float alpha, bool weapon=false);
 
-float gl_GetFogDensity(int lightlevel, PalEntry fogcolor, int sectorfogdensity);
+float gl_GetFogDensity(int lightlevel, PalEntry fogcolor, int sectorfogdensity, int blendfactor);
 struct sector_t;
 bool gl_CheckFog(sector_t *frontsector, sector_t *backsector);
 
