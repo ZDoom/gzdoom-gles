@@ -466,7 +466,7 @@ void gl_SetFog(int lightlevel, int rellight, bool fullbright, const FColormap *c
 	}
 	else
 	{
-		if ((glset.lightmode == 2 || (glset.lightmode == 8) && cmap->BlendFactor > 0) && fogcolor == 0)
+		if ((glset.lightmode == 2 || (glset.lightmode == 8 && cmap->BlendFactor > 0)) && fogcolor == 0)
 		{
 			float light = gl_CalcLightLevel(lightlevel, rellight, false, cmap->BlendFactor);
 			gl_SetShaderLight(light, lightlevel);
