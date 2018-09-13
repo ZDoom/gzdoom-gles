@@ -46,7 +46,7 @@ struct VMRemap
 };
 
 
-#define xx(op, name, mode, alt, kreg, ktype) {OP_##alt, kreg, ktype }
+#define xx(op, name, mode, alt, kreg, ktype) {OP_##alt, kreg, ktype },
 VMRemap opRemap[NUM_OPS] = {
 #include "vmops.h"
 };
