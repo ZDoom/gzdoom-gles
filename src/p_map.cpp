@@ -6186,7 +6186,7 @@ int P_RadiusAttack(AActor *bombspot, AActor *bombsource, int bombdamage, int bom
 				{
 					//[MC] Don't count actors saved by buddha if already at 1 health.
 					int prehealth = thing->health;
-					newdam = P_DamageMobj(thing, bombspot, bombsource, damage, bombmod);
+					newdam = P_DamageMobj(thing, bombspot, bombsource, damage, bombmod, DMG_EXPLOSION);
 					if (thing->health < prehealth)	count++;
 				}
 				else if (thing->player == NULL && (!(flags & RADF_NOIMPACTDAMAGE) && !(thing->flags7 & MF7_DONTTHRUST)))
@@ -6238,7 +6238,7 @@ int P_RadiusAttack(AActor *bombspot, AActor *bombsource, int bombdamage, int bom
 			{ // OK to damage; target is in direct path
 				//[MC] Don't count actors saved by buddha if already at 1 health.
 				int prehealth = thing->health;
-				int newdam = P_DamageMobj(thing, bombspot, bombsource, damage, bombmod);
+				int newdam = P_DamageMobj(thing, bombspot, bombsource, damage, bombmod, DMG_EXPLOSION);
 				P_TraceBleed(newdam > 0 ? newdam : damage, thing, bombspot);
 				if (thing->health < prehealth)	count++;
 			}
