@@ -227,7 +227,14 @@ DEFINE_ACTION_FUNCTION(_CVar, SetInt)
 {
 	// Only menus are allowed to change CVARs.
 	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
-	if (!(self->GetFlags() & CVAR_MOD) && CurrentMenu == nullptr) return 0;
+	if (!(self->GetFlags() & CVAR_MOD))
+	{
+		// Only menus are allowed to change non-mod CVARs.
+		if (DMenu::InMenu == 0)
+		{
+			I_FatalError("Attempt to change CVAR '%s' outside of menu code", self->GetName());
+		}
+	}
 	PARAM_INT(val);
 	UCVarValue v;
 	v.Int = val;
@@ -237,9 +244,15 @@ DEFINE_ACTION_FUNCTION(_CVar, SetInt)
 
 DEFINE_ACTION_FUNCTION(_CVar, SetFloat)
 {
-	// Only menus are allowed to change CVARs.
 	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
-	if (!(self->GetFlags() & CVAR_MOD) && CurrentMenu == nullptr) return 0;
+	if (!(self->GetFlags() & CVAR_MOD))
+	{
+		// Only menus are allowed to change non-mod CVARs.
+		if (DMenu::InMenu == 0)
+		{
+			I_FatalError("Attempt to change CVAR '%s' outside of menu code", self->GetName());
+		}
+	}
 	PARAM_FLOAT(val);
 	UCVarValue v;
 	v.Float = (float)val;
@@ -251,7 +264,14 @@ DEFINE_ACTION_FUNCTION(_CVar, SetString)
 {
 	// Only menus are allowed to change CVARs.
 	PARAM_SELF_STRUCT_PROLOGUE(FBaseCVar);
-	if (!(self->GetFlags() & CVAR_MOD) && CurrentMenu == nullptr) return 0;
+	if (!(self->GetFlags() & CVAR_MOD))
+	{
+		// Only menus are allowed to change non-mod CVARs.
+		if (DMenu::InMenu == 0)
+		{
+			I_FatalError("Attempt to change CVAR '%s' outside of menu code", self->GetName());
+		}
+	}
 	PARAM_STRING(val);
 	UCVarValue v;
 	v.String = val.GetChars();
