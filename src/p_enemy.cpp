@@ -2981,6 +2981,12 @@ DEFINE_ACTION_FUNCTION(AActor, A_ExtChase)
 	return 0;
 }
 
+DEFINE_ACTION_FUNCTION(AActor, A_CheckForResurrection)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	ACTION_RETURN_BOOL(P_CheckForResurrection(self, false));
+}
+
 // for internal use
 void A_Chase(AActor *self)
 {
