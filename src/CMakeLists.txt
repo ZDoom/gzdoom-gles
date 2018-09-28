@@ -266,7 +266,7 @@ if (NOT ZDOOM_USE_SSE2)
 	endif()
 endif()
 
-if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE OR MSVC )
+if( NOT X64 )
 	option( TC_USE_SSE2 "Use SSE2 instructions for software truecolor, requires P4 or later CPU." ON )
 endif()
 
@@ -424,7 +424,7 @@ if( ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
 
 endif()
 
-if ( NOT TC_USE_SSE2 )
+if ( NOT TC_USE_SSE2 AND NOT X64 )
 	add_definitions( -DNO_SSE )
 	if ( MSVC )
 		set (CMAKE_CXX_FLAGS "/arch:IA32 /Oi- ${CMAKE_CXX_FLAGS}")
