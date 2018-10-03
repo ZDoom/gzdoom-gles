@@ -45,7 +45,10 @@ FRenderState gl_RenderState;
 
 CVAR(Bool, gl_direct_state_change, true, 0)
 CVAR(Bool, gl_bandedswlight, false, CVAR_ARCHIVE)
-CVAR(Bool, gl_shadowmap_filter, 1, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
+CUSTOM_CVAR(Int, gl_shadowmap_filter, 1, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
+{
+	if (self < 0 || self > 8) self = 1;
+}
 
 
 static VSMatrix identityMatrix(1);
