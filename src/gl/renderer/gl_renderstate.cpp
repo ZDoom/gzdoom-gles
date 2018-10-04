@@ -45,6 +45,7 @@ FRenderState gl_RenderState;
 
 CVAR(Bool, gl_direct_state_change, true, 0)
 CVAR(Bool, gl_bandedswlight, false, CVAR_ARCHIVE)
+CVAR(Bool, gl_shadowmap_filter, 1, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 
 
 static VSMatrix identityMatrix(1);
@@ -175,6 +176,7 @@ bool FRenderState::ApplyShader()
 	activeShader->muInterpolationFactor.Set(mInterpolationFactor);
 	activeShader->muClipHeight.Set(mClipHeight);
 	activeShader->muClipHeightDirection.Set(mClipHeightDirection);
+	activeShader->muShadowmapFilter.Set(static_cast<int>(gl_shadowmap_filter));
 	activeShader->muTimer.Set((double)(screen->FrameTime - firstFrame) * (double)mShaderTimer / 1000.);
 	activeShader->muAlphaThreshold.Set(mAlphaThreshold);
 	activeShader->muLightIndex.Set(mLightIndex);	// will always be -1 for now

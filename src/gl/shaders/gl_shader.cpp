@@ -149,6 +149,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 	i_data += "uniform int uTextureMode;\n";
 	i_data += "uniform float uClipHeight;\n";
 	i_data += "uniform float uClipHeightDirection;\n";
+	i_data += "uniform int uShadowmapFilter;\n";
 	i_data += "uniform vec2 uClipSplit;\n";
 	i_data += "uniform vec4 uClipLine;\n";
 	i_data += "uniform float uAlphaThreshold;\n";
@@ -467,6 +468,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 	muInterpolationFactor.Init(hShader, "uInterpolationFactor");
 	muClipHeight.Init(hShader, "uClipHeight");
 	muClipHeightDirection.Init(hShader, "uClipHeightDirection");
+	muShadowmapFilter.Init(hShader, "uShadowmapFilter");
 	muAlphaThreshold.Init(hShader, "uAlphaThreshold");
 	muSpecularMaterial.Init(hShader, "uSpecularMaterial");
 	muViewHeight.Init(hShader, "uViewHeight");

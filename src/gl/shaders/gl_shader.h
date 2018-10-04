@@ -283,6 +283,7 @@ class FShader
 	FBufferedUniform1f muInterpolationFactor;
 	FBufferedUniform1f muClipHeight;
 	FBufferedUniform1f muClipHeightDirection;
+	FBufferedUniform1f muShadowmapFilter;
 	FBufferedUniform1f muAlphaThreshold;
 	FBufferedUniform1i muViewHeight;
 	FBufferedUniform2f muSpecularMaterial;
