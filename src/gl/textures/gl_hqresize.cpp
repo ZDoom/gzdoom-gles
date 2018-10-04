@@ -50,7 +50,7 @@
 
 CUSTOM_CVAR(Int, gl_texture_hqresize, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
 {
-	if (self < 0 || self > 19)
+	if (self < 0 || self > 18)
 	{
 		self = 0;
 	}
