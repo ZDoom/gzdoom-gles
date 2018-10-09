@@ -450,7 +450,7 @@ struct JitExceptionInfo
 	std::exception_ptr cppException;
 };
 
-typedef int(*JitFuncPtr)(VMFrameStack *stack, VMReturn *ret, int numret, JitExceptionInfo *exceptInfo);
+typedef int(*JitFuncPtr)(VMValue *params, int numparams, VMReturn *ret, int numret, JitExceptionInfo *exceptInfo);
 
 class VMScriptFunction : public VMFunction
 {
