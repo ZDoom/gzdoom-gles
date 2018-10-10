@@ -36,7 +36,7 @@
 #include "codegen.h"
 #include "info.h"
 #include "m_argv.h"
-//#include "thingdef.h"
+#include "scripting/vm/jit.h"
 #include "doomerrors.h"
 #include "vmintern.h"
 
@@ -933,7 +933,22 @@ void FFunctionBuildList::Build()
 		fclose(dump);
 	}
 	FScriptPosition::StrictErrors = false;
+	if (Args->CheckParm("-dumpjit")) DumpJit();
 	mItems.Clear();
 	mItems.ShrinkToFit();
 	FxAlloc.FreeAllBlocks();
+}
+
+void FFunctionBuildList::DumpJit()
+{
+	FILE *dump = fopen("dumpjit.txt", "w");
+	if (dump == nullptr)
+		return;
+
+	for (auto &item : mItems)
+	{
+		JitDumpLog(dump, item.Function);
+	}
+
+	fclose(dump);
 }
