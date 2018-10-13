@@ -83,12 +83,6 @@ VMScriptFunction::VMScriptFunction(FName name)
 
 VMScriptFunction::~VMScriptFunction()
 {
-	if (FunctionJitted)
-	{
-		JitCleanUp(this);
-		FunctionJitted = false;
-	}
-
 	if (Code != NULL)
 	{
 		if (KonstS != NULL)
@@ -224,8 +218,6 @@ int VMScriptFunction::FirstScriptCall(VMFunction *func, VMValue *params, int num
 	sfunc->ScriptCall = JitCompile(sfunc);
 	if (!sfunc->ScriptCall)
 		sfunc->ScriptCall = VMExec;
-	else
-		sfunc->FunctionJitted = true;
 
 	return func->ScriptCall(func, params, numparams, ret, numret);
 }
