@@ -104,10 +104,7 @@ namespace swrenderer
 
 		r_modelscene = r_models && Models.Size() > 0;
 		if (r_modelscene)
-		{
-			PolyTriangleDrawer::ResizeBuffers(viewport->RenderTarget);
-			PolyTriangleDrawer::ClearStencil(MainThread()->DrawQueue, 0);
-		}
+			PolyTriangleDrawer::ClearBuffers(viewport->RenderTarget);
 
 		if (r_clearbuffer != 0 || r_debug_draw != 0)
 		{
@@ -288,9 +285,6 @@ namespace swrenderer
 		thread->OpaquePass->ResetFakingUnderwater(); // [RH] Hack to make windows into underwater areas possible
 		thread->Portal->SetMainPortal();
 
-		if (r_modelscene && thread->MainThread)
-			PolyTriangleDrawer::ClearStencil(MainThread()->DrawQueue, 0);
-
 		PolyTriangleDrawer::SetViewport(thread->DrawQueue, viewwindowx, viewwindowy, viewwidth, viewheight, thread->Viewport->RenderTarget);
 
 		// Cull things outside the range seen by this thread
@@ -388,7 +382,7 @@ namespace swrenderer
 		viewactive = true;
 		viewport->SetViewport(MainThread(), width, height, MainThread()->Viewport->viewwindow.WidescreenRatio);
 		if (r_modelscene)
-			PolyTriangleDrawer::ResizeBuffers(viewport->RenderTarget);
+			PolyTriangleDrawer::ClearBuffers(viewport->RenderTarget);
 
 		RenderActorView(actor, dontmaplines);
 		DrawerWaitCycles.Clock();

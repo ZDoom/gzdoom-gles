@@ -70,6 +70,7 @@ public:
 
 private:
 	void RenderActorView(AActor *actor, bool dontmaplines);
+	void ClearBuffers();
 	void SetSceneViewport();
 
 	RenderPolyPlayerSprites PlayerSprites;

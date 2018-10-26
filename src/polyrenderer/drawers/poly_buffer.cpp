@@ -59,9 +59,10 @@ PolyStencilBuffer *PolyStencilBuffer::Instance()
 	return &buffer;
 }
 
-void PolyStencilBuffer::Resize(int newwidth, int newheight)
+void PolyStencilBuffer::Clear(int newwidth, int newheight, uint8_t stencil_value)
 {
 	width = newwidth;
 	height = newheight;
 	values.resize(width * height);
+	memset(Values(), stencil_value, width * height);
 }
