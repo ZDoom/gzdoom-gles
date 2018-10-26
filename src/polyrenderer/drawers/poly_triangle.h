@@ -33,7 +33,7 @@ class PolyTriangleDrawer
 {
 public:
 	static void ClearBuffers(DCanvas *canvas);
-	static void SetViewport(const DrawerCommandQueuePtr &queue, int x, int y, int width, int height, DCanvas *canvas);
+	static void SetViewport(const DrawerCommandQueuePtr &queue, int x, int y, int width, int height, DCanvas *canvas, bool span_drawers);
 	static void SetCullCCW(const DrawerCommandQueuePtr &queue, bool ccw);
 	static void SetTwoSided(const DrawerCommandQueuePtr &queue, bool twosided);
 	static void SetWeaponScene(const DrawerCommandQueuePtr &queue, bool enable);
@@ -49,7 +49,7 @@ class PolyTriangleThreadData
 public:
 	PolyTriangleThreadData(int32_t core, int32_t num_cores) : core(core), num_cores(num_cores) { }
 
-	void SetViewport(int x, int y, int width, int height, uint8_t *dest, int dest_width, int dest_height, int dest_pitch, bool dest_bgra);
+	void SetViewport(int x, int y, int width, int height, uint8_t *dest, int dest_width, int dest_height, int dest_pitch, bool dest_bgra, bool span_drawers);
 	void SetTransform(const Mat4f *objectToClip, const Mat4f *objectToWorld);
 	void SetCullCCW(bool value) { ccw = value; }
 	void SetTwoSided(bool value) { twosided = value; }
@@ -95,6 +95,7 @@ private:
 	int modelFrame1 = -1;
 	int modelFrame2 = -1;
 	float modelInterpolationFactor = 0.0f;
+	bool span_drawers = false;
 
 	enum { max_additional_vertices = 16 };
 };
@@ -160,7 +161,7 @@ private:
 class PolySetViewportCommand : public DrawerCommand
 {
 public:
-	PolySetViewportCommand(int x, int y, int width, int height, uint8_t *dest, int dest_width, int dest_height, int dest_pitch, bool dest_bgra);
+	PolySetViewportCommand(int x, int y, int width, int height, uint8_t *dest, int dest_width, int dest_height, int dest_pitch, bool dest_bgra, bool span_drawers);
 
 	void Execute(DrawerThread *thread) override;
 
@@ -174,6 +175,7 @@ private:
 	int dest_height;
 	int dest_pitch;
 	bool dest_bgra;
+	bool span_drawers;
 };
 
 class DrawPolyTrianglesCommand : public DrawerCommand

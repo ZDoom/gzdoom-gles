@@ -52,7 +52,9 @@ struct TriDrawTriangleArgs
 	ShadedTriVertex *v3;
 	int32_t clipright;
 	int32_t clipbottom;
-	uint8_t *stencilbuffer;
+	uint8_t *stencilValues;
+	uint32_t *stencilMasks;
+	int32_t stencilPitch;
 	float *zbuffer;
 	const PolyDrawArgs *uniforms;
 	bool destBgra;
@@ -140,6 +142,7 @@ class ScreenTriangle
 {
 public:
 	static void Draw(const TriDrawTriangleArgs *args, PolyTriangleThreadData *thread);
+	static void DrawSWRender(const TriDrawTriangleArgs *args, PolyTriangleThreadData *thread);
 
 	static void(*SpanDrawers8[])(int y, int x0, int x1, const TriDrawTriangleArgs *args);
 	static void(*SpanDrawers32[])(int y, int x0, int x1, const TriDrawTriangleArgs *args);
