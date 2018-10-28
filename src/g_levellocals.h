@@ -40,6 +40,8 @@
 #include "r_defs.h"
 #include "portal.h"
 #include "p_blockmap.h"
+#include "p_local.h"
+#include "p_destructible.h"
 
 struct FLevelLocals
 {
@@ -85,6 +87,9 @@ struct FLevelLocals
 
 	TArray<FSectorPortal> sectorPortals;
 	TArray<zone_t>	Zones;
+
+	// [ZZ] Destructible geometry information
+	TMap<int, FHealthGroup> healthGroups;
 
 	FBlockmap blockmap;
 

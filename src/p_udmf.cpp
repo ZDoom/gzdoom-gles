@@ -1123,6 +1123,21 @@ public:
 				tagstring = CheckString(key);
 				break;
 
+			case NAME_Health:
+				ld->health = CheckInt(key);
+				break;
+
+			case NAME_DamageSpecial:
+				Flag(ld->activation, SPAC_Damage, key);
+				break;
+
+			case NAME_DeathSpecial:
+				Flag(ld->activation, SPAC_Death, key);
+				break;
+
+			case NAME_HealthGroup:
+				ld->healthgroup = CheckInt(key);
+				break;
 
 			default:
 				break;
@@ -1364,7 +1379,6 @@ public:
 		double scroll_floor_x = 0;
 		double scroll_floor_y = 0;
 		FName scroll_floor_type = NAME_None;
-
 
 		memset(sec, 0, sizeof(*sec));
 		sec->lightlevel = 160;
@@ -1771,6 +1785,22 @@ public:
 				// These two are used by Eternity for something I do not understand.
 				//case NAME_portal_ceil_useglobaltex:
 				//case NAME_portal_floor_useglobaltex:
+
+				case NAME_HealthFloor:
+					sec->healthfloor = CheckInt(key);
+					break;
+
+				case NAME_HealthCeiling:
+					sec->healthceiling = CheckInt(key);
+					break;
+
+				case NAME_HealthFloorGroup:
+					sec->healthfloorgroup = CheckInt(key);
+					break;
+
+				case NAME_HealthCeilingGroup:
+					sec->healthceilinggroup = CheckInt(key);
+					break;
 					
 				default:
 					break;

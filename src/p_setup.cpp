@@ -114,6 +114,7 @@
 #include "edata.h"
 #endif
 #include "events.h"
+#include "p_destructible.h"
 #include "types.h"
 #include "i_time.h"
 #include "scripting/vm/vm.h"
@@ -4098,6 +4099,7 @@ void P_SetupLevel (const char *lumpname, int position, bool newGame)
 
 	// This must be done BEFORE the PolyObj Spawn!!!
 	Renderer->PreprocessLevel();
+	P_InitHealthGroups();
 
 	times[16].Clock();
 	if (reloop) P_LoopSidedefs (false);

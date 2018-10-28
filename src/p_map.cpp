@@ -4693,6 +4693,8 @@ AActor *P_LineAttack(AActor *t1, DAngle angle, double distance,
 	{
 		if (trace.HitType != TRACE_HitActor)
 		{
+			P_GeometryLineAttack(trace, t1, damage, damageType);
+
 			// position a bit closer for puffs
 			if (nointeract || trace.HitType != TRACE_HitWall || ((trace.Line->special != Line_Horizon) || spawnSky))
 			{
@@ -5526,6 +5528,8 @@ void P_RailAttack(FRailParams *p)
 		}
 	}
 
+	P_GeometryLineAttack(trace, p->source, p->damage, damagetype);
+
 	// Spawn a decal or puff at the point where the trace ended.
 	if (trace.HitType == TRACE_HitWall)
 	{
@@ -6135,6 +6139,8 @@ int P_RadiusAttack(AActor *bombspot, AActor *bombsource, int bombdamage, int bom
 	{ // The source is actually the same as the spot, even if that wasn't what we received.
 		bombsource = bombspot;
 	}
+
+	P_GeometryRadiusAttack(bombspot, bombsource, bombdamage, bombdistance, bombmod, fulldamagedistance);
 
 	int count = 0;
 	while ((it.Next(&cres)))
