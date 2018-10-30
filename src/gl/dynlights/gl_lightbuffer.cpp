@@ -32,7 +32,7 @@
 #include "gl/system/gl_interface.h"
 #include "gl/utility//gl_clock.h"
 
-static const int INITIAL_BUFFER_SIZE = 160000;	// This means 80000 lights per frame and 160000*16 bytes == 2.56 MB.
+static const int INITIAL_BUFFER_SIZE = 320000;	// This means 80000 lights per frame and 320000*16 bytes == 5.12 MB.
 
 FLightBuffer::FLightBuffer()
 {
