@@ -993,7 +993,7 @@ void G_DoLoadLevel (int position, bool autosave, bool newGame)
 
 	if (newGame)
 	{
-		E_NewGame(false);
+		E_NewGame(EventHandlerType::Global);
 	}
 
 	P_SetupLevel (level.MapName, position, newGame);
