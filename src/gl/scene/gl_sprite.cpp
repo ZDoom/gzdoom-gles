@@ -306,10 +306,8 @@ void GLSprite::Draw(int pass)
 		{
 			gl_RenderState.AlphaFunc(GL_GEQUAL, 0.f);
 		}
-		else
-		{
-			gl_RenderState.AlphaFunc(GL_GEQUAL, gl_mask_sprite_threshold);
-		}
+		else if (!gltexture->GetTransparent()) gl_RenderState.AlphaFunc(GL_GEQUAL, gl_mask_sprite_threshold);
+		else gl_RenderState.AlphaFunc(GL_GREATER, 0.f);
 
 		if (RenderStyle.BlendOp == STYLEOP_Shadow)
 		{

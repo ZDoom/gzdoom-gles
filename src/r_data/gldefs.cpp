@@ -1160,6 +1160,15 @@ class GLDefsParser
 		tex->gl_info.bDisableFullbright = disable_fullbright;
 	}
 
+	void SetShaderIndex(FTexture *tex, unsigned index)
+	{
+		auto desc = usershaders[index - FIRST_USER_SHADER];
+		if (desc.disablealphatest)
+		{
+			tex->gl_info.mIsTransparent = 1;
+		}
+		tex->gl_info.shaderindex = index;
+	}
 
 	//==========================================================================
 	//
@@ -1376,11 +1385,11 @@ class GLDefsParser
 					usershaders[i].shaderType == usershader.shaderType &&
 					!usershaders[i].defines.Compare(usershader.defines))
 				{
-					tex->gl_info.shaderindex = i + FIRST_USER_SHADER;
+					SetShaderIndex(tex, i + FIRST_USER_SHADER);
 					return;
 				}
 			}
-			tex->gl_info.shaderindex = usershaders.Push(usershader) + FIRST_USER_SHADER;
+			SetShaderIndex(tex, usershaders.Push(usershader) + FIRST_USER_SHADER);
 		}
 	}
 
@@ -1576,6 +1585,10 @@ class GLDefsParser
 					}
 					desc.defines.AppendFormat("#define %s %s\n", defineName.GetChars(), defineValue.GetChars());
 				}
+				else if (sc.Compare("disablealphatest"))
+				{
+					desc.disablealphatest = true;
+				}
 			}
 			if (!tex)
 			{
@@ -1613,11 +1626,11 @@ class GLDefsParser
 						usershaders[i].shaderType == desc.shaderType &&
 						!usershaders[i].defines.Compare(desc.defines))
 					{
-						tex->gl_info.shaderindex = i + FIRST_USER_SHADER;
+						SetShaderIndex(tex, i + FIRST_USER_SHADER);
 						return;
 					}
 				}
-				tex->gl_info.shaderindex = usershaders.Push(desc) + FIRST_USER_SHADER;
+				SetShaderIndex(tex, usershaders.Push(desc) + FIRST_USER_SHADER);
 			}
 		}
 	}
