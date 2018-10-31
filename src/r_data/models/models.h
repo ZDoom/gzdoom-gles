@@ -478,6 +478,7 @@ struct FSpriteModelFrame
 	float angleoffset;
 	// added pithoffset, rolloffset.
 	float pitchoffset, rolloffset; // I don't want to bother with type transformations, so I made this variables float.
+	bool isVoxel;
 };
 
 FSpriteModelFrame * FindModelFrame(const PClass * ti, int sprite, int frame, bool dropped);
