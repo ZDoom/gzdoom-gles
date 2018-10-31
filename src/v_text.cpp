@@ -349,7 +349,7 @@ static void breakit (FBrokenLines *line, FFont *font, const uint8_t *start, cons
 	line->Width = font->StringWidth (line->Text);
 }
 
-FBrokenLines *V_BreakLines (FFont *font, int maxwidth, const uint8_t *string, bool preservecolor, unsigned int *count)
+TArray<FBrokenLines> V_BreakLines (FFont *font, int maxwidth, const uint8_t *string, bool preservecolor, unsigned int *count)
 {
 	TArray<FBrokenLines> Lines(128);
 
@@ -452,21 +452,7 @@ FBrokenLines *V_BreakLines (FFont *font, int maxwidth, const uint8_t *string, bo
 			}
 		}
 	}
-
-	// Make a copy of the broken lines and return them
-	FBrokenLines *broken = new FBrokenLines[Lines.Size() + 1];
-
-	for (unsigned ii = 0; ii < Lines.Size(); ++ii)
-	{
-		broken[ii] = Lines[ii];
-	}
-	broken[Lines.Size()].Width = -1;
-	if (count != nullptr)
-	{
-		*count = Lines.Size();
-	}
-
-	return broken;
+	return Lines;
 }
 
 void V_FreeBrokenLines (FBrokenLines *lines)
@@ -482,18 +468,11 @@ class DBrokenLines : public DObject
 	DECLARE_ABSTRACT_CLASS(DBrokenLines, DObject)
 
 public:
-	FBrokenLines *mBroken;
-	unsigned int mCount;
+	TArray<FBrokenLines> mBroken;
 
-	DBrokenLines(FBrokenLines *broken, unsigned int count)
+	DBrokenLines(TArray<FBrokenLines> &broken)
 	{
-		mBroken = broken;
-		mCount = count;
-	}
-
-	void OnDestroy() override
-	{
-		V_FreeBrokenLines(mBroken);
+		mBroken = std::move(broken);
 	}
 };
 
@@ -502,21 +481,21 @@ IMPLEMENT_CLASS(DBrokenLines, true, false);
 DEFINE_ACTION_FUNCTION(DBrokenLines, Count)
 {
 	PARAM_SELF_PROLOGUE(DBrokenLines);
-	ACTION_RETURN_INT(self->mCount);
+	ACTION_RETURN_INT(self->mBroken.Size());
 }
 
 DEFINE_ACTION_FUNCTION(DBrokenLines, StringWidth)
 {
 	PARAM_SELF_PROLOGUE(DBrokenLines);
 	PARAM_INT(index);
-	ACTION_RETURN_INT((unsigned)index >= self->mCount? -1 : self->mBroken[index].Width);
+	ACTION_RETURN_INT((unsigned)index >= self->mBroken.Size()? -1 : self->mBroken[index].Width);
 }
 
 DEFINE_ACTION_FUNCTION(DBrokenLines, StringAt)
 {
 	PARAM_SELF_PROLOGUE(DBrokenLines);
 	PARAM_INT(index);
-	ACTION_RETURN_STRING((unsigned)index >= self->mCount? -1 : self->mBroken[index].Text);
+	ACTION_RETURN_STRING((unsigned)index >= self->mBroken.Size() ? -1 : self->mBroken[index].Text);
 }
 
 DEFINE_ACTION_FUNCTION(FFont, BreakLines)
@@ -526,6 +505,6 @@ DEFINE_ACTION_FUNCTION(FFont, BreakLines)
 	PARAM_INT(maxwidth);
 
 	unsigned int count;
-	FBrokenLines *broken = V_BreakLines(self, maxwidth, text, true, &count);
-	ACTION_RETURN_OBJECT(Create<DBrokenLines>(broken, count));
+	TArray<FBrokenLines> broken = V_BreakLines(self, maxwidth, text, true, &count);
+	ACTION_RETURN_OBJECT(Create<DBrokenLines>(broken));
 }

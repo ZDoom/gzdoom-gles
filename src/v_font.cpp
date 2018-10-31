@@ -94,6 +94,7 @@ The FON2 header is followed by variable length data:
 #include "r_data/r_translate.h"
 #include "colormatcher.h"
 #include "v_palette.h"
+#include "gstrings.h"
 #include "v_text.h"
 #include "vm.h"
 
@@ -926,7 +927,9 @@ DEFINE_ACTION_FUNCTION(FFont, StringWidth)
 {
 	PARAM_SELF_STRUCT_PROLOGUE(FFont);
 	PARAM_STRING(str);
-	ACTION_RETURN_INT(self->StringWidth(str));
+	const char *txt = str[0] == '$' ? GStrings(&str[1]) : str.GetChars();
+
+	ACTION_RETURN_INT(self->StringWidth(txt));
 }
 
 //==========================================================================
