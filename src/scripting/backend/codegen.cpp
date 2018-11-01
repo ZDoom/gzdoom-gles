@@ -10637,7 +10637,14 @@ FxExpression *FxReturnStatement::Resolve(FCompileContext &ctx)
 	}
 
 	PPrototype *retproto;
-	if (Args.Size() == 0)
+
+	if (ctx.ReturnProto != nullptr && ctx.ReturnProto->ReturnTypes.Size() != Args.Size())
+	{
+		ScriptPosition.Message(MSG_ERROR, "Incorrect number of return values. Got %u, but expected %u", Args.Size(), ctx.ReturnProto->ReturnTypes.Size());
+		delete this;
+		return nullptr;
+	}
+	else if (Args.Size() == 0)
 	{
 		TArray<PType *> none(0);
 		retproto = NewPrototype(none, none);
@@ -10653,7 +10660,7 @@ FxExpression *FxReturnStatement::Resolve(FCompileContext &ctx)
 		}
 		retproto = Args[0]->ReturnProto();
 	}
-	else if (ctx.ReturnProto != nullptr && ctx.ReturnProto->ReturnTypes.Size() == Args.Size())
+	else
 	{
 		for (unsigned i = 0; i < Args.Size(); i++)
 		{
@@ -10667,12 +10674,6 @@ FxExpression *FxReturnStatement::Resolve(FCompileContext &ctx)
 			return nullptr;
 		}
 		return this;	// no point calling CheckReturn here.
-	}
-	else
-	{
-		ScriptPosition.Message(MSG_ERROR, "Incorrect number of return values. Got %u, but expected %u", Args.Size(), ctx.ReturnProto->ReturnTypes.Size());
-		delete this;
-		return nullptr;
 	}
 
 	ctx.CheckReturn(retproto, ScriptPosition);
