@@ -49,6 +49,7 @@
 #include "templates.h"
 #include "gstrings.h"
 #include "vm.h"
+#include "serializer.h"
 
 int ListGetInt(VMVa_List &tags);
 
@@ -349,7 +350,7 @@ static void breakit (FBrokenLines *line, FFont *font, const uint8_t *start, cons
 	line->Width = font->StringWidth (line->Text);
 }
 
-TArray<FBrokenLines> V_BreakLines (FFont *font, int maxwidth, const uint8_t *string, bool preservecolor, unsigned int *count)
+TArray<FBrokenLines> V_BreakLines (FFont *font, int maxwidth, const uint8_t *string, bool preservecolor)
 {
 	TArray<FBrokenLines> Lines(128);
 
@@ -455,28 +456,40 @@ TArray<FBrokenLines> V_BreakLines (FFont *font, int maxwidth, const uint8_t *str
 	return Lines;
 }
 
-void V_FreeBrokenLines (FBrokenLines *lines)
+FSerializer &Serialize(FSerializer &arc, const char *key, FBrokenLines& g, FBrokenLines *def)
 {
-	if (lines)
+	if (arc.BeginObject(key))
 	{
-		delete[] lines;
+		arc("text", g.Text)
+			("width", g.Width)
+			.EndObject();
 	}
+	return arc;
 }
+
+
 
 class DBrokenLines : public DObject
 {
-	DECLARE_ABSTRACT_CLASS(DBrokenLines, DObject)
+	DECLARE_CLASS(DBrokenLines, DObject)
 
 public:
 	TArray<FBrokenLines> mBroken;
+
+	DBrokenLines() = default;
 
 	DBrokenLines(TArray<FBrokenLines> &broken)
 	{
 		mBroken = std::move(broken);
 	}
+
+	void Serialize(FSerializer &arc) override
+	{
+		arc("lines", mBroken);
+	}
 };
 
-IMPLEMENT_CLASS(DBrokenLines, true, false);
+IMPLEMENT_CLASS(DBrokenLines, false, false);
 
 DEFINE_ACTION_FUNCTION(DBrokenLines, Count)
 {
@@ -504,7 +517,6 @@ DEFINE_ACTION_FUNCTION(FFont, BreakLines)
 	PARAM_STRING(text);
 	PARAM_INT(maxwidth);
 
-	unsigned int count;
-	TArray<FBrokenLines> broken = V_BreakLines(self, maxwidth, text, true, &count);
+	auto broken = V_BreakLines(self, maxwidth, text, true);
 	ACTION_RETURN_OBJECT(Create<DBrokenLines>(broken));
 }
