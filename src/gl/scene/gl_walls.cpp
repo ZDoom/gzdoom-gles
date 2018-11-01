@@ -776,6 +776,7 @@ void GLWall::DoMidTexture(seg_t * seg, bool drawfogboundary,
 	float texturetop, texturebottom;
 	bool wrap = (seg->linedef->flags&ML_WRAP_MIDTEX) || (seg->sidedef->Flags&WALLF_WRAP_MIDTEX);
 	bool mirrory = false;
+	float rowoffset = 0;
 
 	//
 	//
@@ -794,7 +795,7 @@ void GLWall::DoMidTexture(seg_t * seg, bool drawfogboundary,
 			tci.mRenderHeight = -tci.mRenderHeight;
 			tci.mScale.Y = -tci.mScale.Y;
 		}
-		float rowoffset = tci.RowOffset(seg->sidedef->GetTextureYOffset(side_t::mid));
+		rowoffset = tci.RowOffset(seg->sidedef->GetTextureYOffset(side_t::mid));
 		if ((seg->linedef->flags & ML_DONTPEGBOTTOM) >0)
 		{
 			texturebottom = MAX(realfront->GetPlaneTexZ(sector_t::floor), realback->GetPlaneTexZ(sector_t::floor)) + rowoffset;
@@ -825,10 +826,10 @@ void GLWall::DoMidTexture(seg_t * seg, bool drawfogboundary,
 		if (!tex || tex->UseType==ETextureType::Null)
 		{
 			if (front->GetTexture(sector_t::ceiling) == skyflatnum &&
-				back->GetTexture(sector_t::ceiling) == skyflatnum)
+				back->GetTexture(sector_t::ceiling) == skyflatnum && !wrap)
 			{
-				// intra-sky lines do not clip the texture at all if there's no upper texture
-				topleft = topright = wrap ? 1e16f : texturetop;
+				// intra-sky lines do not clip the texture at all if there's no upper texture.
+				topleft = topright = texturetop;
 			}
 			else
 			{
