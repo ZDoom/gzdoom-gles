@@ -388,7 +388,7 @@ void SWCanvas::FillSimplePoly(DCanvas *canvas, FTexture *tex, FVector2 *points, 
 	viewport->RenderTarget = screen;
 }
 
-void SWCanvas::DrawLine(DCanvas *canvas, int x0, int y0, int x1, int y1, int palColor, uint32_t realcolor)
+void SWCanvas::DrawLine(DCanvas *canvas, int x0, int y0, int x1, int y1, int palColor, uint32_t realcolor, uint8_t alpha)
 {
 	const int WeightingScale = 0;
 	const int WEIGHTBITS = 6;

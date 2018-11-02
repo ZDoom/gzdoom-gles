@@ -55,7 +55,7 @@ public:
 	void DoClear(int left, int top, int right, int bottom, int palcolor, uint32_t color) override;
 	void DoDim(PalEntry color, float amount, int x1, int y1, int w, int h) override;
 	void FlatFill(int left, int top, int right, int bottom, FTexture *src, bool local_origin) override;
-	void DrawLine(int x0, int y0, int x1, int y1, int palColor, uint32_t realcolor) override;
+	void DrawLine(int x0, int y0, int x1, int y1, int palColor, uint32_t realcolor, uint8_t alpha = 255) override;
 	void DrawPixel(int x, int y, int palcolor, uint32_t rgbcolor) override;
 	void FillSimplePoly(FTexture *tex, FVector2 *points, int npoints, double originx, double originy, double scalex, double scaley, DAngle rotation, const FColormap &colormap, PalEntry flatcolor, int lightlevel, int bottomclip) override;
 	bool WipeStartScreen(int type) override;

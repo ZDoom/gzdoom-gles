@@ -2705,11 +2705,11 @@ void D3DFB::EndLineBatch()
 //
 //==========================================================================
 
-void D3DFB::DrawLine(int x0, int y0, int x1, int y1, int palcolor, uint32_t color)
+void D3DFB::DrawLine(int x0, int y0, int x1, int y1, int palcolor, uint32_t color, uint8_t alpha)
 {
 	if (In2D < 2)
 	{
-		Super::DrawLine(x0, y0, x1, y1, palcolor, color);
+		Super::DrawLine(x0, y0, x1, y1, palcolor, color, alpha);
 		return;
 	}
 	if (!InScene)

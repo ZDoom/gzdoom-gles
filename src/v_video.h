@@ -266,10 +266,10 @@ public:
 	virtual void DoClear(int left, int top, int right, int bottom, int palcolor, uint32_t color);
 
 	// Draws a line
-	virtual void DrawLine(int x0, int y0, int x1, int y1, int palColor, uint32_t realcolor);
+	virtual void DrawLine(int x0, int y0, int x1, int y1, int palColor, uint32_t realcolor, uint8_t alpha = 255);
 
 	// Draws a line with thickness
-	virtual void DrawThickLine(int x0, int y0, int x1, int y1, double thickness, uint32_t realcolor);
+	virtual void DrawThickLine(int x0, int y0, int x1, int y1, double thickness, uint32_t realcolor, uint8_t alpha = 255);
 
 	// Draws a single pixel
 	virtual void DrawPixel(int x, int y, int palcolor, uint32_t rgbcolor);

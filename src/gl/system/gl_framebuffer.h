@@ -59,7 +59,7 @@ public:
 
 	// 2D drawing
 	void DrawTextureParms(FTexture *img, DrawParms &parms);
-	void DrawLine(int x1, int y1, int x2, int y2, int palcolor, uint32_t color);
+	void DrawLine(int x1, int y1, int x2, int y2, int palcolor, uint32_t color, uint8_t alpha = 255);
 	void DrawPixel(int x1, int y1, int palcolor, uint32_t color);
 	void DoClear(int left, int top, int right, int bottom, int palcolor, uint32_t color);
 	void Dim(PalEntry color=0);

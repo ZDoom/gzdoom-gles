@@ -397,10 +397,10 @@ void OpenGLFrameBuffer::DrawTextureParms(FTexture *img, DrawParms &parms)
 //
 //
 //==========================================================================
-void OpenGLFrameBuffer::DrawLine(int x1, int y1, int x2, int y2, int palcolor, uint32_t color)
+void OpenGLFrameBuffer::DrawLine(int x1, int y1, int x2, int y2, int palcolor, uint32_t color, uint8_t alpha)
 {
 	if (GLRenderer != nullptr && GLRenderer->m2DDrawer != nullptr) 
-		GLRenderer->m2DDrawer->AddLine(x1, y1, x2, y2, palcolor, color);
+		GLRenderer->m2DDrawer->AddLine(x1, y1, x2, y2, palcolor, color, alpha);
 }
 
 //==========================================================================
