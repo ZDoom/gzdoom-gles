@@ -362,6 +362,7 @@ bool P_CheckFor3DFloorHit(AActor * mo, double z, bool trigger)
 			if (fabs(z - rover->top.plane->ZatPoint(mo)) < EQUAL_EPSILON) 
 			{
 				mo->BlockingFloor = rover->model;
+				mo->Blocking3DFloor = rover->model;
 				if (trigger) rover->model->TriggerSectorActions (mo, SECSPAC_HitFloor);
 				return true;
 			}
@@ -389,6 +390,7 @@ bool P_CheckFor3DCeilingHit(AActor * mo, double z, bool trigger)
 			if(fabs(z - rover->bottom.plane->ZatPoint(mo)) < EQUAL_EPSILON)
 			{
 				mo->BlockingCeiling = rover->model;
+				mo->Blocking3DFloor = rover->model;
 				if (trigger) rover->model->TriggerSectorActions (mo, SECSPAC_HitCeiling);
 				return true;
 			}
@@ -766,8 +768,10 @@ void P_LineOpening_XFloors (FLineOpening &open, AActor * thing, const line_t *li
 			FTextureID highestfloorpic;
 			int highestfloorterrain = -1;
 			FTextureID lowestceilingpic;
-			sector_t *lowestceilingsec = NULL, *highestfloorsec = NULL;
+			sector_t *lowestceilingsec = nullptr, *highestfloorsec = nullptr;
 			secplane_t *highestfloorplanes[2] = { &open.frontfloorplane, &open.backfloorplane };
+			F3DFloor *lowestceilingffloor = nullptr;
+			F3DFloor *highestfloorffloor = nullptr;
 			
 			highestfloorpic.SetInvalid();
 			lowestceilingpic.SetInvalid();
@@ -792,6 +796,7 @@ void P_LineOpening_XFloors (FLineOpening &open, AActor * thing, const line_t *li
 						lowestceiling = ff_bottom;
 						lowestceilingpic = *rover->bottom.texture;
 						lowestceilingsec = j == 0 ? linedef->frontsector : linedef->backsector;
+						lowestceilingffloor = rover;
 					}
 					
 					if(delta1 <= delta2 && (!restrict || thing->Z() >= ff_top))
@@ -802,6 +807,7 @@ void P_LineOpening_XFloors (FLineOpening &open, AActor * thing, const line_t *li
 							highestfloorpic = *rover->top.texture;
 							highestfloorterrain = rover->model->GetTerrain(rover->top.isceiling);
 							highestfloorsec = j == 0 ? linedef->frontsector : linedef->backsector;
+							highestfloorffloor = rover;
 						}
 						if (ff_top > highestfloorplanes[j]->ZatPoint(x, y))
 						{
@@ -818,6 +824,7 @@ void P_LineOpening_XFloors (FLineOpening &open, AActor * thing, const line_t *li
 				open.floorpic = highestfloorpic;
 				open.floorterrain = highestfloorterrain;
 				open.bottomsec = highestfloorsec;
+				open.bottomffloor = highestfloorffloor;
 			}
 			if (highestfloorplanes[0] != &open.frontfloorplane)
 			{
@@ -835,6 +842,7 @@ void P_LineOpening_XFloors (FLineOpening &open, AActor * thing, const line_t *li
 				open.top = lowestceiling;
 				open.ceilingpic = lowestceilingpic;
 				open.topsec = lowestceilingsec;
+				open.topffloor = lowestceilingffloor;
 			}
 			
 			open.lowfloor = MIN(lowestfloor[0], lowestfloor[1]);
