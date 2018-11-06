@@ -594,7 +594,7 @@ bool SightCheck::P_SightTraverseIntercepts ()
 
 		for (auto rover : lastsector->e->XFloor.ffloors)
 		{
-			if ((rover->flags & FF_SOLID) == myseethrough || !(rover->flags & FF_EXISTS)) continue;
+			if ((rover->flags & FF_SEETHROUGH) == myseethrough || !(rover->flags & FF_EXISTS)) continue;
 			if ((Flags & SF_IGNOREWATERBOUNDARY) && (rover->flags & FF_SOLID) == 0) continue;
 
 			double ff_bottom = rover->bottom.plane->ZatPoint(seeingthing);
@@ -644,7 +644,8 @@ bool SightCheck::P_SightPathTraverse ()
 	for(auto rover : lastsector->e->XFloor.ffloors)
 	{
 		if(!(rover->flags & FF_EXISTS)) continue;
-		
+		if ((Flags & SF_IGNOREWATERBOUNDARY) && (rover->flags & FF_SOLID) == 0) continue;
+
 		double ff_bottom=rover->bottom.plane->ZatPoint(sightstart);
 		double ff_top=rover->top.plane->ZatPoint(sightstart);
 
