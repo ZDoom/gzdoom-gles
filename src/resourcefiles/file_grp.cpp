@@ -87,7 +87,6 @@ public:
 FGrpFile::FGrpFile(const char *filename, FileReader &file)
 : FUncompressedFile(filename, file)
 {
-	Lumps = NULL;
 }
 
 //==========================================================================
@@ -106,7 +105,7 @@ bool FGrpFile::Open(bool quiet)
 	GrpLump *fileinfo = new GrpLump[NumLumps];
 	Reader.Read (fileinfo, NumLumps * sizeof(GrpLump));
 
-	Lumps = new FUncompressedLump[NumLumps];
+	Lumps.Resize(NumLumps);
 
 	int Position = sizeof(GrpInfo) + NumLumps * sizeof(GrpLump);
 

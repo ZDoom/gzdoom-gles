@@ -260,7 +260,7 @@ FIWadManager::FIWadManager(const char *fn)
 			if (lmp->Namespace == ns_global && !stricmp(lmp->Name, "IWADINFO"))
 			{
 				// Found one!
-				ParseIWadInfo(resfile->Filename, (const char*)lmp->CacheLump(), lmp->LumpSize);
+				ParseIWadInfo(resfile->FileName, (const char*)lmp->CacheLump(), lmp->LumpSize);
 				break;
 			}
 		}
@@ -352,7 +352,7 @@ int FIWadManager::CheckIWADInfo(const char *fn)
 				try
 				{
 					FIWADInfo result;
-					ParseIWadInfo(resfile->Filename, (const char*)lmp->CacheLump(), lmp->LumpSize, &result);
+					ParseIWadInfo(resfile->FileName, (const char*)lmp->CacheLump(), lmp->LumpSize, &result);
 					delete resfile;
 
 					for (unsigned i = 0, count = mIWadInfos.Size(); i < count; ++i)

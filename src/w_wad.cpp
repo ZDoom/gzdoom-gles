@@ -1398,7 +1398,7 @@ const char *FWadCollection::GetWadName (int wadnum) const
 		return NULL;
 	}
 
-	name = Files[wadnum]->Filename;
+	name = Files[wadnum]->FileName;
 	slash = strrchr (name, '/');
 	return slash != NULL ? slash+1 : name;
 }
@@ -1461,10 +1461,10 @@ const char *FWadCollection::GetWadFullName (int wadnum) const
 {
 	if ((unsigned int)wadnum >= Files.Size())
 	{
-		return NULL;
+		return nullptr;
 	}
 
-	return Files[wadnum]->Filename;
+	return Files[wadnum]->FileName;
 }
 
 
