@@ -62,6 +62,7 @@
 #include "gl/scene/gl_drawinfo.h"
 #include "gl/scene/gl_portal.h"
 #include "gl/scene/gl_scenedrawer.h"
+#include "gl/renderer/gl_renderer.h"
 #include "gl/shaders/gl_shader.h"
 #include "gl/stereo3d/gl_stereo3d.h"
 #include "gl/stereo3d/scoped_view_shifter.h"
@@ -905,6 +906,8 @@ sector_t * GLSceneDrawer::RenderViewpoint (AActor * camera, GL_IRECT * bounds, f
 
 void FGLRenderer::RenderView (player_t* player)
 {
+	gl_ClearFakeFlat();
+
 	checkBenchActive();
 
 	gl_RenderState.SetVertexBuffer(mVBO);
@@ -964,6 +967,7 @@ void GLSceneDrawer::WriteSavePic (player_t *player, FileWriter *file, int width,
 {
 	GL_IRECT bounds;
 
+	gl_ClearFakeFlat();
 	P_FindParticleSubsectors();	// make sure that all recently spawned particles have a valid subsector.
 	bounds.left=0;
 	bounds.top=0;
@@ -1125,6 +1129,7 @@ extern TexFilter_s TexFilter[];
 
 void FGLInterface::RenderTextureView (FCanvasTexture *tex, AActor *Viewpoint, double FOV)
 {
+	// This doesn't need to clear the fake flat cache. It can be shared between camera textures and the main view of a scene.
 	FMaterial * gltex = FMaterial::ValidateTexture(tex, false);
 
 	int width = gltex->TextureWidth();

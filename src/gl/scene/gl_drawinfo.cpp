@@ -42,6 +42,7 @@
 #include "gl/scene/gl_scenedrawer.h"
 #include "gl/renderer/gl_lightdata.h"
 #include "gl/renderer/gl_renderstate.h"
+#include "gl/renderer/gl_renderer.h"
 #include "gl/textures/gl_material.h"
 #include "gl/utility/gl_clock.h"
 #include "gl/utility/gl_templates.h"
@@ -1212,9 +1213,8 @@ void FDrawInfo::DrawFloodedPlane(wallseg * ws, float planez, sector_t * sec, boo
 void FDrawInfo::FloodUpperGap(seg_t * seg)
 {
 	wallseg ws;
-	sector_t ffake, bfake;
-	sector_t * fakefsector = gl_FakeFlat(seg->frontsector, &ffake, mDrawer->in_area, true);
-	sector_t * fakebsector = gl_FakeFlat(seg->backsector, &bfake, mDrawer->in_area, false);
+	sector_t * fakefsector = gl_FakeFlat(seg->frontsector, mDrawer->in_area, false);
+	sector_t * fakebsector = gl_FakeFlat(seg->backsector, mDrawer->in_area, true);
 
 	vertex_t * v1, * v2;
 
@@ -1264,9 +1264,8 @@ void FDrawInfo::FloodUpperGap(seg_t * seg)
 void FDrawInfo::FloodLowerGap(seg_t * seg)
 {
 	wallseg ws;
-	sector_t ffake, bfake;
-	sector_t * fakefsector = gl_FakeFlat(seg->frontsector, &ffake, mDrawer->in_area, true);
-	sector_t * fakebsector = gl_FakeFlat(seg->backsector, &bfake, mDrawer->in_area, false);
+	sector_t * fakefsector = gl_FakeFlat(seg->frontsector, mDrawer->in_area, false);
+	sector_t * fakebsector = gl_FakeFlat(seg->backsector, mDrawer->in_area, true);
 
 	vertex_t * v1, * v2;
 

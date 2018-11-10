@@ -785,7 +785,9 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 
 	if (sector->sectornum != thing->Sector->sectornum && !thruportal)
 	{
-		rendersector = gl_FakeFlat(thing->Sector, &rs, mDrawer->in_area, false);
+		// This cannot create a copy in the fake sector cache because it'd interfere with the main thread, so provide a local buffer for the copy.
+		// Adding synchronization for this one case would cost more than it might save if the result here could be cached.
+		rendersector = gl_FakeFlat(thing->Sector, mDrawer->in_area, false, &rs);
 	}
 	else
 	{
@@ -1325,7 +1327,7 @@ void GLSceneDrawer::RenderActorsInPortal(FGLLinePortal *glport)
 					th->Prev += newpos - savedpos;
 
 					GLSprite spr(this);
-					spr.Process(th, gl_FakeFlat(th->Sector, &fakesector, in_area, false), 2);
+					spr.Process(th, gl_FakeFlat(th->Sector, in_area, false, &fakesector), 2);
 					th->Angles.Yaw = savedangle;
 					th->SetXYZ(savedpos);
 					th->Prev -= newpos - savedpos;
