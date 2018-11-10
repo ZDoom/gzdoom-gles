@@ -177,7 +177,6 @@ public:
 	};
 
 
-	secplane_t topplane, bottomplane;	// we need to save these to pass them to the shader for calculating glows.
 
 	// these are not the same as ytop and ybottom!!!
 	float zceil[2];
@@ -189,6 +188,7 @@ public:
 public:
 	seg_t * seg;			// this gives the easiest access to all other structs involved
 	subsector_t * sub;		// For polyobjects
+	sector_t *frontsector, *backsector;
 private:
 
 	void CheckGlowing();

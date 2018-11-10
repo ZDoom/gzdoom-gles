@@ -334,7 +334,7 @@ void GLWall::RenderTextured(int rflags)
 		gl_RenderState.EnableGlow(true);
 		gl_RenderState.SetGlowParams(topglowcolor, bottomglowcolor);
 	}
-	gl_RenderState.SetGlowPlanes(topplane, bottomplane);
+	gl_RenderState.SetGlowPlanes(frontsector->ceilingplane, frontsector->floorplane);
 	gl_RenderState.SetMaterial(gltexture, flags & 3, 0, -1, false);
 
 	if (type == RENDERWALL_M2SNF)
@@ -361,7 +361,7 @@ void GLWall::RenderTextured(int rflags)
 
 		for (unsigned i = 0; i < lightlist->Size(); i++)
 		{
-			secplane_t &lowplane = i == (*lightlist).Size() - 1 ? bottomplane : (*lightlist)[i + 1].plane;
+			secplane_t &lowplane = i == (*lightlist).Size() - 1 ? frontsector->floorplane : (*lightlist)[i + 1].plane;
 			// this must use the exact same calculation method as GLWall::Process etc.
 			float low1 = lowplane.ZatPoint(vertexes[0]);
 			float low2 = lowplane.ZatPoint(vertexes[1]);

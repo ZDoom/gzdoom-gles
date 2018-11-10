@@ -1448,6 +1448,8 @@ void GLWall::Process(seg_t *seg, sector_t * frontsector, sector_t * backsector)
 	// note: we always have a valid sidedef and linedef reference when getting here.
 
 	this->seg = seg;
+	this->frontsector = frontsector;
+	this->backsector = backsector;
 	vertindex = 0;
 	vertcount = 0;
 
@@ -1541,8 +1543,6 @@ void GLWall::Process(seg_t *seg, sector_t * frontsector, sector_t * backsector)
 
 
 	if (gl_GetWallGlow(frontsector, topglowcolor, bottomglowcolor)) flags |= GLWF_GLOW;
-	topplane = frontsector->ceilingplane;
-	bottomplane = frontsector->floorplane;
 
 	zfloor[0] = ffh1 = segfront->floorplane.ZatPoint(v1);
 	zfloor[1] = ffh2 = segfront->floorplane.ZatPoint(v2);
@@ -1752,6 +1752,8 @@ void GLWall::ProcessLowerMiniseg(seg_t *seg, sector_t * frontsector, sector_t * 
 	if (bfh > ffh)
 	{
 		this->seg = seg;
+		this->frontsector = frontsector;
+		this->backsector = backsector;
 		this->sub = NULL;
 
 		vertex_t * v1 = seg->v1;
@@ -1777,8 +1779,6 @@ void GLWall::ProcessLowerMiniseg(seg_t *seg, sector_t * frontsector, sector_t * 
 		Colormap = frontsector->Colormap;
 
 		if (gl_GetWallGlow(frontsector, topglowcolor, bottomglowcolor)) flags |= GLWF_GLOW;
-		topplane = frontsector->ceilingplane;
-		bottomplane = frontsector->floorplane;
 		dynlightindex = -1;
 
 		zfloor[0] = zfloor[1] = ffh;
