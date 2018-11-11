@@ -75,6 +75,7 @@ class FRenderState
 	bool mTextureEnabled;
 	bool mFogEnabled;
 	bool mGlowEnabled;
+	bool mGradientEnabled;
 	bool mSplitEnabled;
 	bool mClipLineEnabled;
 	bool mBrightmapEnabled;
@@ -103,6 +104,7 @@ class FRenderState
 	FStateVec4 mCameraPos;
 	FStateVec4 mGlowTop, mGlowBottom;
 	FStateVec4 mGlowTopPlane, mGlowBottomPlane;
+	FStateVec4 mGradientTopPlane, mGradientBottomPlane;
 	FStateVec4 mSplitTopPlane, mSplitBottomPlane;
 	FStateVec4 mClipLine;
 	PalEntry mFogColor;
@@ -285,6 +287,11 @@ public:
 		mGlowEnabled = on;
 	}
 
+	void EnableGradient(bool on)
+	{
+		mGradientEnabled = on;
+	}
+
 	void EnableSplit(bool on)
 	{
 		if (!(gl.flags & RFL_NO_CLIP_PLANES))
@@ -367,6 +374,14 @@ public:
 		DVector3 bn = bottom.Normal();
 		mGlowTopPlane.Set(tn.X, tn.Y, 1. / tn.Z, top.fD());
 		mGlowBottomPlane.Set(bn.X, bn.Y, 1. / bn.Z, bottom.fD());
+	}
+
+	void SetGradientPlanes(const secplane_t &top, const secplane_t &bottom)
+	{
+		DVector3 tn = top.Normal();
+		DVector3 bn = bottom.Normal();
+		mGradientTopPlane.Set(tn.X, tn.Y, 1. / tn.Z, top.fD());
+		mGradientBottomPlane.Set(bn.X, bn.Y, 1. / bn.Z, bottom.fD());
 	}
 
 	void SetSplitPlanes(const secplane_t &top, const secplane_t &bottom)
