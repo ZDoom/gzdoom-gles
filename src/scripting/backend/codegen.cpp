@@ -8248,7 +8248,9 @@ FxExpression *FxMemberFunctionCall::Resolve(FCompileContext& ctx)
 		{
 			auto elementType = static_cast<PDynArray*>(Self->ValueType)->ElementType;
 			Self->ValueType = static_cast<PDynArray*>(Self->ValueType)->BackingType;
+			bool isDynArrayObj = elementType->isObjectPointer();
 			// this requires some added type checks for the passed types.
+			int idx = 0;
 			for (auto &a : ArgList)
 			{
 				a = a->Resolve(ctx);
@@ -8256,6 +8258,16 @@ FxExpression *FxMemberFunctionCall::Resolve(FCompileContext& ctx)
 				{
 					delete this;
 					return nullptr;
+				}
+				if (isDynArrayObj && ((MethodName == NAME_Push && idx == 0) || (MethodName == NAME_Insert && idx == 1)))
+				{
+					// The DynArray_Obj declaration in dynarrays.txt doesn't support generics yet. Check the type here as if it did.
+					if (!static_cast<PObjectPointer*>(elementType)->PointedClass()->IsAncestorOf(static_cast<PObjectPointer*>(a->ValueType)->PointedClass()))
+					{
+						ScriptPosition.Message(MSG_ERROR, "Type mismatch in function argument");
+						delete this;
+						return nullptr;
+					}
 				}
 				if (a->IsDynamicArray())
 				{
@@ -8296,6 +8308,7 @@ FxExpression *FxMemberFunctionCall::Resolve(FCompileContext& ctx)
 						return nullptr;
 					}
 				}
+				idx++;
 			}
 		}
 	}
