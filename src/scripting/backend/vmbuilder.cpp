@@ -817,6 +817,7 @@ VMFunction *FFunctionBuildList::AddFunction(PNamespace *gnspc, const VersionInfo
 	if (it.Func->SymbolName != NAME_None)
 	{
 		it.Function->Proto = it.Func->Variants[0].Proto;
+		it.Function->ArgFlags = it.Func->Variants[0].ArgFlags;
 	}
 
 	mItems.Push(it);
@@ -888,6 +889,7 @@ void FFunctionBuildList::Build()
 			if (sfunc->Proto == nullptr)
 			{
 				sfunc->Proto = NewPrototype(item.Proto->ReturnTypes, item.Func->Variants[0].Proto->ArgumentTypes);
+				sfunc->ArgFlags = item.Func->Variants[0].ArgFlags;
 			}
 
 			// Emit code
