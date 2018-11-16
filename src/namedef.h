@@ -830,6 +830,7 @@ xx(Key)
 // Decorate compatibility functions
 xx(BuiltinTypeCheck)
 xx(BuiltinRandom)
+xx(BuiltinRandom2)
 xx(BuiltinFRandom)
 xx(BuiltinCallLineSpecial)
 xx(BuiltinNameToClass)
