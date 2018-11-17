@@ -26,23 +26,6 @@ enum
 };
 
 
-
-struct FTexCoordInfo
-{
-	int mRenderWidth;
-	int mRenderHeight;
-	int mWidth;
-	FVector2 mScale;
-	FVector2 mTempScale;
-	bool mWorldPanning;
-
-	float FloatToTexU(float v) const { return v / mRenderWidth; }
-	float FloatToTexV(float v) const { return v / mRenderHeight; }
-	float RowOffset(float ofs) const;
-	float TextureOffset(float ofs) const;
-	float TextureAdjustWidth() const;
-};
-
 //===========================================================================
 // 
 // this is the texture maintenance class for OpenGL. 
@@ -160,7 +143,10 @@ public:
 		*r = mSpriteRect;
 	}
 
-	void GetTexCoordInfo(FTexCoordInfo *tci, float x, float y) const;
+	void GetTexCoordInfo(FTexCoordInfo *tci, float x, float y) const
+	{
+		tci->GetFromTexture(tex, x, y);
+	}
 
 	void GetTexCoordInfo(FTexCoordInfo *tci, side_t *side, int texpos) const
 	{

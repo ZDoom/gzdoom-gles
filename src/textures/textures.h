@@ -758,6 +758,24 @@ public:
 
 extern FTextureManager TexMan;
 
+struct FTexCoordInfo
+{
+	int mRenderWidth;
+	int mRenderHeight;
+	int mWidth;
+	FVector2 mScale;
+	FVector2 mTempScale;
+	bool mWorldPanning;
+
+	float FloatToTexU(float v) const { return v / mRenderWidth; }
+	float FloatToTexV(float v) const { return v / mRenderHeight; }
+	float RowOffset(float ofs) const;
+	float TextureOffset(float ofs) const;
+	float TextureAdjustWidth() const;
+	void GetFromTexture(FTexture *tex, float x, float y);
+};
+
+
 #endif
 
 
