@@ -762,7 +762,7 @@ DEFINE_ACTION_FUNCTION(AActor, SetState)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_POINTER(state, FState);
-	PARAM_BOOL_DEF(nofunction);
+	PARAM_BOOL(nofunction);
 	ACTION_RETURN_BOOL(self->SetState(state, nofunction));
 };
 
@@ -876,7 +876,7 @@ DEFINE_ACTION_FUNCTION(AActor, GiveInventory)
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_CLASS(type, AInventory);
 	PARAM_INT(amount);
-	PARAM_BOOL_DEF(givecheat);
+	PARAM_BOOL(givecheat);
 	ACTION_RETURN_BOOL(self->GiveInventory(type, amount, givecheat));
 }
 
@@ -976,8 +976,8 @@ DEFINE_ACTION_FUNCTION(AActor, TakeInventory)
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_CLASS_NOT_NULL(item, AInventory);
 	PARAM_INT(amount);
-	PARAM_BOOL_DEF(fromdecorate);
-	PARAM_BOOL_DEF(notakeinfinite);
+	PARAM_BOOL(fromdecorate);
+	PARAM_BOOL(notakeinfinite);
 	ACTION_RETURN_BOOL(self->TakeInventory(item, amount, fromdecorate, notakeinfinite));
 }
 
@@ -1046,7 +1046,7 @@ DEFINE_ACTION_FUNCTION(AActor, SetInventory)
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_CLASS_NOT_NULL(item, AInventory);
 	PARAM_INT(amount);
-	PARAM_BOOL_DEF(beyondMax);
+	PARAM_BOOL(beyondMax);
 	ACTION_RETURN_BOOL(self->SetInventory(item, amount, beyondMax));
 }
 
@@ -1196,7 +1196,7 @@ DEFINE_ACTION_FUNCTION(AActor, DropInventory)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_OBJECT_NOT_NULL(item, AInventory);
-	PARAM_INT_DEF(amt);
+	PARAM_INT(amt);
 	ACTION_RETURN_OBJECT(self->DropInventory(item, amt));
 }
 
@@ -1243,7 +1243,7 @@ DEFINE_ACTION_FUNCTION(AActor, FindInventory)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_CLASS(type, AInventory);
-	PARAM_BOOL_DEF(subclass);
+	PARAM_BOOL(subclass);
 	ACTION_RETURN_OBJECT(self->FindInventory(type, subclass));
 }
 
@@ -1404,8 +1404,8 @@ DEFINE_ACTION_FUNCTION(AActor, CopyFriendliness)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_OBJECT_NOT_NULL(other, AActor);
-	PARAM_BOOL_DEF(changetarget);
-	PARAM_BOOL_DEF(resethealth);
+	PARAM_BOOL(changetarget);
+	PARAM_BOOL(resethealth);
 	self->CopyFriendliness(other, changetarget, resethealth);
 	return 0;
 }
@@ -1580,7 +1580,7 @@ DEFINE_ACTION_FUNCTION(AActor, GiveBody)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_INT(num);
-	PARAM_INT_DEF(max);
+	PARAM_INT(max);
 	ACTION_RETURN_BOOL(P_GiveBody(self, num, max));
 }
 
@@ -2122,8 +2122,8 @@ void P_ExplodeMissile (AActor *mo, line_t *line, AActor *target, bool onsky)
 DEFINE_ACTION_FUNCTION(AActor, ExplodeMissile)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_POINTER_DEF(line, line_t);
-	PARAM_OBJECT_DEF(target, AActor);
+	PARAM_POINTER(line, line_t);
+	PARAM_OBJECT(target, AActor);
 	P_ExplodeMissile(self, line, target);
 	return 0;
 }
@@ -3373,7 +3373,7 @@ DEFINE_ACTION_FUNCTION(AActor, CheckFakeFloorTriggers)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_FLOAT(oldz);
-	PARAM_BOOL_DEF(oldz_has_viewh);
+	PARAM_BOOL(oldz_has_viewh);
 	P_CheckFakeFloorTriggers(self, oldz, oldz_has_viewh);
 	return 0;
 }
@@ -3686,8 +3686,8 @@ int P_FindUniqueTID(int start_tid, int limit)
 DEFINE_ACTION_FUNCTION(AActor, FindUniqueTid)
 {
 	PARAM_PROLOGUE;
-	PARAM_INT_DEF(start);
-	PARAM_INT_DEF(limit);
+	PARAM_INT(start);
+	PARAM_INT(limit);
 	ACTION_RETURN_INT(P_FindUniqueTID(start, limit));
 }
 
@@ -4132,7 +4132,7 @@ void AActor::CheckPortalTransition(bool islinked)
 DEFINE_ACTION_FUNCTION(AActor, CheckPortalTransition)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_BOOL_DEF(linked);
+	PARAM_BOOL(linked);
 	self->CheckPortalTransition(linked);
 	return 0;
 }
@@ -5010,7 +5010,7 @@ bool AActor::UpdateWaterLevel(bool dosplash)
 DEFINE_ACTION_FUNCTION(AActor, UpdateWaterLevel)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_BOOL_DEF(splash);
+	PARAM_BOOL(splash);
 	ACTION_RETURN_BOOL(self->UpdateWaterLevel(splash));
 }
 
@@ -5210,10 +5210,10 @@ DEFINE_ACTION_FUNCTION(AActor, Spawn)
 {
 	PARAM_PROLOGUE;
 	PARAM_CLASS_NOT_NULL(type, AActor);
-	PARAM_FLOAT_DEF(x);
-	PARAM_FLOAT_DEF(y);
-	PARAM_FLOAT_DEF(z);
-	PARAM_INT_DEF(flags);
+	PARAM_FLOAT(x);
+	PARAM_FLOAT(y);
+	PARAM_FLOAT(z);
+	PARAM_INT(flags);
 	ACTION_RETURN_OBJECT(AActor::StaticSpawn(type, DVector3(x, y, z), replace_t(flags)));
 }
 
@@ -6325,8 +6325,8 @@ DEFINE_ACTION_FUNCTION(AActor, SpawnPuff)
 	PARAM_ANGLE(hitdir);
 	PARAM_ANGLE(particledir);
 	PARAM_INT(updown);
-	PARAM_INT_DEF(flags);
-	PARAM_OBJECT_DEF(victim, AActor);
+	PARAM_INT(flags);
+	PARAM_OBJECT(victim, AActor);
 	ACTION_RETURN_OBJECT(P_SpawnPuff(self, pufftype, DVector3(x, y, z), hitdir, particledir, updown, flags, victim));
 }
 
@@ -6525,7 +6525,7 @@ DEFINE_ACTION_FUNCTION(AActor, BloodSplatter)
 	PARAM_FLOAT(y);
 	PARAM_FLOAT(z);
 	PARAM_ANGLE(dir);
-	PARAM_BOOL_DEF(axe);
+	PARAM_BOOL(axe);
 	if (axe) P_BloodSplatter2(DVector3(x, y, z), self, dir);
 	else P_BloodSplatter(DVector3(x, y, z), self, dir);
 	return 0;
@@ -6757,9 +6757,9 @@ DEFINE_ACTION_FUNCTION(AActor, HitWater)
 	PARAM_FLOAT(x);
 	PARAM_FLOAT(y);
 	PARAM_FLOAT(z);
-	PARAM_BOOL_DEF(checkabove);
-	PARAM_BOOL_DEF(alert);
-	PARAM_BOOL_DEF(force);
+	PARAM_BOOL(checkabove);
+	PARAM_BOOL(alert);
+	PARAM_BOOL(force);
 	ACTION_RETURN_BOOL(P_HitWater(self, sec, DVector3(x, y, z), checkabove, alert, force));
 }
 
@@ -7096,8 +7096,8 @@ DEFINE_ACTION_FUNCTION(AActor, SpawnMissileXYZ)
 	PARAM_FLOAT(z);
 	PARAM_OBJECT_NOT_NULL(dest, AActor);
 	PARAM_CLASS(type, AActor);
-	PARAM_BOOL_DEF(check);
-	PARAM_OBJECT_DEF(owner, AActor);
+	PARAM_BOOL(check);
+	PARAM_OBJECT(owner, AActor);
 	ACTION_RETURN_OBJECT(P_SpawnMissileXYZ(DVector3(x,y,z), self, dest, type, check, owner));
 }
 
@@ -7115,7 +7115,7 @@ DEFINE_ACTION_FUNCTION(AActor, SpawnMissile)
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_OBJECT_NOT_NULL(dest, AActor);
 	PARAM_CLASS(type, AActor);
-	PARAM_OBJECT_DEF(owner, AActor);
+	PARAM_OBJECT(owner, AActor);
 	ACTION_RETURN_OBJECT(P_SpawnMissile(self, dest, type, owner));
 }
 
@@ -7171,7 +7171,7 @@ DEFINE_ACTION_FUNCTION(AActor, OldSpawnMissile)
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_OBJECT_NOT_NULL(dest, AActor);
 	PARAM_CLASS(type, AActor);
-	PARAM_OBJECT_DEF(owner, AActor);
+	PARAM_OBJECT(owner, AActor);
 	ACTION_RETURN_OBJECT(P_OldSpawnMissile(self, owner, dest, type));
 }
 
@@ -7284,8 +7284,8 @@ DEFINE_ACTION_FUNCTION(AActor, SpawnMissileAngleZSpeed)
 	PARAM_ANGLE(angle);
 	PARAM_FLOAT(vz);
 	PARAM_FLOAT(speed);
-	PARAM_OBJECT_DEF(owner, AActor);
-	PARAM_BOOL_DEF(checkspawn);
+	PARAM_OBJECT(owner, AActor);
+	PARAM_BOOL(checkspawn);
 	ACTION_RETURN_OBJECT(P_SpawnMissileAngleZSpeed(self, z, type, angle, vz, speed, owner, checkspawn));
 }
 
@@ -7458,14 +7458,14 @@ DEFINE_ACTION_FUNCTION(AActor, SpawnPlayerMissile)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_CLASS(type, AActor);
-	PARAM_ANGLE_DEF(angle);
-	PARAM_FLOAT_DEF(x);
-	PARAM_FLOAT_DEF(y);
-	PARAM_FLOAT_DEF(z);
-	PARAM_POINTER_DEF(lt, FTranslatedLineTarget);
-	PARAM_BOOL_DEF(nofreeaim);
-	PARAM_BOOL_DEF(noautoaim);
-	PARAM_INT_DEF(aimflags);
+	PARAM_ANGLE(angle);
+	PARAM_FLOAT(x);
+	PARAM_FLOAT(y);
+	PARAM_FLOAT(z);
+	PARAM_POINTER(lt, FTranslatedLineTarget);
+	PARAM_BOOL(nofreeaim);
+	PARAM_BOOL(noautoaim);
+	PARAM_INT(aimflags);
 	AActor *missileactor;
 	if (angle == 1e37) angle = self->Angles.Yaw;
 	AActor *misl = P_SpawnPlayerMissile(self, x, y, z, type, angle, lt, &missileactor, nofreeaim, noautoaim, aimflags);
@@ -7807,7 +7807,7 @@ void AActor::SetIdle(bool nofunction)
 DEFINE_ACTION_FUNCTION(AActor, SetIdle)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_BOOL_DEF(nofunction);
+	PARAM_BOOL(nofunction);
 	self->SetIdle(nofunction);
 	return 0;
 }
@@ -7984,7 +7984,7 @@ const char *AActor::GetTag(const char *def) const
 DEFINE_ACTION_FUNCTION(AActor, GetTag)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_STRING_DEF(def);
+	PARAM_STRING(def);
 	ACTION_RETURN_STRING(self->GetTag(def.Len() == 0? nullptr : def.GetChars()));
 }
 
@@ -8205,7 +8205,7 @@ double AActor::GetBobOffset(double ticfrac) const
 DEFINE_ACTION_FUNCTION(AActor, GetBobOffset)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_FLOAT_DEF(frac);
+	PARAM_FLOAT(frac);
 	ACTION_RETURN_FLOAT(self->GetBobOffset(frac));
 }
 
@@ -8228,7 +8228,7 @@ DEFINE_ACTION_FUNCTION(DActorIterator, Create)
 {
 	PARAM_PROLOGUE;
 	PARAM_INT(tid);
-	PARAM_CLASS_DEF(type, AActor);
+	PARAM_CLASS(type, AActor);
 	ACTION_RETURN_OBJECT(Create<DActorIterator>(type, tid));
 }
 
@@ -8295,7 +8295,7 @@ DEFINE_ACTION_FUNCTION(AActor, AddZ)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_FLOAT(addz);
-	PARAM_BOOL_DEF(moving);
+	PARAM_BOOL(moving);
 	self->AddZ(addz, moving);
 	return 0;
 }
@@ -8389,7 +8389,7 @@ DEFINE_ACTION_FUNCTION(AActor, AngleTo)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_OBJECT_NOT_NULL(targ, AActor);
-	PARAM_BOOL_DEF(absolute);
+	PARAM_BOOL(absolute);
 	ACTION_RETURN_FLOAT(self->AngleTo(targ, absolute).Degrees);
 }
 
@@ -8397,7 +8397,7 @@ DEFINE_ACTION_FUNCTION(AActor, AngleToVector)
 {
 	PARAM_PROLOGUE;
 	PARAM_ANGLE(angle);
-	PARAM_FLOAT_DEF(length);
+	PARAM_FLOAT(length);
 	ACTION_RETURN_VEC2(angle.ToVector(length));
 }
 
@@ -8440,7 +8440,7 @@ DEFINE_ACTION_FUNCTION(AActor, Vec2Angle)
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_FLOAT(length);
 	PARAM_ANGLE(angle);
-	PARAM_BOOL_DEF(absolute);
+	PARAM_BOOL(absolute);
 	ACTION_RETURN_VEC2(self->Vec2Angle(length, angle, absolute));
 }
 
@@ -8464,8 +8464,8 @@ DEFINE_ACTION_FUNCTION(AActor, Vec3Angle)
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_FLOAT(length)
 	PARAM_ANGLE(angle);
-	PARAM_FLOAT_DEF(z);
-	PARAM_BOOL_DEF(absolute);
+	PARAM_FLOAT(z);
+	PARAM_BOOL(absolute);
 	ACTION_RETURN_VEC3(self->Vec3Angle(length, angle, z, absolute));
 }
 
@@ -8475,7 +8475,7 @@ DEFINE_ACTION_FUNCTION(AActor, Vec2OffsetZ)
 	PARAM_FLOAT(x);
 	PARAM_FLOAT(y);
 	PARAM_FLOAT(z);
-	PARAM_BOOL_DEF(absolute);
+	PARAM_BOOL(absolute);
 	ACTION_RETURN_VEC3(self->Vec2OffsetZ(x, y, z, absolute));
 }
 
@@ -8484,7 +8484,7 @@ DEFINE_ACTION_FUNCTION(AActor, Vec2Offset)
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_FLOAT(x);
 	PARAM_FLOAT(y);
-	PARAM_BOOL_DEF(absolute);
+	PARAM_BOOL(absolute);
 	ACTION_RETURN_VEC2(self->Vec2Offset(x, y, absolute));
 }
 
@@ -8494,7 +8494,7 @@ DEFINE_ACTION_FUNCTION(AActor, Vec3Offset)
 	PARAM_FLOAT(x);
 	PARAM_FLOAT(y);
 	PARAM_FLOAT(z);
-	PARAM_BOOL_DEF(absolute);
+	PARAM_BOOL(absolute);
 	ACTION_RETURN_VEC3(self->Vec3Offset(x, y, z, absolute));
 }
 

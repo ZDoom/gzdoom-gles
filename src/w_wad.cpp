@@ -475,8 +475,8 @@ DEFINE_ACTION_FUNCTION(_Wads, CheckNumForName)
 	PARAM_PROLOGUE;
 	PARAM_STRING(name);
 	PARAM_INT(ns);
-	PARAM_INT_DEF(wadnum);
-	PARAM_BOOL_DEF(exact);
+	PARAM_INT(wadnum);
+	PARAM_BOOL(exact);
 	ACTION_RETURN_INT(Wads.CheckNumForName(name, ns, wadnum, exact));
 }
 //==========================================================================
@@ -1066,8 +1066,8 @@ DEFINE_ACTION_FUNCTION(_Wads, FindLump)
 {
 	PARAM_PROLOGUE;
 	PARAM_STRING(name);
-	PARAM_INT_DEF(startlump);
-	PARAM_INT_DEF(ns);
+	PARAM_INT(startlump);
+	PARAM_INT(ns);
 	const bool isLumpValid = startlump >= 0 && startlump < Wads.GetNumLumps();
 	ACTION_RETURN_INT(isLumpValid ? Wads.FindLump(name, &startlump, 0 != ns) : -1);
 }

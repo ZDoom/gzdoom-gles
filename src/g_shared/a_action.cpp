@@ -89,7 +89,7 @@ void A_Unblock(AActor *self, bool drop)
 DEFINE_ACTION_FUNCTION(AActor, A_NoBlocking)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_BOOL_DEF(drop);
+	PARAM_BOOL(drop);
 	A_Unblock(self, drop);
 	return 0;
 }
