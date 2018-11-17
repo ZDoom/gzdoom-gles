@@ -495,6 +495,11 @@ bool FTexture::ProcessData(unsigned char * buffer, int w, int h, bool ispatch)
 	if (bMasked) 
 	{
 		bMasked = SmoothEdges(buffer, w, h);
+		if (!bMasked)
+		{
+			auto stex = GetRedirect(false);
+			stex->bMasked = false;	// also clear in the base texture if there is a redirection.
+		}
 		if (bMasked && !ispatch) FindHoles(buffer, w, h);
 	}
 	return true;
