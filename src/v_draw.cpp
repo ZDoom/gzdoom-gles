@@ -208,7 +208,7 @@ DEFINE_ACTION_FUNCTION(_Screen, DrawTexture)
 	if (!screen->HasBegun2D()) ThrowAbortException(X_OTHER, "Attempt to draw to screen outside a draw function");
 
 	FTexture *tex = animate ? TexMan(FSetTextureID(texid)) : TexMan[FSetTextureID(texid)];
-	VMVa_List args = { param + 4, 0, numparam - 5, va_reginfo };
+	VMVa_List args = { param + 4, 0, numparam - 5, va_reginfo + 4 };
 	screen->DrawTexture(tex, x, y, args);
 	return 0;
 }
