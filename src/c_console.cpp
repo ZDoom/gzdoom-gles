@@ -71,7 +71,6 @@
 #include "vm.h"
 #include "i_time.h"
 
-FString FStringFormat(VM_ARGS); // extern from thingdef_data.cpp
 
 #include "gi.h"
 
@@ -1356,7 +1355,9 @@ DEFINE_ACTION_FUNCTION(_Console, HideConsole)
 DEFINE_ACTION_FUNCTION(_Console, Printf)
 {
 	PARAM_PROLOGUE;
-	FString s = FStringFormat(param, numparam, ret, numret);
+	PARAM_VA_POINTER(va_reginfo)	// Get the hidden type information array
+
+	FString s = FStringFormat(VM_ARGS_NAMES);
 	Printf("%s\n", s.GetChars());
 	return 0;
 }

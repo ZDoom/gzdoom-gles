@@ -300,7 +300,7 @@ int VMNativeFunction::NativeScriptCall(VMFunction *func, VMValue *params, int nu
 	try
 	{
 		VMCycles[0].Unclock();
-		numret = static_cast<VMNativeFunction *>(func)->NativeCall(params, numparams, returns, numret);
+		numret = static_cast<VMNativeFunction *>(func)->NativeCall(VM_INVOKE(params, numparams, returns, numret, func->RegTypes));
 		VMCycles[0].Clock();
 
 		return numret;
@@ -582,7 +582,7 @@ int VMCall(VMFunction *func, VMValue *params, int numparams, VMReturn *results, 
 	{	
 		if (func->VarFlags & VARF_Native)
 		{
-			return static_cast<VMNativeFunction *>(func)->NativeCall(params, numparams, results, numresults);
+			return static_cast<VMNativeFunction *>(func)->NativeCall(VM_INVOKE(params, numparams, results, numresults, func->RegTypes));
 		}
 		else
 		{
@@ -741,7 +741,7 @@ void ThrowAbortException(VMScriptFunction *sfunc, VMOP *line, EVMAbortException 
 DEFINE_ACTION_FUNCTION(DObject, ThrowAbortException)
 {
 	PARAM_PROLOGUE;
-	FString s = FStringFormat(param, numparam, ret, numret);
+	FString s = FStringFormat(VM_ARGS_NAMES);
 	ThrowAbortException(X_OTHER, s.GetChars());
 	return 0;
 }

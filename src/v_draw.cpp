@@ -203,10 +203,12 @@ DEFINE_ACTION_FUNCTION(_Screen, DrawTexture)
 	PARAM_FLOAT(x);
 	PARAM_FLOAT(y);
 
+	PARAM_VA_POINTER(va_reginfo)	// Get the hidden type information array
+
 	if (!screen->HasBegun2D()) ThrowAbortException(X_OTHER, "Attempt to draw to screen outside a draw function");
 
 	FTexture *tex = animate ? TexMan(FSetTextureID(texid)) : TexMan[FSetTextureID(texid)];
-	VMVa_List args = { param + 4, 0, numparam - 4 };
+	VMVa_List args = { param + 4, 0, numparam - 5, va_reginfo };
 	screen->DrawTexture(tex, x, y, args);
 	return 0;
 }
@@ -243,6 +245,8 @@ DEFINE_ACTION_FUNCTION(_Screen, DrawShape)
 	PARAM_INT(texid);
 	PARAM_BOOL(animate);
 	PARAM_POINTER(shape, DShape2D);
+
+	PARAM_VA_POINTER(va_reginfo)	// Get the hidden type information array
 
 	return 0;
 }
@@ -425,7 +429,7 @@ int ListGetInt(VMVa_List &tags)
 {
 	if (tags.curindex < tags.numargs)
 	{
-		if (tags.args[tags.curindex].Type == REGT_INT)
+		if (tags.reginfo[tags.curindex] == REGT_INT)
 		{
 			return tags.args[tags.curindex++].i;
 		}
@@ -436,11 +440,18 @@ int ListGetInt(VMVa_List &tags)
 
 static inline double ListGetDouble(VMVa_List &tags)
 {
-	if (tags.curindex < tags.numargs && tags.args[tags.curindex].Type == REGT_FLOAT)
+	if (tags.curindex < tags.numargs)
 	{
-		return tags.args[tags.curindex++].f;
+		if (tags.reginfo[tags.curindex] == REGT_FLOAT)
+		{
+			return tags.args[tags.curindex++].f;
+		}
+		if (tags.reginfo[tags.curindex] == REGT_INT)
+		{
+			return tags.args[tags.curindex++].i;
+		}
+		ThrowAbortException(X_OTHER, "Invalid parameter in draw function, float expected");
 	}
-	ThrowAbortException(X_OTHER, "Invalid parameter in draw function, float expected");
 	return 0;
 }
 
