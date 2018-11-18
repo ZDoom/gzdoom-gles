@@ -4723,14 +4723,6 @@ void AActor::Tick ()
 	}
 }
 
-DEFINE_ACTION_FUNCTION(AActor, Tick)
-{
-	PARAM_SELF_PROLOGUE(AActor);
-	self->Tick();
-	return 0;
-}
-
-
 //==========================================================================
 //
 // AActor :: CheckNoDelay
@@ -8314,13 +8306,6 @@ DEFINE_ACTION_FUNCTION(AActor, SetDamage)
 	PARAM_INT(dmg);
 	self->SetDamage(dmg);
 	return 0;
-}
-
-DEFINE_ACTION_FUNCTION(AActor, GetDefaultByType)
-{
-	PARAM_PROLOGUE;
-	PARAM_CLASS(cls, AActor);
-	ACTION_RETURN_OBJECT(cls == nullptr? nullptr : GetDefaultByType(cls));
 }
 
 // This combines all 3 variations of the internal function
