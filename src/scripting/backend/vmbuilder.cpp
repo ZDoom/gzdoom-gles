@@ -934,7 +934,7 @@ void FFunctionBuildList::DumpJit()
 }
 
 
-void EmitterArray::AddParameter(VMFunctionBuilder *build, FxExpression *operand)
+void FunctionCallEmitter::AddParameter(VMFunctionBuilder *build, FxExpression *operand)
 {
 	ExpEmit where = operand->Emit(build);
 
@@ -961,7 +961,7 @@ void EmitterArray::AddParameter(VMFunctionBuilder *build, FxExpression *operand)
 	});
 }
 
-void EmitterArray::AddParameter(ExpEmit &emit, bool reference)
+void FunctionCallEmitter::AddParameter(ExpEmit &emit, bool reference)
 {
 	numparams += emit.RegCount;
 	emitters.push_back([=](VMFunctionBuilder *build) ->int
@@ -973,7 +973,7 @@ void EmitterArray::AddParameter(ExpEmit &emit, bool reference)
 	});
 }
 
-void EmitterArray::AddParameterPointerConst(void *konst)
+void FunctionCallEmitter::AddParameterPointerConst(void *konst)
 {
 	numparams++;
 	emitters.push_back([=](VMFunctionBuilder *build) ->int
@@ -983,7 +983,7 @@ void EmitterArray::AddParameterPointerConst(void *konst)
 	});
 }
 
-void EmitterArray::AddParameterPointer(int index, bool konst)
+void FunctionCallEmitter::AddParameterPointer(int index, bool konst)
 {
 	numparams++;
 	emitters.push_back([=](VMFunctionBuilder *build) ->int
@@ -993,7 +993,7 @@ void EmitterArray::AddParameterPointer(int index, bool konst)
 	});
 }
 
-void EmitterArray::AddParameterFloatConst(double konst)
+void FunctionCallEmitter::AddParameterFloatConst(double konst)
 {
 	numparams++;
 	emitters.push_back([=](VMFunctionBuilder *build) ->int
@@ -1003,7 +1003,7 @@ void EmitterArray::AddParameterFloatConst(double konst)
 	});
 }
 
-void EmitterArray::AddParameterIntConst(int konst)
+void FunctionCallEmitter::AddParameterIntConst(int konst)
 {
 	numparams++;
 	emitters.push_back([=](VMFunctionBuilder *build) ->int
@@ -1021,7 +1021,7 @@ void EmitterArray::AddParameterIntConst(int konst)
 	});
 }
 
-void EmitterArray::AddParameterStringConst(const FString &konst)
+void FunctionCallEmitter::AddParameterStringConst(const FString &konst)
 {
 	numparams++;
 	emitters.push_back([=](VMFunctionBuilder *build) ->int
@@ -1031,7 +1031,7 @@ void EmitterArray::AddParameterStringConst(const FString &konst)
 	});
 }
 
-int EmitterArray::EmitParameters(VMFunctionBuilder *build)
+ExpEmit FunctionCallEmitter::EmitCall(VMFunctionBuilder *build, TArray<ExpEmit> *ReturnRegs)
 {
 	int paramcount = 0;
 	for (auto &func : emitters)
@@ -1039,18 +1039,27 @@ int EmitterArray::EmitParameters(VMFunctionBuilder *build)
 		paramcount += func(build);
 	}
 	assert(paramcount == numparams);
-	return paramcount;
-}
 
+	if (virtualselfreg == -1)
+	{
+		build->Emit(OP_CALL_K, build->GetConstantAddress(target), paramcount, returns.Size());
+	}
+	else
+	{
+		ExpEmit funcreg(build, REGT_POINTER);
 
-ExpEmit EmitterArray::EmitCall(VMFunctionBuilder *build)
-{
-	int count = EmitParameters(build);
-	build->Emit(OP_CALL_K, build->GetConstantAddress(target), count, returns.Size());
-	if (returns.Size() == 0) return ExpEmit();
+		build->Emit(OP_VTBL, funcreg.RegNum, virtualselfreg, target->VirtualIndex);
+		build->Emit(OP_CALL, funcreg.RegNum, paramcount, returns.Size());
+	}
 
-	ExpEmit out(build, returns[0]);
-	build->Emit(OP_RESULT, 0, returns[0], out.RegNum);
-	return out;
+	assert(returns.Size() < 2 || ReturnRegs != nullptr);
+	for (unsigned i = 0; i < returns.Size(); i++)
+	{
+		ExpEmit reg(build, returns[i].first, returns[i].second);
+		build->Emit(OP_RESULT, 0, EncodeRegType(reg), reg.RegNum);
+		if (ReturnRegs) ReturnRegs->Push(reg);
+		else return reg;
+	}
+	return ExpEmit();
 }
 
