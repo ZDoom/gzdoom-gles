@@ -87,6 +87,7 @@
 #include "w_zip.h"
 #include "resourcefiles/resourcefile.h"
 #include "vm.h"
+#include "dobjgc.h"
 
 #include <zlib.h>
 
@@ -233,9 +234,6 @@ FString			savedescription;
 
 // [RH] Name of screenshot file to generate (usually NULL)
 FString			shotfile;
-
-AActor* 		bodyque[BODYQUESIZE]; 
-int 			bodyqueslot; 
 
 FString savename;
 FString BackupSaveName;
@@ -1699,13 +1697,14 @@ DEFINE_ACTION_FUNCTION(DObject, G_PickPlayerStart)
 static void G_QueueBody (AActor *body)
 {
 	// flush an old corpse if needed
-	int modslot = bodyqueslot%BODYQUESIZE;
+	int modslot = level.bodyqueslot%level.BODYQUESIZE;
+	level.bodyqueslot = modslot + 1;
 
-	if (bodyqueslot >= BODYQUESIZE && bodyque[modslot] != NULL)
+	if (level.bodyqueslot >= level.BODYQUESIZE && level.bodyque[modslot] != NULL)
 	{
-		bodyque[modslot]->Destroy ();
+		level.bodyque[modslot]->Destroy ();
 	}
-	bodyque[modslot] = body;
+	level.bodyque[modslot] = body;
 
 	// Copy the player's translation, so that if they change their color later, only
 	// their current body will change and not all their old corpses.
@@ -1729,7 +1728,6 @@ static void G_QueueBody (AActor *body)
 		body->Scale.Y *= skin.Scale.Y / defaultActor->Scale.Y;
 	}
 
-	bodyqueslot++;
 }
 
 //

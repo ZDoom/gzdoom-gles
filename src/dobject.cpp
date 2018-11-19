@@ -40,7 +40,6 @@
 #include "dobject.h"
 #include "doomstat.h"		// Ideally, DObjects can be used independant of Doom.
 #include "d_player.h"		// See p_user.cpp to find out why this doesn't work.
-#include "g_game.h"			// Needed for bodyque.
 #include "c_dispatch.h"
 #include "i_system.h"
 #include "r_state.h"
@@ -504,16 +503,6 @@ size_t DObject::StaticPointerSubstitution (AActor *old, AActor *notOld)
 		i++;
 		changed += probe->PointerSubstitution(old, notOld);
 		last = probe;
-	}
-
-	// Go through the bodyque.
-	for (i = 0; i < BODYQUESIZE; ++i)
-	{
-		if (bodyque[i] == old)
-		{
-			bodyque[i] = notOld;
-			changed++;
-		}
 	}
 
 	// Go through players.
