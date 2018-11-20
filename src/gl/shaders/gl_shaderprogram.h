@@ -30,14 +30,16 @@ private:
 	FShaderProgram(const FShaderProgram &) = delete;
 	FShaderProgram &operator=(const FShaderProgram &) = delete;
 
+	void CompileShader(ShaderType type);
 	static FString PatchShader(ShaderType type, const FString &code, const char *defines, int maxGlslVersion);
-
 	void CreateShader(ShaderType type);
 	FString GetShaderInfoLog(GLuint handle);
 	FString GetProgramInfoLog(GLuint handle);
 
 	GLuint mProgram = 0;
 	GLuint mShaders[NumShaderTypes];
+	FString mShaderSources[NumShaderTypes];
+	FString mShaderNames[NumShaderTypes];
 };
 
 #endif
