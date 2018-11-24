@@ -10320,14 +10320,7 @@ scriptwait:
 
 				if (tag == 0)
 				{
-					if (activator != NULL && activator->player)
-					{
-						changes += P_MorphPlayer(activator->player, activator->player, playerclass, duration, style, morphflash, unmorphflash);
-					}
-					else
-					{
-						changes += P_MorphMonster(activator, monsterclass, duration, style, morphflash, unmorphflash);
-					}
+					changes = P_MorphActor(activator, activator, playerclass, monsterclass, duration, style, morphflash, unmorphflash);
 				}
 				else
 				{
@@ -10336,15 +10329,7 @@ scriptwait:
 
 					while ( (actor = iterator.Next ()) )
 					{
-						if (actor->player)
-						{
-							changes += P_MorphPlayer(activator == NULL ? NULL : activator->player,
-								actor->player, playerclass, duration, style, morphflash, unmorphflash);
-						}
-						else
-						{
-							changes += P_MorphMonster(actor, monsterclass, duration, style, morphflash, unmorphflash);
-						}
+						changes += P_MorphActor(activator, actor, playerclass, monsterclass, duration, style, morphflash, unmorphflash);
 					}
 				}
 
