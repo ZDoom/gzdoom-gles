@@ -102,9 +102,16 @@ void cht_DoCheat (player_t *player, int cheat)
 	};
 	PClassActor *type;
 	AInventory *item;
+	FString smsg;
 	const char *msg = "";
 	char msgbuild[32];
 	int i;
+
+	// No cheating when not having a pawn attached.
+	if (player->mo == nullptr)
+	{
+		return;
+	}
 
 	switch (cheat)
 	{
@@ -200,7 +207,8 @@ void cht_DoCheat (player_t *player, int cheat)
 		break;
 
 	case CHT_MORPH:
-		msg = cht_Morph (player, PClass::FindActor (gameinfo.gametype == GAME_Heretic ? NAME_ChickenPlayer : NAME_PigPlayer), true);
+		smsg = cht_Morph (player, PClass::FindActor (gameinfo.gametype == GAME_Heretic ? NAME_ChickenPlayer : NAME_PigPlayer), true);
+		msg = smsg.GetChars();
 		break;
 
 	case CHT_NOTARGET:
@@ -558,32 +566,17 @@ void cht_DoCheat (player_t *player, int cheat)
 		Printf ("%s cheats: %s\n", player->userinfo.GetName(), msg);
 }
 
-const char *cht_Morph (player_t *player, PClassActor *morphclass, bool quickundo)
+FString cht_Morph(player_t *player, PClassActor *morphclass, bool quickundo)
 {
-	if (player->mo == NULL)
-	{
-		return "";
-	}
-	auto oldclass = player->mo->GetClass();
+	if (player->mo == nullptr)	return "";
 
-	// Set the standard morph style for the current game
-	int style = MORPH_UNDOBYTOMEOFPOWER;
-	if (gameinfo.gametype == GAME_Hexen) style |= MORPH_UNDOBYCHAOSDEVICE;
-
-	if (player->morphTics)
+	IFVIRTUALPTR(player->mo, APlayerPawn, CheatMorph)
 	{
-		if (P_UndoPlayerMorph (player, player))
-		{
-			if (!quickundo && oldclass != morphclass && P_MorphPlayer (player, player, morphclass, 0, style))
-			{
-				return GStrings("TXT_STRANGER");
-			}
-			return GStrings("TXT_NOTSTRANGE");
-		}
-	}
-	else if (P_MorphPlayer (player, player, morphclass, 0, style))
-	{
-		return GStrings("TXT_STRANGE");
+		FString message;
+		VMReturn msgret(&message);
+		VMValue params[3] = { player->mo, morphclass, quickundo };
+		VMCall(func, params, 3, nullptr, 0);
+		return message;
 	}
 	return "";
 }
@@ -614,8 +607,6 @@ void cht_SetInv(player_t *player, const char *string, int amount, bool beyond)
 
 void cht_Give (player_t *player, const char *name, int amount)
 {
-	if (player->mo == nullptr)	return;
-
 	IFVIRTUALPTR(player->mo, APlayerPawn, CheatGive)
 	{
 		FString namestr = name;
@@ -626,8 +617,6 @@ void cht_Give (player_t *player, const char *name, int amount)
 
 void cht_Take (player_t *player, const char *name, int amount)
 {
-	if (player->mo == nullptr) return;
-
 	IFVIRTUALPTR(player->mo, APlayerPawn, CheatTake)
 	{
 		FString namestr = name;
