@@ -361,6 +361,7 @@ struct GameInfoStruct native
 	native bool intermissioncounter;
 	native Name mSliderColor;
 	native Color defaultbloodcolor;
+	native double telefogheight;
 }
 
 class Object native
