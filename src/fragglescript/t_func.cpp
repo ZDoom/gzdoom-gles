@@ -59,6 +59,7 @@
 #include "math/cmath.h"
 #include "g_levellocals.h"
 #include "actorinlines.h"
+#include "scriptutil.h"
 
 static FRandom pr_script("FScript");
 
@@ -292,6 +293,17 @@ static int T_GetPlayerNum(const svalue_t &arg)
 		return -1;
 	}
 	return playernum;
+}
+
+APlayerPawn *T_GetPlayerActor(const svalue_t &arg)
+{
+	int num = T_GetPlayerNum(arg);
+	return num == -1 ? nullptr : players[num].mo;
+}
+
+PClassActor *T_ClassType(const svalue_t &arg)
+{
+	return PClass::FindActor(stringvalue(arg));
 }
 
 //==========================================================================
@@ -2845,34 +2857,8 @@ void FParser::SF_SetWeapon()
 {
 	if (CheckArgs(2))
 	{
-		int playernum=T_GetPlayerNum(t_argv[0]);
-		if (playernum!=-1) 
-		{
-			AInventory *item = players[playernum].mo->FindInventory (PClass::FindActor (stringvalue(t_argv[1])));
-
-			if (item == NULL || !item->IsKindOf(NAME_Weapon))
-			{
-			}
-			else if (players[playernum].ReadyWeapon == item)
-			{
-				// The weapon is already selected, so setweapon succeeds by default,
-				// but make sure the player isn't switching away from it.
-				players[playernum].PendingWeapon = WP_NOCHANGE;
-				t_return.value.i = 1;
-			}
-			else
-			{
-				auto weap = static_cast<AWeapon *> (item);
-
-				if (weap->CheckAmmo (AWeapon::EitherFire, false))
-				{
-					// There's enough ammo, so switch to it.
-					t_return.value.i = 1;
-					players[playernum].PendingWeapon = weap;
-				}
-			}
-		}
-		t_return.value.i = 0;
+		t_return.type = svt_int;
+		t_return.value.i = ScriptUtil::Exec(NAME_SetWeapon, ScriptUtil::Pointer, T_GetPlayerActor(t_argv[0]), ScriptUtil::Class, T_ClassType(t_argv[1]), ScriptUtil::End);
 	}
 }
 
