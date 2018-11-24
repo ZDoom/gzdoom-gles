@@ -6238,7 +6238,7 @@ int P_RadiusAttack(AActor *bombspot, AActor *bombsource, int bombdamage, int bom
 		// them far too "active." BossBrains also use the old code
 		// because some user levels require they have a height of 16,
 		// which can make them near impossible to hit with the new code.
-		if ((flags & RADF_NODAMAGE) || !((bombspot->flags5 | thing->flags5) & MF5_OLDRADIUSDMG))
+		if (((flags & RADF_NODAMAGE) || !((bombspot->flags5 | thing->flags5) & MF5_OLDRADIUSDMG)) && !(flags & RADF_OLDRADIUSDAMAGE))
 		{
 			double points = P_GetRadiusDamage(false, bombspot, thing, bombdamage, bombdistance, fulldamagedistance, bombsource == thing);
 			double check = int(points) * bombdamage;
@@ -6313,6 +6313,18 @@ int P_RadiusAttack(AActor *bombspot, AActor *bombsource, int bombdamage, int bom
 		}
 	}
 	return count;
+}
+
+DEFINE_ACTION_FUNCTION(AActor, RadiusAttack)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_OBJECT(bombsource, AActor);
+	PARAM_INT(bombdamage);
+	PARAM_INT(bombdistance);
+	PARAM_NAME(damagetype);
+	PARAM_INT(flags);
+	PARAM_INT(fulldamagedistance);
+	ACTION_RETURN_INT(P_RadiusAttack(self, bombsource, bombdamage, bombdistance, damagetype, flags, fulldamagedistance));
 }
 
 //==========================================================================
