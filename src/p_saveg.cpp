@@ -1034,7 +1034,7 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 		{
 			if (playeringame[i] && players[i].mo != NULL)
 			{
-				players[i].mo->SetupWeaponSlots();
+				FWeaponSlots::SetupWeaponSlots(players[i].mo);
 			}
 		}
 	}
