@@ -920,7 +920,6 @@ void F_StartIntermission(FName seq, uint8_t state)
 	}
 }
 
-
 //==========================================================================
 //
 // Called by main loop.

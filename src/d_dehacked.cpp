@@ -1701,7 +1701,7 @@ static int PatchWeapon (int weapNum)
 		}
 		else if (stricmp (Line1, "Min ammo") == 0)
 		{
-			info->MinAmmo1 = val;
+			info->MinSelAmmo1 = val;
 		}
 		else
 		{
