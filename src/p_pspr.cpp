@@ -45,6 +45,7 @@
 #include "cmdlib.h"
 #include "g_levellocals.h"
 #include "vm.h"
+#include "sbar.h"
 
 
 // MACROS ------------------------------------------------------------------
@@ -1341,6 +1342,32 @@ void DPSprite::OnDestroy()
 		}
 	}
 	Super::OnDestroy();
+}
+
+//------------------------------------------------------------------------
+//
+//
+//
+//------------------------------------------------------------------------
+
+float DPSprite::GetYAdjust(bool fullscreen)
+{
+	AWeapon *weapon = dyn_cast<AWeapon>(GetCaller());
+	if (weapon != nullptr)
+	{
+		float fYAd = weapon->YAdjust;
+		if (fYAd != 0)
+		{
+			if (fullscreen)
+			{
+				return fYAd;
+			}
+			else
+			{
+				return StatusBar->GetDisplacement() * fYAd;
+			}
+		}
+	}
 }
 
 //------------------------------------------------------------------------
