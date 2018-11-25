@@ -509,7 +509,7 @@ static int DrawKeys(player_t * CPlayer, int x, int y)
 //---------------------------------------------------------------------------
 static TArray<PClassActor *> orderedammos;
 
-static void AddAmmoToList(AWeapon * weapdef)
+static void AddAmmoToList(AInventory * weapdef)
 {
 
 	for (int i = 0; i < 2; i++)
@@ -572,7 +572,7 @@ static int DrawAmmo(player_t *CPlayer, int x, int y)
 	char buf[256];
 	AInventory *inv;
 
-	AWeapon *wi=CPlayer->ReadyWeapon;
+	auto wi=CPlayer->ReadyWeapon;
 
 	orderedammos.Clear();
 
@@ -595,7 +595,7 @@ static int DrawAmmo(player_t *CPlayer, int x, int y)
 				
 				if (hud_showammo > 1 || CPlayer->mo->FindInventory(weap))
 				{
-					AddAmmoToList((AWeapon*)GetDefaultByType(weap));
+					AddAmmoToList((AInventory*)GetDefaultByType(weap));
 				}
 			}
 		}
@@ -605,7 +605,7 @@ static int DrawAmmo(player_t *CPlayer, int x, int y)
 		{
 			if (inv->IsKindOf(NAME_Weapon))
 			{
-				AddAmmoToList((AWeapon*)inv);
+				AddAmmoToList(inv);
 			}
 		}
 	}
@@ -738,7 +738,7 @@ DEFINE_ACTION_FUNCTION(DBaseStatusBar, GetInventoryIcon)
 	return MIN(numret, 2);
 }
 
-static void DrawOneWeapon(player_t * CPlayer, int x, int & y, AWeapon * weapon)
+static void DrawOneWeapon(player_t * CPlayer, int x, int & y, AInventory * weapon)
 {
 	double trans;
 
@@ -778,9 +778,9 @@ static void DrawWeapons(player_t *CPlayer, int x, int y)
 	for(inv = CPlayer->mo->Inventory; inv; inv = inv->Inventory)
 	{
 		if (inv->IsKindOf(NAME_Weapon) && 
-			!CPlayer->weapons.LocateWeapon(static_cast<AWeapon*>(inv)->GetClass(), NULL, NULL))
+			!CPlayer->weapons.LocateWeapon(inv->GetClass(), NULL, NULL))
 		{
-			DrawOneWeapon(CPlayer, x, y, static_cast<AWeapon*>(inv));
+			DrawOneWeapon(CPlayer, x, y, inv);
 		}
 	}
 
@@ -793,7 +793,7 @@ static void DrawWeapons(player_t *CPlayer, int x, int y)
 			inv=CPlayer->mo->FindInventory(weap);
 			if (inv) 
 			{
-				DrawOneWeapon(CPlayer, x, y, static_cast<AWeapon*>(inv));
+				DrawOneWeapon(CPlayer, x, y, inv);
 			}
 		}
 	}
