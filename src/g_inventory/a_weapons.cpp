@@ -191,18 +191,6 @@ void AWeapon::Serialize(FSerializer &arc)
 
 }
 
-//===========================================================================
-//
-// AWeapon :: MarkPrecacheSounds
-//
-//===========================================================================
-
-void AWeapon::MarkPrecacheSounds() const
-{
-	Super::MarkPrecacheSounds();
-	UpSound.MarkUsed();
-	ReadySound.MarkUsed();
-}
 
 /* Weapon slots ***********************************************************/
 
