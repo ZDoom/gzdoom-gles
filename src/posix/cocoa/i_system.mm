@@ -132,7 +132,7 @@ void I_Quit()
 extern FILE* Logfile;
 bool gameisdead;
 
-void I_FatalError(const char* const error, ...)
+static void I_FatalError(const char* const error, va_list ap)
 {
 	static bool alreadyThrown = false;
 	gameisdead = true;
@@ -145,7 +145,7 @@ void I_FatalError(const char* const error, ...)
 		int index;
 		va_list argptr;
 		va_start(argptr, error);
-		index = vsnprintf(errortext, MAX_ERRORTEXT, error, argptr);
+		index = vsnprintf(errortext, MAX_ERRORTEXT, error, ap);
 		va_end(argptr);
 
 		extern void Mac_I_FatalError(const char*);
@@ -169,16 +169,34 @@ void I_FatalError(const char* const error, ...)
 	}
 }
 
-void I_Error(const char* const error, ...)
+void I_FatalError(const char* const error, ...)
+{
+	va_list argptr;
+	va_start(argptr, error);
+	I_FatalError(error, argptr);
+	va_end(argptr);
+
+}
+
+extern thread_local int jit_frames;
+void I_Error (const char *error, ...)
 {
 	va_list argptr;
 	char errortext[MAX_ERRORTEXT];
 
 	va_start(argptr, error);
-	vsnprintf(errortext, MAX_ERRORTEXT, error, argptr);
-	va_end(argptr);
 
-	throw CRecoverableError(errortext);
+	if (jit_frames == 0)
+	{
+		vsprintf (errortext, error, argptr);
+		va_end (argptr);
+		throw CRecoverableError(errortext);
+	}
+	else
+	{
+		I_FatalError(error, argptr);
+		va_end(argptr);
+	}
 }
 
 

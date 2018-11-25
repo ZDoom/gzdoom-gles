@@ -443,17 +443,6 @@ extern VMFrameStack GlobalVMStack;
 
 typedef std::pair<const class PType *, unsigned> FTypeAndOffset;
 
-struct JitExceptionInfo
-{
-	std::exception_ptr cppException;
-	std::jmp_buf sjljbuf;
-	int vmframes = 0;
-};
-
-extern thread_local JitExceptionInfo *CurrentJitExceptInfo;
-
-void VMThrowException(std::exception_ptr cppException);
-
 typedef int(*JitFuncPtr)(VMFunction *func, VMValue *params, int numparams, VMReturn *ret, int numret);
 
 class VMScriptFunction : public VMFunction
