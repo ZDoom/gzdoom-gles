@@ -1640,6 +1640,14 @@ int side_t::GetLightLevel (bool foggy, int baselight, bool is3dlight, int *pfake
 }
 
 
+DEFINE_ACTION_FUNCTION(_Sector, GetPortalDisplacement)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(sector_t);
+	PARAM_INT(pos);
+	ACTION_RETURN_VEC2(self->GetPortalDisplacement(pos));
+}
+
+
 DEFINE_FIELD_X(Sector, sector_t, floorplane)
 DEFINE_FIELD_X(Sector, sector_t, ceilingplane)
 DEFINE_FIELD_X(Sector, sector_t, Colormap)
