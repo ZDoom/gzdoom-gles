@@ -1194,7 +1194,7 @@ static void ParseActor(FScanner &sc, PNamespace *ns)
 	}
 	try
 	{
-		GetDefaultByType(info)->Finalize(bag.statedef);
+		FinalizeClass(info, bag.statedef);
 	}
 	catch (CRecoverableError &err)
 	{
