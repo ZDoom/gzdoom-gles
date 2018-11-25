@@ -362,6 +362,7 @@ struct GameInfoStruct native
 	native Name mSliderColor;
 	native Color defaultbloodcolor;
 	native double telefogheight;
+	native int defKickback;
 }
 
 class Object native
