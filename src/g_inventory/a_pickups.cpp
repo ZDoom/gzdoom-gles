@@ -381,10 +381,3 @@ CCMD (targetinv)
 				"the NOBLOCKMAP flag or have height/radius of 0.\n");
 }
 
-//===========================================================================
-//===========================================================================
-
-
-
-IMPLEMENT_CLASS(AStateProvider, false, false)
-
