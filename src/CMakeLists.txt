@@ -1205,6 +1205,7 @@ set (PCH_SOURCES
 	scripting/vm/vmexec.cpp
 	scripting/vm/vmframe.cpp
 	scripting/vm/jit.cpp
+	scripting/vm/jit_runtime.cpp
 	scripting/vm/jit_call.cpp
 	scripting/vm/jit_flow.cpp
 	scripting/vm/jit_load.cpp
