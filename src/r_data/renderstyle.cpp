@@ -58,6 +58,11 @@ FRenderStyle LegacyRenderStyles[STYLE_Count] =
 	{ { STYLEOP_RevSub, STYLEALPHA_Src, STYLEALPHA_One, 0 } },											/* STYLE_Subtract*/
 	{ { STYLEOP_Add, STYLEALPHA_Src, STYLEALPHA_One, STYLEF_ColorIsFixed } },							/* STYLE_AddStencil */
 	{ { STYLEOP_Add, STYLEALPHA_Src, STYLEALPHA_One, STYLEF_RedIsAlpha | STYLEF_ColorIsFixed } },		/* STYLE_AddShaded */
+	{ { STYLEOP_Add, STYLEALPHA_DstCol, STYLEALPHA_Zero, 0 } },											/* STYLE_Multiply */
+	{ { STYLEOP_Add, STYLEALPHA_InvDstCol, STYLEALPHA_Zero, 0 } },										/* STYLE_InverseMultiply */
+	{ { STYLEOP_Add, STYLEALPHA_SrcCol, STYLEALPHA_InvSrcCol, 0 } },									/* STYLE_ColorBlend */
+	{ { STYLEOP_Add, STYLEALPHA_One, STYLEALPHA_Zero, 0 } },											/* STYLE_Source */
+	{ { STYLEOP_Add, STYLEALPHA_SrcCol, STYLEALPHA_One, 0 } },											/* STYLE_ColorAdd */
 };
 
 double GetAlpha(int type, double alpha)
@@ -68,7 +73,7 @@ double GetAlpha(int type, double alpha)
 	case STYLEALPHA_One:		return 1.;
 	case STYLEALPHA_Src:		return alpha;
 	case STYLEALPHA_InvSrc:		return 1. - alpha;
-	default:					return 0;
+	default:					return 0.5;	// undeterminable
 	}
 }
 
