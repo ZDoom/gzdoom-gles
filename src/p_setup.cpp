@@ -4087,6 +4087,12 @@ void P_SetupLevel(const char *lumpname, int position, bool newGame)
 
 	// This must be done BEFORE the PolyObj Spawn!!!
 	Renderer->PreprocessLevel();
+
+	for (auto &sec : level.sectors)
+	{
+		P_Recalculate3DFloors(&sec);
+	}
+
 	P_InitHealthGroups();
 
 	times[16].Clock();
