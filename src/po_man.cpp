@@ -875,7 +875,7 @@ void FPolyObj::ThrustMobj (AActor *actor, side_t *side)
 			P_TraceBleed (newdam > 0 ? newdam : crush, actor);
 		}
 	}
-	if (level.flags2 & LEVEL2_POLYGRIND) actor->Grind(false); // crush corpses that get caught in a polyobject's way
+	if (level.flags2 & LEVEL2_POLYGRIND) actor->CallGrind(false); // crush corpses that get caught in a polyobject's way
 }
 
 //==========================================================================
