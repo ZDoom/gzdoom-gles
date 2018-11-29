@@ -73,8 +73,6 @@ public:
 	virtual void Serialize(FSerializer &arc) override;
 	virtual void Tick() override;
 
-	bool CallTryPickup(AActor *toucher, AActor **toucher_return = NULL);	// Wrapper for script function.
-
 	void DepleteOrDestroy ();			// virtual on the script side. 
 	PalEntry CallGetBlend();			// virtual on the script side.
 	bool GetNoTeleportFreeze();			// virtual on the script side.
@@ -99,5 +97,7 @@ public:
 
 	FSoundIDNoInit PickupSound;
 };
+
+bool CallTryPickup(AInventory *item, AActor *toucher, AActor **toucher_return = nullptr);
 
 #endif //__A_PICKUPS_H__
