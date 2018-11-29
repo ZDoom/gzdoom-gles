@@ -248,7 +248,7 @@ DFireFlicker::DFireFlicker (sector_t *sector)
 	: DLighting (sector)
 {
 	m_MaxLight = sector->lightlevel;
-	m_MinLight = sector_t::ClampLight(sector->FindMinSurroundingLight(sector->lightlevel) + 16);
+	m_MinLight = sector_t::ClampLight(FindMinSurroundingLight(sector, sector->lightlevel) + 16);
 	m_Count = 4;
 }
 
@@ -393,7 +393,7 @@ DLightFlash::DLightFlash (sector_t *sector)
 {
 	// Find light levels like Doom.
 	m_MaxLight = sector->lightlevel;
-	m_MinLight = sector->FindMinSurroundingLight (sector->lightlevel);
+	m_MinLight = FindMinSurroundingLight (sector, sector->lightlevel);
 	m_MaxTime = 64;
 	m_MinTime = 7;
 	m_Count = (pr_lightflash() & m_MaxTime) + 1;
@@ -485,7 +485,7 @@ DStrobe::DStrobe (sector_t *sector, int utics, int ltics, bool inSync)
 	m_BrightTime = utics;
 
 	m_MaxLight = sector->lightlevel;
-	m_MinLight = sector->FindMinSurroundingLight (sector->lightlevel);
+	m_MinLight = FindMinSurroundingLight (sector, sector->lightlevel);
 
 	if (m_MinLight == m_MaxLight)
 		m_MinLight = 0;
@@ -731,7 +731,7 @@ void DGlow::Tick ()
 DGlow::DGlow (sector_t *sector)
 	: DLighting (sector)
 {
-	m_MinLight = sector->FindMinSurroundingLight (sector->lightlevel);
+	m_MinLight = FindMinSurroundingLight (sector, sector->lightlevel);
 	m_MaxLight = sector->lightlevel;
 	m_Direction = -1;
 }
