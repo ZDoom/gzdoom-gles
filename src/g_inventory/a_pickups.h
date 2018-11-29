@@ -73,8 +73,6 @@ public:
 	virtual void Serialize(FSerializer &arc) override;
 	//virtual void Tick() override;
 
-	PalEntry CallGetBlend();			// virtual on the script side.
-
 	TObjPtr<AActor*> Owner;		// Who owns this item? NULL if it's still a pickup.
 	int Amount;					// Amount of item this instance has
 	int MaxAmount;				// Max amount of item this instance can have

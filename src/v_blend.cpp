@@ -52,6 +52,7 @@
 #include "v_palette.h"
 #include "d_player.h"
 #include "g_levellocals.h"
+#include "vm.h"
 
 CVAR( Float, blood_fade_scalar, 1.0f, CVAR_ARCHIVE )	// [SP] Pulled from Skulltag - changed default from 0.5 to 1.0
 CVAR( Float, pickup_fade_scalar, 1.0f, CVAR_ARCHIVE )	// [SP] Uses same logic as blood_fade_scalar except for pickups
@@ -105,7 +106,16 @@ void V_AddPlayerBlend (player_t *CPlayer, float blend[4], float maxinvalpha, int
 	// [RH] All powerups can affect the screen blending now
 	for (AInventory *item = CPlayer->mo->Inventory; item != NULL; item = item->Inventory)
 	{
-		PalEntry color = item->CallGetBlend ();
+		PalEntry color = 0;
+
+		IFVIRTUALPTR(item, AInventory, GetBlend)
+		{
+			VMValue params[1] = { item };
+			VMReturn ret((int*)&color.d);
+			VMCall(func, params, 1, &ret, 1);
+		}
+
+
 		if (color.a != 0)
 		{
 			V_AddBlend (color.r/255.f, color.g/255.f, color.b/255.f, color.a/255.f, blend);
