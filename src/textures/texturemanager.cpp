@@ -1277,7 +1277,7 @@ DEFINE_ACTION_FUNCTION_NATIVE(_TexMan, GetSize, GetTextureSize)
 static void GetScaledSize(int texid, DVector2 *pvec)
 {
 	auto tex = TexMan.ByIndex(texid);
-	int x, y;
+	double x, y;
 	if (tex != nullptr)
 	{
 		x = tex->GetScaledWidthDouble();
@@ -1308,7 +1308,7 @@ DEFINE_ACTION_FUNCTION_NATIVE(_TexMan, GetScaledSize, GetScaledSize)
 static void GetScaledOffset(int texid, DVector2 *pvec)
 {
 	auto tex = TexMan.ByIndex(texid);
-	int x, y;
+	double x, y;
 	if (tex != nullptr)
 	{
 		x = tex->GetScaledLeftOffsetDouble();
