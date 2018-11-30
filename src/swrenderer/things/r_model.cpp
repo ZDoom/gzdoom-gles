@@ -107,7 +107,7 @@ namespace swrenderer
 			if (lump.isValid())
 			{
 				FTexture * tex = TexMan(lump);
-				if (tex) disablefullbright = tex->bDisableFullbright;
+				if (tex) disablefullbright = tex->gl_info.bDisableFullbright;
 			}
 			return psp->GetState()->GetFullbright() && !disablefullbright;
 		}
