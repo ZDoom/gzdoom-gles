@@ -1384,6 +1384,7 @@ struct line_t
 	inline bool isVisualPortal() const;
 	inline line_t *getPortalDestination() const;
 	inline int getPortalAlignment() const;
+	inline bool hitSkyWall(AActor* mo) const;
 
 	int Index() const;
 };
