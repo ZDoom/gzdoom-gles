@@ -1907,7 +1907,7 @@ EXTERN_CVAR(Float, con_midtime)
 DEFINE_ACTION_FUNCTION(AActor, A_Print)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_STRING	(text);
+	PARAM_STRING_VAL(text);
 	PARAM_FLOAT	(time);
 	PARAM_NAME	(fontname);
 
@@ -1942,7 +1942,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_Print)
 DEFINE_ACTION_FUNCTION(AActor, A_PrintBold)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_STRING	(text);
+	PARAM_STRING_VAL	(text);
 	PARAM_FLOAT	(time);
 	PARAM_NAME	(fontname);
 
@@ -1973,7 +1973,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_PrintBold)
 DEFINE_ACTION_FUNCTION(AActor, A_Log)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_STRING(text);
+	PARAM_STRING_VAL(text);
 	PARAM_BOOL(local);
 
 	if (local && !self->CheckLocalView(consoleplayer)) return 0;

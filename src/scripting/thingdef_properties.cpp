@@ -159,7 +159,7 @@ void ModActorFlag(AActor *actor, FFlagDef *fd, bool set)
 //
 //==========================================================================
 
-bool ModActorFlag(AActor *actor, FString &flagname, bool set, bool printerror)
+bool ModActorFlag(AActor *actor, const FString &flagname, bool set, bool printerror)
 {
 	bool found = false;
 
