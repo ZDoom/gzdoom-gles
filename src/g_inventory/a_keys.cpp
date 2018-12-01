@@ -159,6 +159,7 @@ static Lock *locks[256];		// all valid locks
 static bool keysdone=false;		// have the locks been initialized?
 static int currentnumber;		// number to be assigned to next key
 static bool ignorekey;			// set to true when the current lock is not being used
+static TArray<PClassActor *> KeyTypes;	// List of all keys sorted by lock.
 
 static void ClearLocks();
 
@@ -406,6 +407,52 @@ static void ClearLocks()
 	keysdone = false;
 }
 
+//---------------------------------------------------------------------------
+//
+// create a sorted list of the defined keys so 
+// this doesn't have to be done each frame
+//
+// For use by the HUD and statusbar code to get a consistent order.
+//
+//---------------------------------------------------------------------------
+
+static int ktcmp(const void * a, const void * b)
+{
+	auto key1 = GetDefaultByType(*(PClassActor **)a);
+	auto key2 = GetDefaultByType(*(PClassActor **)b);
+	return key1->special1 - key2->special1;
+}
+
+static void CreateSortedKeyList()
+{
+	TArray<PClassActor *> UnassignedKeyTypes;
+	KeyTypes.Clear();
+	for (unsigned int i = 0; i < PClassActor::AllActorClasses.Size(); i++)
+	{
+		PClassActor *ti = PClassActor::AllActorClasses[i];
+		auto kt = PClass::FindActor(NAME_Key);
+
+		if (ti->IsDescendantOf(kt))
+		{
+			AInventory *key = (AInventory*)(GetDefaultByType(ti));
+
+			if (key->Icon.isValid() && key->special1 > 0)
+			{
+				KeyTypes.Push(ti);
+			}
+			else
+			{
+				UnassignedKeyTypes.Push(ti);
+			}
+		}
+	}
+	if (KeyTypes.Size())
+	{
+		qsort(&KeyTypes[0], KeyTypes.Size(), sizeof(KeyTypes[0]), ktcmp);
+	}
+	KeyTypes.Append(UnassignedKeyTypes);
+}
+
 //===========================================================================
 //
 // P_InitKeyMessages
@@ -440,6 +487,7 @@ void P_InitKeyMessages()
 		}
 		sc.Close();
 	}
+	CreateSortedKeyList();
 	keysdone = true;
 }
 
@@ -464,7 +512,7 @@ void P_DeinitKeyMessages()
 //
 //===========================================================================
 
-bool P_CheckKeys (AActor *owner, int keynum, bool remote, bool quiet)
+int P_CheckKeys (AActor *owner, int keynum, bool remote, bool quiet)
 {
 	const char *failtext = NULL;
 	FSoundID *failsound;
@@ -521,15 +569,6 @@ bool P_CheckKeys (AActor *owner, int keynum, bool remote, bool quiet)
 	return false;
 }
 
-DEFINE_ACTION_FUNCTION(AActor, CheckKeys)
-{
-	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_INT(locknum);
-	PARAM_BOOL(remote);
-	PARAM_BOOL(quiet);
-	ACTION_RETURN_BOOL(P_CheckKeys(self, locknum, remote, quiet));
-}
-
 //==========================================================================
 //
 // These functions can be used to get color information for
@@ -561,4 +600,16 @@ int P_GetMapColorForKey (AInventory * key)
 		if (locks[i] && locks[i]->check(key)) return locks[i]->rgb;
 	}
 	return 0;
+}
+
+
+int P_GetKeyTypeCount()
+{
+	return KeyTypes.Size();
+}
+
+PClassActor *P_GetKeyType(int num)
+{
+	if ((unsigned)num >= KeyTypes.Size()) return nullptr;
+	return KeyTypes[num];
 }
