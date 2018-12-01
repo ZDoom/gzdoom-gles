@@ -942,7 +942,7 @@ AInventory *APlayerPawn::PickNewWeapon(PClassActor *ammotype)
 	{
 		VMValue param[] = { player->mo, ammotype };
 		VMReturn ret((void**)&best);
-		VMCall(func, &param, 1, &ret, 1);
+		VMCall(func, param, 2, &ret, 1);
 	}
 
 	return best;
