@@ -3712,8 +3712,7 @@ do_count:
 				if (tag == -1 || tagManager.SectorHasTag(actor->Sector, tag))
 				{
 					// Don't count items in somebody's inventory
-					if (!actor->IsKindOf (RUNTIME_CLASS(AInventory)) ||
-						static_cast<AInventory *>(actor)->Owner == NULL)
+					if (actor->IsMapActor())
 					{
 						count++;
 					}
@@ -3732,8 +3731,7 @@ do_count:
 				if (tag == -1 || tagManager.SectorHasTag(actor->Sector, tag))
 				{
 					// Don't count items in somebody's inventory
-					if (!actor->IsKindOf (RUNTIME_CLASS(AInventory)) ||
-						static_cast<AInventory *>(actor)->Owner == NULL)
+					if (actor->IsMapActor())
 					{
 						count++;
 					}
