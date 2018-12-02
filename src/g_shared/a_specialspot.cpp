@@ -455,7 +455,7 @@ DEFINE_ACTION_FUNCTION(ASpecialSpot, A_SpawnSingleItem)
 		{
 			spawned->flags &= ~MF_DROPPED;
 		}
-		if (spawned->IsKindOf(RUNTIME_CLASS(AInventory)))
+		if (spawned->IsKindOf(NAME_Inventory))
 		{
 			static_cast<AInventory*>(spawned)->SpawnPointClass = self->GetClass();
 		}

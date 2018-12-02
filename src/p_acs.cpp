@@ -1846,7 +1846,7 @@ static int CheckInventory (AActor *activator, const char *type, bool max)
 		DPrintf (DMSG_ERROR, "ACS: '%s': Unknown actor class.\n", type);
 		return 0;
 	}
-	else if (!info->IsDescendantOf(RUNTIME_CLASS(AInventory)))
+	else if (!info->IsDescendantOf(NAME_Inventory))
 	{
 		DPrintf(DMSG_ERROR, "ACS: '%s' is not an inventory item.\n", type);
 		return 0;
@@ -1860,7 +1860,7 @@ static int CheckInventory (AActor *activator, const char *type, bool max)
 		{
 			return item->MaxAmount;
 		}
-		else if (info != nullptr && info->IsDescendantOf(RUNTIME_CLASS(AInventory)))
+		else if (info != nullptr && info->IsDescendantOf(NAME_Inventory))
 		{
 			return ((AInventory *)GetDefaultByType(info))->MaxAmount;
 		}
