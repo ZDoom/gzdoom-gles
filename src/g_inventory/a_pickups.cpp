@@ -181,11 +181,11 @@ DEFINE_ACTION_FUNCTION(AInventory, PrintPickupMessage)
 //
 //===========================================================================
 
-void AInventory::DepleteOrDestroy ()
+void DepleteOrDestroy (AInventory *item)
 {
-	IFVIRTUAL(AInventory, DepleteOrDestroy)
+	IFVIRTUALPTR(item, AInventory, DepleteOrDestroy)
 	{
-		VMValue params[1] = { (DObject*)this };
+		VMValue params[1] = { item };
 		VMCall(func, params, 1, nullptr, 0);
 	}
 }
@@ -210,48 +210,6 @@ PalEntry AInventory::CallGetBlend()
 		return retval;
 	}
 	else return 0;
-}
-
-//===========================================================================
-//
-// AInventory :: PrevInv
-//
-// Returns the previous item with IF_INVBAR set.
-//
-//===========================================================================
-
-AInventory *AInventory::PrevInv ()
-{
-	AInventory *lastgood = NULL;
-	AInventory *item = Owner->Inventory;
-
-	while (item != NULL && item != this)
-	{
-		if (item->ItemFlags & IF_INVBAR)
-		{
-			lastgood = item;
-		}
-		item = item->Inventory;
-	}
-	return lastgood;
-}
-//===========================================================================
-//
-// AInventory :: NextInv
-//
-// Returns the next item with IF_INVBAR set.
-//
-//===========================================================================
-
-AInventory *AInventory::NextInv ()
-{
-	AInventory *item = Inventory;
-
-	while (item != NULL && !(item->ItemFlags & IF_INVBAR))
-	{
-		item = item->Inventory;
-	}
-	return item;
 }
 
 //===========================================================================
