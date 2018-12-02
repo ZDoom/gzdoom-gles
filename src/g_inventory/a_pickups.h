@@ -71,7 +71,7 @@ class AInventory : public AActor
 public:
 	
 	virtual void Serialize(FSerializer &arc) override;
-	virtual void Tick() override;
+	//virtual void Tick() override;
 
 	PalEntry CallGetBlend();			// virtual on the script side.
 
