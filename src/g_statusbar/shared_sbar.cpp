@@ -76,6 +76,7 @@ IMPLEMENT_POINTERS_START(DBaseStatusBar)
 	IMPLEMENT_POINTER(Messages[0])
 	IMPLEMENT_POINTER(Messages[1])
 	IMPLEMENT_POINTER(Messages[2])
+	IMPLEMENT_POINTER(AltHud)
 IMPLEMENT_POINTERS_END
 
 EXTERN_CVAR (Bool, am_showmonsters)
@@ -373,6 +374,22 @@ DBaseStatusBar::DBaseStatusBar ()
 	CPlayer = NULL;
 	ShowLog = false;
 	defaultScale = { (double)CleanXfac, (double)CleanYfac };
+
+	// Create the AltHud object. Todo: Make class type configurable.
+	FName classname = "AltHud";
+	auto cls = PClass::FindClass(classname);
+	if (cls)
+	{
+		AltHud = cls->CreateNew();
+
+		VMFunction * func = nullptr;
+		PClass::FindFunction(&func, classname, "Init"); 
+		if (func != nullptr)
+		{
+			VMValue params[] = { AltHud };
+			VMCall(func, params, countof(params), nullptr, 0);
+		}
+	}
 }
 
 static void ValidateResolution(int &hres, int &vres)
@@ -436,6 +453,7 @@ void DBaseStatusBar::OnDestroy ()
 		}
 		Messages[i] = NULL;
 	}
+	if (AltHud) AltHud->Destroy();
 	Super::OnDestroy();
 }
 
@@ -1002,8 +1020,6 @@ void DBaseStatusBar::CallDraw(EHudState state, double ticFrac)
 	screen->ClearClipRect();	// make sure the scripts don't leave a valid clipping rect behind.
 	BeginStatusBar(BaseSBarHorizontalResolution, BaseSBarVerticalResolution, BaseRelTop, false);
 }
-
-
 
 void DBaseStatusBar::DrawLog ()
 {
