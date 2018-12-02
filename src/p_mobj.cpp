@@ -636,7 +636,7 @@ DEFINE_ACTION_FUNCTION(AActor, InStateSequence)
 bool AActor::IsMapActor()
 {
 	// [SP] Don't remove owned inventory objects.
-	return (!IsKindOf(NAME_Inventory) || static_cast<AInventory *>(this)->Owner == nullptr);
+	return (!IsKindOf(NAME_Inventory) || GC::ReadBarrier(PointerVar<AActor>(NAME_Owner)) == nullptr);
 }
 
 //==========================================================================
@@ -797,7 +797,7 @@ void AActor::DestroyAllInventory ()
 			toDelete.Push(inv);
 			AInventory *item = inv->Inventory;
 			inv->Inventory = nullptr;
-			inv->Owner = nullptr;
+			inv->PointerVar<AActor>(NAME_Owner) = nullptr;
 			inv = item;
 		}
 		for (auto p : toDelete)
@@ -1020,9 +1020,9 @@ void AActor::ObtainInventory (AActor *other)
 	}
 
 	AInventory *item = Inventory;
-	while (item != NULL)
+	while (item != nullptr)
 	{
-		item->Owner = this;
+		item->PointerVar<AActor>(NAME_Owner) = this;
 		item = item->Inventory;
 	}
 }
@@ -3802,7 +3802,7 @@ void AActor::Tick ()
 			// by the order in the inventory, not the order in the thinker table
 			AInventory *item = Inventory;
 			
-			while (item != NULL && item->Owner == this)
+			while (item != NULL)
 			{
 				IFVIRTUALPTR(item, AInventory, DoEffect)
 				{
