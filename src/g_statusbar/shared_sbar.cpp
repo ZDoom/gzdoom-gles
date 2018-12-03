@@ -382,8 +382,7 @@ DBaseStatusBar::DBaseStatusBar ()
 	{
 		AltHud = cls->CreateNew();
 
-		VMFunction * func = nullptr;
-		PClass::FindFunction(&func, classname, "Init"); 
+		VMFunction * func = PClass::FindFunction(classname, "Init"); 
 		if (func != nullptr)
 		{
 			VMValue params[] = { AltHud };
