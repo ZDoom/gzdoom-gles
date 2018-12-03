@@ -1798,14 +1798,15 @@ void FormatNumber(int number, int minsize, int maxsize, int flags, const FString
 //
 //---------------------------------------------------------------------------
 
-FTextureID GetInventoryIcon(AInventory *item, uint32_t flags, int *applyscale)
+//FTextureID GetInventoryIcon(AInventory *item, uint32_t flags, int *applyscale)
+int GetInventoryIcon(AInventory *item, uint32_t flags, int *applyscale)
 {
 	if (applyscale != NULL)
 	{
 		*applyscale = false;
 	}
 
-	if (item == nullptr) return FNullTextureID();
+	if (item == nullptr) return FNullTextureID().GetIndex();
 
 	FTextureID picnum, Icon = item->Icon, AltIcon = item->AltHUDIcon;
 	FState * state = NULL, *ReadyState;
@@ -1850,6 +1851,6 @@ FTextureID GetInventoryIcon(AInventory *item, uint32_t flags, int *applyscale)
 			picnum = sprframe->Texture[0];
 		}
 	}
-	return picnum;
+	return picnum.GetIndex();
 }
 
