@@ -795,7 +795,7 @@ void AActor::DestroyAllInventory ()
 		while (inv != nullptr)
 		{
 			toDelete.Push(inv);
-			AInventory *item = inv->Inventory;
+			auto item = inv->Inventory;
 			inv->Inventory = nullptr;
 			inv->PointerVar<AActor>(NAME_Owner) = nullptr;
 			inv = item;
@@ -916,18 +916,17 @@ DEFINE_ACTION_FUNCTION(AActor, FindInventory)
 
 AInventory *AActor::GiveInventoryType (PClassActor *type)
 {
-	AInventory *item = NULL;
-
-	if (type != NULL)
+	if (type != nullptr)
 	{
-		item = static_cast<AInventory *>(Spawn (type));
+		auto item = static_cast<AInventory *>(Spawn (type));
 		if (!CallTryPickup (item, this))
 		{
 			item->Destroy ();
-			return NULL;
+			return nullptr;
 		}
+		return item;
 	}
-	return item;
+	return nullptr;
 }
 
 DEFINE_ACTION_FUNCTION(AActor, GiveInventoryType)
@@ -1019,7 +1018,7 @@ void AActor::ObtainInventory (AActor *other)
 		you->InvSel = NULL;
 	}
 
-	AInventory *item = Inventory;
+	auto item = Inventory;
 	while (item != nullptr)
 	{
 		item->PointerVar<AActor>(NAME_Owner) = this;
@@ -3465,7 +3464,7 @@ bool AActor::AdjustReflectionAngle (AActor *thing, DAngle &angle)
 
 int AActor::AbsorbDamage(int damage, FName dmgtype)
 {
-	for (AInventory *item = Inventory; item != nullptr; item = item->Inventory)
+	for (auto item = Inventory; item != nullptr; item = item->Inventory)
 	{
 		IFVIRTUALPTR(item, AInventory, AbsorbDamage)
 		{
@@ -3481,7 +3480,7 @@ void AActor::AlterWeaponSprite(visstyle_t *vis)
 	int changed = 0;
 	TArray<AInventory *> items;
 	// This needs to go backwards through the items but the list has no backlinks.
-	for (AInventory *item = Inventory; item != nullptr; item = item->Inventory)
+	for (auto item = Inventory; item != nullptr; item = item->Inventory)
 	{
 		items.Push(item);
 	}
@@ -3800,7 +3799,7 @@ void AActor::Tick ()
 		{
 			// Handle powerup effects here so that the order is controlled
 			// by the order in the inventory, not the order in the thinker table
-			AInventory *item = Inventory;
+			auto item = Inventory;
 			
 			while (item != NULL)
 			{

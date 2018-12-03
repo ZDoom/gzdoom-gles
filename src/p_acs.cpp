@@ -1748,7 +1748,7 @@ void P_WriteACSVars(FSerializer &arc)
 
 static bool DoUseInv (AActor *actor, PClassActor *info)
 {
-	AInventory *item = actor->FindInventory (info);
+	auto item = actor->FindInventory (info);
 	if (item != NULL)
 	{
 		player_t* const player = actor->player;
@@ -1852,7 +1852,7 @@ int CheckInventory (AActor *activator, const char *type, bool max)
 		return 0;
 	}
 
-	AInventory *item = activator->FindInventory (info);
+	auto item = activator->FindInventory (info);
 
 	if (max)
 	{
@@ -9372,7 +9372,7 @@ scriptwait:
 					}
 					else
 					{
-						STACK(1) = ((AInventory *)GetDefaultByType (type))->IntVar(NAME_MaxAmount);
+						STACK(1) = GetDefaultByType (type)->IntVar(NAME_MaxAmount);
 					}
 				}
 				else
