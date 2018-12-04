@@ -1190,6 +1190,7 @@ set (PCH_SOURCES
 	scripting/symbols.cpp
 	scripting/vmiterators.cpp
 	scripting/vmthunks.cpp
+	scripting/vmthunks_actors.cpp
 	scripting/types.cpp
 	scripting/thingdef.cpp
 	scripting/thingdef_data.cpp
