@@ -1543,7 +1543,7 @@ static int PatchSprite (int sprNum)
 static int PatchAmmo (int ammoNum)
 {
 	PClassActor *ammoType = NULL;
-	AInventory *defaultAmmo = NULL;
+	AActor *defaultAmmo = NULL;
 	int result;
 	int oldclip;
 	int dummy;
@@ -1556,7 +1556,7 @@ static int PatchAmmo (int ammoNum)
 		ammoType = AmmoNames[ammoNum];
 		if (ammoType != NULL)
 		{
-			defaultAmmo = (AInventory*)GetDefaultByType (ammoType);
+			defaultAmmo = GetDefaultByType (ammoType);
 			if (defaultAmmo != NULL)
 			{
 				max = &defaultAmmo->IntVar(NAME_MaxAmount);
@@ -1598,7 +1598,7 @@ static int PatchAmmo (int ammoNum)
 
 			if (type->IsDescendantOf (ammoType))
 			{
-				defaultAmmo = (AInventory *)GetDefaultByType (type);
+				defaultAmmo = GetDefaultByType (type);
 				defaultAmmo->IntVar(NAME_MaxAmount) = *max;
 				defaultAmmo->IntVar(NAME_Amount) = Scale (defaultAmmo->IntVar(NAME_Amount), *per, oldclip);
 			}
@@ -1626,7 +1626,7 @@ static int PatchWeapon (int weapNum)
 {
 	int result;
 	PClassActor *type = nullptr;
-	AInventory *info = nullptr;
+	AActor *info = nullptr;
 	bool patchedStates = false;
 	FStateDefinitions statedef;
 
@@ -1635,7 +1635,7 @@ static int PatchWeapon (int weapNum)
 		type = WeaponNames[weapNum];
 		if (type != NULL)
 		{
-			info = (AInventory*)GetDefaultByType (type);
+			info = GetDefaultByType (type);
 			DPrintf (DMSG_SPAMMY, "Weapon %d\n", weapNum);
 		}
 	}
