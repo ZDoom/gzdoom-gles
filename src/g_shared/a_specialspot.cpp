@@ -251,12 +251,6 @@ DSpotState *DSpotState::GetSpotState(bool create)
 	return SpotState;
 }
 
-DEFINE_ACTION_FUNCTION(DSpotState, GetSpotState)
-{
-	PARAM_PROLOGUE;
-	ACTION_RETURN_OBJECT(DSpotState::GetSpotState());
-}
-
 //----------------------------------------------------------------------------
 //
 //
@@ -324,14 +318,6 @@ ASpecialSpot *DSpotState::GetNextInList(PClassActor *type, int skipcounter)
 	return NULL;
 }
 
-DEFINE_ACTION_FUNCTION(DSpotState, GetNextInList)
-{
-	PARAM_SELF_PROLOGUE(DSpotState);
-	PARAM_CLASS(type, AActor);
-	PARAM_INT(skipcounter);
-	ACTION_RETURN_OBJECT(self->GetNextInList(type, skipcounter));
-}
-
 //----------------------------------------------------------------------------
 //
 //
@@ -345,18 +331,6 @@ ASpecialSpot *DSpotState::GetSpotWithMinMaxDistance(PClassActor *type, double x,
 	return NULL;
 }
 
-DEFINE_ACTION_FUNCTION(DSpotState, GetSpotWithMinMaxDistance)
-{
-	PARAM_SELF_PROLOGUE(DSpotState);
-	PARAM_CLASS(type, AActor);
-	PARAM_FLOAT(x);
-	PARAM_FLOAT(y);
-	PARAM_FLOAT(mindist);
-	PARAM_FLOAT(maxdist);
-	ACTION_RETURN_OBJECT(self->GetSpotWithMinMaxDistance(type, x, y, mindist, maxdist));
-}
-
-
 //----------------------------------------------------------------------------
 //
 //
@@ -368,14 +342,6 @@ ASpecialSpot *DSpotState::GetRandomSpot(PClassActor *type, bool onlyonce)
 	FSpotList *list = FindSpotList(type);
 	if (list != NULL) return list->GetRandomSpot(onlyonce);
 	return NULL;
-}
-
-DEFINE_ACTION_FUNCTION(DSpotState, GetRandomSpot)
-{
-	PARAM_SELF_PROLOGUE(DSpotState);
-	PARAM_CLASS(type, AActor);
-	PARAM_BOOL(onlyonce);
-	ACTION_RETURN_POINTER(self->GetRandomSpot(type, onlyonce));
 }
 
 //----------------------------------------------------------------------------
