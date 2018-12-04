@@ -9344,7 +9344,7 @@ scriptwait:
 
 		case PCD_GETSIGILPIECES:
 			{
-				AInventory *sigil;
+				AActor *sigil;
 
 				if (activator == NULL || (sigil = activator->FindInventory(NAME_Sigil)) == NULL)
 				{
@@ -9361,11 +9361,10 @@ scriptwait:
 			if (activator != NULL)
 			{
 				PClass *type = PClass::FindClass (FBehavior::StaticLookupString (STACK(1)));
-				AInventory *item;
 
 				if (type != NULL && type->ParentClass == PClass::FindActor(NAME_Ammo))
 				{
-					item = activator->FindInventory (static_cast<PClassActor *>(type));
+					auto item = activator->FindInventory (static_cast<PClassActor *>(type));
 					if (item != NULL)
 					{
 						STACK(1) = item->IntVar(NAME_MaxAmount);
@@ -9390,11 +9389,10 @@ scriptwait:
 			if (activator != NULL)
 			{
 				PClassActor *type = PClass::FindActor (FBehavior::StaticLookupString (STACK(2)));
-				AInventory *item;
 
 				if (type != NULL && type->ParentClass == PClass::FindActor(NAME_Ammo))
 				{
-					item = activator->FindInventory (type);
+					auto item = activator->FindInventory (type);
 					if (item != NULL)
 					{
 						item->IntVar(NAME_MaxAmount) = STACK(1);

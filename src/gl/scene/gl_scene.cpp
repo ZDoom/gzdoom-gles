@@ -775,11 +775,11 @@ void GLSceneDrawer::SetFixedColormap (player_t *player)
 		{
 			auto torchtype = PClass::FindActor(NAME_PowerTorch);
 			auto litetype = PClass::FindActor(NAME_PowerLightAmp);
-			for(AInventory * in = cplayer->mo->Inventory; in; in = in->Inventory)
+			for(AActor *in = cplayer->mo->Inventory; in; in = in->Inventory)
 			{
 				PalEntry color = 0;
 
-				IFVIRTUALPTR(in, AInventory, GetBlend)
+				IFVIRTUALPTRNAME(in, NAME_Inventory, GetBlend)
 				{
 					VMValue params[1] = { in };
 					VMReturn ret((int*)&color.d);

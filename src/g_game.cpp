@@ -239,7 +239,7 @@ FString savename;
 FString BackupSaveName;
 
 bool SendLand;
-const AInventory *SendItemUse, *SendItemDrop;
+const AActor *SendItemUse, *SendItemDrop;
 int SendItemDropAmount;
 
 EXTERN_CVAR (Int, team)
@@ -437,7 +437,7 @@ CCMD(invprev)
 
 CCMD (invuseall)
 {
-	SendItemUse = (const AInventory *)1;
+	SendItemUse = (const AActor *)1;
 }
 
 CCMD (invuse)
@@ -451,7 +451,7 @@ CCMD (invuse)
 
 CCMD(invquery)
 {
-	AInventory *inv = players[consoleplayer].mo->InvSel;
+	AActor *inv = players[consoleplayer].mo->InvSel;
 	if (inv != NULL)
 	{
 		Printf(PRINT_HIGH, "%s (%dx)\n", inv->GetTag(), inv->IntVar(NAME_Amount));
@@ -758,7 +758,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 		Net_WriteString (savedescription);
 		savegamefile = "";
 	}
-	if (SendItemUse == (const AInventory *)1)
+	if (SendItemUse == (const AActor *)1)
 	{
 		Net_WriteByte (DEM_INVUSEALL);
 		SendItemUse = NULL;

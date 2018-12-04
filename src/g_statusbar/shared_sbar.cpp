@@ -1307,12 +1307,12 @@ void DBaseStatusBar::CallScreenSizeChanged()
 //
 //---------------------------------------------------------------------------
 
-AInventory *DBaseStatusBar::ValidateInvFirst (int numVisible) const
+AActor *DBaseStatusBar::ValidateInvFirst (int numVisible) const
 {
 	IFVM(BaseStatusBar, ValidateInvFirst)
 	{
-		VMValue params[] = { (AInventory*)this, numVisible };
-		AInventory *item;
+		VMValue params[] = { const_cast<DBaseStatusBar*>(this), numVisible };
+		AActor *item;
 		VMReturn ret((void**)&item);
 		VMCall(func, params, 2, &ret, 1);
 		return item;
@@ -1798,8 +1798,7 @@ void FormatNumber(int number, int minsize, int maxsize, int flags, const FString
 //
 //---------------------------------------------------------------------------
 
-//FTextureID GetInventoryIcon(AInventory *item, uint32_t flags, int *applyscale)
-int GetInventoryIcon(AInventory *item, uint32_t flags, int *applyscale)
+int GetInventoryIcon(AActor *item, uint32_t flags, int *applyscale)
 {
 	if (applyscale != NULL)
 	{

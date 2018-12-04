@@ -935,9 +935,9 @@ void APlayerPawn::PostBeginPlay()
 //
 //===========================================================================
 
-AInventory *APlayerPawn::PickNewWeapon(PClassActor *ammotype)
+AActor *APlayerPawn::PickNewWeapon(PClassActor *ammotype)
 {
-	AInventory *best = nullptr;
+	AActor *best = nullptr;
 	IFVM(PlayerPawn, PickNewWeapon)
 	{
 		VMValue param[] = { player->mo, ammotype };
@@ -963,10 +963,10 @@ void APlayerPawn::GiveDeathmatchInventory()
 	{
 		if (PClassActor::AllActorClasses[i]->IsDescendantOf (PClass::FindActor(NAME_Key)))
 		{
-			AInventory *key = (AInventory*)GetDefaultByType (PClassActor::AllActorClasses[i]);
+			auto key = GetDefaultByType (PClassActor::AllActorClasses[i]);
 			if (key->special1 != 0)
 			{
-				key = (AInventory*)Spawn(PClassActor::AllActorClasses[i]);
+				key = Spawn(PClassActor::AllActorClasses[i]);
 				if (!CallTryPickup (key, this))
 				{
 					key->Destroy ();
@@ -1968,7 +1968,7 @@ void P_UnPredictPlayer ()
 		APlayerPawn *act = player->mo;
 		AActor *savedcamera = player->camera;
 
-		TObjPtr<AInventory*> InvSel = act->InvSel;
+		TObjPtr<AActor*> InvSel = act->InvSel;
 		int inventorytics = player->inventorytics;
 
 		*player = PredictionPlayerBackup;
