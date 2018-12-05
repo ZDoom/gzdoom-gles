@@ -76,13 +76,22 @@ CVAR(Int, m_use_mouse, 2, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 CVAR(Int, m_show_backbutton, 0, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 
 
-DEFINE_ACTION_FUNCTION(DMenu, GetCurrentMenu)
+static DMenu *GetCurrentMenu()
+{
+	return CurrentMenu;
+}
+
+DEFINE_ACTION_FUNCTION_NATIVE(DMenu, GetCurrentMenu, GetCurrentMenu)
 {
 	ACTION_RETURN_OBJECT(CurrentMenu);
 }
 
+static int GetMenuTime()
+{
+	return MenuTime;
+}
 
-DEFINE_ACTION_FUNCTION(DMenu, MenuTime)
+DEFINE_ACTION_FUNCTION_NATIVE(DMenu, MenuTime, GetMenuTime)
 {
 	ACTION_RETURN_INT(MenuTime);
 }
@@ -117,13 +126,17 @@ IMPLEMENT_CLASS(DMenuDescriptor, false, false)
 IMPLEMENT_CLASS(DListMenuDescriptor, false, false)
 IMPLEMENT_CLASS(DOptionMenuDescriptor, false, false)
 
-DEFINE_ACTION_FUNCTION(DMenuDescriptor, GetDescriptor)
+DMenuDescriptor *GetMenuDescriptor(int name)
+{
+	DMenuDescriptor **desc = MenuDescriptors.CheckKey(ENamedName(name));
+	return desc ? *desc : nullptr;
+}
+
+DEFINE_ACTION_FUNCTION_NATIVE(DMenuDescriptor, GetDescriptor, GetMenuDescriptor)
 {
 	PARAM_PROLOGUE;
 	PARAM_NAME(name);
-	DMenuDescriptor **desc = MenuDescriptors.CheckKey(name);
-	auto retn = desc ? *desc : nullptr;
-	ACTION_RETURN_OBJECT(retn);
+	ACTION_RETURN_OBJECT(GetMenuDescriptor(name));
 }
 
 size_t DListMenuDescriptor::PropagateMark()
@@ -234,12 +247,16 @@ bool DMenu::CallMenuEvent(int mkey, bool fromcontroller)
 //
 //=============================================================================
 
-DEFINE_ACTION_FUNCTION(DMenu, SetMouseCapture)
+static void SetMouseCapture(bool on)
+{
+	if (on) I_SetMouseCapture();
+	else I_ReleaseMouseCapture();
+}
+DEFINE_ACTION_FUNCTION_NATIVE(DMenu, SetMouseCapture, SetMouseCapture)
 {
 	PARAM_PROLOGUE;
 	PARAM_BOOL(on);
-	if (on) I_SetMouseCapture();
-	else I_ReleaseMouseCapture();
+	SetMouseCapture(on);
 	return 0;
 }
 
@@ -265,7 +282,13 @@ void DMenu::Close ()
 	}
 }
 
-DEFINE_ACTION_FUNCTION(DMenu, Close)
+
+static void Close(DMenu *menu)
+{
+	menu->Close();
+}
+
+DEFINE_ACTION_FUNCTION_NATIVE(DMenu, Close, Close)
 {
 	PARAM_SELF_PROLOGUE(DMenu);
 	self->Close();
