@@ -348,15 +348,6 @@ void AActor::UnlinkFromWorld (FLinkContext *ctx)
 	ClearRenderLineList();
 }
 
-DEFINE_ACTION_FUNCTION(AActor, UnlinkFromWorld)
-{
-	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_POINTER(ctx, FLinkContext);
-	self->UnlinkFromWorld(ctx); // fixme
-	return 0;
-}
-
-
 //==========================================================================
 //
 // If the thing is exactly on a line, move it into the sector
@@ -566,14 +557,6 @@ void AActor::LinkToWorld(FLinkContext *ctx, bool spawningmapthing, sector_t *sec
 	if (!spawningmapthing) UpdateRenderSectorList();
 }
 
-DEFINE_ACTION_FUNCTION(AActor, LinkToWorld)
-{
-	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_POINTER(ctx, FLinkContext);
-	self->LinkToWorld(ctx);
-	return 0;
-}
-
 void AActor::SetOrigin(double x, double y, double z, bool moving)
 {
 	FLinkContext ctx;
@@ -582,17 +565,6 @@ void AActor::SetOrigin(double x, double y, double z, bool moving)
 	LinkToWorld (&ctx);
 	P_FindFloorCeiling(this, FFCF_ONLYSPAWNPOS);
 	if (!moving) ClearInterpolation();
-}
-
-DEFINE_ACTION_FUNCTION(AActor, SetOrigin)
-{
-	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_FLOAT(x);
-	PARAM_FLOAT(y);
-	PARAM_FLOAT(z);
-	PARAM_BOOL(moving);
-	self->SetOrigin(x, y, z, moving);
-	return 0;
 }
 
 //===========================================================================
@@ -1887,15 +1859,6 @@ AActor *P_RoughMonsterSearch(AActor *mo, int distance, bool onlyseekable, bool f
 	}
 
 	return P_BlockmapSearch(mo, distance, RoughBlockCheck, (void *)&info);
-}
-
-DEFINE_ACTION_FUNCTION(AActor, RoughMonsterSearch)
-{
-	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_INT(distance);
-	PARAM_BOOL(onlyseekable);
-	PARAM_BOOL(frontonly);
-	ACTION_RETURN_OBJECT(P_RoughMonsterSearch(self, distance, onlyseekable, frontonly));
 }
 
 //==========================================================================
