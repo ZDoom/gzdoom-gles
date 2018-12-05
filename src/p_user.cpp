@@ -303,14 +303,6 @@ CCMD (playerclasses)
 	}
 }
 
-DEFINE_ACTION_FUNCTION(AActor, Substitute)
-{
-	PARAM_SELF_PROLOGUE(AActor);
-	PARAM_OBJECT(replace, AActor);
-	DObject::StaticPointerSubstitution(self, replace);
-	return 0;
-}
-
 //
 // Movement.
 //
@@ -1228,23 +1220,6 @@ DEFINE_ACTION_FUNCTION(AActor, A_SkullPop)
 		{
 			players[i].camera = mo;
 		}
-	}
-	return 0;
-}
-
-//----------------------------------------------------------------------------
-//
-// PROC A_CheckSkullDone
-//
-//----------------------------------------------------------------------------
-
-DEFINE_ACTION_FUNCTION(AActor, A_CheckPlayerDone)
-{
-	PARAM_SELF_PROLOGUE(AActor);
-
-	if (self->player == NULL)
-	{
-		self->Destroy();
 	}
 	return 0;
 }

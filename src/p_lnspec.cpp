@@ -3184,7 +3184,7 @@ FUNC(LS_NoiseAlert)
 		emitter = iter.Next();
 	}
 
-	P_NoiseAlert (target, emitter);
+	P_NoiseAlert (emitter, target);
 	return true;
 }
 
