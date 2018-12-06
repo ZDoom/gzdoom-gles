@@ -116,11 +116,14 @@ namespace
 	}
 }
 
+void R_ShowCurrentScaling();
 CUSTOM_CVAR(Float, vid_scalefactor, 1.0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
 {
 	setsizeneeded = true;
 	if (self < 0.05 || self > 2.0)
 		self = 1.0;
+	if (self != 1.0)
+		R_ShowCurrentScaling();
 }
 
 CUSTOM_CVAR(Int, vid_scalemode, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
@@ -224,9 +227,11 @@ CCMD (vid_scaletowidth)
 		return;	
 
 	if (argv.argc() > 1)
-		vid_scalefactor = (float)((double)atof(argv[1]) / screen->GetWidth());
-
-	R_ShowCurrentScaling();
+	{
+		// the following enables the use of ViewportScaledWidth to get the proper dimensions in custom scale modes
+		vid_scalefactor = 1;
+		vid_scalefactor = (float)((double)atof(argv[1]) / ViewportScaledWidth(screen->GetWidth(), screen->GetHeight()));
+	}
 }
 
 CCMD (vid_scaletoheight)
@@ -235,9 +240,10 @@ CCMD (vid_scaletoheight)
 		return;	
 
 	if (argv.argc() > 1)
-		vid_scalefactor = (float)((double)atof(argv[1]) / screen->GetHeight());
-
-	R_ShowCurrentScaling();
+	{
+		vid_scalefactor = 1;
+		vid_scalefactor = (float)((double)atof(argv[1]) / ViewportScaledHeight(screen->GetWidth(), screen->GetHeight()));
+	}
 }
 
 inline bool atob(char* I)
