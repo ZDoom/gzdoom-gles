@@ -7608,7 +7608,7 @@ FxExpression *FxFunctionCall::Resolve(FCompileContext& ctx)
 
 	if (ctx.Class != nullptr)
 	{
-		PFunction *afd = FindClassMemberFunction(ctx.Class, ctx.Class, MethodName, ScriptPosition, &error);
+		PFunction *afd = FindClassMemberFunction(ctx.Class, ctx.Class, MethodName, ScriptPosition, &error, ctx.Version);
 
 		if (afd != nullptr)
 		{
@@ -8010,7 +8010,7 @@ FxExpression *FxMemberFunctionCall::Resolve(FCompileContext& ctx)
 					if (novirtual)
 					{
 						bool error;
-						PFunction *afd = FindClassMemberFunction(ccls, ctx.Class, MethodName, ScriptPosition, &error);
+						PFunction *afd = FindClassMemberFunction(ccls, ctx.Class, MethodName, ScriptPosition, &error, ctx.Version);
 						if ((nullptr != afd) && (afd->Variants[0].Flags & VARF_Method) && (afd->Variants[0].Flags & VARF_Virtual))
 						{
 							staticonly = false;
@@ -8317,7 +8317,7 @@ FxExpression *FxMemberFunctionCall::Resolve(FCompileContext& ctx)
 
 isresolved:
 	bool error = false;
-	PFunction *afd = FindClassMemberFunction(cls, ctx.Class, MethodName, ScriptPosition, &error);
+	PFunction *afd = FindClassMemberFunction(cls, ctx.Class, MethodName, ScriptPosition, &error, ctx.Version);
 	if (error)
 	{
 		delete this;
