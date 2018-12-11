@@ -82,6 +82,7 @@
 #include "r_utility.h"
 #include "g_levellocals.h"
 #include "s_sound.h"
+#include "vm.h"
 
 #include "stats.h"
 #include "st_start.h"
@@ -1070,6 +1071,11 @@ void DoMain (HINSTANCE hInstance)
 		auto msg = error.what();
 		if (strcmp(msg, "NoRunExit"))
 		{
+			if (CVMAbortException::stacktrace.IsNotEmpty())
+			{
+				Printf("%s", CVMAbortException::stacktrace.GetChars());
+			}
+
 			if (!batchrun)
 			{
 				ShowErrorPane(msg);
