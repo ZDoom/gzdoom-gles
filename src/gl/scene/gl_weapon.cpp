@@ -301,7 +301,7 @@ void GLSceneDrawer::DrawPlayerSprites(sector_t * viewsector, bool hudModelStep)
 
 		lightlevel = gl_CalcLightLevel(lightlevel, getExtraLight(), true, 0);
 
-		if (glset.lightmode == 8 || lightlevel < 92)
+		if (glset.lightmode >= 8 || lightlevel < 92)
 		{
 			// Korshun: the way based on max possible light level for sector like in software renderer.
 			float min_L = 36.0 / 31.0 - ((lightlevel / 255.0) * (63.0 / 31.0)); // Lightlevel in range 0-63
@@ -331,7 +331,7 @@ void GLSceneDrawer::DrawPlayerSprites(sector_t * viewsector, bool hudModelStep)
 	// hack alert! Rather than changing everything in the underlying lighting code let's just temporarily change
 	// light mode here to draw the weapon sprite.
 	int oldlightmode = glset.lightmode;
-	if (glset.lightmode == 8) glset.lightmode = 2;
+	if (glset.lightmode >= 8) glset.lightmode = 2;
 
 	for(DPSprite *psp = player->psprites; psp != nullptr && psp->GetID() < PSP_TARGETCENTER; psp = psp->GetNext())
 	{

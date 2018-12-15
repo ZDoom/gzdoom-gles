@@ -377,7 +377,7 @@ void F2DDrawer::Draw()
 	int8_t savedlightmode = glset.lightmode;
 	// lightmode is only relevant for automap subsectors,
 	// but We cannot use the software light mode here because it doesn't properly calculate the light for 2D rendering.
-	if (glset.lightmode == 8) glset.lightmode = 0;
+	if (glset.lightmode >= 8) glset.lightmode = 0;
 
 	set(&mVertices[0], mVertices.Size());
 	for (unsigned i = 0; i < mData.Size();)

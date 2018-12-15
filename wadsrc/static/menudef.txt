@@ -2141,6 +2141,7 @@ OptionValue "LightingModes"
 	3, "$OPTVAL_DARK"
 	4, "$OPTVAL_LEGACY"
 	8, "$OPTVAL_SOFTWARE"
+	16, "$OPTVAL_VANILLA"
 }
 
 OptionValue "Precision"

@@ -364,7 +364,7 @@ public:
 
 	void SetSoftLightLevel(int level, int blendfactor = 0)
 	{
-		if (glset.lightmode == 8 && blendfactor == 0) mLightParms[3] = level / 255.f;
+		if (glset.lightmode >= 8 && blendfactor == 0) mLightParms[3] = level / 255.f;
 		else mLightParms[3] = -1.f;
 	}
 

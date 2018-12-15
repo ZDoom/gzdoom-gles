@@ -100,8 +100,9 @@ CUSTOM_CVAR(Int,gl_fogmode,1,CVAR_ARCHIVE|CVAR_NOINITCALL)
 CUSTOM_CVAR(Int, gl_lightmode, 8 ,CVAR_ARCHIVE|CVAR_NOINITCALL)
 {
 	int newself = self;
-	if (newself > 4) newself=8;	// use 8 for software lighting to avoid conflicts with the bit mask
-	if (newself < 0) newself=0;
+	if (newself > 8) newself = 16;	// use 8 and 16 for software lighting to avoid conflicts with the bit mask
+	else if (newself > 4) newself = 8;
+	else if (newself < 0) newself = 0;
 	if (self != newself) self = newself;
 	glset.lightmode = newself;
 }
@@ -173,7 +174,7 @@ int gl_CalcLightLevel(int lightlevel, int rellight, bool weapon, int blendfactor
 
 	if (lightlevel == 0) return 0;
 
-	bool darklightmode = (glset.lightmode & 2) || (glset.lightmode == 8 && blendfactor > 0);
+	bool darklightmode = (glset.lightmode & 2) || (glset.lightmode >= 8 && blendfactor > 0);
 
 	if (darklightmode && lightlevel < 192 && !weapon) 
 	{
@@ -215,7 +216,7 @@ static PalEntry gl_CalcLightColor(int light, PalEntry pe, int blendfactor)
 
 	if (blendfactor == 0)
 	{
-		if (glset.lightmode == 8)
+		if (glset.lightmode >= 8)
 		{
 			return pe;
 		}
@@ -281,7 +282,7 @@ float gl_GetFogDensity(int lightlevel, PalEntry fogcolor, int sectorfogdensity, 
 	float density;
 
 	int lightmode = glset.lightmode;
-	if (lightmode == 8 && blendfactor > 0) lightmode = 2;	// The blendfactor feature does not work with software-style lighting.
+	if (lightmode >= 8 && blendfactor > 0) lightmode = 2;	// The blendfactor feature does not work with software-style lighting.
 
 	if (lightmode & 4)
 	{
@@ -296,7 +297,7 @@ float gl_GetFogDensity(int lightlevel, PalEntry fogcolor, int sectorfogdensity, 
 	else if ((fogcolor.d & 0xffffff) == 0)
 	{
 		// case 2: black fog
-		if ((lightmode != 8 || blendfactor > 0) && !(level.flags3 & LEVEL3_NOLIGHTFADE))
+		if ((lightmode < 8 || blendfactor > 0) && !(level.flags3 & LEVEL3_NOLIGHTFADE))
 		{
 			density = distfogtable[glset.lightmode != 0][gl_ClampLight(lightlevel)];
 		}
@@ -466,7 +467,7 @@ void gl_SetFog(int lightlevel, int rellight, bool fullbright, const FColormap *c
 	}
 	else
 	{
-		if ((glset.lightmode == 2 || (glset.lightmode == 8 && cmap->BlendFactor > 0)) && fogcolor == 0)
+		if ((glset.lightmode == 2 || (glset.lightmode >= 8 && cmap->BlendFactor > 0)) && fogcolor == 0)
 		{
 			float light = gl_CalcLightLevel(lightlevel, rellight, false, cmap->BlendFactor);
 			gl_SetShaderLight(light, lightlevel);
@@ -487,7 +488,7 @@ void gl_SetFog(int lightlevel, int rellight, bool fullbright, const FColormap *c
 		gl_RenderState.SetFog(fogcolor, fogdensity);
 
 		// Korshun: fullbright fog like in software renderer.
-		if (glset.lightmode == 8 && cmap->BlendFactor == 0 && glset.brightfog && fogdensity != 0 && fogcolor != 0)
+		if (glset.lightmode >= 8 && cmap->BlendFactor == 0 && glset.brightfog && fogdensity != 0 && fogcolor != 0)
 		{
 			gl_RenderState.SetSoftLightLevel(255);
 		}
