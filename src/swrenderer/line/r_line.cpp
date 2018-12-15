@@ -455,7 +455,7 @@ namespace swrenderer
 						double yscale = pic->Scale.Y * sidedef->GetTextureYScale(side_t::mid);
 						fixed_t xoffset = FLOAT2FIXED(sidedef->GetTextureXOffset(side_t::mid));
 
-						if (pic->bWorldPanning)
+						if (pic->bWorldPanning || (level.flags3 & LEVEL3_FORCEWORLDPANNING))
 						{
 							xoffset = xs_RoundToInt(xoffset * lwallscale);
 						}
@@ -848,7 +848,7 @@ namespace swrenderer
 				mTopPart.TextureMid = (mBackSector->GetPlaneTexZ(sector_t::ceiling) - Thread->Viewport->viewpoint.Pos.Z) * yrepeat;
 			}
 		}
-		if (mTopPart.Texture->bWorldPanning)
+		if (mTopPart.Texture->bWorldPanning || (level.flags3 & LEVEL3_FORCEWORLDPANNING))
 		{
 			mTopPart.TextureMid += rowoffset * yrepeat;
 		}
@@ -904,7 +904,7 @@ namespace swrenderer
 				mMiddlePart.TextureMid = (mFrontSector->GetPlaneTexZ(sector_t::ceiling) - Thread->Viewport->viewpoint.Pos.Z) * yrepeat + mMiddlePart.Texture->GetHeight();
 			}
 		}
-		if (mMiddlePart.Texture->bWorldPanning)
+		if (mMiddlePart.Texture->bWorldPanning || (level.flags3 & LEVEL3_FORCEWORLDPANNING))
 		{
 			mMiddlePart.TextureMid += rowoffset * yrepeat;
 		}
@@ -969,7 +969,7 @@ namespace swrenderer
 				mBottomPart.TextureMid = (mBackSector->GetPlaneTexZ(sector_t::floor) - Thread->Viewport->viewpoint.Pos.Z) * yrepeat + mBottomPart.Texture->GetHeight();
 			}
 		}
-		if (mBottomPart.Texture->bWorldPanning)
+		if (mBottomPart.Texture->bWorldPanning || (level.flags3 & LEVEL3_FORCEWORLDPANNING))
 		{
 			mBottomPart.TextureMid += rowoffset * yrepeat;
 		}
@@ -1144,7 +1144,7 @@ namespace swrenderer
 			lwallscale = xscale;
 		}
 		fixed_t offset;
-		if (mTopPart.Texture->bWorldPanning)
+		if (mTopPart.Texture->bWorldPanning || (level.flags3 & LEVEL3_FORCEWORLDPANNING))
 		{
 			offset = xs_RoundToInt(mTopPart.TextureOffsetU * xscale);
 		}
@@ -1191,7 +1191,7 @@ namespace swrenderer
 			lwallscale = xscale;
 		}
 		fixed_t offset;
-		if (mMiddlePart.Texture->bWorldPanning)
+		if (mMiddlePart.Texture->bWorldPanning || (level.flags3 & LEVEL3_FORCEWORLDPANNING))
 		{
 			offset = xs_RoundToInt(mMiddlePart.TextureOffsetU * xscale);
 		}
@@ -1239,7 +1239,7 @@ namespace swrenderer
 			lwallscale = xscale;
 		}
 		fixed_t offset;
-		if (mBottomPart.Texture->bWorldPanning)
+		if (mBottomPart.Texture->bWorldPanning || (level.flags3 & LEVEL3_FORCEWORLDPANNING))
 		{
 			offset = xs_RoundToInt(mBottomPart.TextureOffsetU * xscale);
 		}
