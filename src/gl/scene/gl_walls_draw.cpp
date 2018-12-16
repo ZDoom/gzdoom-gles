@@ -359,7 +359,7 @@ void GLWall::RenderTextured(int rflags)
 		}
 		mDrawer->SetFog(255, 0, NULL, false);
 	}
-	if (type != RENDERWALL_COLOR)
+	if (type != RENDERWALL_COLOR && seg->sidedef != nullptr)
 	{
 		auto side = seg->sidedef;
 		auto tierndx = renderwalltotier[type];
