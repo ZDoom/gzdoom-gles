@@ -657,7 +657,8 @@ public:
 		// only used for specialcolors array
 		walltop,
 		wallbottom,
-		sprites
+		sprites,
+		add
 	};
 
 	struct splane
@@ -964,7 +965,7 @@ public:
 	secplane_t	floorplane, ceilingplane;
 
 	// [RH] give floor and ceiling even more properties
-	PalEntry SpecialColors[5];
+	PalEntry SpecialColors[6];
 	FColormap Colormap;
 
 private:

@@ -100,7 +100,7 @@ class FRenderState
 
 	FVertexBuffer *mVertexBuffer, *mCurrentVertexBuffer;
 	FStateVec4 mNormal;
-	FStateVec4 mColor;
+	FStateVec4 mColor, mColorAdd;
 	FStateVec4 mCameraPos;
 	FStateVec4 mGlowTop, mGlowBottom;
 	FStateVec4 mGlowTopPlane, mGlowBottomPlane;
