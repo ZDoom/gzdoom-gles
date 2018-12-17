@@ -94,7 +94,7 @@ uint8_t *FVoxelTexture::MakeTexture (FRenderStyle style)
 {
 	// GetPixels gets called when a translated palette is used so we still need to implement it here.
 	auto Pixels = new uint8_t[256];
-	uint8_t *pp = SourceVox->Palette;
+	uint8_t *pp = SourceVox->Palette.Data();
 
 	if(pp != NULL)
 	{
@@ -131,9 +131,9 @@ int FVoxelTexture::CopyTrueColorPixels(FBitmap *bmp, int x, int y, int rotate, F
 {
 	PalEntry pe[256];
 	uint8_t bitmap[256];
-	uint8_t *pp = SourceVox->Palette;
+	uint8_t *pp = SourceVox->Palette.Data();
 
-	if(pp != NULL)
+	if(pp != nullptr)
 	{
 		for(int i=0;i<256;i++, pp+=3)
 		{

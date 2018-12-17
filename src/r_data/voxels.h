@@ -40,14 +40,12 @@ struct FVoxelMipLevel
 
 struct FVoxel
 {
+	TArray<uint8_t> Palette;
 	int LumpNum;
 	int NumMips;
 	int VoxelIndex;			// Needed by GZDoom
-	uint8_t *Palette;
 	FVoxelMipLevel Mips[MAXVOXMIPS];
 
-	FVoxel();
-	~FVoxel();
 	void CreateBgraSlabData();
 	void Remap();
 	void RemovePalette();

@@ -725,9 +725,9 @@ void I_PrintStr(const char *cp)
 	if (con_debugoutput)
 	{
 		// Strip out any color escape sequences before writing to debug output
-		char * copy = new char[strlen(cp)+1];
+		TArray<char> copy(strlen(cp) + 1, true);
 		const char * srcp = cp;
-		char * dstp = copy;
+		char * dstp = copy.Data();
 
 		while (*srcp != 0)
 		{
@@ -743,8 +743,7 @@ void I_PrintStr(const char *cp)
 		}
 		*dstp=0;
 
-		OutputDebugStringA(copy);
-		delete [] copy;
+		OutputDebugStringA(copy.Data());
 	}
 
 	if (ConWindowHidden)
