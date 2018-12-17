@@ -271,7 +271,11 @@ void *AddJitFunction(asmjit::CodeHolder* code, asmjit::CCFunc *func)
 	RUNTIME_FUNCTION *table = (RUNTIME_FUNCTION*)(unwindptr + unwindInfoSize);
 	table[0].BeginAddress = (DWORD)(ptrdiff_t)(startaddr - baseaddr);
 	table[0].EndAddress = (DWORD)(ptrdiff_t)(endaddr - baseaddr);
+#ifndef __MINGW64__
 	table[0].UnwindInfoAddress = (DWORD)(ptrdiff_t)(unwindptr - baseaddr);
+#else
+	table[0].UnwindData = (DWORD)(ptrdiff_t)(unwindptr - baseaddr);
+#endif
 	BOOLEAN result = RtlAddFunctionTable(table, 1, (DWORD64)baseaddr);
 	JitFrames.Push((uint8_t*)table);
 	if (result == 0)
