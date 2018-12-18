@@ -130,7 +130,8 @@ if( WIN32 )
 		comdlg32
 		ws2_32
 		setupapi
-		oleaut32 )
+		oleaut32
+		dbghelp )
 
 	if( NOT ZD_CMAKE_COMPILER_IS_GNUCXX_COMPATIBLE )
 		set( ZDOOM_LIBS ${ZDOOM_LIBS} DelayImp )
@@ -140,7 +141,6 @@ if( WIN32 )
 		if( DX_dxguid_LIBRARY )
 			list( APPEND ZDOOM_LIBS "${DX_dxguid_LIBRARY}" )
 		endif()
-		set( ZDOOM_LIBS ${ZDOOM_LIBS} libdbghelp.a )
 	endif()
 else()
 	if( APPLE )
