@@ -81,6 +81,7 @@ void FRenderState::Reset()
 	mBlendEquation = GL_FUNC_ADD;
 	mModelMatrixEnabled = false;
 	mTextureMatrixEnabled = false;
+	mAddColor = 0;
 	mObjectColor = 0xffffffff;
 	mObjectColor2 = 0;
 	mVertexBuffer = mCurrentVertexBuffer = NULL;
@@ -188,6 +189,7 @@ bool FRenderState::ApplyShader()
 	activeShader->muClipSplit.Set(mClipSplit);
 	activeShader->muViewHeight.Set(viewheight);
 	activeShader->muSpecularMaterial.Set(mGlossiness, mSpecularLevel);
+	activeShader->muAddColor.Set(mAddColor); // Can this be done without a shader?
 
 	if (mGlowEnabled)
 	{

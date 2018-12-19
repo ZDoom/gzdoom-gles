@@ -380,6 +380,7 @@ void GLFlat::Draw(int pass, bool trans)	// trans only has meaning for GLPASS_LIG
 	case GLPASS_ALL:			// Same, but also creates the dynlight data.
 		mDrawer->SetColor(lightlevel, rel, Colormap,1.0f);
 		mDrawer->SetFog(lightlevel, rel, &Colormap, false);
+		gl_RenderState.SetAddColor(flat->AddColor | 0xff000000);
 		if (!gltexture->tex->isFullbright())
 			gl_RenderState.SetObjectColor(FlatColor | 0xff000000);
 		if (sector->special != GLSector_Skybox)
@@ -443,6 +444,7 @@ void GLFlat::Draw(int pass, bool trans)	// trans only has meaning for GLPASS_LIG
 		gl_RenderState.EnableTextureMatrix(false);
 		break;
 	}
+	gl_RenderState.SetAddColor(0);
 }
 
 
@@ -557,13 +559,14 @@ void GLFlat::SetFrom3DFloor(F3DFloor *rover, bool top, bool underside)
 	{
 		Colormap.LightColor = light->extra_colormap.FadeColor;
 		FlatColor = 0xffffffff;
+		AddColor = 0;
 	}
 	else
 	{
 		Colormap.CopyFrom3DLight(light);
 		FlatColor = *plane.flatcolor;
+		// AddColor = sector->SpecialColors[sector_t::add];
 	}
-
 
 	alpha = rover->alpha/255.0f;
 	renderstyle = rover->flags&FF_ADDITIVETRANS? STYLE_Add : STYLE_Translucent;
@@ -620,6 +623,7 @@ void GLFlat::ProcessSector(sector_t * frontsector)
 		lightlevel = gl_ClampLight(frontsector->GetFloorLight());
 		Colormap = frontsector->Colormap;
 		FlatColor = frontsector->SpecialColors[sector_t::floor];
+		AddColor = frontsector->SpecialColors[sector_t::add];
 		port = frontsector->ValidatePortal(sector_t::floor);
 		if ((stack = (port != NULL)))
 		{
@@ -680,6 +684,7 @@ void GLFlat::ProcessSector(sector_t * frontsector)
 		lightlevel = gl_ClampLight(frontsector->GetCeilingLight());
 		Colormap = frontsector->Colormap;
 		FlatColor = frontsector->SpecialColors[sector_t::ceiling];
+		AddColor = frontsector->SpecialColors[sector_t::add];
 		port = frontsector->ValidatePortal(sector_t::ceiling);
 		if ((stack = (port != NULL)))
 		{
