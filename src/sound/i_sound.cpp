@@ -302,6 +302,7 @@ void I_CloseSound ()
 
 void I_ShutdownSound()
 {
+	I_ShutdownMusic(true);
 	if (GSnd != NULL)
 	{
 		S_StopAllChannels();
