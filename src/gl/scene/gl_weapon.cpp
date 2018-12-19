@@ -447,7 +447,14 @@ void GLSceneDrawer::DrawPlayerSprites(sector_t * viewsector, bool hudModelStep)
 				}
 				SetColor(ll, 0, cmc, trans, true);
 			}
-			// gl_RenderState.SetAddColor(0);
+			if (owner->Sector)
+			{
+				gl_RenderState.SetAddColor(owner->Sector->SpecialColors[sector_t::add] | 0xff000000);
+			}
+			else
+			{
+				gl_RenderState.SetAddColor(0);
+			}
 
 			if (psp->firstTic)
 			{ // Can't interpolate the first tic.
