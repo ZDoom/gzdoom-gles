@@ -447,6 +447,7 @@ void GLSceneDrawer::DrawPlayerSprites(sector_t * viewsector, bool hudModelStep)
 				}
 				SetColor(ll, 0, cmc, trans, true);
 			}
+			// gl_RenderState.SetAddColor(0);
 
 			if (psp->firstTic)
 			{ // Can't interpolate the first tic.
@@ -475,6 +476,7 @@ void GLSceneDrawer::DrawPlayerSprites(sector_t * viewsector, bool hudModelStep)
 		}
 	}
 	gl_RenderState.SetObjectColor(0xffffffff);
+	gl_RenderState.SetAddColor(0);
 	gl_RenderState.SetDynLight(0, 0, 0);
 	gl_RenderState.EnableBrightmap(false);
 	glset.lightmode = oldlightmode;

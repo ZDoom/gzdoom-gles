@@ -368,6 +368,7 @@ void GLWall::RenderTextured(int rflags)
 		PalEntry color2 = side->GetSpecialColor(tierndx, side_t::wallbottom, frontsector);
 		gl_RenderState.SetObjectColor(color1);
 		gl_RenderState.SetObjectColor2(color2);
+		gl_RenderState.SetAddColor(seg->frontsector->SpecialColors[sector_t::add]);
 		if (color1 != color2)
 		{
 			// Do gradient setup only if there actually is a gradient.
@@ -432,6 +433,7 @@ void GLWall::RenderTextured(int rflags)
 	}
 	gl_RenderState.SetObjectColor(0xffffffff);
 	gl_RenderState.SetObjectColor2(0);
+	gl_RenderState.SetAddColor(0);
 	gl_RenderState.SetTextureMode(tmode);
 	gl_RenderState.EnableGlow(false);
 	gl_RenderState.EnableGradient(false);
