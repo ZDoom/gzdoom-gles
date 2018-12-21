@@ -449,7 +449,7 @@ void GLSceneDrawer::DrawPlayerSprites(sector_t * viewsector, bool hudModelStep)
 			}
 			if (playermo->Sector)
 			{
-				gl_RenderState.SetAddColor(playermo->Sector->SpecialColors[sector_t::add] | 0xff000000);
+				gl_RenderState.SetAddColor(playermo->Sector->AdditiveColors[sector_t::sprites] | 0xff000000);
 			}
 			else
 			{

@@ -623,7 +623,7 @@ void GLFlat::ProcessSector(sector_t * frontsector)
 		lightlevel = gl_ClampLight(frontsector->GetFloorLight());
 		Colormap = frontsector->Colormap;
 		FlatColor = frontsector->SpecialColors[sector_t::floor];
-		AddColor = frontsector->SpecialColors[sector_t::add];
+		AddColor = frontsector->AdditiveColors[sector_t::floor];
 		port = frontsector->ValidatePortal(sector_t::floor);
 		if ((stack = (port != NULL)))
 		{
@@ -684,7 +684,7 @@ void GLFlat::ProcessSector(sector_t * frontsector)
 		lightlevel = gl_ClampLight(frontsector->GetCeilingLight());
 		Colormap = frontsector->Colormap;
 		FlatColor = frontsector->SpecialColors[sector_t::ceiling];
-		AddColor = frontsector->SpecialColors[sector_t::add];
+		AddColor = frontsector->AdditiveColors[sector_t::ceiling];
 		port = frontsector->ValidatePortal(sector_t::ceiling);
 		if ((stack = (port != NULL)))
 		{

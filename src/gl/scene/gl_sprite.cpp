@@ -363,7 +363,7 @@ void GLSprite::Draw(int pass)
 				: ThingColor.Modulate(cursec->SpecialColors[sector_t::sprites]);
 
 			gl_RenderState.SetObjectColor(finalcol);
-			gl_RenderState.SetAddColor(cursec->SpecialColors[sector_t::add] | 0xff000000);
+			gl_RenderState.SetAddColor(cursec->AdditiveColors[sector_t::sprites] | 0xff000000);
 		}
 		mDrawer->SetColor(lightlevel, rel, Colormap, trans);
 	}
