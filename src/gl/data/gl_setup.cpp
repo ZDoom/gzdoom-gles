@@ -549,8 +549,8 @@ void gl_PreprocessLevel()
 	PrepareSegs();
 	PrepareSectorData();
 	InitVertexData();
-	int *checkmap = new int[level.vertexes.Size()];
-	memset(checkmap, -1, sizeof(int)*level.vertexes.Size());
+	TArray<int> checkmap(level.vertexes.Size());
+	memset(checkmap.Data(), -1, sizeof(int)*level.vertexes.Size());
 	for(auto &sec : level.sectors) 
 	{
 		int i = sec.sectornum;
@@ -579,18 +579,12 @@ void gl_PreprocessLevel()
 			}
 		}
 	}
-	delete[] checkmap;
-
 	gl_InitPortals();
 
 	if (GLRenderer != NULL) 
 	{
 		GLRenderer->SetupLevel();
 	}
-
-#if 0
-	gl_CreateSections();
-#endif
 
 	InitGLRMapinfoData();
 }
