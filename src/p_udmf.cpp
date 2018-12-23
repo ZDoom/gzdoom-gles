@@ -1332,7 +1332,7 @@ public:
 				break;
 
 			case NAME_useowncolors_top:
-				Flag(sd->textures[side_t::top].flags, side_t::part::UseOwnColors, key);
+				Flag(sd->textures[side_t::top].flags, side_t::part::UseOwnSpecialColors, key);
 				break;
 
 			case NAME_uppercolor_top:
@@ -1356,7 +1356,7 @@ public:
 				break;
 
 			case NAME_useowncolors_mid:
-				Flag(sd->textures[side_t::mid].flags, side_t::part::UseOwnColors, key);
+				Flag(sd->textures[side_t::mid].flags, side_t::part::UseOwnSpecialColors, key);
 				break;
 
 			case NAME_uppercolor_mid:
@@ -1380,7 +1380,7 @@ public:
 				break;
 
 			case NAME_useowncolors_bottom:
-				Flag(sd->textures[side_t::bottom].flags, side_t::part::UseOwnColors, key);
+				Flag(sd->textures[side_t::bottom].flags, side_t::part::UseOwnSpecialColors, key);
 				break;
 
 			case NAME_uppercolor_bottom:
@@ -1403,6 +1403,14 @@ public:
 				sd->SetAdditiveColor(side_t::bottom, CheckInt(key));
 				break;
 
+			case NAME_useowncoloradd_top:
+				sd->textures[side_t::top].flags |= side_t::part::UseOwnAdditiveColor * CheckBool(key);
+
+			case NAME_useowncoloradd_mid:
+				sd->textures[side_t::mid].flags |= side_t::part::UseOwnAdditiveColor * CheckBool(key);
+
+			case NAME_useowncoloradd_bottom:
+				sd->textures[side_t::bottom].flags |= side_t::part::UseOwnAdditiveColor * CheckBool(key);
 
 			default:
 				break;
