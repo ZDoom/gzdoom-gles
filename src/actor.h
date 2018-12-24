@@ -1235,6 +1235,8 @@ public:
 
 	// When was this actor spawned?
 	int SpawnTime;
+	uint32_t SpawnOrder;
+
 
 	// ThingIDs
 	static void ClearTIDHashes ();
