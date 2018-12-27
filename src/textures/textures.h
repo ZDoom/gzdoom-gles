@@ -645,11 +645,12 @@ private:
 	TMap<int,int> PalettedVersions;		// maps from normal -> paletted version
 	TArray<TArray<uint8_t> > BuildTileData;
 
-	TArray<FAnimDef *> mAnimations;
 	TArray<FSwitchDef *> mSwitchDefs;
 	TArray<FDoorAnimation> mAnimatedDoors;
 
 public:
+	TArray<FAnimDef *> mAnimations;
+
 	short sintable[2048];	// for texture warping
 	enum
 	{
