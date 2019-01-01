@@ -204,7 +204,7 @@ namespace swrenderer
 			FLightNode *cur_node = light_list;
 			while (cur_node)
 			{
-				if (!(cur_node->lightsource->flags2&MF2_DORMANT))
+				if (cur_node->lightsource->IsActive())
 					max_lights++;
 				cur_node = cur_node->nextLight;
 			}
@@ -216,7 +216,7 @@ namespace swrenderer
 			cur_node = light_list;
 			while (cur_node)
 			{
-				if (!(cur_node->lightsource->flags2&MF2_DORMANT))
+				if (cur_node->lightsource->IsActive())
 				{
 					double lightX = cur_node->lightsource->X() - Thread->Viewport->viewpoint.Pos.X;
 					double lightY = cur_node->lightsource->Y() - Thread->Viewport->viewpoint.Pos.Y;

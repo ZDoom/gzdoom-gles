@@ -599,16 +599,6 @@ void gl_PreprocessLevel()
 
 void gl_CleanLevelData()
 {
-	// Dynamic lights must be destroyed before the sector information here is deleted.
-	TThinkerIterator<ADynamicLight> it(STAT_DLIGHT);
-	AActor * mo=it.Next();
-	while (mo)
-	{
-		AActor * next = it.Next();
-		mo->Destroy();
-		mo=next;
-	}
-
 	if (level.sides.Size() > 0 && level.sides[0].segs)
 	{
 		delete [] level.sides[0].segs;

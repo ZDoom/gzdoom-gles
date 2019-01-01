@@ -170,6 +170,8 @@ struct FLevelLocals : public FLevelData
 	float		pixelstretch;
 	float		MusicVolume;
 
+	FDynamicLight *lights;
+
 	bool		IsJumpingAllowed() const;
 	bool		IsCrouchingAllowed() const;
 	bool		IsFreelookAllowed() const;

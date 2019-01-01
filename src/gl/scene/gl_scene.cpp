@@ -956,8 +956,8 @@ void FGLRenderer::RenderView (player_t* player)
 	drawer.SetFixedColormap (player);
 
 	// Check if there's some lights. If not some code can be skipped.
-	TThinkerIterator<ADynamicLight> it(STAT_DLIGHT);
-	mLightCount = ((it.Next()) != NULL);
+	FDynamicLight * dl = level.lights;
+	mLightCount = ((dl->next) != nullptr);
 
 	mShadowMap.Update();
 	sector_t * viewsector = drawer.RenderViewpoint(player->camera, NULL, r_viewpoint.FieldOfView.Degrees, ratio, fovratio, true, true);
@@ -988,8 +988,8 @@ void GLSceneDrawer::WriteSavePic (player_t *player, FileWriter *file, int width,
 	if (!gl.legacyMode) GLRenderer->mLights->Clear();
 
 	// Check if there's some lights. If not some code can be skipped.
-	TThinkerIterator<ADynamicLight> it(STAT_DLIGHT);
-	GLRenderer->mLightCount = ((it.Next()) != NULL);
+	FDynamicLight * dl = level.lights;
+	GLRenderer->mLightCount = ((dl->next) != nullptr);
 
 	sector_t *viewsector = RenderViewpoint(players[consoleplayer].camera, &bounds,
 								r_viewpoint.FieldOfView.Degrees, 1.6f, 1.6f, true, false);

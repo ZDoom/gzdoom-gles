@@ -57,12 +57,13 @@ CVAR (Bool, gl_light_particles, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
 
 CVAR(Int, gl_attenuate, -1, 0);	// This is mainly a debug option.
 
+
 //==========================================================================
 //
 // Sets up the parameters to render one dynamic light onto one plane
 //
 //==========================================================================
-bool gl_GetLight(int group, Plane & p, ADynamicLight * light, bool checkside, FDynLightData &ldata)
+bool gl_GetLight(int group, Plane & p, FDynamicLight * light, bool checkside, FDynLightData &ldata)
 {
 	DVector3 pos = light->PosRelative(group);
 	float radius = (light->GetRadius());
@@ -85,7 +86,7 @@ bool gl_GetLight(int group, Plane & p, ADynamicLight * light, bool checkside, FD
 // Add one dynamic light to the light data list
 //
 //==========================================================================
-void gl_AddLightToList(int group, ADynamicLight * light, FDynLightData &ldata)
+void gl_AddLightToList(int group, FDynamicLight * light, FDynLightData &ldata)
 {
 	int i = 0;
 
@@ -136,14 +137,15 @@ void gl_AddLightToList(int group, ADynamicLight * light, FDynLightData &ldata)
 	if (light->IsSpot())
 	{
 		lightType = 1.0f;
-		spotInnerAngle = light->SpotInnerAngle.Cos();
-		spotOuterAngle = light->SpotOuterAngle.Cos();
+		spotInnerAngle = (float)light->pSpotInnerAngle->Cos();
+		spotOuterAngle = (float)light->pSpotOuterAngle->Cos();
 
-		DAngle negPitch = -light->Angles.Pitch;
+		DAngle negPitch = -*light->pPitch;
+		DAngle Angle = light->target->Angles.Yaw;
 		double xzLen = negPitch.Cos();
-		spotDirX = -light->Angles.Yaw.Cos() * xzLen;
-		spotDirY = -negPitch.Sin();
-		spotDirZ = -light->Angles.Yaw.Sin() * xzLen;
+		spotDirX = float(-Angle.Cos() * xzLen);
+		spotDirY = float(-negPitch.Sin());
+		spotDirZ = float(-Angle.Sin() * xzLen);
 	}
 
 	float *data = &ldata.arrays[i][ldata.arrays[i].Reserve(16)];

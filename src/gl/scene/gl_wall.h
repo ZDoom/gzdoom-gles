@@ -15,7 +15,7 @@ struct F3DFloor;
 struct model_t;
 struct FSpriteModelFrame;
 struct particle_t;
-class ADynamicLight;
+struct FDynamicLight;
 class FMaterial;
 struct GLDrawList;
 struct GLSkyInfo;
@@ -205,7 +205,7 @@ private:
 	void SplitWall(sector_t * frontsector, bool translucent);
 
 	void SetupLights();
-	bool PrepareLight(ADynamicLight * light, int pass);
+	bool PrepareLight(FDynamicLight * light, int pass);
 	void MakeVertices(bool nosplit);
 	void RenderWall(int textured);
 	void RenderTextured(int rflags);

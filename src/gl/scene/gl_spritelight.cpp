@@ -63,7 +63,7 @@ T smoothstep(const T edge0, const T edge1, const T x)
 
 void gl_SetDynSpriteLight(AActor *self, float x, float y, float z, subsector_t * subsec)
 {
-	ADynamicLight *light;
+	FDynamicLight *light;
 	float frac, lr, lg, lb;
 	float radius;
 	float out[3] = { 0.0f, 0.0f, 0.0f };
@@ -73,7 +73,7 @@ void gl_SetDynSpriteLight(AActor *self, float x, float y, float z, subsector_t *
 	while (node)
 	{
 		light=node->lightsource;
-		if (light->visibletoplayer && !(light->flags2&MF2_DORMANT) && (!(light->lightflags&LF_DONTLIGHTSELF) || light->target != self || !self) && !(light->lightflags&LF_DONTLIGHTACTORS))
+		if (light->ShouldLightActor(self))
 		{
 			float dist;
 			FVector3 L;
@@ -107,13 +107,14 @@ void gl_SetDynSpriteLight(AActor *self, float x, float y, float z, subsector_t *
 				if (light->IsSpot())
 				{
 					L *= -1.0f / dist;
-					DAngle negPitch = -light->Angles.Pitch;
+					DAngle negPitch = -*light->pPitch;
+					DAngle Angle = light->target->Angles.Yaw;
 					double xyLen = negPitch.Cos();
-					double spotDirX = -light->Angles.Yaw.Cos() * xyLen;
-					double spotDirY = -light->Angles.Yaw.Sin() * xyLen;
+					double spotDirX = -Angle.Cos() * xyLen;
+					double spotDirY = -Angle.Sin() * xyLen;
 					double spotDirZ = -negPitch.Sin();
 					double cosDir = L.X * spotDirX + L.Y * spotDirY + L.Z * spotDirZ;
-					frac *= (float)smoothstep(light->SpotOuterAngle.Cos(), light->SpotInnerAngle.Cos(), cosDir);
+					frac *= (float)smoothstep(light->pSpotOuterAngle->Cos(), light->pSpotInnerAngle->Cos(), cosDir);
 				}
 
 				if (frac > 0 && GLRenderer->mShadowMap.ShadowTest(light, { x, y, z }))
@@ -175,7 +176,7 @@ int gl_SetDynModelLight(AActor *self, int dynlightindex)
 
 	if (self)
 	{
-		static std::vector<ADynamicLight*> addedLights; // static so that we build up a reserve (memory allocations stop)
+		static std::vector<FDynamicLight*> addedLights; // static so that we build up a reserve (memory allocations stop)
 
 		addedLights.clear();
 
@@ -189,8 +190,8 @@ int gl_SetDynModelLight(AActor *self, int dynlightindex)
 			FLightNode * node = subsector->lighthead;
 			while (node) // check all lights touching a subsector
 			{
-				ADynamicLight *light = node->lightsource;
-				if (light->visibletoplayer && !(light->flags2&MF2_DORMANT) && (!(light->lightflags&LF_DONTLIGHTSELF) || light->target != self) && !(light->lightflags&LF_DONTLIGHTACTORS))
+				FDynamicLight *light = node->lightsource;
+				if (light->ShouldLightActor(self))
 				{
 					int group = subsector->sector->PortalGroup;
 					DVector3 pos = light->PosRelative(group);

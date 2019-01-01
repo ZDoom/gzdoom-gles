@@ -58,8 +58,8 @@ struct FDynLightData
 
 
 
-bool gl_GetLight(int group, Plane & p, ADynamicLight * light, bool checkside, FDynLightData &data);
-void gl_AddLightToList(int group, ADynamicLight * light, FDynLightData &ldata);
+bool gl_GetLight(int group, Plane & p, FDynamicLight * light, bool checkside, FDynLightData &data);
+void gl_AddLightToList(int group, FDynamicLight * light, FDynLightData &ldata);
 void gl_UploadLights(FDynLightData &data);
 
 

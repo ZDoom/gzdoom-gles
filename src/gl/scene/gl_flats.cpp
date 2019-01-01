@@ -124,9 +124,9 @@ void GLFlat::SetupSubsectorLights(int pass, subsector_t * sub, int *dli)
 	FLightNode * node = sub->lighthead;
 	while (node)
 	{
-		ADynamicLight * light = node->lightsource;
+		FDynamicLight * light = node->lightsource;
 			
-		if (light->flags2&MF2_DORMANT)
+		if (!light->IsActive())
 		{
 			node=node->nextLight;
 			continue;
@@ -135,7 +135,7 @@ void GLFlat::SetupSubsectorLights(int pass, subsector_t * sub, int *dli)
 
 		// we must do the side check here because gl_SetupLight needs the correct plane orientation
 		// which we don't have for Legacy-style 3D-floors
-		double planeh = plane.plane.ZatPoint(light);
+		double planeh = plane.plane.ZatPoint(light->Pos);
 		if (gl_lights_checkside && ((planeh<light->Z() && ceiling) || (planeh>light->Z() && !ceiling)))
 		{
 			node = node->nextLight;
