@@ -1022,7 +1022,7 @@ xx(PickupSound)
 // PlayerPawn member fields
 xx(ColorRangeStart)
 xx(ColorRangeEnd)
-
+xx(InvFirst)
 
 xx(BlueCard)
 xx(YellowCard)
