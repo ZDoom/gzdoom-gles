@@ -1127,7 +1127,7 @@ void ZCCCompiler::CompileAllFields()
 	// Create copies of the arrays which can be altered
 	auto Classes = this->Classes;
 	auto Structs = this->Structs;
-	TMap<PClass*, bool> HasNativeChildren;
+	TMap<FName, bool> HasNativeChildren;
 
 	// first step: Look for native classes with native children.
 	// These may not have any variables added to them because it'd clash with the native definitions.
@@ -1143,7 +1143,7 @@ void ZCCCompiler::CompileAllFields()
 				if (ac->ParentClass != nullptr && ac->ParentClass->VMType == c->Type() && ac->Size != TentativeClass)
 				{
 					// Only set a marker here, so that we can print a better message when the actual fields get added.
-					HasNativeChildren.Insert(ac, true);
+					HasNativeChildren.Insert(c->Type()->TypeName, true);
 					break;
 				}
 			}
@@ -1189,7 +1189,7 @@ void ZCCCompiler::CompileAllFields()
 			else
 				type->MetaSize = 0;
 
-			if (CompileFields(type->VMType, Classes[i]->Fields, nullptr, &Classes[i]->TreeNodes, false, !!HasNativeChildren.CheckKey(type)))
+			if (CompileFields(type->VMType, Classes[i]->Fields, nullptr, &Classes[i]->TreeNodes, false, !!HasNativeChildren.CheckKey(type->TypeName)))
 			{
 				// Remove from the list if all fields got compiled.
 				Classes.Delete(i--);
@@ -1357,7 +1357,7 @@ bool ZCCCompiler::CompileFields(PContainerType *type, TArray<ZCC_VarDeclarator *
 						}
 					}
 				}
-				else if (hasnativechildren)
+				else if (hasnativechildren && !(varflags & VARF_Meta))
 				{
 					Error(field, "Cannot add field %s to %s. %s has native children which means it size may not change", FName(name->Name).GetChars(), type->TypeName.GetChars(), type->TypeName.GetChars());
 				}
