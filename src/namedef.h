@@ -1030,6 +1030,7 @@ xx(SideMove2)
 xx(Face)
 xx(Slot)
 xx(SoundClass)
+xx(ViewBob)
 
 xx(BlueCard)
 xx(YellowCard)
