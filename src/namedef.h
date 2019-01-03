@@ -1031,6 +1031,7 @@ xx(Face)
 xx(Slot)
 xx(SoundClass)
 xx(ViewBob)
+xx(DamageFade)
 
 xx(BlueCard)
 xx(YellowCard)
