@@ -1375,7 +1375,7 @@ DEFINE_CLASS_PROPERTY_PREFIX(player, soundclass, S, PlayerPawn)
 
 	FString tmp = str;
 	tmp.ReplaceChars (' ', '_');
-	defaults->SoundClass = tmp.IsNotEmpty()? FName(tmp) : NAME_None;
+	defaults->NameVar(NAME_SoundClass) = tmp.IsNotEmpty()? FName(tmp) : NAME_None;
 }
 
 //==========================================================================
@@ -1386,7 +1386,7 @@ DEFINE_CLASS_PROPERTY_PREFIX(player, face, S, PlayerPawn)
 	PROP_STRING_PARM(str, 0);
 	FString tmp = str;
 
-	if (tmp.Len() == 0) defaults->Face = NAME_None;
+	if (tmp.Len() == 0) defaults->NameVar(NAME_Face) = NAME_None;
 	else
 	{
 		tmp.ToUpper();
@@ -1401,7 +1401,7 @@ DEFINE_CLASS_PROPERTY_PREFIX(player, face, S, PlayerPawn)
 				"Invalid face '%s' for '%s';\nSTF replacement codes must be 3 alphanumeric characters.\n",
 				tmp.GetChars(), info->TypeName.GetChars());
 		}
-		defaults->Face = tmp;
+		defaults->NameVar(NAME_Face) = tmp;
 	}
 }
 
@@ -1708,7 +1708,8 @@ DEFINE_CLASS_PROPERTY_PREFIX(player, weaponslot, ISsssssssssssssssssssssssssssss
 			PROP_STRING_PARM(str, i);
 			weapons << ' ' << str;
 		}
-		defaults->Slot[slot] = weapons.IsEmpty()? NAME_None : FName(weapons);
+		FName *slots = &defaults->NameVar(NAME_Slot);
+		slots[slot] = weapons.IsEmpty()? NAME_None : FName(weapons);
 	}
 }
 
