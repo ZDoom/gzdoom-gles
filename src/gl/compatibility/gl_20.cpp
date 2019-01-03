@@ -407,7 +407,7 @@ bool gl_SetupLight(int group, Plane & p, FDynamicLight * light, FVector3 & nearP
 	float dist = fabsf(p.DistToPoint(lpos.X, lpos.Z, lpos.Y));
 	float radius = light->GetRadius();
 
-	if (gl.legacyMode && (light->lightflags & LF_ATTENUATE))
+	if (gl.legacyMode && (light->IsAttenuated()))
 	{
 		radius *= 0.66f;
 	}

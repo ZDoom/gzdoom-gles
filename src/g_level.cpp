@@ -88,6 +88,7 @@
 #include "events.h"
 #include "dobjgc.h"
 #include "i_music.h"
+#include "a_dynlight.h"
 
 #include "gi.h"
 
@@ -1514,6 +1515,7 @@ void G_InitLevelLocals ()
 	compatflags2.Callback();
 
 	level.DefaultEnvironment = info->DefaultEnvironment;
+	FLightDefaults::SetAttenuationForLevel();
 }
 
 //==========================================================================

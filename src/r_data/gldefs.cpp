@@ -143,6 +143,7 @@ static const char *LightTags[]=
    "attenuate",
    "dontlightactors",
    "spot",
+   "noshadowmap",
    nullptr
 };
 
@@ -165,7 +166,8 @@ enum {
    LIGHTTAG_DONTLIGHTSELF,
    LIGHTTAG_ATTENUATE,
    LIGHTTAG_DONTLIGHTACTORS,
-   LIGHTTAG_SPOT
+   LIGHTTAG_SPOT,
+   LIGHTTAG_NOSHADOWMAP,
 };
 
 //==========================================================================
@@ -449,8 +451,11 @@ class GLDefsParser
 				case LIGHTTAG_ADDITIVE:
 					defaults->SetAdditive(ParseInt(sc) != 0);
 					break;
-				case LIGHTTAG_HALO:
-					defaults->SetHalo(ParseInt(sc) != 0);
+				case LIGHTTAG_HALO:	// old development garbage
+					ParseInt(sc);
+					break;
+				case LIGHTTAG_NOSHADOWMAP:
+					defaults->SetNoShadowmap(ParseInt(sc) != 0);
 					break;
 				case LIGHTTAG_DONTLIGHTSELF:
 					defaults->SetDontLightSelf(ParseInt(sc) != 0);
@@ -542,8 +547,11 @@ class GLDefsParser
 				case LIGHTTAG_SUBTRACTIVE:
 					defaults->SetSubtractive(ParseInt(sc) != 0);
 					break;
-				case LIGHTTAG_HALO:
-					defaults->SetHalo(ParseInt(sc) != 0);
+				case LIGHTTAG_HALO:	// old development garbage
+					ParseInt(sc);
+					break;
+				case LIGHTTAG_NOSHADOWMAP:
+					defaults->SetNoShadowmap(ParseInt(sc) != 0);
 					break;
 				case LIGHTTAG_DONTLIGHTSELF:
 					defaults->SetDontLightSelf(ParseInt(sc) != 0);
@@ -638,8 +646,11 @@ class GLDefsParser
 				case LIGHTTAG_SUBTRACTIVE:
 					defaults->SetSubtractive(ParseInt(sc) != 0);
 					break;
-				case LIGHTTAG_HALO:
-					defaults->SetHalo(ParseInt(sc) != 0);
+				case LIGHTTAG_HALO:	// old development garbage
+					ParseInt(sc);
+					break;
+				case LIGHTTAG_NOSHADOWMAP:
+					defaults->SetNoShadowmap(ParseInt(sc) != 0);
 					break;
 				case LIGHTTAG_DONTLIGHTSELF:
 					defaults->SetDontLightSelf(ParseInt(sc) != 0);
@@ -733,8 +744,11 @@ class GLDefsParser
 				case LIGHTTAG_SUBTRACTIVE:
 					defaults->SetSubtractive(ParseInt(sc) != 0);
 					break;
-				case LIGHTTAG_HALO:
-					defaults->SetHalo(ParseInt(sc) != 0);
+				case LIGHTTAG_HALO:	// old development garbage
+					ParseInt(sc);
+					break;
+				case LIGHTTAG_NOSHADOWMAP:
+					defaults->SetNoShadowmap(ParseInt(sc) != 0);
 					break;
 				case LIGHTTAG_DONTLIGHTSELF:
 					defaults->SetDontLightSelf(ParseInt(sc) != 0);
@@ -825,8 +839,11 @@ class GLDefsParser
 				case LIGHTTAG_SUBTRACTIVE:
 					defaults->SetSubtractive(ParseInt(sc) != 0);
 					break;
-				case LIGHTTAG_HALO:
-					defaults->SetHalo(ParseInt(sc) != 0);
+				case LIGHTTAG_HALO:	// old development garbage
+					ParseInt(sc);
+					break;
+				case LIGHTTAG_NOSHADOWMAP:
+					defaults->SetNoShadowmap(ParseInt(sc) != 0);
 					break;
 				case LIGHTTAG_DONTLIGHTSELF:
 					defaults->SetDontLightSelf(ParseInt(sc) != 0);

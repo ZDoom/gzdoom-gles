@@ -55,8 +55,6 @@ CVAR (Bool, gl_lights_checkside, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
 CVAR (Bool, gl_light_sprites, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
 CVAR (Bool, gl_light_particles, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
 
-CVAR(Int, gl_attenuate, -1, 0);	// This is mainly a debug option.
-
 
 //==========================================================================
 //
@@ -120,13 +118,9 @@ void gl_AddLightToList(int group, FDynamicLight * light, FDynLightData &ldata)
 	}
 
 	float shadowIndex = light->mShadowmapIndex + 1.0f;
-	bool attenuate;
 
     // Store attenuate flag in the sign bit of the float.
-	if (gl_attenuate == -1) attenuate = !!(light->lightflags & LF_ATTENUATE);
-	else attenuate = !!gl_attenuate;
-
-	if (attenuate) shadowIndex = -shadowIndex;
+	if (light->IsAttenuated()) shadowIndex = -shadowIndex;
 
 	float lightType = 0.0f;
 	float spotInnerAngle = 0.0f;
