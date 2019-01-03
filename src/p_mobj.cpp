@@ -2292,7 +2292,7 @@ explode:
 		// Don't affect main player when voodoo dolls stop:
 		if (player && player->mo == mo && !(player->cheats & CF_PREDICTING))
 		{
-			player->mo->PlayIdle ();
+			PlayIdle (player->mo);
 		}
 
 		mo->Vel.X = mo->Vel.Y = 0;
@@ -5089,7 +5089,11 @@ APlayerPawn *P_SpawnPlayer (FPlayerStart *mthing, int playernum, int flags)
 
 	if (deathmatch)
 	{ // Give all cards in death match mode.
-		p->mo->GiveDeathmatchInventory ();
+		IFVIRTUALPTR(p->mo, APlayerPawn, GiveDeathmatchInventory)
+		{
+			VMValue params[1] = { p->mo };
+			VMCall(func, params, 1, nullptr, 0);
+		}
 	}
 	else if ((multiplayer || (level.flags2 & LEVEL2_ALLOWRESPAWN) || sv_singleplayerrespawn ||
 		!!G_SkillProperty(SKILLP_PlayerRespawn)) && state == PST_REBORN && oldactor != NULL)
@@ -7073,6 +7077,18 @@ int AActor::SpawnHealth() const
 		int adj = int(defhealth * G_SkillProperty(SKILLP_MonsterHealth));
 		return (adj <= 0) ? 1 : adj;
 	}
+}
+
+int AActor::GetMaxHealth(bool withupgrades) const
+{
+	int ret = 100;
+	IFVIRTUAL(AActor, GetMaxHealth)
+	{
+		VMValue param[] = { const_cast<AActor*>(this), withupgrades };
+		VMReturn r(&ret);
+		VMCall(func, param, 2, &r, 1);
+	}
+	return ret;
 }
 
 FState *AActor::GetRaiseState()
