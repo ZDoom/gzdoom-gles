@@ -1914,7 +1914,7 @@ static const char *GetSoundClass(AActor *pp)
 	{
 		return Skins[player->userinfo.GetSkin()].Name.GetChars();
 	}
-	auto sclass = pp->NameVar(NAME_SoundClass);
+	auto sclass = player? pp->NameVar(NAME_SoundClass) : NAME_None;
 
 	return sclass != NAME_None ? sclass.GetChars() : "player";
 }
