@@ -729,6 +729,25 @@ protected:
 	FBehavior	    *activeBehavior;
 	int				InModuleScriptNumber;
 
+	TArray<FString> ACS_StringBuilderStack;
+
+	inline void STRINGBUILDER_START(FString &Builder)
+	{
+		if (Builder.IsNotEmpty() || ACS_StringBuilderStack.Size())
+		{
+			ACS_StringBuilderStack.Push(Builder);
+			Builder = "";
+		}
+	}
+
+	inline void STRINGBUILDER_FINISH(FString &Builder)
+	{
+		if (!ACS_StringBuilderStack.Pop(Builder))
+		{
+			Builder = "";
+		}
+	}
+
 	void Link();
 	void Unlink();
 	void PutLast();
@@ -803,10 +822,6 @@ struct FBehavior::ArrayInfo
 };
 
 TArray<FBehavior *> FBehavior::StaticModules;
-TArray<FString> ACS_StringBuilderStack;
-
-#define STRINGBUILDER_START(Builder) if (Builder.IsNotEmpty() || ACS_StringBuilderStack.Size()) { ACS_StringBuilderStack.Push(Builder); Builder = ""; }
-#define STRINGBUILDER_FINISH(Builder) if (!ACS_StringBuilderStack.Pop(Builder)) { Builder = ""; }
 
 //============================================================================
 //
@@ -3483,12 +3498,6 @@ void DACSThinker::Tick ()
 
 //	GlobalACSStrings.Clear();
 
-	if (ACS_StringBuilderStack.Size())
-	{
-		int size = ACS_StringBuilderStack.Size();
-		ACS_StringBuilderStack.Clear();
-		I_Error("Error: %d garbage entries on ACS string builder stack.", size);
-	}
 	ACSTime.Unclock();
 }
 
