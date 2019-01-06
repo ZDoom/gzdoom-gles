@@ -41,7 +41,7 @@ IMPLEMENT_CLASS(DSectorEffect, false, false)
 DSectorEffect::DSectorEffect ()
 : DThinker(STAT_SECTOREFFECT)
 {
-	m_Sector = NULL;
+	m_Sector = nullptr;
 }
 
 void DSectorEffect::OnDestroy()
@@ -50,15 +50,15 @@ void DSectorEffect::OnDestroy()
 	{
 		if (m_Sector->floordata == this)
 		{
-			m_Sector->floordata = NULL;
+			m_Sector->floordata = nullptr;
 		}
 		if (m_Sector->ceilingdata == this)
 		{
-			m_Sector->ceilingdata = NULL;
+			m_Sector->ceilingdata = nullptr;
 		}
 		if (m_Sector->lightingdata == this)
 		{
-			m_Sector->lightingdata = NULL;
+			m_Sector->lightingdata = nullptr;
 		}
 	}
 	Super::OnDestroy();
@@ -93,7 +93,7 @@ IMPLEMENT_POINTERS_END
 DMover::DMover (sector_t *sector)
 	: DSectorEffect (sector)
 {
-	interpolation = NULL;
+	interpolation = nullptr;
 }
 
 void DMover::OnDestroy()
@@ -110,10 +110,10 @@ void DMover::Serialize(FSerializer &arc)
 
 void DMover::StopInterpolation(bool force)
 {
-	if (interpolation != NULL)
+	if (interpolation != nullptr)
 	{
 		interpolation->DelRef(force);
-		interpolation = NULL;
+		interpolation = nullptr;
 	}
 }
 
