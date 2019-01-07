@@ -233,7 +233,7 @@ static void PrintMessage (const char *str)
 //
 //===========================================================================
 
-static void ParseLock(FScanner &sc)
+static void ParseLock(FScanner &sc, int &currentnumber)
 {
 	int i,r,g,b;
 	int keynum;
@@ -250,7 +250,6 @@ static void ParseLock(FScanner &sc)
 		sc.MustGetStringName("{");
 	}
 
-	int currentnumber = 0;
 	if (keynum == 0 || keynum < -1)
 	{
 		sc.ScriptError("Lock index %d out of range", keynum);
@@ -422,7 +421,7 @@ static void CreateSortedKeyList()
 
 void P_InitKeyMessages()
 {
-	int lastlump, lump;
+	int lastlump, lump, currentnumber = 0;
 
 	lastlump = 0;
 
@@ -434,12 +433,13 @@ void P_InitKeyMessages()
 		{
 			if (sc.Compare("LOCK")) 
 			{
-				ParseLock(sc);
+				ParseLock(sc, currentnumber);
 			}
 			else if (sc.Compare("CLEARLOCKS"))
 			{
 				// clear all existing lock definitions and key numbers
 				ClearLocks();
+				currentnumber = 0;
 			}
 			else
 			{
