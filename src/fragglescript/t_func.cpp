@@ -3322,7 +3322,7 @@ void FParser::SF_Resurrect()
 		mo->Height = mo->GetDefault()->Height;
 		mo->radius = mo->GetDefault()->radius;
 		mo->Revive();
-		mo->target = NULL;
+		mo->target = nullptr;
 	}
 }
 

@@ -151,7 +151,7 @@ void VerifyTargetChain(AActor *self, bool preciseMissileCheck)
 			{
 				// if any of the actors from self to (inclusive) origin match the next actor,
 				// self has reached/created a loop
-				self->target = NULL;
+				self->target = nullptr;
 				return;
 			}
 			if (compare == origin) break; // when "compare" = origin, we know that the next actor is, and should be "next"
@@ -177,7 +177,7 @@ void VerifyMasterChain(AActor *self)
 		{
 			if (compare == next)
 			{
-				self->master = NULL;
+				self->master = nullptr;
 				return;
 			}
 			if (compare == origin) break;

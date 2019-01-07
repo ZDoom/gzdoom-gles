@@ -1346,7 +1346,7 @@ int P_LookForTID (AActor *actor, INTBOOL allaround, FLookExParams *params)
 	if (actor->LastLookActor != NULL &&
 		actor->LastLookActor->tid != actor->TIDtoHate)
 	{
-		actor->LastLookActor = NULL;
+		actor->LastLookActor = nullptr;
 	}
 
 	FActorIterator iterator (actor->TIDtoHate, actor->LastLookActor);
@@ -1411,12 +1411,12 @@ int P_LookForTID (AActor *actor, INTBOOL allaround, FLookExParams *params)
 			if (!actor->IsFriend(actor->lastenemy))
 			{
 				actor->target = actor->lastenemy;
-				actor->lastenemy = NULL;
+				actor->lastenemy = nullptr;
 				return true;
 			}
 			else
 			{
-				actor->lastenemy = NULL;
+				actor->lastenemy = nullptr;
 			}
 		}
 	}
@@ -1550,12 +1550,12 @@ int P_LookForEnemies (AActor *actor, INTBOOL allaround, FLookExParams *params)
 			if (!actor->IsFriend(actor->lastenemy))
 			{
 				actor->target = actor->lastenemy;
-				actor->lastenemy = NULL;
+				actor->lastenemy = nullptr;
 				return true;
 			}
 			else
 			{
-				actor->lastenemy = NULL;
+				actor->lastenemy = nullptr;
 			}
 		}
 	}
@@ -1684,12 +1684,12 @@ int P_LookForPlayers (AActor *actor, INTBOOL allaround, FLookExParams *params)
 					if (!actor->IsFriend(actor->lastenemy))
 					{
 						actor->target = actor->lastenemy;
-						actor->lastenemy = NULL;
+						actor->lastenemy = nullptr;
 						return true;
 					}
 					else
 					{
-						actor->lastenemy = NULL;
+						actor->lastenemy = nullptr;
 					}
 				}
 			}
@@ -1849,7 +1849,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_Look)
 	if (self->target == self->goal)
 	{
 		if (self->reactiontime > level.maptime)
-			self->target = NULL;
+			self->target = nullptr;
 	}
 	else if (self->SeeSound)
 	{
@@ -1936,7 +1936,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_LookEx)
 					if (maxheardist && dist > maxheardist)
 					{
 						targ = NULL;
-						self->LastHeard = NULL;
+						self->LastHeard = nullptr;
 					}
 				}
 			}
@@ -1995,7 +1995,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_LookEx)
             
             // [KS] The target can become ourselves in rare circumstances (like
             // if we committed suicide), so if that's the case, just ignore it.
-            if (self->target == self) self->target = NULL;
+            if (self->target == self) self->target = nullptr;
 
 			if (self->target != NULL)
 			{
@@ -2031,7 +2031,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_LookEx)
 	if (self->target == self->goal)
 	{
 		if (self->reactiontime > level.maptime)
-			self->target = NULL;
+			self->target = nullptr;
 	}
 	else if (self->SeeSound && !(flags & LOF_NOSEESOUND))
 	{
@@ -2073,7 +2073,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_LookEx)
 DEFINE_ACTION_FUNCTION(AActor, A_ClearLastHeard)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	self->LastHeard = NULL;
+	self->LastHeard = nullptr;
 	return 0;
 }
 
@@ -2235,7 +2235,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 		actor->target->renderflags & RF_INVISIBLE &&
 		actor->target != actor->goal)
 	{
-		actor->target = NULL;
+		actor->target = nullptr;
 	}
 
 	// modify target threshold
@@ -2284,7 +2284,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 
 	// [RH] If the target is dead or a friend (and not a goal), stop chasing it.
 	if (actor->target && actor->target != actor->goal && (actor->target->health <= 0 || actor->IsFriend(actor->target)))
-		actor->target = NULL;
+		actor->target = nullptr;
 
 	// [RH] Friendly monsters will consider chasing whoever hurts a player if they
 	// don't already have a target.
@@ -2408,7 +2408,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 				actor->reactiontime = actor->GetDefault()->reactiontime;
 				actor->Angles.Yaw = lastgoalang;		// Look in direction of last goal
 			}
-			if (actor->target == actor->goal) actor->target = NULL;
+			if (actor->target == actor->goal) actor->target = nullptr;
 			actor->flags |= MF_JUSTATTACKED;
 			if (newgoal != NULL && delay != 0)
 			{
@@ -2702,8 +2702,8 @@ bool P_CheckForResurrection(AActor *self, bool usevilestates)
 				{
 					// If this is a friendly Arch-Vile (which is turning the resurrected monster into its friend)
 					// and the Arch-Vile is currently targetting the resurrected monster the target must be cleared.
-					if (self->lastenemy == temp) self->lastenemy = NULL;
-					if (self->lastenemy == corpsehit) self->lastenemy = NULL;
+					if (self->lastenemy == temp) self->lastenemy = nullptr;
+					if (self->lastenemy == corpsehit) self->lastenemy = nullptr;
 					if (temp == self->target) temp = NULL;
 				}
 				self->target = temp;

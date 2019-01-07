@@ -585,7 +585,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_RearrangePointers)
 		if (!(PTROP_UNSAFETARGET & flags)) VerifyTargetChain(self);
 		break;
 	case AAPTR_NULL:
-		self->target = NULL;
+		self->target = nullptr;
 		// THIS IS NOT "A_ClearTarget", so no other targeting info is removed
 		break;
 	}
@@ -602,7 +602,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_RearrangePointers)
 		if (!(PTROP_UNSAFEMASTER & flags)) VerifyMasterChain(self);
 		break;
 	case AAPTR_NULL:
-		self->master = NULL;
+		self->master = nullptr;
 		break;
 	}
 
@@ -615,7 +615,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_RearrangePointers)
 		self->tracer = getmaster;
 		break; // no verification deemed necessary; the engine never follows a tracer chain(?)
 	case AAPTR_NULL:
-		self->tracer = NULL;
+		self->tracer = nullptr;
 		break;
 	}
 	return 0;
@@ -786,7 +786,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_SeekerMissile)
 	{
 		if (flags & SMF_LOOK)
 		{ // This monster is no longer seekable, so let us look for another one next time.
-			self->tracer = NULL;
+			self->tracer = nullptr;
 		}
 	}
 	return 0;
@@ -1996,17 +1996,17 @@ DEFINE_ACTION_FUNCTION(AActor, A_Respawn)
 		//      ...Actually it's better off an option, so you have better control over monster behavior.
 		if (!(flags & RSF_KEEPTARGET))
 		{
-			self->target = NULL;
-			self->LastHeard = NULL;
-			self->lastenemy = NULL;
+			self->target = nullptr;
+			self->LastHeard = nullptr;
+			self->lastenemy = nullptr;
 		}
 		else
 		{
 			// Don't attack yourself (Re: "Marine targets itself after suicide")
 			if (self->target == self)
-				self->target = NULL;
+				self->target = nullptr;
 			if (self->lastenemy == self)
-				self->lastenemy = NULL;
+				self->lastenemy = nullptr;
 		}
 
 		self->flags  = (defs->flags & ~MF_FRIENDLY) | (self->flags & MF_FRIENDLY);

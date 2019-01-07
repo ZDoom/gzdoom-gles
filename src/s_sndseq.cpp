@@ -309,7 +309,7 @@ IMPLEMENT_POINTERS_END
 DSeqNode::DSeqNode ()
 : m_SequenceChoices(0)
 {
-	m_Next = m_Prev = m_ChildSeqNode = m_ParentSeqNode = NULL;
+	m_Next = m_Prev = m_ChildSeqNode = m_ParentSeqNode = nullptr;
 }
 
 void DSeqNode::Serialize(FSerializer &arc)
@@ -397,8 +397,8 @@ void DSeqNode::OnDestroy()
 	if (m_ParentSeqNode != NULL && m_ParentSeqNode->m_ChildSeqNode == this)
 	{
 		m_ParentSeqNode->m_SequencePtr++;
-		m_ParentSeqNode->m_ChildSeqNode = NULL;
-		m_ParentSeqNode = NULL;
+		m_ParentSeqNode->m_ChildSeqNode = nullptr;
+		m_ParentSeqNode = nullptr;
 	}
 	if (SequenceListHead == this)
 	{
@@ -823,7 +823,7 @@ DSeqNode::DSeqNode (int sequence, int modenum)
 		m_Prev = NULL;
 	}
 	GC::WriteBarrier(this);
-	m_ParentSeqNode = m_ChildSeqNode = NULL;
+	m_ParentSeqNode = m_ChildSeqNode = nullptr;
 }
 
 void DSeqNode::ActivateSequence (int sequence)
