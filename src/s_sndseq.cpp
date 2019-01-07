@@ -37,6 +37,7 @@
 #include "gi.h"
 #include "templates.h"
 #include "c_dispatch.h"
+
 #include "g_level.h"
 #include "serializer.h"
 #include "d_player.h"
@@ -53,8 +54,6 @@
 #define HexenDoorSeq(a)		((a) | 0x40)
 #define HexenEnvSeq(a)		((a) | 0x80)
 #define HexenLastSeq		(0xff)
-
-#define TIME_REFERENCE		level.time
 
 // TYPES -------------------------------------------------------------------
 
@@ -329,7 +328,7 @@ void DSeqNode::Serialize(FSerializer &arc)
 	if (arc.isWriting())
 	{
 		seqOffset = (int)SN_GetSequenceOffset(m_Sequence, m_SequencePtr);
-		delayTics = m_DelayUntilTic;
+		delayTics = m_DelayTics;
 		volume = m_Volume;
 		atten = m_Atten;
 		id = m_CurrentSoundID;
@@ -376,7 +375,7 @@ void DSeqNode::Serialize(FSerializer &arc)
 			// Can I just Destroy() here instead of erroring out?
 		}
 
-		ChangeData (seqOffset, delayTics - TIME_REFERENCE, volume, id);
+		ChangeData (seqOffset, delayTics, volume, id);
 
 		m_SequenceChoices.Resize(numchoices);
 		if (numchoices > 0 && arc.BeginArray("choices"))
@@ -831,7 +830,7 @@ void DSeqNode::ActivateSequence (int sequence)
 {
 	m_SequencePtr = Sequences[sequence]->Script;
 	m_Sequence = sequence;
-	m_DelayUntilTic = 0;
+	m_DelayTics = 0;
 	m_StopSound = Sequences[sequence]->StopSound;
 	m_CurrentSoundID = 0;
 	m_Volume = 1;			// Start at max volume...
@@ -1195,9 +1194,9 @@ DEFINE_ACTION_FUNCTION(_Sector, IsMakingLoopingSound)
 
 void DSeqNode::Tick ()
 {
-	if (TIME_REFERENCE < m_DelayUntilTic)
+	if (m_DelayTics > 0)
 	{
-		return;
+		if (--m_DelayTics > 0) return;
 	}
 	for (;;)
 	{
@@ -1242,7 +1241,7 @@ void DSeqNode::Tick ()
 			// command will repeat until the sequence is stopped.
 			m_CurrentSoundID = FSoundID(GetData(m_SequencePtr[0]));
 			MakeSound (0, m_CurrentSoundID);
-			m_DelayUntilTic = TIME_REFERENCE + m_SequencePtr[1];
+			m_DelayTics = m_SequencePtr[1];
 			return;
 
 		case SS_CMD_RANDOMSEQUENCE:
@@ -1277,13 +1276,13 @@ void DSeqNode::Tick ()
 			break;
 
 		case SS_CMD_DELAY:
-			m_DelayUntilTic = TIME_REFERENCE + GetData(*m_SequencePtr);
+			m_DelayTics = GetData(*m_SequencePtr);
 			m_SequencePtr++;
 			m_CurrentSoundID = 0;
 			return;
 
 		case SS_CMD_DELAYRAND:
-			m_DelayUntilTic = TIME_REFERENCE + GetData(m_SequencePtr[0]) + pr_sndseq(m_SequencePtr[1]);
+			m_DelayTics = GetData(m_SequencePtr[0]) + pr_sndseq(m_SequencePtr[1]);
 			m_SequencePtr += 2;
 			m_CurrentSoundID = 0;
 			return;
@@ -1496,7 +1495,7 @@ void SN_ChangeNodeData (int nodeNum, int seqOffset, int delayTics, float volume,
 
 void DSeqNode::ChangeData (int seqOffset, int delayTics, float volume, FSoundID currentSoundID)
 {
-	m_DelayUntilTic = TIME_REFERENCE + delayTics;
+	m_DelayTics = delayTics;
 	m_Volume = volume;
 	m_SequencePtr += seqOffset;
 	m_CurrentSoundID = currentSoundID;
