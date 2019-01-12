@@ -162,7 +162,7 @@ struct FScriptPosition
 	static int ErrorCounter;
 	static bool StrictErrors;
 	static bool errorout;
-	FString FileName;
+	FName FileName;
 	int ScriptLine;
 
 	FScriptPosition()
