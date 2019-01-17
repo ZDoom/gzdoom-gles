@@ -402,6 +402,27 @@ DEFINE_ACTION_FUNCTION(DLevelCompatibility, AddSectorTag)
 	return 0;
 }
 
+DEFINE_ACTION_FUNCTION(DLevelCompatibility, ClearLineIDs)
+{
+	PARAM_SELF_PROLOGUE(DLevelCompatibility);
+	PARAM_INT(line);
+	tagManager.RemoveLineIDs(line);
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DLevelCompatibility, AddLineID)
+{
+	PARAM_SELF_PROLOGUE(DLevelCompatibility);
+	PARAM_INT(line);
+	PARAM_INT(tag);
+	
+	if ((unsigned)line < level.lines.Size())
+	{
+		tagManager.AddLineID(line, tag);
+	}
+	return 0;
+}
+
 DEFINE_ACTION_FUNCTION(DLevelCompatibility, SetThingSkills)
 {
 	PARAM_SELF_PROLOGUE(DLevelCompatibility);
