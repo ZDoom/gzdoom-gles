@@ -39,7 +39,6 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <unistd.h>
-#include "mus2midi.h"
 #endif
 
 #include <ctype.h>
