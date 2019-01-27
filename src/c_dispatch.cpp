@@ -80,6 +80,9 @@ public:
 
 class FDelayedCommand
 {
+public:
+	virtual ~FDelayedCommand() {}
+
 protected:
 	virtual bool Tick() = 0;
 
