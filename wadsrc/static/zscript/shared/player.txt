@@ -2766,7 +2766,7 @@ struct PlayerInfo native play	// self is what internally is known as player_t
 		return
 			gamestate == GS_TITLELEVEL ||
 			(cheats & CF_TOTALLYFROZEN) ||
-			(level.frozen && timefreezer == 0);
+			mo.isFrozen();
 	}
 
 	void Uncrouch()

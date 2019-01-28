@@ -2588,7 +2588,32 @@ DEFINE_ACTION_FUNCTION_NATIVE(FLevelLocals, Vec3Offset, Vec3Offset)
 	ACTION_RETURN_VEC3(result);
 }
 
+static int isFrozen(FLevelLocals *self)
+{
+	return self->isFrozen();
+}
 
+DEFINE_ACTION_FUNCTION_NATIVE(FLevelLocals, isFrozen, isFrozen)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FLevelLocals);
+	return isFrozen(self);
+}
+
+void setFrozen(FLevelLocals *self, int on)
+{
+	self->frozenstate = (self->frozenstate & ~1) | !!on;
+	// For compatibility. The engine itself never checks this.
+	if (on) self->flags2 |= LEVEL2_FROZEN;
+	else  self->flags2 &= ~LEVEL2_FROZEN;
+}
+
+DEFINE_ACTION_FUNCTION_NATIVE(FLevelLocals, setFrozen, setFrozen)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FLevelLocals);
+	PARAM_BOOL(on);
+	setFrozen(self, on);
+	return 0;
+}
 
 //=====================================================================================
 //

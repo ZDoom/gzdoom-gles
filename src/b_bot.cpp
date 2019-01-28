@@ -50,6 +50,7 @@
 #include "d_player.h"
 #include "w_wad.h"
 #include "vm.h"
+#include "g_levellocals.h"
 
 IMPLEMENT_CLASS(DBot, false, true)
 
@@ -139,7 +140,7 @@ void DBot::Tick ()
 {
 	Super::Tick ();
 
-	if (player->mo == nullptr || bglobal.freeze)
+	if (player->mo == nullptr || level.isFrozen())
 	{
 		return;
 	}

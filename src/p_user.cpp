@@ -1226,6 +1226,12 @@ void P_PlayerThink (player_t *player)
 		I_Error ("No player %td start\n", player - players + 1);
 	}
 
+	// Bots do not think in freeze mode.
+	if (level.isFrozen() && player->Bot != nullptr)
+	{
+		return;
+	}
+
 	if (debugfile && !(player->cheats & CF_PREDICTING))
 	{
 		fprintf (debugfile, "tic %d for pl %d: (%f, %f, %f, %f) b:%02x p:%d y:%d f:%d s:%d u:%d\n",
@@ -1690,7 +1696,7 @@ bool P_IsPlayerTotallyFrozen(const player_t *player)
 	return
 		gamestate == GS_TITLELEVEL ||
 		player->cheats & CF_TOTALLYFROZEN ||
-		((level.flags2 & LEVEL2_FROZEN) && player->timefreezer == 0);
+		player->mo->isFrozen();
 }
 
 

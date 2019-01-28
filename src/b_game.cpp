@@ -97,6 +97,7 @@ Everything that is changed is marked (maybe commented) with "Added by MC"
 #include "doomerrors.h"
 #include "events.h"
 #include "vm.h"
+#include "g_levellocals.h"
 
 static FRandom pr_botspawn ("BotSpawn");
 
@@ -133,7 +134,7 @@ FCajunMaster::~FCajunMaster()
 }
 
 //This function is called every tick (from g_game.c).
-void FCajunMaster::Main ()
+void FCajunMaster::Main()
 {
 	BotThinkCycles.Reset();
 
@@ -141,7 +142,7 @@ void FCajunMaster::Main ()
 		return;
 
 	//Add new bots?
-	if (wanted_botnum > botnum && !freeze)
+	if (wanted_botnum > botnum && !level.isFrozen())
 	{
 		if (t_join == ((wanted_botnum - botnum) * SPAWN_DELAY))
 		{

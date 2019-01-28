@@ -1234,7 +1234,7 @@ void GLSprite::ProcessParticle (particle_t *particle, sector_t *sector)//, int s
 	}
 
 	double timefrac = r_viewpoint.TicFrac;
-	if (paused || bglobal.freeze || (level.flags2 & LEVEL2_FROZEN))
+	if (paused || level.isFrozen())
 		timefrac = 0.;
 	float xvf = (particle->Vel.X) * timefrac;
 	float yvf = (particle->Vel.Y) * timefrac;

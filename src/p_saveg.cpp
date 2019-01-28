@@ -984,7 +984,8 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 		("level.deathsequence", level.deathsequence)
 		("level.bodyqueslot", level.bodyqueslot)
 		("level.spawnindex", level.spawnindex)
-		.Array("level.bodyque", level.bodyque, level.BODYQUESIZE);
+		.Array("level.bodyque", level.bodyque, level.BODYQUESIZE)
+		("level.frozenstate", level.frozenstate);
 
 	// Hub transitions must keep the current total time
 	if (!hubload)
@@ -996,6 +997,7 @@ void G_SerializeLevel(FSerializer &arc, bool hubload)
 		sky2texture = level.skytexture2;
 		R_InitSkyMap();
 		G_AirControlChanged();
+		bglobal.freeze = !!(level.frozenstate & 2);
 	}
 
 

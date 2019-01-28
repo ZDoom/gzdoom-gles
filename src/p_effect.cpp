@@ -250,7 +250,7 @@ void P_ThinkParticles ()
 	{
 		particle = &Particles[i];
 		i = particle->tnext;
-		if (!particle->notimefreeze && ((bglobal.freeze) || (level.flags2 & LEVEL2_FROZEN)))
+		if (!particle->notimefreeze && level.isFrozen())
 		{
 			prev = particle;
 			continue;
