@@ -87,8 +87,6 @@ CUSTOM_CVAR (Bool, gl_lights, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOIN
 	else AActor::DeleteAllAttachedLights();
 }
 
-CVAR (Bool, gl_attachedlights, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
-
 //==========================================================================
 //
 //==========================================================================
@@ -872,6 +870,7 @@ void AActor::RecreateAllAttachedLights()
 		if (a->IsKindOf(NAME_DynamicLight))
 		{
 			::AttachLight(a);
+			::ActivateLight(a);
 		}
 		else
 		{

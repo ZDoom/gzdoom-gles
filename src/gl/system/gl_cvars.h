@@ -22,7 +22,6 @@ EXTERN_CVAR(Bool, gl_usefb)
 EXTERN_CVAR(Int, gl_weaponlight)
 
 EXTERN_CVAR (Bool, gl_lights);
-EXTERN_CVAR (Bool, gl_attachedlights);
 EXTERN_CVAR (Bool, gl_lights_checkside);
 EXTERN_CVAR (Bool, gl_light_sprites);
 EXTERN_CVAR (Bool, gl_light_particles);
