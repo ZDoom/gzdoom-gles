@@ -123,10 +123,10 @@ void FNodeBuilder::Extract (FLevelLocals &level)
 		{
 			outSegs[i] = *(seg_t *)&segs[i];
 
-			if (segs[i].Partner != DWORD_MAX)
+			if (segs[i].Partner != UINT_MAX)
 			{
 				const uint32_t storedseg = Segs[segs[i].Partner].storedseg;
-				outSegs[i].PartnerSeg = DWORD_MAX == storedseg ? nullptr : &outSegs[storedseg];
+				outSegs[i].PartnerSeg = UINT_MAX == storedseg ? nullptr : &outSegs[storedseg];
 			}
 			else
 			{
@@ -331,7 +331,7 @@ int FNodeBuilder::CloseSubsector (TArray<glseg_t> &segs, int subsector, vertex_t
 		{
 			angle_t bestdiff = ANGLE_MAX;
 			FPrivSeg *bestseg = NULL;
-			uint32_t bestj = DWORD_MAX;
+			uint32_t bestj = UINT_MAX;
 			j = first;
 			do
 			{
@@ -527,6 +527,6 @@ void FNodeBuilder::PushConnectingGLSeg (int subsector, TArray<glseg_t> &segs, ve
 	newseg.frontsector = NULL;
 	newseg.linedef = NULL;
 	newseg.sidedef = NULL;
-	newseg.Partner = DWORD_MAX;
+	newseg.Partner = UINT_MAX;
 	segs.Push (newseg);
 }
