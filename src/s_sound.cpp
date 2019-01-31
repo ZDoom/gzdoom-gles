@@ -1446,7 +1446,7 @@ void S_PlaySoundPitch(AActor *a, int chan, FSoundID sid, float vol, float atten,
 	}
 	else
 	{
-		if (a->CheckLocalView(consoleplayer))
+		if (a->CheckLocalView())
 		{
 			S_SoundPitch(chan, sid, vol, ATTN_NONE, pitch);
 		}

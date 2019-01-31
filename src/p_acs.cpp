@@ -8731,7 +8731,7 @@ scriptwait:
 					screen = screen->target;
 				}
 				if (pcd == PCD_ENDPRINTBOLD || screen == NULL ||
-					screen->CheckLocalView (consoleplayer))
+					screen->CheckLocalView())
 				{
 					C_MidPrint(activefont, work, pcd == PCD_ENDPRINTBOLD && (gameinfo.correctprintbold || (level.flags2 & LEVEL2_HEXENHACK)));
 				}
@@ -8976,7 +8976,7 @@ scriptwait:
 
 		case PCD_LOCALAMBIENTSOUND:
 			lookup = FBehavior::StaticLookupString (STACK(2));
-			if (lookup != NULL && activator && activator->CheckLocalView (consoleplayer))
+			if (lookup != NULL && activator && activator->CheckLocalView())
 			{
 				S_Sound (CHAN_AUTO,
 						 lookup,
@@ -10103,7 +10103,7 @@ scriptwait:
 		}
 
 		case PCD_SETMUGSHOTSTATE:
-			if (!multiplayer || (activator != nullptr && activator->CheckLocalView(consoleplayer)))
+			if (!multiplayer || (activator != nullptr && activator->CheckLocalView()))
 			{
 				StatusBar->SetMugShotState(FBehavior::StaticLookupString(STACK(1)));
 			}

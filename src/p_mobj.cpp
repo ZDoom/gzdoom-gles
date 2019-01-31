@@ -965,18 +965,18 @@ DEFINE_ACTION_FUNCTION(AActor, GiveBody)
 //
 //============================================================================
 
-bool AActor::CheckLocalView (int playernum) const
+bool AActor::CheckLocalView() const
 {
-	if (players[playernum].camera == this)
+	if (players[consoleplayer].camera == this)
 	{
 		return true;
 	}
-	if (players[playernum].mo != this || players[playernum].camera == NULL)
+	if (players[consoleplayer].mo != this || players[consoleplayer].camera == NULL)
 	{
 		return false;
 	}
-	if (players[playernum].camera->player == NULL &&
-		!(players[playernum].camera->flags3 & MF3_ISMONSTER))
+	if (players[consoleplayer].camera->player == NULL &&
+		!(players[consoleplayer].camera->flags3 & MF3_ISMONSTER))
 	{
 		return true;
 	}
@@ -987,7 +987,7 @@ DEFINE_ACTION_FUNCTION(AActor, CheckLocalView)
 {
 	PARAM_SELF_PROLOGUE(AActor);
 	PARAM_INT(cp);
-	ACTION_RETURN_BOOL(self->CheckLocalView(cp));
+	ACTION_RETURN_BOOL(self->CheckLocalView());
 }
 
 //============================================================================

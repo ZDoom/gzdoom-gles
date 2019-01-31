@@ -614,7 +614,7 @@ void P_GiveSecret(AActor *actor, bool printmessage, bool playsound, int sectornu
 			ret.IntAt(&retval);
 			VMCall(func, params, countof(params), &ret, 1);
 		}
-		if (retval && cl_showsecretmessage && actor->CheckLocalView(consoleplayer))
+		if (retval && cl_showsecretmessage && actor->CheckLocalView())
 		{
 			if (printmessage)
 			{

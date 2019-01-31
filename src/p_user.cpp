@@ -471,7 +471,7 @@ void player_t::SetLogText (const char *text)
 {
 	 LogText = text;
 
-	if (mo && mo->CheckLocalView(consoleplayer))
+	if (mo && mo->CheckLocalView())
 	{
 		// Print log text to console
 		AddToConsole(-1, TEXTCOLOR_GOLD);

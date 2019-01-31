@@ -766,7 +766,7 @@ class Inventory : Actor
 			toucher = player.mo;
 		}
 
-		bool localview = toucher.CheckLocalView(consoleplayer);
+		bool localview = toucher.CheckLocalView();
 
 		if (!toucher.CanTouchItem(self))
 			return;
@@ -1053,7 +1053,7 @@ class Inventory : Actor
 		}
 		/*
 		else if ((ItemFlags & IF_FANCYPICKUPSOUND) &&
-			(toucher == NULL || toucher->CheckLocalView(consoleplayer)))
+			(toucher == NULL || toucher->CheckLocalView()))
 		{
 			atten = ATTN_NONE;
 		}
@@ -1063,7 +1063,7 @@ class Inventory : Actor
 			atten = ATTN_NORM;
 		}
 
-		if (toucher != NULL && toucher.CheckLocalView(consoleplayer))
+		if (toucher != NULL && toucher.CheckLocalView())
 		{
 			chan = CHAN_PICKUP|CHAN_NOPAUSE;
 		}

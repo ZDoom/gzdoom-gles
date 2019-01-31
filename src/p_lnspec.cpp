@@ -3198,7 +3198,7 @@ FUNC(LS_SendToCommunicator)
 			it->player->SetLogNumber (arg0);
 		}
 
-		if (it->CheckLocalView (consoleplayer))
+		if (it->CheckLocalView())
 		{
 			S_StopSound (CHAN_VOICE);
 			it->player->SetSubtitle(arg0, name);
