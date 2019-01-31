@@ -59,6 +59,8 @@
 #include "s_sound.h"
 #include "v_text.h"
 #include "gi.h"
+#include "c_cvars.h"
+#include "stats.h"
 
 #include "doomdef.h"
 

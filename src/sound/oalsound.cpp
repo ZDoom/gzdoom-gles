@@ -51,6 +51,7 @@
 #include "i_music.h"
 #include "i_musicinterns.h"
 #include "cmdlib.h"
+#include "menu/menu.h"
 
 FModule OpenALModule{"OpenAL"};
 
