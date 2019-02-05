@@ -452,16 +452,6 @@ void G_InitNew (const char *mapname, bool bTitleLevel)
 	ST_CreateStatusBar(bTitleLevel);
 	setsizeneeded = true;
 
-	if (gameinfo.gametype == GAME_Strife || (SBarInfoScript[SCRIPT_CUSTOM] != NULL && SBarInfoScript[SCRIPT_CUSTOM]->GetGameType() == GAME_Strife))
-	{
-		// Set the initial quest log text for Strife.
-		for (i = 0; i < MAXPLAYERS; ++i)
-		{
-			if (playeringame[i])
-				players[i].SetLogText ("$TXT_FINDHELP");
-		}
-	}
-
 	// [RH] If this map doesn't exist, bomb out
 	if (!P_CheckMapData(mapname))
 	{
@@ -522,6 +512,16 @@ void G_InitNew (const char *mapname, bool bTitleLevel)
 	}
 	
 	G_DoLoadLevel (0, false, !savegamerestore);
+
+	if (gameinfo.gametype == GAME_Strife || (SBarInfoScript[SCRIPT_CUSTOM] != nullptr && SBarInfoScript[SCRIPT_CUSTOM]->GetGameType() == GAME_Strife))
+	{
+		// Set the initial quest log text for Strife.
+		for (i = 0; i < MAXPLAYERS; ++i)
+		{
+			if (playeringame[i])
+				players[i].SetLogText("$TXT_FINDHELP");
+		}
+	}
 }
 
 //

@@ -448,11 +448,11 @@ void player_t::SetLogText (const char *text)
 {
 	LogText = text;
 
-	if (mo->CheckLocalView(consoleplayer))
+	if (mo && mo->CheckLocalView(consoleplayer))
 	{
 		// Print log text to console
 		AddToConsole(-1, TEXTCOLOR_GOLD);
-		AddToConsole(-1, GStrings(LogText));
+		AddToConsole(-1, LogText[0] == '$'? GStrings(LogText.GetChars()+1) : LogText.GetChars() );
 		AddToConsole(-1, "\n");
 	}
 }
