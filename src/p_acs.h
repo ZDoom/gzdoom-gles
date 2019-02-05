@@ -349,7 +349,7 @@ class FBehavior
 public:
 	FBehavior ();
 	~FBehavior ();
-	bool Init(int lumpnum, FileReader * fr = NULL, int len = 0);
+	bool Init(int lumpnum, FileReader * fr = NULL, int len = 0, int reallumpnum = -1);
 
 	bool IsGood ();
 	uint8_t *FindChunk (uint32_t id) const;
@@ -377,11 +377,11 @@ public:
 	const char *GetModuleName() const { return ModuleName; }
 	ACSProfileInfo *GetFunctionProfileData(int index) { return index >= 0 && index < NumFunctions ? &FunctionProfileData[index] : NULL; }
 	ACSProfileInfo *GetFunctionProfileData(ScriptFunction *func) { return GetFunctionProfileData((int)(func - (ScriptFunction *)Functions)); }
-	const char *LookupString (uint32_t index) const;
+	const char *LookupString (uint32_t index, bool forprint = false) const;
 
 	BoundsCheckingArray<int32_t *, NUM_MAPVARS> MapVars;
 
-	static FBehavior *StaticLoadModule (int lumpnum, FileReader *fr = nullptr, int len=0);
+	static FBehavior *StaticLoadModule (int lumpnum, FileReader *fr = nullptr, int len=0, int reallumpnum = -1);
 	static void StaticLoadDefaultModules ();
 	static void StaticUnloadModules ();
 	static bool StaticCheckAllGood ();
@@ -392,32 +392,34 @@ public:
 	static void StaticUnlockLevelVarStrings();
 
 	static const ScriptPtr *StaticFindScript (int script, FBehavior *&module);
-	static const char *StaticLookupString (uint32_t index);
+	static const char *StaticLookupString (uint32_t index, bool forprint = false);
 	static void StaticStartTypedScripts (uint16_t type, AActor *activator, bool always, int arg1=0, bool runNow=false);
 	static void StaticStopMyScripts (AActor *actor);
 
 private:
 	struct ArrayInfo;
 
-	ACSFormat Format;
-
-	int LumpNum;
 	uint8_t *Data;
-	int DataSize;
 	uint8_t *Chunks;
 	ScriptPtr *Scripts;
-	int NumScripts;
 	ScriptFunction *Functions;
 	ACSProfileInfo *FunctionProfileData;
-	int NumFunctions;
 	ArrayInfo *ArrayStore;
-	int NumArrays;
 	ArrayInfo **Arrays;
+
+	ACSFormat Format;
+	int LumpNum;
+	int DataSize;
+	int NumScripts;
+	int NumFunctions;
+	int NumArrays;
 	int NumTotalArrays;
 	uint32_t StringTable;
+	uint32_t LibraryID;
+	bool ShouldLocalize;
+
 	int32_t MapVarStore[NUM_MAPVARS];
 	TArray<FBehavior *> Imports;
-	uint32_t LibraryID;
 	char ModuleName[9];
 	TArray<int> JumpPoints;
 
