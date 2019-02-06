@@ -1484,7 +1484,7 @@ public:
 	}
 
 	int ApplyDamageFactor(FName damagetype, int damage) const;
-	int GetModifiedDamage(FName damagetype, int damage, bool passive);
+	int GetModifiedDamage(FName damagetype, int damage, bool passive, AActor *inflictor, AActor *source, int flags = 0);
 	void DeleteAttachedLights();
 	static void DeleteAllAttachedLights();
 	static void RecreateAllAttachedLights();
