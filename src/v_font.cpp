@@ -1095,23 +1095,17 @@ FFont *V_GetFont(const char *name)
 //
 //==========================================================================
 
-FFont::FFont (const char *name, const char *nametemplate, int first, int count, int start, int fdlump, int spacewidth, bool notranslate)
+FFont::FFont (const char *name, const char *nametemplate, const char *filetemplate, int lfirst, int lcount, int start, int fdlump, int spacewidth, bool notranslate)
 {
 	int i;
 	FTextureID lump;
 	char buffer[12];
-	TArray<FTexture*> charLumps;
 	int maxyoffs;
 	bool doomtemplate = gameinfo.gametype & GAME_DoomChex ? strncmp (nametemplate, "STCFN", 5) == 0 : false;
-	bool stcfn121 = false;
 
 	noTranslate = notranslate;
 	Lump = fdlump;
-	Chars = new CharData[count];
-	charLumps.Resize(count);
 	PatchRemap = new uint8_t[256];
-	FirstChar = first;
-	LastChar = first + count - 1;
 	FontHeight = 0;
 	GlobalKerning = false;
 	FontName = name;
@@ -1122,10 +1116,13 @@ FFont::FFont (const char *name, const char *nametemplate, int first, int count, 
 
 	maxyoffs = 0;
 
-	for (i = 0; i < count; i++)
+	TMap<int, FTexture*> charMap;
+	int minchar = INT_MAX;
+	int maxchar = INT_MIN;
+	for (i = 0; i < lcount; i++)
 	{
-		charLumps[i] = NULL;
-		mysnprintf (buffer, countof(buffer), nametemplate, i + start);
+		int position = '!' + i;
+		mysnprintf(buffer, countof(buffer), nametemplate, i + start);
 
 		lump = TexMan.CheckForTexture(buffer, ETextureType::MiscPatch);
 		if (doomtemplate && lump.isValid() && i + start == 121)
@@ -1138,21 +1135,55 @@ FFont::FFont (const char *name, const char *nametemplate, int first, int count, 
 				!TexMan.CheckForTexture("STCFN122", ETextureType::MiscPatch).isValid())
 			{
 				// insert the incorrectly named '|' graphic in its correct position.
-				if (count > 124-start) charLumps[124-start] = TexMan[lump];
-				lump.SetInvalid();
-				stcfn121 = true;
+				position = 124;
 			}
 		}
-
 		if (lump.isValid())
 		{
-			FTexture *pic = TexMan[lump];
-			if (pic != NULL)
+			if (position < minchar) minchar = position;
+			if (position > maxchar) maxchar = position;
+			charMap.Insert(position, TexMan[lump]);
+		}
+	}
+	if (filetemplate != nullptr)
+	{
+		TArray<FolderEntry> folderdata;
+		FStringf path("fonts/%s/", filetemplate);
+		if (Wads.GetLumpsInFolder(path, folderdata))
+		{
+			// all valid lumps must be named with a hex number that represents its Unicode character index.
+			for (auto &entry : folderdata)
 			{
-				// set the lump here only if it represents a valid texture
-				if (i != 124-start || !stcfn121)
-					charLumps[i] = pic;
+				char *endp;
+				auto base = ExtractFileBase(entry.name);
+				auto position = strtoll(base.GetChars(), &endp, 16);
+				if ((*endp == 0 || *endp == '.' && position >= '!' && position < 0xffff))
+				{
+					auto lump = TexMan.CheckForTexture(entry.name, ETextureType::MiscPatch);
+					if (lump.isValid())
+					{
+						if ((int)position < minchar) minchar = (int)position;
+						if ((int)position > maxchar) maxchar = (int)position;
+						charMap.Insert((int)position, TexMan[lump]);
+					}
+				}
+			}
+		}
+	}
 
+	FirstChar = minchar;
+	LastChar = maxchar;
+	auto count = maxchar - minchar + 1;
+	Chars = new CharData[count];
+
+	for (i = 0; i < count; i++)
+	{
+		auto lump = charMap.CheckKey(FirstChar + i);
+		if (lump != nullptr)
+		{
+			FTexture *pic = *lump;
+			if (pic != nullptr)
+			{
 				int height = pic->GetScaledHeight();
 				int yoffs = pic->GetScaledTopOffset();
 
@@ -1160,18 +1191,15 @@ FFont::FFont (const char *name, const char *nametemplate, int first, int count, 
 				{
 					maxyoffs = yoffs;
 				}
-				height += abs (yoffs);
+				height += abs(yoffs);
 				if (height > FontHeight)
 				{
 					FontHeight = height;
 				}
 			}
-		}
 
-		if (charLumps[i] != nullptr)
-		{
-			if (!noTranslate) Chars[i].Pic = new FFontChar1 (charLumps[i]);
-			else Chars[i].Pic = charLumps[i];
+			if (!noTranslate) Chars[i].Pic = new FFontChar1 (pic);
+			else Chars[i].Pic = pic;
 			Chars[i].XMove = Chars[i].Pic->GetScaledWidth();
 		}
 		else
@@ -1185,9 +1213,9 @@ FFont::FFont (const char *name, const char *nametemplate, int first, int count, 
 	{
 		SpaceWidth = spacewidth;
 	}
-	else if ('N'-first >= 0 && 'N'-first < count && Chars['N' - first].Pic != NULL)
+	else if ('N'-FirstChar >= 0 && 'N'-FirstChar < count && Chars['N' - FirstChar].Pic != nullptr)
 	{
-		SpaceWidth = (Chars['N' - first].XMove + 1) / 2;
+		SpaceWidth = (Chars['N' - FirstChar].XMove + 1) / 2;
 	}
 	else
 	{
@@ -3069,7 +3097,7 @@ void V_InitCustomFonts()
 			}
 			if (format == 1)
 			{
-				FFont *fnt = new FFont (namebuffer, templatebuf, first, count, start, llump, spacewidth, donttranslate);
+				FFont *fnt = new FFont (namebuffer, templatebuf, nullptr, first, count, start, llump, spacewidth, donttranslate);
 				fnt->SetCursor(cursor);
 				fnt->SetKerning(kerning);
 			}
@@ -3474,19 +3502,19 @@ void V_InitFonts()
 		}
 		else if (Wads.CheckNumForName ("FONTA_S") >= 0)
 		{
-			SmallFont = new FFont ("SmallFont", "FONTA%02u", HU_FONTSTART, HU_FONTSIZE, 1, -1);
+			SmallFont = new FFont ("SmallFont", "FONTA%02u", "defsmallfont", HU_FONTSTART, HU_FONTSIZE, 1, -1);
 			SmallFont->SetCursor('[');
 		}
 		else
 		{
-			SmallFont = new FFont ("SmallFont", "STCFN%.3d", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
+			SmallFont = new FFont ("SmallFont", "STCFN%.3d", "defsmallfont", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
 		}
 	}
 	if (!(SmallFont2 = FFont::FindFont("SmallFont2")))	// Only used by Strife
 	{
 		if (Wads.CheckNumForName ("STBFN033", ns_graphics) >= 0)
 		{
-			SmallFont2 = new FFont ("SmallFont2", "STBFN%.3d", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
+			SmallFont2 = new FFont ("SmallFont2", "STBFN%.3d", "defsmallfont2", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
 		}
 		else
 		{
@@ -3517,7 +3545,7 @@ void V_InitFonts()
 			}
 			else
 			{
-				BigFont = new FFont ("BigFont", "FONTB%02u", HU_FONTSTART, HU_FONTSIZE, 1, -1);
+				BigFont = new FFont ("BigFont", "FONTB%02u", "defbigfont", HU_FONTSTART, HU_FONTSIZE, 1, -1);
 			}
 		}
 	}
