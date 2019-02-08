@@ -163,7 +163,7 @@ struct FLevelLocals : public FLevelData
 
 	bool		FromSnapshot;			// The current map was restored from a snapshot
 	bool		HasHeightSecs;			// true if some Transfer_Heights effects are present in the map. If this is false, some checks in the renderer can be shortcut.
-	uint8_t		frozenstate;
+	int			frozenstate;
 
 	double		teamdamage;
 
