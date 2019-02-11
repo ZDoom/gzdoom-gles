@@ -53,7 +53,7 @@
 #include "g_levellocals.h"
 #include "events.h"
 
-TArray<cluster_info_t> wadclusterinfos;
+static TArray<cluster_info_t> wadclusterinfos;
 TArray<level_info_t> wadlevelinfos;
 
 level_info_t TheDefaultLevelInfo;
