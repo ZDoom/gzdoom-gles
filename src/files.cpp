@@ -39,6 +39,17 @@
 #include "m_misc.h"
 
 
+FILE *myfopen(const char *filename, const char *flags)
+{
+#ifndef _WIN32
+	return fopen(filename, flags);
+#else
+	auto widename = WideString(filename);
+	auto wideflags = WideString(flags);
+	return _wfopen(widename.c_str(), wideflags.c_str());
+#endif
+}
+
 
 //==========================================================================
 //
@@ -69,7 +80,7 @@ public:
 
 	bool Open(const char *filename, long startpos = 0, long len = -1)
 	{
-		File = fopen(filename, "rb");
+		File = myfopen(filename, "rb");
 		if (File == nullptr) return false;
 		FilePos = startpos;
 		StartPos = startpos;
@@ -409,7 +420,7 @@ bool FileReader::OpenMemoryArray(std::function<bool(TArray<uint8_t>&)> getter)
 
 bool FileWriter::OpenDirect(const char *filename)
 {
-	File = fopen(filename, "wb");
+	File = myfopen(filename, "wb");
 	return (File != NULL);
 }
 

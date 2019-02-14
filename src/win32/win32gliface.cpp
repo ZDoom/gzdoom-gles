@@ -34,7 +34,6 @@
 
 //#include "gl/system/gl_system.h"
 
-#define _WIN32_WINNT 0x0501
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <GL/gl.h>
@@ -217,14 +216,11 @@ struct MonitorEnumState
 
 static BOOL CALLBACK GetDisplayDeviceNameMonitorEnumProc(HMONITOR hMonitor, HDC, LPRECT, LPARAM dwData)
 {
-	using OptWin32::GetMonitorInfoA;
-
 	MonitorEnumState *state = reinterpret_cast<MonitorEnumState *>(dwData);
 
-	MONITORINFOEX mi;
+	MONITORINFOEXA mi;
 	mi.cbSize = sizeof mi;
-	assert (GetMonitorInfo);
-	GetMonitorInfo(hMonitor, &mi);
+	GetMonitorInfoA(hMonitor, &mi);
 
 	// This assumes the monitors are returned by EnumDisplayMonitors in the
 	// order they're found in the Direct3D9 adapters list. Fingers crossed...
@@ -249,8 +245,6 @@ static BOOL CALLBACK GetDisplayDeviceNameMonitorEnumProc(HMONITOR hMonitor, HDC,
 
 void Win32GLVideo::GetDisplayDeviceName()
 {
-	using OptWin32::GetMonitorInfoA;
-
 	// If anything goes wrong, anything at all, everything uses the primary
     // monitor.
 	m_DisplayDeviceName = 0;
@@ -266,12 +260,11 @@ void Win32GLVideo::GetDisplayDeviceName()
 	{
 		if (mes.hFoundMonitor)
 		{
-			MONITORINFOEX mi;
+			MONITORINFOEXA mi;
 
 			mi.cbSize = sizeof mi;
 
-			assert (GetMonitorInfo);
-			if (GetMonitorInfo(mes.hFoundMonitor, &mi))
+			if (GetMonitorInfoA(mes.hFoundMonitor, &mi))
 			{
 				strcpy(m_DisplayDeviceBuffer, mi.szDevice);
 				m_DisplayDeviceName = m_DisplayDeviceBuffer;
@@ -291,13 +284,13 @@ void Win32GLVideo::GetDisplayDeviceName()
 void Win32GLVideo::MakeModesList()
 {
 	ModeInfo *pMode, *nextmode;
-	DEVMODE dm;
+	DEVMODEA dm;
 	int mode = 0;
 
-	memset(&dm, 0, sizeof(DEVMODE));
-	dm.dmSize = sizeof(DEVMODE);
+	memset(&dm, 0, sizeof(DEVMODEA));
+	dm.dmSize = sizeof(DEVMODEA);
 
-	while (EnumDisplaySettings(m_DisplayDeviceName, mode, &dm))
+	while (EnumDisplaySettingsA(m_DisplayDeviceName, mode, &dm))
 	{
 		this->AddMode(dm.dmPelsWidth, dm.dmPelsHeight, dm.dmBitsPerPel, dm.dmPelsHeight, dm.dmDisplayFrequency);
 		++mode;
@@ -548,19 +541,16 @@ struct DumpAdaptersState
 
 static BOOL CALLBACK DumpAdaptersMonitorEnumProc(HMONITOR hMonitor, HDC, LPRECT, LPARAM dwData)
 {
-	using OptWin32::GetMonitorInfoA;
-
 	DumpAdaptersState *state = reinterpret_cast<DumpAdaptersState *>(dwData);
 
-	MONITORINFOEX mi;
+	MONITORINFOEXA mi;
 	mi.cbSize=sizeof mi;
 
 	char moreinfo[64] = "";
 
 	bool active = true;
 
-	assert (GetMonitorInfo);
-	if (GetMonitorInfo(hMonitor, &mi))
+	if (GetMonitorInfoA(hMonitor, &mi))
 	{
 		bool primary = !!(mi.dwFlags & MONITORINFOF_PRIMARY);
 
@@ -632,7 +622,7 @@ HWND Win32GLVideo::InitDummy()
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = NULL;
 	wc.lpszMenuName = NULL;
-	wc.lpszClassName = "GZDoomOpenGLDummyWindow";
+	wc.lpszClassName = L"GZDoomOpenGLDummyWindow";
 
 	//Register window class
 	if(!RegisterClass(&wc))
@@ -649,9 +639,9 @@ HWND Win32GLVideo::InitDummy()
 	AdjustWindowRectEx(&windowRect, style, false, exStyle);
 
 	//Create Window
-	if(!(dummy = CreateWindowEx(exStyle,
-		"GZDoomOpenGLDummyWindow",
-		"GZDOOM",
+	if (!(dummy = CreateWindowExW(exStyle,
+		L"GZDoomOpenGLDummyWindow",
+		WGAMENAME,
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | style,
 		0, 0,
 		windowRect.right-windowRect.left,
@@ -660,7 +650,7 @@ HWND Win32GLVideo::InitDummy()
 		g_hInst,
 		NULL)))
 	{
-		UnregisterClass("GZDoomOpenGLDummyWindow", g_hInst);
+		UnregisterClassW(L"GZDoomOpenGLDummyWindow", g_hInst);
 		return 0;
 	}
 	ShowWindow(dummy, SW_HIDE);
@@ -677,7 +667,7 @@ HWND Win32GLVideo::InitDummy()
 void Win32GLVideo::ShutdownDummy(HWND dummy)
 {
 	DestroyWindow(dummy);
-	UnregisterClass("GZDoomOpenGLDummyWindow", GetModuleHandle(NULL));
+	UnregisterClassW(L"GZDoomOpenGLDummyWindow", GetModuleHandle(NULL));
 }
 
 
@@ -961,15 +951,15 @@ void Win32GLVideo::Shutdown()
 
 bool Win32GLVideo::SetFullscreen(const char *devicename, int w, int h, int bits, int hz)
 {
-	DEVMODE dm;
+	DEVMODEA dm;
 
 	if (w==0)
 	{
-		ChangeDisplaySettingsEx(devicename, 0, 0, 0, 0);
+		ChangeDisplaySettingsExA(devicename, 0, 0, 0, 0);
 	}
 	else
 	{
-		dm.dmSize = sizeof(DEVMODE);
+		dm.dmSize = sizeof(DEVMODEA);
 		dm.dmSpecVersion = DM_SPECVERSION;//Somebody owes me...
 		dm.dmDriverExtra = 0;//...1 hour of my life back
 		dm.dmPelsWidth = w;
@@ -977,10 +967,10 @@ bool Win32GLVideo::SetFullscreen(const char *devicename, int w, int h, int bits,
 		dm.dmBitsPerPel = bits;
 		dm.dmDisplayFrequency = hz;
 		dm.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY;
-		if (DISP_CHANGE_SUCCESSFUL != ChangeDisplaySettingsEx(devicename, &dm, 0, CDS_FULLSCREEN, 0))
+		if (DISP_CHANGE_SUCCESSFUL != ChangeDisplaySettingsExA(devicename, &dm, 0, CDS_FULLSCREEN, 0))
 		{
 			dm.dmFields &= ~DM_DISPLAYFREQUENCY;
-			return DISP_CHANGE_SUCCESSFUL == ChangeDisplaySettingsEx(devicename, &dm, 0, CDS_FULLSCREEN, 0);
+			return DISP_CHANGE_SUCCESSFUL == ChangeDisplaySettingsExA(devicename, &dm, 0, CDS_FULLSCREEN, 0);
 		}
 	}
 	return true;
@@ -1000,8 +990,6 @@ bool Win32GLVideo::SetFullscreen(const char *devicename, int w, int h, int bits,
 
 Win32GLFrameBuffer::Win32GLFrameBuffer(void *hMonitor, int width, int height, int bits, int refreshHz, bool fullscreen, bool bgra) : BaseWinFB(width, height, bgra) 
 {
-	using OptWin32::GetMonitorInfoA;
-
 	m_Width = width;
 	m_Height = height;
 	m_Bits = bits;
@@ -1020,11 +1008,10 @@ Win32GLFrameBuffer::Win32GLFrameBuffer(void *hMonitor, int width, int height, in
 
 	if (hMonitor)
 	{
-		MONITORINFOEX mi;
+		MONITORINFOEXA mi;
 		mi.cbSize = sizeof mi;
 
-		assert (GetMonitorInfo);
-		if (GetMonitorInfo(HMONITOR(hMonitor), &mi))
+		if (GetMonitorInfoA(HMONITOR(hMonitor), &mi))
 		{
 			strcpy(m_displayDeviceNameBuffer, mi.szDevice);
 			m_displayDeviceName = m_displayDeviceNameBuffer;

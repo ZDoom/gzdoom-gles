@@ -412,7 +412,8 @@ void FBasicStartupScreen::NetInit(const char *message, int numplayers)
 	{
 		HWND ctl;
 
-		SetDlgItemText (NetStartPane, IDC_NETSTARTMESSAGE, message);
+		std::wstring wmessage = WideString(message);
+		SetDlgItemTextW (NetStartPane, IDC_NETSTARTMESSAGE, wmessage.c_str());
 		ctl = GetDlgItem (NetStartPane, IDC_NETSTARTPROGRESS);
 
 		if (numplayers == 0)
@@ -428,7 +429,7 @@ void FBasicStartupScreen::NetInit(const char *message, int numplayers)
 				// If we don't set the PBS_MARQUEE style, then the marquee will never show up.
 				SetWindowLong (ctl, GWL_STYLE, GetWindowLong (ctl, GWL_STYLE) | PBS_MARQUEE);
 			}
-			SetDlgItemText (NetStartPane, IDC_NETSTARTCOUNT, "");
+			SetDlgItemTextW (NetStartPane, IDC_NETSTARTCOUNT, L"");
 		}
 		else
 		{
@@ -441,7 +442,7 @@ void FBasicStartupScreen::NetInit(const char *message, int numplayers)
 			if (numplayers == 1)
 			{
 				SendMessage (ctl, PBM_SETPOS, 1, 0);
-				SetDlgItemText (NetStartPane, IDC_NETSTARTCOUNT, "");
+				SetDlgItemTextW (NetStartPane, IDC_NETSTARTCOUNT, L"");
 			}
 		}
 	}
@@ -522,7 +523,7 @@ void FBasicStartupScreen :: NetProgress(int count)
 		char buf[16];
 
 		mysnprintf (buf, countof(buf), "%d/%d", NetCurPos, NetMaxPos);
-		SetDlgItemText (NetStartPane, IDC_NETSTARTCOUNT, buf);
+		SetDlgItemTextA (NetStartPane, IDC_NETSTARTCOUNT, buf);
 		SendDlgItemMessage (NetStartPane, IDC_NETSTARTPROGRESS, PBM_SETPOS, MIN(NetCurPos, NetMaxPos), 0);
 	}
 }
@@ -1210,7 +1211,7 @@ void ST_Endoom()
 
 bool ST_Util_CreateStartupWindow ()
 {
-	StartupScreen = CreateWindowEx (WS_EX_NOPARENTNOTIFY, "STATIC", NULL,
+	StartupScreen = CreateWindowEx (WS_EX_NOPARENTNOTIFY, L"STATIC", NULL,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_OWNERDRAW,
 		0, 0, 0, 0, Window, NULL, g_hInst, NULL);
 	if (StartupScreen == NULL)
@@ -1232,7 +1233,7 @@ bool ST_Util_CreateStartupWindow ()
 
 void ST_Util_SizeWindowForBitmap (int scale)
 {
-	DEVMODE displaysettings;
+	DEVMODEA displaysettings;
 	int w, h, cx, cy, x, y;
 	RECT rect;
 
@@ -1254,7 +1255,7 @@ void ST_Util_SizeWindowForBitmap (int scale)
 	// puts it partially offscreen.
 	memset (&displaysettings, 0, sizeof(displaysettings));
 	displaysettings.dmSize = sizeof(displaysettings);
-	EnumDisplaySettings (NULL, ENUM_CURRENT_SETTINGS, &displaysettings);
+	EnumDisplaySettingsA (NULL, ENUM_CURRENT_SETTINGS, &displaysettings);
 	GetWindowRect (Window, &rect);
 	cx = (rect.left + rect.right) / 2;
 	cy = (rect.top + rect.bottom) / 2;

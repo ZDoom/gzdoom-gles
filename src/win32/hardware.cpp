@@ -311,13 +311,13 @@ void I_ClosestResolution (int *width, int *height, int bits)
 
 static void GetCenteredPos (int &winx, int &winy, int &winw, int &winh, int &scrwidth, int &scrheight)
 {
-	DEVMODE displaysettings;
+	DEVMODEA displaysettings;
 	RECT rect;
 	int cx, cy;
 
 	memset (&displaysettings, 0, sizeof(displaysettings));
 	displaysettings.dmSize = sizeof(displaysettings);
-	EnumDisplaySettings (NULL, ENUM_CURRENT_SETTINGS, &displaysettings);
+	EnumDisplaySettingsA (NULL, ENUM_CURRENT_SETTINGS, &displaysettings);
 	scrwidth = (int)displaysettings.dmPelsWidth;
 	scrheight = (int)displaysettings.dmPelsHeight;
 	GetWindowRect (Window, &rect);

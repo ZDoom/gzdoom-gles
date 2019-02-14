@@ -563,7 +563,7 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (message == WM_WTSSESSION_CHANGE && lParam == (LPARAM)SessionID)
 			{
 #ifdef _DEBUG
-				OutputDebugString ("SessionID matched\n");
+				OutputDebugStringA ("SessionID matched\n");
 #endif
 				// When using fast user switching, XP will lock a session before
 				// disconnecting it, and the session will be unlocked before reconnecting it.
@@ -611,7 +611,7 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 #ifdef _DEBUG
 			char foo[256];
 			mysnprintf (foo, countof(foo), "Session Change: %ld %d\n", lParam, wParam);
-			OutputDebugString (foo);
+			OutputDebugStringA (foo);
 #endif
 		}
 		break;
@@ -666,7 +666,7 @@ bool I_InitInput (void *hwnd)
 	FindRawInputFunctions();
 
 	// Try for DirectInput 8 first, then DirectInput 3 for NT 4's benefit.
-	DInputDLL = LoadLibrary("dinput8.dll");
+	DInputDLL = LoadLibraryA("dinput8.dll");
 	if (DInputDLL != NULL)
 	{
 		typedef HRESULT (WINAPI *blah)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN);
@@ -692,7 +692,7 @@ bool I_InitInput (void *hwnd)
 		{
 			FreeLibrary(DInputDLL);
 		}
-		DInputDLL = LoadLibrary ("dinput.dll");
+		DInputDLL = LoadLibraryA ("dinput.dll");
 		if (DInputDLL == NULL)
 		{
 			I_FatalError ("Could not load dinput.dll: %08lx", GetLastError());
@@ -992,7 +992,7 @@ static void FindRawInputFunctions()
 {
 	if (!norawinput)
 	{
-		HMODULE user32 = GetModuleHandle("user32.dll");
+		HMODULE user32 = GetModuleHandleA("user32.dll");
 
 		if (user32 == NULL)
 		{
