@@ -569,6 +569,11 @@ static void ParseReplies (const char *name, int pos, FStrifeDialogueReply **repl
 
 		// The next node to use when this reply is chosen.
 		reply->NextNode = rsp->Link;
+		if (reply->NextNode < 0)
+		{
+			reply->NextNode *= -1;
+			reply->CloseDialog = false;
+		}
 
 		// The message to record in the log for this reply.
 		reply->LogNumber = rsp->Log;
@@ -1124,14 +1129,13 @@ static void HandleReply(player_t *player, bool isconsole, int nodenum, int reply
 	if (reply->NextNode != 0)
 	{
 		int rootnode = npc->ConversationRoot;
-		const bool isNegative = reply->NextNode < 0;
-		const unsigned next = (unsigned)(rootnode + (isNegative ? -1 : 1) * reply->NextNode - 1);
+		const unsigned next = (unsigned)(rootnode + reply->NextNode - 1);
 
 		if (next < StrifeDialogues.Size())
 		{
 			npc->Conversation = StrifeDialogues[next];
 
-			if (isNegative)
+			if (!(reply->CloseDialog))
 			{
 				if (gameaction != ga_slideshow)
 				{
