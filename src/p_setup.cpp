@@ -3144,8 +3144,7 @@ void P_FreeLevelData ()
 	P_ClearPortals();
 	tagManager.Clear();
 	level.total_monsters = level.total_items = level.total_secrets =
-		level.killed_monsters = level.found_items = level.found_secrets =
-		wminfo.maxfrags = 0;
+	level.killed_monsters = level.found_items = level.found_secrets = 0;
 		
 	if (level.sectors.Size() > 0)
 	{
@@ -3235,7 +3234,6 @@ void P_SetupLevel(const char *lumpname, int position, bool newGame)
 	}
 
 	level.maptype = MAPTYPE_UNKNOWN;
-	wminfo.partime = 180;
 
 	if (!savegamerestore)
 	{

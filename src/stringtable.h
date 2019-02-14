@@ -75,7 +75,7 @@ public:
 		allStrings.Insert(dehacked_table, map);
 		UpdateLanguage();
 	}
-	
+
 	const char *GetLanguageString(const char *name, uint32_t langtable) const;
 	const char *GetString(const char *name, uint32_t *langtable) const;
 	const char *operator() (const char *name) const;	// Never returns NULL

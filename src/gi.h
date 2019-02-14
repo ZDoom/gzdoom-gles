@@ -49,6 +49,7 @@ enum
 	GI_COMPATPOLY1			= 0x00000040,	// Hexen's MAP36 needs old polyobject drawing
 	GI_COMPATPOLY2			= 0x00000080,	// so does HEXDD's MAP47
 	GI_NOTEXTCOLOR			= 0x00000100,	// Chex Quest 3 would have everything green
+	GI_IGNORETITLEPATCHES	= 0x00000200,	// Ignore the map name graphics when not runnning in English language
 };
 
 #include "gametype.h"
