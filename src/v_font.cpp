@@ -2824,10 +2824,10 @@ void FFont::FixXMoves()
 			// Try an uppercase character.
 			if (myislower(i + FirstChar))
 			{
-				int upper = i - 32;
-				if (upper >= 0)
+				int upper = upperforlower[FirstChar + i];
+				if (upper >= FirstChar && upper <= LastChar )
 				{
-					Chars[i].XMove = Chars[upper].XMove;
+					Chars[i].XMove = Chars[upper - FirstChar].XMove;
 					continue;
 				}
 			}
