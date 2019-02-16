@@ -51,6 +51,7 @@
 #include "templates.h"
 #include "s_sound.h"
 #include "events.h"
+#include "utf8.h"
 
 static void I_CheckGUICapture ();
 static void I_CheckNativeMouse ();
@@ -494,10 +495,9 @@ void MessagePump (const SDL_Event &sev)
 	case SDL_TEXTINPUT:
 		if (GUICapture)
 		{
-			int utf8_decode(const char *src, int *size);
 			int size;
 			
-			int unichar = utf8_decode(sev.text.text, &size);
+			int unichar = utf8_decode((const uint8_t*)sev.text.text, &size);
 			if (size != 4)
 			{
 				event.type = EV_GUI_Event;

@@ -1057,6 +1057,7 @@ set (PCH_SOURCES
 	v_video.cpp
 	w_wad.cpp
 	wi_stuff.cpp
+	utf8.cpp
 	zstrformat.cpp
 	g_inventory/a_keys.cpp
 	g_inventory/a_pickups.cpp
