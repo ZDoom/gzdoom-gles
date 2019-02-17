@@ -736,6 +736,7 @@ DEFINE_ACTION_FUNCTION_NATIVE(FLevelLocals, SecretExitLevel, G_SecretExitLevel)
 //
 //
 //==========================================================================
+static wbstartstruct_t wminfo;
 
 void G_DoCompleted (void)
 {
@@ -766,7 +767,6 @@ void G_DoCompleted (void)
 	if (automapactive)
 		AM_Stop ();
 
-	wbstartstruct_t wminfo; 				// parms for world map / intermission
 
 	uint32_t langtable[2] = {};
 	wminfo.finished_ep = level.cluster - 1;
@@ -780,6 +780,7 @@ void G_DoCompleted (void)
 	{
 		wminfo.next = level.MapName;
 		wminfo.LName1 = wminfo.LName0;
+		wminfo.nextname = wminfo.thisname;
 	}
 	else
 	{
@@ -794,7 +795,7 @@ void G_DoCompleted (void)
 		{
 			wminfo.next = nextinfo->MapName;
 			wminfo.LName1 = TexMan.CheckForTexture(nextinfo->PName, ETextureType::MiscPatch);
-			wminfo.nextname = info->LookupLevelName(&langtable[1]);
+			wminfo.nextname = nextinfo->LookupLevelName(&langtable[1]);
 		}
 	}
 
