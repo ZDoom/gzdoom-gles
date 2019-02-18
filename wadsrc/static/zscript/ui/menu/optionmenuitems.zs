@@ -1191,7 +1191,7 @@ class OptionMenuItemTextField : OptionMenuFieldBase
 			String s;
 			[b, s] = GetString(0);
 			Menu.MenuSound("menu/choose");
-			mEnter = TextEnterMenu.Open(Menu.GetCurrentMenu(), s, -1, 2, fromcontroller);
+			mEnter = TextEnterMenu.OpenTextEnter(Menu.GetCurrentMenu(), SmallFont, s, -1, fromcontroller);
 			mEnter.ActivateMenu();
 			return true;
 		}
