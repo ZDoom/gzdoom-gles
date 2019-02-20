@@ -208,7 +208,7 @@ class DIntermissionScreenText : public DIntermissionScreen
 {
 	DECLARE_CLASS (DIntermissionScreenText, DIntermissionScreen)
 
-	const char *mText;
+	FString mText;
 	int mTextSpeed;
 	int mTextX, mTextY;
 	int mTextCounter;
