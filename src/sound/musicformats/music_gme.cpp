@@ -39,8 +39,8 @@
 
 #include "i_musicinterns.h"
 #include "c_cvars.h"
-#include "critsec.h"
 #include <gme/gme.h>
+#include <mutex>
 #include "v_text.h"
 #include "files.h"
 #include "templates.h"
@@ -59,7 +59,7 @@ public:
 	FString GetStats();
 
 protected:
-	FCriticalSection CritSec;
+	std::mutex CritSec;
 	Music_Emu *Emu;
 	gme_info_t *TrackInfo;
 	int SampleRate;
@@ -254,12 +254,12 @@ bool GMESong::StartTrack(int track, bool getcritsec)
 
 	if (getcritsec)
 	{
-		CritSec.Enter();
+		std::lock_guard<std::mutex> lock(CritSec);
+		err = gme_start_track(Emu, track);
 	}
-	err = gme_start_track(Emu, track);
-	if (getcritsec)
+	else
 	{
-		CritSec.Leave();
+		err = gme_start_track(Emu, track);
 	}
 	if (err != NULL)
 	{
@@ -359,7 +359,7 @@ bool GMESong::Read(SoundStream *stream, void *buff, int len, void *userdata)
 	gme_err_t err;
 	GMESong *song = (GMESong *)userdata;
 
-	song->CritSec.Enter();
+	std::lock_guard<std::mutex> lock(song->CritSec);
 	if (gme_track_ended(song->Emu))
 	{
 		if (song->m_Looping)
@@ -369,11 +369,9 @@ bool GMESong::Read(SoundStream *stream, void *buff, int len, void *userdata)
 		else
 		{
 			memset(buff, 0, len);
-			song->CritSec.Leave();
 			return false;
 		}
 	}
 	err = gme_play(song->Emu, len >> 1, (short *)buff);
-	song->CritSec.Leave();
 	return (err == NULL);
 }
