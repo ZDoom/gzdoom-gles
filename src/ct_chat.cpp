@@ -116,7 +116,6 @@ CVAR (Bool, chat_substitution, false, CVAR_ARCHIVE)
 void CT_Init ()
 {
 	ChatQueue.Clear();
-	ChatQueue.Push(0);
 	CharLen = 0;
 	chatmodeon = 0;
 }
@@ -146,7 +145,9 @@ bool CT_Responder (event_t *ev)
 		{
 			if (ev->data1 == '\r')
 			{
+				ChatQueue.Push(0);
 				ShoveChatStr ((char *)ChatQueue.Data(), chatmodeon - 1);
+				ChatQueue.Pop();
 				CT_Stop ();
 				return true;
 			}
@@ -166,7 +167,9 @@ bool CT_Responder (event_t *ev)
 			else if (ev->data1 == 'C' && (ev->data3 & GKM_CTRL))
 #endif // __APPLE__
 			{
+				ChatQueue.Push(0);
 				I_PutInClipboard ((char *)ChatQueue.Data());
+				ChatQueue.Pop();
 				return true;
 			}
 #ifdef __APPLE__
@@ -253,25 +256,22 @@ void CT_Drawer (void)
 		promptwidth = displayfont->StringWidth (prompt) * scalex;
 		x = displayfont->GetCharWidth (displayfont->GetCursor()) * scalex * 2 + promptwidth;
 
+		FString printstr = ChatQueue;
 		// figure out if the text is wider than the screen
 		// if so, only draw the right-most portion of it.
-		const uint8_t *textp = ChatQueue.Data();
+		const uint8_t *textp = (const uint8_t*)printstr.GetChars();
 		while(*textp)
 		{
 			auto textw = displayfont->StringWidth(textp);
 			if (x + textw * scalex < screen_width) break;
 			GetCharFromString(textp);
 		}
+		printstr += displayfont->GetCursor();
 
-		// draw the prompt, text, and cursor
-		ChatQueue.Last() = displayfont->GetCursor();
-		ChatQueue.Push(0);
 		screen->DrawText (displayfont, CR_GREEN, 0, y, prompt, 
 			DTA_VirtualWidth, screen_width, DTA_VirtualHeight, screen_height, DTA_KeepRatio, true, TAG_DONE);
-		screen->DrawText (displayfont, CR_GREY, promptwidth, y, (const char *)textp, 
+		screen->DrawText (displayfont, CR_GREY, promptwidth, y, printstr, 
 			DTA_VirtualWidth, screen_width, DTA_VirtualHeight, screen_height, DTA_KeepRatio, true, TAG_DONE);
-		ChatQueue.Pop();
-		ChatQueue.Last() = 0;
 
 		BorderTopRefresh = screen->GetPageCount ();
 	}
@@ -307,7 +307,6 @@ static void CT_AddChar (int c)
 			}
 			CharLen++;
 		}
-		ChatQueue.Push(0);
 	}
 }
 
@@ -322,10 +321,9 @@ static void CT_BackSpace ()
 {
 	if (CharLen)
 	{
-		int endpos = ChatQueue.Size() - 2;
+		int endpos = ChatQueue.Size() - 1;
 		while (endpos > 0 && ChatQueue[endpos] >= 0x80 && ChatQueue[endpos] < 0xc0) endpos--;
-		ChatQueue[endpos] = 0;
-		ChatQueue.Clamp(endpos + 1);
+		ChatQueue.Clamp(endpos);
 		CharLen--;
 	}
 }
@@ -339,12 +337,7 @@ static void CT_BackSpace ()
 
 static void CT_ClearChatMessage ()
 {
-	if (ChatQueue.Size() > 1)
-	{
-		ChatQueue.Clamp(1);
-		ChatQueue[0] = 0;
-		CharLen = 0;
-	}
+	ChatQueue.Clear();
 }
 
 //===========================================================================
