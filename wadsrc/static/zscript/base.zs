@@ -45,8 +45,16 @@ struct _ native	// These are the global variables, the struct is only here to av
 	native readonly Weapon WP_NOCHANGE;
 	native int LocalViewPitch;
 	deprecated("3.8") native readonly bool globalfreeze;
+	native readonly @MusPlayingInfo mus_playing;
 
 }
+
+struct MusPlayingInfo native
+{
+	native String name;
+	native int baseorder;
+	native bool loop;
+};
 
 struct TexMan
 {
