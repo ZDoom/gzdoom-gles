@@ -1161,6 +1161,7 @@ static void BuildEpisodeMenu()
 		DOptionMenuDescriptor *od = Create<DOptionMenuDescriptor>();
 		MenuDescriptors[NAME_Episodemenu] = od;
 		od->mMenuName = NAME_Episodemenu;
+		od->mFont = gameinfo.gametype == GAME_Doom ? BigUpper : BigFont;
 		od->mTitle = "$MNU_EPISODE";
 		od->mSelectedItem = 0;
 		od->mScrollPos = 0;

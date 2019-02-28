@@ -3581,27 +3581,31 @@ void V_InitFonts()
 	{
 		if (Wads.CheckNumForName ("FONTA_S") >= 0)
 		{
-			SmallFont = new FFont ("SmallFont", "FONTA%02u", "defsmallfont", HU_FONTSTART, HU_FONTSIZE, 1, -1);
+			SmallFont = new FFont("SmallFont", "FONTA%02u", "defsmallfont", HU_FONTSTART, HU_FONTSIZE, 1, -1);
 			SmallFont->SetCursor('[');
 		}
 		else if (Wads.CheckNumForName ("STCFN033", ns_graphics) >= 0)
 		{
-			SmallFont = new FFont ("SmallFont", "STCFN%.3d", "defsmallfont", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
+			SmallFont = new FFont("SmallFont", "STCFN%.3d", "defsmallfont", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
 		}
 	}
 	if (!(SmallFont2 = V_GetFont("SmallFont2")))	// Only used by Strife
 	{
 		if (Wads.CheckNumForName ("STBFN033", ns_graphics) >= 0)
 		{
-			SmallFont2 = new FFont ("SmallFont2", "STBFN%.3d", "defsmallfont2", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
+			SmallFont2 = new FFont("SmallFont2", "STBFN%.3d", "defsmallfont2", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
 		}
 	}
 	if (!(BigFont = V_GetFont("BigFont")))
 	{
 		if (gameinfo.gametype & GAME_Raven)
 		{
-			BigFont = new FFont ("BigFont", "FONTB%02u", "defbigfont", HU_FONTSTART, HU_FONTSIZE, 1, -1);
+			BigFont = new FFont("BigFont", "FONTB%02u", "defbigfont", HU_FONTSTART, HU_FONTSIZE, 1, -1);
 		}
+	}
+	if (!(BigUpper = V_GetFont("BigUpper")))
+	{
+		BigUpper = BigFont;
 	}
 	if (!(ConFont = V_GetFont("ConsoleFont", "CONFONT")))
 	{
