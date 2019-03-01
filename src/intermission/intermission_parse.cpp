@@ -939,5 +939,5 @@ CCMD(testfinale)
 		return;
 	}
 
-	F_StartFinale(gameinfo.finaleMusic, gameinfo.finaleOrder, -1, 0, gameinfo.FinaleFlat, text, false, false, true, true, false);
+	F_StartFinale(gameinfo.finaleMusic, gameinfo.finaleOrder, -1, 0, gameinfo.FinaleFlat, text, false, false, true, true);
 }
