@@ -8984,7 +8984,7 @@ scriptwait:
 
 		case PCD_LOCALAMBIENTSOUND:
 			lookup = FBehavior::StaticLookupString (STACK(2));
-			if (lookup != NULL && activator->CheckLocalView (consoleplayer))
+			if (lookup != NULL && activator && activator->CheckLocalView (consoleplayer))
 			{
 				S_Sound (CHAN_AUTO,
 						 lookup,
