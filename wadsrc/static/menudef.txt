@@ -427,25 +427,12 @@ OptionMenu "CustomizeControls" protected
 {
 	Title "$CNTRLMNU_TITLE"
 
-	StaticText ""
 	Submenu    "$CNTRLMNU_ACTION"      , "ActionControlsMenu"
-
-	StaticText ""
 	Submenu    "$CNTRLMNU_CHAT"        , "ChatControlsMenu"
-
-	StaticText ""
 	Submenu    "$CNTRLMNU_WEAPONS"     , "WeaponsControlMenu"
-
-	StaticText ""
 	Submenu    "$CNTRLMNU_INVENTORY"   , "InventoryControlsMenu"
-
-	StaticText ""
 	Submenu    "$CNTRLMNU_OTHER"       , "OtherControlsMenu"
-
-	StaticText ""
 	Submenu    "$CNTRLMNU_POPUPS"      , "StrifeControlsMenu"
-
-	StaticText ""
 	Submenu    "$MAPCNTRLMNU_CONTROLS" , "MapControlsMenu"
 }
 
