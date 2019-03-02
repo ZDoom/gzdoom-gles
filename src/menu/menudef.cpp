@@ -958,6 +958,7 @@ static void ParseOptionMenu(FScanner &sc)
 	sc.MustGetString();
 
 	DOptionMenuDescriptor *desc = Create<DOptionMenuDescriptor>();
+	desc->mFont = gameinfo.gametype == GAME_Doom ? BigUpper : BigFont;
 	desc->mMenuName = sc.String;
 	desc->mSelectedItem = -1;
 	desc->mScrollPos = 0;
@@ -1295,6 +1296,7 @@ static void BuildPlayerclassMenu()
 		DOptionMenuDescriptor *od = Create<DOptionMenuDescriptor>();
 		MenuDescriptors[NAME_Playerclassmenu] = od;
 		od->mMenuName = NAME_Playerclassmenu;
+		od->mFont = gameinfo.gametype == GAME_Doom ? BigUpper : BigFont;
 		od->mTitle = "$MNU_CHOOSECLASS";
 		od->mSelectedItem = 0;
 		od->mScrollPos = 0;
@@ -1675,6 +1677,7 @@ fail:
 		od = Create<DOptionMenuDescriptor>();
 		MenuDescriptors[NAME_Skillmenu] = od;
 		od->mMenuName = NAME_Skillmenu;
+		od->mFont = gameinfo.gametype == GAME_Doom ? BigUpper : BigFont;
 		od->mTitle = "$MNU_CHOOSESKILL";
 		od->mSelectedItem = defindex;
 		od->mScrollPos = 0;
