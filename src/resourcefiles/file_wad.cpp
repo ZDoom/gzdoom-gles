@@ -33,6 +33,7 @@
 **
 */
 
+#include <ctype.h>
 #include "resourcefile.h"
 #include "cmdlib.h"
 #include "templates.h"
