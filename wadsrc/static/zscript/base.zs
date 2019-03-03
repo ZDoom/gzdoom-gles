@@ -685,6 +685,8 @@ struct LevelLocals native
 	native play int ExecuteSpecial(int special, Actor activator, line linedef, bool lineside, int arg1 = 0, int arg2 = 0, int arg3 = 0, int arg4 = 0, int arg5 = 0);
 	native static void GiveSecret(Actor activator, bool printmsg = true, bool playsound = true);
 	native static void StartSlideshow(Name whichone = 'none');
+	native static void MakeScreenShot();
+	native static void MakeAutoSave();
 	native void WorldDone();
 	native static void RemoveAllBots(bool fromlist);
 	native static Vector2 GetAutomapPosition();
