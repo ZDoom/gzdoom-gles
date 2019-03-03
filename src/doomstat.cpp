@@ -55,7 +55,7 @@ CUSTOM_CVAR (Float, teamdamage, 0.f, CVAR_SERVERINFO)
 	level.teamdamage = self;
 }
 
-CUSTOM_CVAR (String, language, "auto", CVAR_ARCHIVE|CVAR_NOINITCALL)
+CUSTOM_CVAR (String, language, "auto", CVAR_ARCHIVE|CVAR_NOINITCALL | CVAR_GLOBALCONFIG)
 {
 	GStrings.UpdateLanguage();
 	if (level.info != NULL) level.LevelName = level.info->LookupLevelName();
