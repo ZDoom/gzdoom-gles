@@ -841,8 +841,7 @@ void CopyPlayer(player_t *dst, player_t *src, const char *name)
 	bool attackdown = dst->attackdown;
 	bool usedown = dst->usedown;
 
-
-	*dst = *src;		// To avoid memory leaks at this point the userinfo in src must be empty which is taken care of by the TransferFrom call above.
+	dst->CopyFrom(*src, true);	// To avoid memory leaks at this point the userinfo in src must be empty which is taken care of by the TransferFrom call above.
 
 	dst->cheats |= chasecam;
 
@@ -884,9 +883,6 @@ void CopyPlayer(player_t *dst, player_t *src, const char *name)
 
 		pspr = pspr->Next;
 	}
-
-	// Don't let the psprites be destroyed when src is destroyed.
-	src->psprites = nullptr;
 
 	// These 2 variables may not be overwritten.
 	dst->attackdown = attackdown;
