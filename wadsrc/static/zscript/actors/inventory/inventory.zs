@@ -768,6 +768,9 @@ class Inventory : Actor
 
 		bool localview = toucher.CheckLocalView(consoleplayer);
 
+		if (!toucher.CanTouchItem(self))
+			return;
+
 		bool res;
 		[res, toucher] = CallTryPickup(toucher);
 		if (!res) return;
