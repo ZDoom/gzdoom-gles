@@ -1909,7 +1909,7 @@ void FMapInfoParser::ParseEpisodeInfo ()
 		{
 			ParseAssign();
 			sc.MustGetString ();
-			name = sc.String;
+			name = strbin1(sc.String);
 		}
 		else if (sc.Compare ("picname"))
 		{
