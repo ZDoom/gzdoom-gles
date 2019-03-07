@@ -399,7 +399,6 @@ void player_t::CopyFrom(player_t &p, bool copyPSP)
 		psprites = p.psprites;
 		p.psprites = nullptr;
 	}
-	else psprites = nullptr;
 }
 
 size_t player_t::PropagateMark()
