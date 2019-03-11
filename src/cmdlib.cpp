@@ -418,6 +418,7 @@ void FormatGUID (char *buffer, size_t buffsize, const GUID &guid)
 
 const char *myasctime ()
 {
+	static char readabletime[50];
 	time_t clock;
 	struct tm *lt;
 
@@ -425,11 +426,12 @@ const char *myasctime ()
 	lt = localtime (&clock);
 	if (lt != NULL)
 	{
-		return asctime (lt);
+		strftime(readabletime, 50, "%F %T", lt);
+		return readabletime;
 	}
 	else
 	{
-		return "Pre Jan 01 00:00:00 1970\n";
+		return "Unknown\n";
 	}
 }
 
