@@ -43,16 +43,6 @@ struct WadStuff;
 #define SHARE_DIR "/usr/local/share/"
 #endif
 
-// Index values into the LanguageIDs array
-enum
-{
-	LANGIDX_UserPreferred,
-	LANGIDX_UserDefault,
-	LANGIDX_SysPreferred,
-	LANGIDX_SysDefault
-};
-extern uint32_t LanguageIDs[4];
-extern void SetLanguageIDs ();
 
 // Called by DoomMain.
 void I_Init (void);
