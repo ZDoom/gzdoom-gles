@@ -77,6 +77,10 @@ CVAR(Int, m_use_mouse, 2, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 CVAR(Int, m_show_backbutton, 0, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 
 
+// Option Search
+CVAR(Bool, os_isanyof, true, CVAR_ARCHIVE);
+
+
 static DMenu *GetCurrentMenu()
 {
 	return CurrentMenu;

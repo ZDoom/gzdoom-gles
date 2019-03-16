@@ -354,6 +354,8 @@ OptionMenu "OptionsMenu" protected
 	Submenu "$OPTMNU_VIDEO",			"VideoModeMenu"
 	Submenu "$OPTMNU_CHANGERENDER",		"RendererMenu"
 	StaticText " "
+	Submenu "$OS_TITLE", "os_Menu"
+	StaticText " "
 	SafeCommand "$OPTMNU_DEFAULTS",	"reset2defaults"
 	SafeCommand	"$OPTMNU_RESETTOSAVED",	"reset2saved"
 	Command "$OPTMNU_CONSOLE",			"menuconsole"
@@ -2618,3 +2620,22 @@ OptionMenu "ReverbSave" protected
 	StaticText "Environments to save"
 	// Rest is filled in by code.
 }
+
+/*=======================================
+ *
+ * Option Search menu
+ *
+ *=======================================*/
+
+OptionMenu "os_Menu"
+{
+	Class "os_Menu"
+	Title "$OS_TITLE"
+}
+
+OptionValue "os_isanyof_values"
+{
+	0, "$OS_ALL"
+	1, "$OS_ANY"
+}
+
