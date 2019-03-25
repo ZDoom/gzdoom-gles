@@ -988,7 +988,7 @@ bool PIT_CheckLine(FMultiBlockLinesIterator &mit, FMultiBlockLinesIterator::Chec
 		// better than Strife's handling of rails, which lets you jump into rails
 		// from either side. How long until somebody reports this as a bug and I'm
 		// forced to say, "It's not a bug. It's a feature?" Ugh.
-		(!(level.flags2 & LEVEL2_RAILINGHACK) ||
+		(!(i_compatflags2 & COMPATF2_RAILING) ||
 		open.bottom == tm.thing->Sector->floorplane.ZatPoint(ref)))
 	{
 		open.bottom += 32;

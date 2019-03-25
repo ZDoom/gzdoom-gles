@@ -3367,10 +3367,6 @@ void P_SetupLevel(const char *lumpname, int position, bool newGame)
 		if (!map->HasBehavior && !map->isText)
 		{
 			// set compatibility flags
-			if (gameinfo.gametype == GAME_Strife)
-			{
-				level.flags2 |= LEVEL2_RAILINGHACK;
-			}
 			level.flags2 |= LEVEL2_DUMMYSWITCHES;
 		}
 
