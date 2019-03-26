@@ -1591,6 +1591,7 @@ OptionMenu "CompatMapMenu" protected
 	Option "$CMPTMNU_TELEPORT",						"compat_teleport", "YesNo"
 	Option "$CMPTMNU_PUSHWINDOW",					"compat_pushwindow", "YesNo"
 	Option "$CMPTMNU_CHECKSWITCHRANGE",				"compat_checkswitchrange", "YesNo"
+	Option "$CMPTMNU_RAILINGHACK",					"compat_railing", "YesNo"
 	Class "CompatibilityMenu"
 }
 
@@ -1607,7 +1608,6 @@ OptionMenu "CompatPhysicsMenu" protected
 	Option "$CMPTMNU_MISSILECLIP",					"compat_MISSILECLIP", "YesNo"
 	Option "$CMPTMNU_EXPLODE1",						"compat_explode1", "YesNo"
 	Option "$CMPTMNU_EXPLODE2",						"compat_explode2", "YesNo"
-	Option "$CMPTMNU_RAILINGHACK",					"compat_railing", "YesNo"
 	Class "CompatibilityMenu"
 }
 
