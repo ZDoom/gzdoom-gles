@@ -397,7 +397,7 @@ void FRenderState::DrawColormapOverlay()
 //
 //==========================================================================
 
-bool gl_SetupLight(int group, Plane & p, ADynamicLight * light, FVector3 & nearPt, FVector3 & up, FVector3 & right,
+bool gl_SetupLight(int group, Plane & p, FDynamicLight * light, FVector3 & nearPt, FVector3 & up, FVector3 & right,
 	float & scale, bool checkside, bool additive)
 {
 	FVector3 fn, pos;
@@ -627,9 +627,9 @@ void GLFlat::DrawSubsectorLights(subsector_t * sub, int pass)
 	FLightNode * node = sub->lighthead;
 	while (node)
 	{
-		ADynamicLight * light = node->lightsource;
+		FDynamicLight * light = node->lightsource;
 
-		if (light->flags2&MF2_DORMANT ||
+		if (!(light->IsActive()) ||
 			(pass == GLPASS_LIGHTTEX && light->IsAdditive()) ||
 			(pass == GLPASS_LIGHTTEX_ADDITIVE && !light->IsAdditive()))
 		{
@@ -639,7 +639,7 @@ void GLFlat::DrawSubsectorLights(subsector_t * sub, int pass)
 
 		// we must do the side check here because gl_SetupLight needs the correct plane orientation
 		// which we don't have for Legacy-style 3D-floors
-		double planeh = plane.plane.ZatPoint(light);
+		double planeh = plane.plane.ZatPoint(light->Pos);
 		if (gl_lights_checkside && ((planeh<light->Z() && ceiling) || (planeh>light->Z() && !ceiling)))
 		{
 			node = node->nextLight;
@@ -713,7 +713,7 @@ void GLFlat::DrawLightsCompat(int pass)
 // Sets up the texture coordinates for one light to be rendered
 //
 //==========================================================================
-bool GLWall::PrepareLight(ADynamicLight * light, int pass)
+bool GLWall::PrepareLight(FDynamicLight * light, int pass)
 {
 	float vtx[] = { glseg.x1,zbottom[0],glseg.y1, glseg.x1,ztop[0],glseg.y1, glseg.x2,ztop[1],glseg.y2, glseg.x2,zbottom[1],glseg.y2 };
 	Plane p;
@@ -788,9 +788,9 @@ void GLWall::RenderLightsCompat(int pass)
 	memcpy(save, tcs, sizeof(tcs));
 	while (node)
 	{
-		ADynamicLight * light = node->lightsource;
+		FDynamicLight * light = node->lightsource;
 
-		if (light->flags2&MF2_DORMANT ||
+		if (!(light->IsActive()) ||
 			(pass == GLPASS_LIGHTTEX && light->IsAdditive()) ||
 			(pass == GLPASS_LIGHTTEX_ADDITIVE && !light->IsAdditive()))
 		{
