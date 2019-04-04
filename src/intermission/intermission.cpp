@@ -839,7 +839,7 @@ void DIntermissionController::Ticker ()
 					S_ChangeMusic (level.Music, level.musicorder);
 				gamestate = GS_LEVEL;
 				wipegamestate = GS_LEVEL;
-				P_ResumeConversation ();
+				gameaction = ga_resumeconversation;
 				viewactive = true;
 				Destroy();
 				break;

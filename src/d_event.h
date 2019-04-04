@@ -75,6 +75,7 @@ enum gameaction_t : int
 	ga_screenshot,
 	ga_togglemap,
 	ga_fullconsole,
+	ga_resumeconversation,
 };
 
 
