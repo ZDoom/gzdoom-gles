@@ -45,6 +45,8 @@
 #include "p_destructible.h"
 
 
+extern int i_compatflags, i_compatflags2;
+
 struct FLevelData
 {
 	TArray<vertex_t> vertexes;
@@ -88,6 +90,9 @@ struct FLevelLocals : public FLevelData
 	void AddScroller(int secnum);
 	void SetInterMusic(const char *nextmap);
 	void SetMusicVolume(float v);
+
+	int li_compatflags = i_compatflags;
+	int li_compatflags2 = i_compatflags2;
 
 	uint8_t		md5[16];			// for savegame validation. If the MD5 does not match the savegame won't be loaded.
 	int			time;			// time in the hub
