@@ -1720,11 +1720,16 @@ OPTMNU_NETWORK				= "Network Options";
 OPTMNU_SOUND				= "Sound Options";
 OPTMNU_DISPLAY				= "Display Options";
 OPTMNU_VIDEO				= "Set video mode";
-OPTMNU_CHANGERENDER		= "Change Rendering Output";
+OPTMNU_CHANGERENDER			= "Change Rendering Output";
 OPTMNU_DEFAULTS				= "Reset to defaults";
 OPTMNU_RESETTOSAVED			= "Reset to last saved";
 OPTMNU_CONSOLE				= "Go to console";
 OPTMNU_REVERB				= "Reverb environment editor";
+OS_TITLE					= "Option Search";
+OS_ANY						= "Search for any term";
+OS_ALL						= "Search for all terms";
+OS_NO_RESULTS				= "No results found.";
+OS_LABEL					= "Search:";
 
 // Controls Menu
 
