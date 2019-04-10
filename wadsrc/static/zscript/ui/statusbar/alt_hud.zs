@@ -726,11 +726,11 @@ class AltHud ui
 						 DTA_VirtualWidth, hudwidth, DTA_VirtualHeight, hudheight);
 	}
 
-	void DrawCoordinates(PlayerInfo CPlayer)
+	void DrawCoordinates(PlayerInfo CPlayer, bool withmapname)
 	{
 		Vector3 pos;
 		String coordstr;
-		int h = SmallFont.GetHeight() + 1;
+		int h = SmallFont.GetHeight();
 		let mo = CPlayer.mo;
 		
 		if (!map_point_coordinates || !automapactive) 
@@ -746,16 +746,19 @@ class AltHud ui
 		int xpos = hudwidth - SmallFont.StringWidth("X: -00000")-6;
 		int ypos = 18;
 
-		screen.DrawText(SmallFont, hudcolor_titl, hudwidth - 6 - SmallFont.StringWidth(level.MapName), ypos, level.MapName,
-			DTA_KeepRatio, true,
-			DTA_VirtualWidth, hudwidth, DTA_VirtualHeight, hudheight);
+		if (withmapname)
+		{
+			screen.DrawText(SmallFont, hudcolor_titl, hudwidth - 6 - SmallFont.StringWidth(level.MapName), ypos, level.MapName,
+				DTA_KeepRatio, true,
+				DTA_VirtualWidth, hudwidth, DTA_VirtualHeight, hudheight);
 
-		screen.DrawText(SmallFont, hudcolor_titl, hudwidth - 6 - SmallFont.StringWidth(level.LevelName), ypos + h, level.LevelName,
-			DTA_KeepRatio, true,
-			DTA_VirtualWidth, hudwidth, DTA_VirtualHeight, hudheight);
-
+			screen.DrawText(SmallFont, hudcolor_titl, hudwidth - 6 - SmallFont.StringWidth(level.LevelName), ypos + h, level.LevelName,
+				DTA_KeepRatio, true,
+				DTA_VirtualWidth, hudwidth, DTA_VirtualHeight, hudheight);
+	
+			ypos += 3 * h;
+		}
 		
-		ypos += 3 * h;
 		DrawCoordinateEntry(xpos, ypos, String.Format("X: %.0f", pos.X));
 		ypos += h;
 		DrawCoordinateEntry(xpos, ypos, String.Format("Y: %.0f", pos.Y));
@@ -924,7 +927,7 @@ class AltHud ui
 		y = DrawAmmo(CPlayer, hudwidth-5, y);
 		if (hud_showweapons) DrawWeapons(CPlayer, hudwidth - 5, y);
 		DrawInventory(CPlayer, 144, hudheight - 28);
-		if (idmypos) DrawCoordinates(CPlayer);
+		if (idmypos) DrawCoordinates(CPlayer, true);
 
 		int h = SmallFont.GetHeight();
 		y = h;
@@ -966,7 +969,7 @@ class AltHud ui
 			DTA_KeepRatio, true,
 			DTA_VirtualWidth, hudwidth, DTA_VirtualHeight, hudheight);
 
-		DrawCoordinates(CPlayer);
+		DrawCoordinates(CPlayer, false);
 	}
 
 	//---------------------------------------------------------------------------
