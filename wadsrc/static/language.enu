@@ -2914,3 +2914,47 @@ TXT_NEED_OPASS = "You need the Oracle Pass!";
 TXT_FREED_PRISONERS = "You've freed the prisoners!";
 TXT_DESTROYED_CONVERTER = "You've destroyed the Converter!";
 TXT_COMPLETED_TRAINING = "Congratulations! You have completed the training area";
+
+TXT_QUITENDOOM = "Press any key or click anywhere in the window to quit.";
+
+// Extra engine strings:
+
+AUTOMAPMNU_SHOWKEYS_ALWAYS = "Always show keys";
+TXT_NOTARGET_ON = "No Target ON";
+TXT_NOTARGET_OFF = "No Target OFF";
+TXT_ANUBIS_ON = "Quake with fear!";
+TXT_ANUBIS_OFF = "No more Ogre Armor";
+TXT_CHASECAM_ON = "chasecam ON";
+TXT_CHASECAM_OFF = "chasecam OFF";
+TXT_BADDIE_KILLED = "1 baddie killed";
+TXT_BADDIES_KILLED = "%d baddies killed";
+TXT_MONSTER_KILLED = "1 monster killed";
+TXT_MONSTERS_KILLED = "%d monsters killed";
+TXT_NO_RESURRECT = "Unable to resurrect. Player is no longer connected to its body.";
+TXT_ALL_ARTIFACTS = "All Artifacts!";
+TXT_WHAT_KILL = "What do you want to kill outside of a game?";
+TXT_NOT_FROZEN = "Frozen player properties turned off";
+TXT_X_CHEATS = "%s cheats";
+TXT_NO_TEAM_CHANGE = "Team changing has been disabled!";
+TXT_JOINED_TEAM = "%s joined the %t team";
+TXT_LONER = "%s is now a loner";
+TTXT_LEFTWITHFRAGS = "%s left the game with %d frags";
+TXT_LEFTTHEGAME = "%s left the game";
+TXT_SAVEGAMENEEDS = "This savegame needs these files";
+TXT_COULDNOTREAD = "Could not read savegame '%s'.";
+TXT_NOINFOJSON = "'%s' is not a valid savegame: Missing 'info.json'.";
+TXT_FAILEDTOREADSG = "Failed to access savegame info in '%s'.";
+TXT_INCOMPATIBLESG = "Savegame '%s' is from an incompatible version.";
+TXT_OTHERENGINESG = "Savegame '%s' is from another ZDoom-based engine.";
+TXT_TOOOLDSG = "Savegame '%s' is from an older version: %d (%e is the oldest supported)";
+TXT_TOONEWSG = "Savegame '%s' is from an newer version: %d (%e is the highest supported)";
+TXT_NOMAPSG = "Savegame '%s' is missing the current map.";
+TXT_NOGLOBALSJSON = "'%s' is not a valid savegame: Missing 'globals.json'.";
+TXT_SGINFOERR = "Failed to access savegame info in '%s'";
+TXT_SAVEPENDINGA = "A game save is still pending.";
+TXT_NOTSAVEABLE = "Not in a saveable game.";
+TXT_NOTINLEVEL = "Not in a level";
+TXT_SPPLAYERDEAD = "Player is dead in a single-player game";
+TXT_SAVEFAILED = "Save failed";
+TXT_SCREENSHOTERR = "Could not create screenshot.";
+TXT_BY = "By %s";
