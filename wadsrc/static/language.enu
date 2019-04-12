@@ -2699,10 +2699,13 @@ DSPLYMNU_SATURATION = "Saturation";
 DSPLYMNU_HWGAMMA	= "Hardware Gamma";
 
 // OpenGL Options
-GLMNU_TITLE		= "OPENGL OPTIONS";
-GLMNU_DYNLIGHT	= "Dynamic Light Options";
-GLMNU_TEXOPT	= "Texture Options";
-GLMNU_PREFS		= "Preferences";
+GLMNU_TITLE			= "OpenGL Options";
+GLMNU_DYNLIGHT		= "Dynamic Light Options";
+GLMNU_TEXOPT		= "Texture Options";
+GLMNU_PREFS			= "Preferences";
+HUDMNU_FLASH		= "Screen Blend Options";
+GLMNU_POSTPROCESS	= "Postprocessing";
+GLMNU_3DMODE		= "3D mode";
 
 // Texture Options
 GLTEXMNU_TITLE			= "TEXTURE OPTIONS";

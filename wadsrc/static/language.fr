@@ -2689,6 +2689,8 @@ GLMNU_TITLE		= "OPTIONS OPENGL";
 GLMNU_DYNLIGHT	= "Options Lumières Dynamiques";
 GLMNU_TEXOPT	= "Options Textures";
 GLMNU_PREFS		= "Préférences";
+HUDMNU_FLASH	= "Options de blending écran";
+GLMNU_3DMODE	= "3D mód";
 
 // Texture Options
 GLTEXMNU_TITLE			= "OPTIONS TEXTURE";
