@@ -1526,8 +1526,10 @@ void DBaseStatusBar::DrawGraphic(FTextureID texture, double x, double y, int fla
 //
 //============================================================================
 
-void DBaseStatusBar::DrawString(FFont *font, const FString &cstring, double x, double y, int flags, double Alpha, int translation, int spacing, bool monospaced, int shadowX, int shadowY)
+void DBaseStatusBar::DrawString(FFont *font, const FString &cstring, double x, double y, int flags, double Alpha, int translation, int spacing, EMonospacing monospacing, int shadowX, int shadowY)
 {
+	bool monospaced = monospacing != EMonospacing::MOff;
+
 	switch (flags & DI_TEXT_ALIGN)
 	{
 	default:
@@ -1611,6 +1613,11 @@ void DBaseStatusBar::DrawString(FFont *font, const FString &cstring, double x, d
 		rw = c->GetScaledWidthDouble();
 		rh = c->GetScaledHeightDouble();
 
+		if (monospacing == EMonospacing::CellCenter)
+			rx += (spacing - rw) / 2;
+		else if (monospacing == EMonospacing::CellRight)
+			rx += (spacing - rw);
+
 		if (!fullscreenOffsets)
 		{
 			StatusbarToRealCoords(rx, ry, rw, rh);
@@ -1647,7 +1654,6 @@ void DBaseStatusBar::DrawString(FFont *font, const FString &cstring, double x, d
 		else
 			x += spacing;
 	}
-
 }
 
 void SBar_DrawString(DBaseStatusBar *self, DHUDFont *font, const FString &string, double x, double y, int flags, int trans, double alpha, int wrapwidth, int linespacing)
@@ -1669,13 +1675,13 @@ void SBar_DrawString(DBaseStatusBar *self, DHUDFont *font, const FString &string
 		auto brk = V_BreakLines(font->mFont, wrapwidth, string, true);
 		for (auto &line : brk)
 		{
-			self->DrawString(font->mFont, line.Text, x, y, flags, alpha, trans, font->mSpacing, font->mMonospaced, font->mShadowX, font->mShadowY);
+			self->DrawString(font->mFont, line.Text, x, y, flags, alpha, trans, font->mSpacing, font->mMonospacing, font->mShadowX, font->mShadowY);
 			y += font->mFont->GetHeight() + linespacing;
 		}
 	}
 	else
 	{
-		self->DrawString(font->mFont, string, x, y, flags, alpha, trans, font->mSpacing, font->mMonospaced, font->mShadowX, font->mShadowY);
+		self->DrawString(font->mFont, string, x, y, flags, alpha, trans, font->mSpacing, font->mMonospacing, font->mShadowX, font->mShadowY);
 	}
 }
 
