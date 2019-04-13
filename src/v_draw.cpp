@@ -524,6 +524,8 @@ bool DCanvas::ParseDrawTextureTags(FTexture *img, double x, double y, uint32_t t
 	parms->cellx = parms->celly = 0;
 	parms->maxstrlen = INT_MAX;
 	parms->virtBottom = false;
+	parms->monospace = EMonospacing::MOff;
+	parms->spacing = 0;
 
 	// Parse the tag list for attributes. (For floating point attributes,
 	// consider that the C ABI dictates that all floats be promoted to
@@ -854,6 +856,14 @@ bool DCanvas::ParseDrawTextureTags(FTexture *img, double x, double y, uint32_t t
 
 		case DTA_CellY:
 			parms->celly = ListGetInt(tags);
+			break;
+
+		case DTA_Monospace:
+			parms->monospace = ListGetInt(tags);
+			break;
+
+		case DTA_Spacing:
+			parms->spacing = ListGetInt(tags);
 			break;
 
 		}
