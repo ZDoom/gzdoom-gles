@@ -233,8 +233,8 @@ public:
 
 	void ToUpper ();
 	void ToLower ();
-	FString MakeUpper();
-	FString MakeLower();
+	FString MakeUpper() const;
+	FString MakeLower() const;
 
 	void StripLeft ();
 	void StripLeft (const FString &charset);
