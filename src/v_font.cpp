@@ -972,6 +972,7 @@ static int stripaccent(int code)
 			return 'z';
 		if (code == 0x9f)	// Latin capital letter Y with diaeresis
 			return 'Y';
+		if (code == 0xab || code == 0xbb) return '"';	// typographic quotation marks.
 		if (code == 0xff)	// Latin small letter Y with diaeresis
 			return 'y';
 		// Every other accented character has the high two bits set.
@@ -1012,10 +1013,53 @@ static int stripaccent(int code)
 		static const uint16_t u200map[] = {0xc4, 0xe4, 0xc2, 0xe2, 0xcb, 0xeb, 0xca, 0xea, 0xcf, 0xef, 0xce, 0xee, 0xd6, 0xf6, 0xd4, 0xe4, 'R', 'r', 'R', 'r', 0xdc, 0xfc, 0xdb, 0xfb, 0x15e, 0x15f, 0x162, 0x163};
 		return u200map[code - 0x200];
 	}
-	else if (code == 0x201d)
+	else switch (code)
 	{
-		// Map the typographic upper quotation mark to the generic form
-		code = '"';
+		case 0x2014:
+			return '-';	// long hyphen
+			
+		case 0x201c:
+		case 0x201d:
+		case 0x201e:
+			return '"';	// typographic quotation marks
+			
+			// Cyrillic characters with equivalents in the Latin alphabet.
+		case 0x400:
+			return 0xc8;
+			
+		case 0x401:
+			return 0xcb;
+			
+		case 0x405:
+			return 'S';
+			
+		case 0x406:
+			return 'I';
+			
+		case 0x407:
+			return 0xcf;
+			
+		case 0x408:
+			return 'J';
+
+		case 0x450:
+			return 0xe8;
+			
+		case 0x451:
+			return 0xeb;
+			
+		case 0x455:
+			return 's';
+			
+		case 0x456:
+			return 'i';
+			
+		case 0x457:
+			return 0xef;
+			
+		case 0x458:
+			return 'j';
+
 	}
 
 	// skip the rest of Latin characters because none of them are relevant for modern languages.
@@ -1496,6 +1540,15 @@ int FFont::GetCharCode(int code, bool needpic) const
 	{
 		return code;
 	}
+	
+	// Special handling for the ß which may only exist as lowercase, so for this we need an additional upper -> lower check for all fonts aside from the generic substitution logic.
+	if (code == 0x1e9e)
+	{
+		if (LastChar <= 0xdf && (!needpic || Chars[0xdf - FirstChar].Pic != nullptr))
+		{
+			return 0xdf;
+		}
+	}
 
 	// Use different substitution logic based on the fonts content:
 	// In a font which has both upper and lower case, prefer unaccented small characters over capital ones.
@@ -1556,28 +1609,20 @@ int FFont::GetCharCode(int code, bool needpic) const
 
 FTexture *FFont::GetChar (int code, int *const width) const
 {
-	code = GetCharCode(code, false);
+	code = GetCharCode(code, true);
 	int xmove = SpaceWidth;
 
 	if (code >= 0)
 	{
 		code -= FirstChar;
 		xmove = Chars[code].XMove;
-		if (Chars[code].Pic == NULL)
-		{
-			code = GetCharCode(code + FirstChar, true);
-			if (code >= 0)
-			{
-				code -= FirstChar;
-				xmove = Chars[code].XMove;
-			}
-		}
 	}
-	if (width != NULL)
+
+	if (width != nullptr)
 	{
 		*width = xmove;
 	}
-	return (code < 0) ? NULL : Chars[code].Pic;
+	return (code < 0) ? nullptr : Chars[code].Pic;
 }
 
 //==========================================================================
@@ -1588,8 +1633,9 @@ FTexture *FFont::GetChar (int code, int *const width) const
 
 int FFont::GetCharWidth (int code) const
 {
-	code = GetCharCode(code, false);
-	return (code < 0) ? SpaceWidth : Chars[code - FirstChar].XMove;
+	code = GetCharCode(code, true);
+	if (code >= 0) return Chars[code - FirstChar].XMove;
+	return SpaceWidth;
 }
 
 //==========================================================================
