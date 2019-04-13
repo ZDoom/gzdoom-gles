@@ -247,7 +247,7 @@ class ListMenuItemTextItem : ListMenuItemSelectable
 		mFont = desc.mFont;
 		mColor = desc.mFontColor;
 		mColorSelected = desc.mFontcolor2;
-		mHotkey = hotkey.CharCodeAt(0);
+		mHotkey = hotkey.GetNextCodePoint(0);
 	}
 	
 	void InitDirect(double x, double y, int height, String hotkey, String text, Font font, int color, int color2, Name child, int param = 0)
@@ -257,7 +257,8 @@ class ListMenuItemTextItem : ListMenuItemSelectable
 		mFont = font;
 		mColor = color;
 		mColorSelected = color2;
-		mHotkey = hotkey.CharCodeAt(0);
+		int pos = 0;
+		mHotkey = hotkey.GetNextCodePoint(0);
 	}
 	
 	override void Drawer(bool selected)
@@ -284,14 +285,14 @@ class ListMenuItemPatchItem : ListMenuItemSelectable
 	void Init(ListMenuDescriptor desc, TextureID patch, String hotkey, Name child, int param = 0)
 	{
 		Super.Init(desc.mXpos, desc.mYpos, desc.mLinespacing, child, param);
-		mHotkey = hotkey.CharCodeAt(0);
+		mHotkey = hotkey.GetNextCodePoint(0);
 		mTexture = patch;
 	}
 	
 	void InitDirect(double x, double y, int height, TextureID patch, String hotkey, Name child, int param = 0)
 	{
 		Super.Init(x, y, height, child, param);
-		mHotkey = hotkey.CharCodeAt(0);
+		mHotkey = hotkey.GetNextCodePoint(0);
 		mTexture = patch;
 	}
 	
