@@ -3,7 +3,8 @@
 ** Font management
 **
 **---------------------------------------------------------------------------
-** Copyright 1998-2008 Randy Heit
+** Copyright 1998-2016 Randy Heit
+** Copyright 2005-2019 Christoph Oelckers
 ** All rights reserved.
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -99,27 +100,13 @@ The FON2 header is followed by variable length data:
 #include "vm.h"
 #include "utf8.h"
 
+#include "fontinternals.h"
+
 // MACROS ------------------------------------------------------------------
 
 #define DEFAULT_LOG_COLOR	PalEntry(223,223,223)
 
 // TYPES -------------------------------------------------------------------
-void RecordTextureColors (FTexture *pic, uint32_t *colorsused);
-
-// This structure is used by BuildTranslations() to hold color information.
-struct TranslationParm
-{
-	short RangeStart;	// First level for this range
-	short RangeEnd;		// Last level for this range
-	uint8_t Start[3];		// Start color for this range
-	uint8_t End[3];		// End color for this range
-};
-
-struct TranslationMap
-{
-	FName Name;
-	int Number;
-};
 
 class FSingleLumpFont : public FFont
 {
@@ -215,19 +202,6 @@ protected:
 	void MakeTexture ();
 };
 
-struct TempParmInfo
-{
-	unsigned int StartParm[2];
-	unsigned int ParmLen[2];
-	int Index;
-};
-struct TempColorInfo
-{
-	FName Name;
-	unsigned int ParmInfo;
-	PalEntry LogColor;
-};
-
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
@@ -247,9 +221,9 @@ int NumTextColors;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
-static TArray<TranslationParm> TranslationParms[2];
-static TArray<TranslationMap> TranslationLookup;
-static TArray<PalEntry> TranslationColors;
+TArray<TranslationParm> TranslationParms[2];
+TArray<TranslationMap> TranslationLookup;
+TArray<PalEntry> TranslationColors;
 
 // CODE --------------------------------------------------------------------
 
@@ -948,7 +922,7 @@ void InitLowerUpper()
 }
 
 
-static bool myislower(int code)
+bool myislower(int code)
 {
 	if (code >= 0 && code < 65536) return islowermap[code];
 	return false;
@@ -956,7 +930,7 @@ static bool myislower(int code)
 
 // Returns a character without an accent mark (or one with a similar looking accent in some cases where direct support is unlikely.
 
-static int stripaccent(int code)
+int stripaccent(int code)
 {
 	if (code < 0x8a)
 		return code;
