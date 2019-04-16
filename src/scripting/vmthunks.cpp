@@ -41,6 +41,8 @@
 #include "p_acs.h"
 #include "a_pickups.h"
 
+#include <time.h>
+
 DVector2 AM_GetPosition();
 int Net_GetLatency(int *ld, int *ad);
 
