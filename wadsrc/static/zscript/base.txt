@@ -159,7 +159,6 @@ enum DrawTextureTags
 
 	DTA_Color,
 	DTA_LegacyRenderStyle,	// takes an old-style STYLE_* constant instead of an FRenderStyle
-	DTA_Internal3,
 };
 
 class Shape2D : Object native
