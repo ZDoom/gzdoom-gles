@@ -1120,7 +1120,6 @@ void FDrawInfo::CollectSectorStacksFloor(subsector_t * sub, sector_t * anchor)
 void FDrawInfo::ProcessSectorStacks()
 {
 	unsigned int i;
-	sector_t fake;
 
 	validcount++;
 	for (i=0;i<CeilingStacks.Size (); i++)
