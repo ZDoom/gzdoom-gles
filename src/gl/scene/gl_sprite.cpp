@@ -966,7 +966,7 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 		if (mDrawer->FixedColormap == CM_LITE)
 		{
 			if (gl_enhanced_nightvision &&
-				(thing->IsKindOf(RUNTIME_CLASS(AInventory)) || thing->flags3&MF3_ISMONSTER || thing->flags&MF_MISSILE || thing->flags&MF_CORPSE))
+				(thing->IsKindOf(NAME_Inventory) || thing->flags3&MF3_ISMONSTER || thing->flags&MF_MISSILE || thing->flags&MF_CORPSE))
 			{
 				RenderStyle.Flags |= STYLEF_InvertSource;
 			}
