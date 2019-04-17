@@ -2,6 +2,8 @@
 
 #include "actor.h"
 #include "r_defs.h"
+#include "g_levellocals.h"
+
 // These depend on both actor.h and r_defs.h so they cannot be in either file without creating a cross dependency.
 
 inline DVector3 AActor::PosRelative(int portalgroup) const
