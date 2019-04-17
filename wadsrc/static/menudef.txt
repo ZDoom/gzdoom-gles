@@ -2190,12 +2190,16 @@ OptionValue "HqResizeModes"
    10, "$OPTVAL_2XBRZ"
    11, "$OPTVAL_3XBRZ"
    12, "$OPTVAL_4XBRZ"
+   //18, "$OPTVAL_5XBRZ"
+   //19, "$OPTVAL_6XBRZ"
    13, "$OPTVAL_OLD_2XBRZ"
    14, "$OPTVAL_OLD_3XBRZ"
    15, "$OPTVAL_OLD_4XBRZ"
-   16, "$OPTVAL_NORMAL2X"
-   17, "$OPTVAL_NORMAL3X"
-   18, "$OPTVAL_NORMAL4X"
+   //16, "$OPTVAL_OLD_5XBRZ"
+   //17, "$OPTVAL_OLD_6XBRZ"
+   20, "$OPTVAL_NORMAL2X"
+   21, "$OPTVAL_NORMAL3X"
+   22, "$OPTVAL_NORMAL4X"
 }
 
 OptionValue "HqResizeModesNoMMX"
@@ -2210,9 +2214,13 @@ OptionValue "HqResizeModesNoMMX"
    10, "$OPTVAL_2XBRZ"
    11, "$OPTVAL_3XBRZ"
    12, "$OPTVAL_4XBRZ"
+   //18, "$OPTVAL_5XBRZ"
+   //19, "$OPTVAL_6XBRZ"
    13, "$OPTVAL_OLD_2XBRZ"
    14, "$OPTVAL_OLD_3XBRZ"
    15, "$OPTVAL_OLD_4XBRZ"
+   //16, "$OPTVAL_OLD_5XBRZ"
+   //17, "$OPTVAL_OLD_6XBRZ"
 }
 
 OptionValue "FogMode"
@@ -2286,12 +2294,15 @@ OptionMenu "GLTextureGLOptions" protected
 	{
 		Option "$GLTEXMNU_HQRESIZE",		gl_texture_hqresize,			"HqResizeModesNoMMX"
 	}
+	StaticText "!HQRESIZE_WARNING!"
+
 	Option "$GLTEXMNU_RESIZETEX",		gl_texture_hqresize_textures,	"OnOff"
 	Option "$GLTEXMNU_RESIZESPR",		gl_texture_hqresize_sprites,	"OnOff"
 	Option "$GLTEXMNU_RESIZEFNT",		gl_texture_hqresize_fonts,		"OnOff"
 	Option "$GLTEXMNU_PRECACHETEX",		gl_precache,					"YesNo"
 	Option "$GLTEXMNU_TRIMSPREDGE",		gl_trimsprites,					"OnOff"
 	Option "$GLTEXMNU_SORTDRAWLIST", 	gl_sort_textures,				"YesNo"
+	Class "GLTextureGLOptions"
 }
 
 OptionMenu "GLLightOptions" protected
