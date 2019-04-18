@@ -1202,6 +1202,7 @@ void GLSprite::ProcessParticle (particle_t *particle, sector_t *sector)//, int s
 	gltexture=NULL;
 	topclip = LARGE_VALUE;
 	bottomclip = -LARGE_VALUE;
+	index = 0;
 
 	// [BB] Load the texture for round or smooth particles
 	if (gl_particles_style)
