@@ -180,10 +180,11 @@ int gl_SetDynModelLight(AActor *self, int dynlightindex)
 
 		addedLights.clear();
 
-		float x = self->X();
-		float y = self->Y();
-		float z = self->Center();
-		float radiusSquared = self->renderradius * self->renderradius;
+		float x = (float)self->X();
+		float y = (float)self->Y();
+		float z = (float)self->Center();
+		float actorradius = (float)self->RenderRadius();
+		float radiusSquared = actorradius * actorradius;
 
 		BSPWalkCircle(x, y, radiusSquared, [&](subsector_t *subsector) // Iterate through all subsectors potentially touched by actor
 		{
@@ -195,7 +196,7 @@ int gl_SetDynModelLight(AActor *self, int dynlightindex)
 				{
 					int group = subsector->sector->PortalGroup;
 					DVector3 pos = light->PosRelative(group);
-					float radius = light->GetRadius() + self->renderradius;
+					float radius = light->GetRadius() + actorradius;
 					double dx = pos.X - x;
 					double dy = pos.Y - y;
 					double dz = pos.Z - z;
