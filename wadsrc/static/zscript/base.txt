@@ -45,7 +45,7 @@ struct _ native	// These are the global variables, the struct is only here to av
 	native readonly Weapon WP_NOCHANGE;
 	native int LocalViewPitch;
 	deprecated("3.8") native readonly bool globalfreeze;
-	
+
 }
 
 struct TexMan
@@ -604,7 +604,7 @@ struct LevelLocals native
 		UDMF_Sector,
 		//UDMF_Thing // not implemented
 	};
-	
+
 	const CLUSTER_HUB = 0x00000001;	// Cluster uses hub behavior
 
 
@@ -674,7 +674,7 @@ struct LevelLocals native
 	native String GetUDMFString(int type, int index, Name key);
 	native int GetUDMFInt(int type, int index, Name key);
 	native double GetUDMFFloat(int type, int index, Name key);
-	native int ExecuteSpecial(int special, Actor activator, line linedef, bool lineside, int arg1 = 0, int arg2 = 0, int arg3 = 0, int arg4 = 0, int arg5 = 0);
+	native play int ExecuteSpecial(int special, Actor activator, line linedef, bool lineside, int arg1 = 0, int arg2 = 0, int arg3 = 0, int arg4 = 0, int arg5 = 0);
 	native static void GiveSecret(Actor activator, bool printmsg = true, bool playsound = true);
 	native static void StartSlideshow(Name whichone = 'none');
 	native void WorldDone();
@@ -686,10 +686,19 @@ struct LevelLocals native
 	native bool IsCrouchingAllowed() const;
 	native bool IsFreelookAllowed() const;
 	native void StartIntermission(Name type, int state) const;
-	native int isFrozen();
+	static play SpotState GetSpotState(bool create = true) { return SpotState.GetSpotState(create); }
+	static play int FindUniqueTid(int start = 0, int limit = 0) { return Actor.FindUniqueTid(start, limit); }
+	static play uint GetSkyboxPortal(Actor actor) { return SectorPortal.GetSkyboxPortal(actor); }
+	static void ReplaceTextures(String from, String to, int flags) { Texman.ReplaceTextures(from, to, flags); }
+	clearscope static HealthGroup FindHealthGroup(int id) { return HealthGroup.Find(id); }
+	static vector3, int PickDeathmatchStart() { return Object.G_PickDeathmatchStart(); }
+	static vector3, int PickPlayerStart(int pnum, int flags = 0) { return Object.G_PickPlayerStart(pnum, flags); }
+	native int isFrozen() const;
 	native void setFrozen(bool on);
 
 	native static clearscope bool IsPointInMap(vector3 p);
+	static clearscope Sector PointInSector(Vector2 pt) { return Sector.PointInSector(pt); }
+	static clearscope bool IsPointInLevel(vector3 p) { return level.IsPointInMap(p); }
 
 	native static clearscope vector2 Vec2Diff(vector2 v1, vector2 v2);
 	native static clearscope vector3 Vec3Diff(vector3 v1, vector3 v2);
@@ -703,10 +712,24 @@ struct LevelLocals native
 
 	native void ChangeSky( TextureID sky1, TextureID sky2 );
 
+	static SectorTagIterator CreateSectorTagIterator(int tag, line defline = null) { return SectorTagIterator.Create(tag, defline); }
+	static LineIdIterator CreateLineIdIterator(int tag){ return LineIdIterator.Create(tag); }
+	static ActorIterator CreateActorIterator(int tid, class<Actor> type = "Actor") { return ActorIterator.Create(tid); }
+
 	String TimeFormatted(bool totals = false)
 	{
 		int sec = Thinker.Tics2Seconds(totals? totaltime : time); 
 		return String.Format("%02d:%02d:%02d", sec / 3600, (sec % 3600) / 60, sec % 60);
+	}
+
+	static play bool CreateCeiling(sector sec, int type, line ln, double speed, double speed2, double height = 0, int crush = -1, int silent = 0, int change = 0, int crushmode = 0 /*Floor.crushDoom*/)
+	{
+		return Ceiling.CreateCeiling(sec, type, ln, speed, speed2, height, crush, silent, change, crushmode);
+	}
+
+	static play bool CreateFloor(sector sec, int floortype, line ln, double speed, double height = 0, int crush = -1, int change = 0, bool crushmode = false, bool hereticlower = false)
+	{
+		return Floor.CreateFloor(sec, floortype, ln, speed, height, crush, change, crushmode, hereticlower);
 	}
 }
 
@@ -953,7 +976,7 @@ class Ceiling : MovingCeiling native
 	}
 	
 	native static bool CreateCeiling(sector sec, int type, line ln, double speed, double speed2, double height = 0, int crush = -1, int silent = 0, int change = 0, int crushmode = crushDoom);
-	
+
 }
 
 struct LookExParams
