@@ -155,7 +155,7 @@ const FTexture::Span FPaletteTester::DummySpan[2] = { { 0, 16 }, { 0, 0 } };
 
 int DisplayWidth, DisplayHeight, DisplayBits;
 
-FFont *SmallFont, *SmallFont2, *BigFont, *BigUpper, *ConFont, *IntermissionFont;
+FFont *SmallFont, *SmallFont2, *BigFont, *BigUpper, *ConFont, *IntermissionFont, *NewConsoleFont, *NewSmallFont, *CurrentConsoleFont, *OriginalSmallFont, *AlternativeSmallFont, *OriginalBigFont;
 
 uint32_t Col2RGB8[65][256];
 uint32_t *Col2RGB8_LessPrecision[65];
@@ -211,6 +211,7 @@ bool	setmodeneeded = false;
 // [RH] Resolution to change to when setmodeneeded is true
 int		NewWidth, NewHeight, NewBits;
 
+bool generic_ui = false; // hack hack
 
 //==========================================================================
 //
@@ -1713,6 +1714,11 @@ DEFINE_GLOBAL(SmallFont)
 DEFINE_GLOBAL(SmallFont2)
 DEFINE_GLOBAL(BigFont)
 DEFINE_GLOBAL(ConFont)
+DEFINE_GLOBAL(NewConsoleFont)
+DEFINE_GLOBAL(NewSmallFont)
+DEFINE_GLOBAL(AlternativeSmallFont)
+DEFINE_GLOBAL(OriginalSmallFont)
+DEFINE_GLOBAL(OriginalBigFont)
 DEFINE_GLOBAL(IntermissionFont)
 DEFINE_GLOBAL(CleanXfac)
 DEFINE_GLOBAL(CleanYfac)
@@ -1722,3 +1728,4 @@ DEFINE_GLOBAL(CleanXfac_1)
 DEFINE_GLOBAL(CleanYfac_1)
 DEFINE_GLOBAL(CleanWidth_1)
 DEFINE_GLOBAL(CleanHeight_1)
+DEFINE_GLOBAL(generic_ui)

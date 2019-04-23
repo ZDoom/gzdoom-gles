@@ -25,6 +25,11 @@ struct _ native	// These are the global variables, the struct is only here to av
 	native readonly Font smallfont2;
 	native readonly Font bigfont;
 	native readonly Font confont;
+	native readonly Font NewConsoleFont;
+	native readonly Font NewSmallFont;
+	native readonly Font AlternativeSmallFont;
+	native readonly Font OriginalSmallFont;
+	native readonly Font OriginalBigFont;
 	native readonly Font intermissionfont;
 	native readonly int CleanXFac;
 	native readonly int CleanYFac;
@@ -46,6 +51,7 @@ struct _ native	// These are the global variables, the struct is only here to av
 	native int LocalViewPitch;
 	deprecated("3.8") native readonly bool globalfreeze;
 	native readonly @MusPlayingInfo musplaying;
+	native readonly bool generic_ui;
 
 }
 
@@ -299,6 +305,7 @@ struct Font native
 
 	native int GetCharWidth(int code);
 	native int StringWidth(String code);
+	native bool CanPrint(String code);
 	native int GetHeight();
 	native String GetCursor();
 

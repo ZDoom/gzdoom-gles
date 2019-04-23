@@ -1947,6 +1947,18 @@ DEFINE_ACTION_FUNCTION_NATIVE(FFont, StringWidth, StringWidth)
 	ACTION_RETURN_INT(StringWidth(self, str));
 }
 
+static int CanPrint(FFont *font, const FString &str) // hack hack
+{
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION_NATIVE(FFont, CanPrint, CanPrint)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FFont);
+	PARAM_STRING(str);
+	ACTION_RETURN_INT(CanPrint(self, str));
+}
+
 static int FindFontColor(int name)
 {
 	return V_FindFontColor(ENamedName(name));
