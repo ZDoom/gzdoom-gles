@@ -90,7 +90,8 @@ struct TexMan
 		ReturnFirst = 4,
 		AllowSkins = 8,
 		ShortNameOnly = 16,
-		DontCreate = 32
+		DontCreate = 32,
+		Localize = 64
 	};
 	
 	enum ETexReplaceFlags
@@ -111,6 +112,7 @@ struct TexMan
 	native static Vector2 GetScaledSize(TextureID tex);
 	native static Vector2 GetScaledOffset(TextureID tex);
 	native static int CheckRealHeight(TextureID tex);
+	static bool OkForLocalization(TextureID patch, String textSubstitute) { return false; } // hack hack
 
 	native static void SetCameraToTexture(Actor viewpoint, String texture, double fov);
 }

@@ -113,7 +113,7 @@ public:
 	inline int StringWidth (const char *str) const { return StringWidth ((const uint8_t *)str); }
 	inline int StringWidth (const FString &str) const { return StringWidth ((const uint8_t *)str.GetChars()); }
 
-	inline bool CanPrint(const uint8_t *str) const { return false; } // hack hack
+	inline bool CanPrint(const uint8_t *str) const { return true; } // hack hack
 
 	int GetCharCode(int code, bool needpic) const;
 	char GetCursor() const { return Cursor; }
