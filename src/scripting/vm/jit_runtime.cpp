@@ -1,6 +1,7 @@
 
 #include "jit.h"
 #include "jitintern.h"
+#include <memory>
 
 #ifdef WIN32
 #include <DbgHelp.h>
