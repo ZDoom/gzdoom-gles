@@ -408,7 +408,7 @@ OptionValue "PlayerSkin"
 	}
 */
 
-OptionMenu "NewPlayerMenu"
+OptionMenu "NewPlayerMenu" protected
 {
 	Title "$MNU_PLAYERSETUP"
 	PlayerNameField "$PLYRMNU_NAME"
