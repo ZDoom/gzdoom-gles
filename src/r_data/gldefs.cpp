@@ -1790,7 +1790,7 @@ void ParseGLDefs()
 {
 	const char *defsLump = NULL;
 
-	LightDefaults.DeleteAndClear();
+	LightDefaults.Clear();
 	//gl_DestroyUserShaders(); function says 'todo'
 	switch (gameinfo.gametype)
 	{

@@ -2792,7 +2792,7 @@ void D_DoomMain (void)
 		DestroyCVarsFlagged(CVAR_MOD);	// Delete any cvar left by mods
 		FS_Close();						// destroy the global FraggleScript.
 		DeinitMenus();
-		LightDefaults.DeleteAndClear();			// this can leak heap memory if it isn't cleared.
+		LightDefaults.Clear();			// this can leak heap memory if it isn't cleared.
 
 		// delete DoomStartupInfo data
 		DoomStartupInfo.Name = "";
