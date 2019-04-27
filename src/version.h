@@ -50,7 +50,7 @@ const char *GetVersionString();
 // These are for content versioning.
 #define VER_MAJOR 3
 #define VER_MINOR 7
-#define VER_REVISION 0
+#define VER_REVISION 2
 
 // Version identifier for network games.
 // Bump it every time you do a release unless you're certain you
