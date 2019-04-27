@@ -172,7 +172,7 @@ int gl_CalcLightLevel(int lightlevel, int rellight, bool weapon, int blendfactor
 {
 	int light;
 
-	if (lightlevel == 0) return 0;
+	if (lightlevel <= 0) return 0;
 
 	bool darklightmode = (glset.lightmode & 2) || (glset.lightmode >= 8 && blendfactor > 0);
 
