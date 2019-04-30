@@ -304,11 +304,6 @@ void DCanvas::Dim (PalEntry color)
 		amount = gameinfo.dimamount;
 	}
 
-	if (gameinfo.gametype == GAME_Hexen && gamestate == GS_DEMOSCREEN)
-	{ // On the Hexen title screen, the default dimming is not
-		// enough to make the menus readable.
-		amount = MIN<float> (1.f, amount*2.f);
-	}
 	// Add the cvar's dimming on top of the color passed to the function
 	if (color.a != 0)
 	{
