@@ -900,12 +900,12 @@ void FGLRenderer::DrawPresentTexture(const GL_IRECT &box, bool applyGamma)
 	{
 		// Full screen exclusive mode treats a rgba16f frame buffer as linear.
 		// It probably will eventually in desktop mode too, but the DWM doesn't seem to support that.
-		invgamma *= 2.2f;
-		mPresentShader->InvGamma.Set(invgamma);
+		mPresentShader->HdrMode.Set(1);
 		mPresentShader->ColorScale.Set(static_cast<float>((gl_dither_bpc == -1) ? 1023.0f : (float)((1 << gl_dither_bpc) - 1)));
 	}
 	else
 	{
+		mPresentShader->HdrMode.Set(0);
 		mPresentShader->ColorScale.Set(static_cast<float>((gl_dither_bpc == -1) ? 255.0f : (float)((1 << gl_dither_bpc) - 1)));
 	}
 	mPresentShader->Scale.Set(mScreenViewport.width / (float)mBuffers->GetWidth(), mScreenViewport.height / (float)mBuffers->GetHeight());

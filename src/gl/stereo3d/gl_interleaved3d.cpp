@@ -113,6 +113,7 @@ static void prepareInterleavedPresent(FPresentStereoShaderBase& shader)
 		shader.Saturation.Set(clamp<float>(vid_saturation, -15.0f, 15.0f));
 		shader.GrayFormula.Set(static_cast<int>(gl_satformula));
 	}
+	shader.HdrMode.Set(0);
 	shader.ColorScale.Set(static_cast<float>((gl_dither_bpc == -1) ? 255.0f : (float)((1 << gl_dither_bpc) - 1)));
 	shader.Scale.Set(
 		GLRenderer->mScreenViewport.width / (float)GLRenderer->mBuffers->GetWidth(),

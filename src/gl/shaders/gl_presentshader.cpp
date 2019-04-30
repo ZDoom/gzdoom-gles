@@ -50,6 +50,7 @@ void FPresentShaderBase::Init(const char * vtx_shader_name, const char * program
 	GrayFormula.Init(mShader, "GrayFormula");
 	Scale.Init(mShader, "UVScale");
 	ColorScale.Init(mShader, "ColorScale");
+	HdrMode.Init(mShader, "HdrMode");
 }
 
 void FPresentShader::Bind()
