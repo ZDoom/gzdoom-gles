@@ -87,15 +87,15 @@ void gl_SetDynSpriteLight(AActor *self, float x, float y, float z, subsector_t *
 				if (fromgroup == togroup || fromgroup == 0 || togroup == 0) goto direct;
 
 				DVector2 offset = Displacements.getOffset(fromgroup, togroup);
-				L = FVector3(x - light->X() - offset.X, y - light->Y() - offset.Y, z - light->Z());
+				L = FVector3(x - (float)(light->X() + offset.X), y - (float)(light->Y() + offset.Y), z - (float)light->Z());
 			}
 			else
 			{
 			direct:
-				L = FVector3(x - light->X(), y - light->Y(), z - light->Z());
+				L = FVector3(x - (float)light->X(), y - (float)light->Y(), z - (float)light->Z());
 			}
 
-			dist = L.LengthSquared();
+			dist = (float)L.LengthSquared();
 			radius = light->GetRadius();
 
 			if (dist < radius * radius)
@@ -124,7 +124,7 @@ void gl_SetDynSpriteLight(AActor *self, float x, float y, float z, subsector_t *
 					lb = light->GetBlue() / 255.0f;
 					if (light->IsSubtractive())
 					{
-						float bright = FVector3(lr, lg, lb).Length();
+						float bright = (float)FVector3(lr, lg, lb).Length();
 						FVector3 lightColor(lr, lg, lb);
 						lr = (bright - lr) * -1;
 						lg = (bright - lg) * -1;
@@ -146,11 +146,11 @@ void gl_SetDynSpriteLight(AActor *thing, particle_t *particle)
 {
 	if (thing != NULL)
 	{
-		gl_SetDynSpriteLight(thing, thing->X(), thing->Y(), thing->Center(), thing->subsector);
+		gl_SetDynSpriteLight(thing, (float)thing->X(), (float)thing->Y(), (float)thing->Center(), thing->subsector);
 	}
 	else if (particle != NULL)
 	{
-		gl_SetDynSpriteLight(NULL, particle->Pos.X, particle->Pos.Y, particle->Pos.Z, particle->subsector);
+		gl_SetDynSpriteLight(NULL, (float)particle->Pos.X, (float)particle->Pos.Y, (float)particle->Pos.Z, particle->subsector);
 	}
 }
 
