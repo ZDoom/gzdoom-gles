@@ -211,7 +211,7 @@ namespace swrenderer
 	{
 		int numThreads = std::thread::hardware_concurrency();
 		if (numThreads == 0)
-			numThreads = 4;
+			numThreads = 2;
 
 		if (r_scene_multithreaded == 0 || r_multithreaded == 0)
 			numThreads = 1;

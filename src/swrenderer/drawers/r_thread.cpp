@@ -174,11 +174,12 @@ void DrawerThreads::StartThreads()
 {
 	std::unique_lock<std::mutex> lock(threads_mutex);
 
-	int num_threads = std::thread::hardware_concurrency();
+	static int num_threads = std::thread::hardware_concurrency();
 	if (num_threads == 0)
 	{
 		num_threads = 2;
-		Printf ("Could not determine number of CPU cores (assuming 2). Set r_multithreaded.\n");
+		if (r_multithreaded == 1)
+			Printf ("Could not determine number of CPU cores (assuming 2). Set r_multithreaded.\n");
 	}
 
 	if (r_multithreaded == 0)
