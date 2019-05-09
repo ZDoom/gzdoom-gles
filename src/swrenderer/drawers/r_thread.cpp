@@ -176,7 +176,10 @@ void DrawerThreads::StartThreads()
 
 	int num_threads = std::thread::hardware_concurrency();
 	if (num_threads == 0)
-		num_threads = 4;
+	{
+		num_threads = 2;
+		Printf ("Could not determine number of CPU cores (assuming 2). Set r_multithreaded.\n");
+	}
 
 	if (r_multithreaded == 0)
 		num_threads = 1;
