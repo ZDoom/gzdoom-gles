@@ -906,21 +906,19 @@ DEFINE_ACTION_FUNCTION_NATIVE(AActor, FindUniqueTid, P_FindUniqueTID)
 
 static void RemoveFromHash(AActor *self)
 {
-	self->RemoveFromHash();
+	self->SetTID(0);
 }
 
 DEFINE_ACTION_FUNCTION_NATIVE(AActor, RemoveFromHash, RemoveFromHash)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	self->RemoveFromHash();
+	RemoveFromHash(self);
 	return 0;
 }
 
 static void ChangeTid(AActor *self, int tid)
 {
-	self->RemoveFromHash();
-	self->tid = tid;
-	self->AddToHash();
+	self->SetTID(tid);
 }
 
 DEFINE_ACTION_FUNCTION_NATIVE(AActor, ChangeTid, ChangeTid)

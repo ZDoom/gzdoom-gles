@@ -1240,13 +1240,15 @@ public:
 
 	// ThingIDs
 	static void ClearTIDHashes ();
+	void SetTID (int newTID);
+
+private:
 	void AddToHash ();
 	void RemoveFromHash ();
 
-
-private:
 	static AActor *TIDHash[128];
 	static inline int TIDHASH (int key) { return key & 127; }
+
 public:
 	static FSharedStringArena mStringPropertyData;
 private:

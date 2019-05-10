@@ -105,8 +105,7 @@ bool P_Thing_Spawn (int tid, AActor *source, int type, DAngle angle, bool fog, i
 				}
 				if (mobj->flags & MF_SPECIAL)
 					mobj->flags |= MF_DROPPED;	// Don't respawn
-				mobj->tid = newtid;
-				mobj->AddToHash ();
+				mobj->SetTID(newtid);
 				mobj->flags2 = oldFlags2;
 			}
 			else
@@ -328,8 +327,7 @@ bool P_Thing_Projectile (int tid, AActor *source, int type, const char *type_nam
 
 				if (mobj)
 				{
-					mobj->tid = newtid;
-					mobj->AddToHash ();
+					mobj->SetTID(newtid);
 					P_PlaySpawnSound(mobj, spot);
 					if (gravity)
 					{
