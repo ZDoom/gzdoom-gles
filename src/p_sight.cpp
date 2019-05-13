@@ -847,9 +847,7 @@ int P_CheckSight (AActor *t1, AActor *t2, int flags)
 
 	bool res;
 
-	assert (t1 != NULL);
-	assert (t2 != NULL);
-	if (t1 == NULL || t2 == NULL)
+	if (t1 == nullptr || t2 == nullptr)
 	{
 		return false;
 	}
