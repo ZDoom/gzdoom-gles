@@ -164,7 +164,7 @@ DEFINE_ACTION_FUNCTION_NATIVE(FStringStruct, CharAt, StringCharAt)
 static int StringCharCodeAt(FString *self, int pos)
 {
 	if ((unsigned)pos >= self->Len()) return 0;
-	else return (*self)[pos];
+	else return (uint8_t)((*self)[pos]);
 }
 
 DEFINE_ACTION_FUNCTION_NATIVE(FStringStruct, CharCodeAt, StringCharCodeAt)
