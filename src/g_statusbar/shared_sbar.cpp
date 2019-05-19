@@ -88,6 +88,7 @@ EXTERN_CVAR (Bool, am_showtotaltime)
 EXTERN_CVAR (Bool, noisedebug)
 EXTERN_CVAR (Int, con_scaletext)
 EXTERN_CVAR(Bool, vid_fps)
+EXTERN_CVAR(Bool, inter_subtitles)
 CVAR(Int, hud_scale, 0, CVAR_ARCHIVE);
 
 
@@ -1096,7 +1097,8 @@ void DBaseStatusBar::DrawLog ()
 		hudheight = SCREENHEIGHT / scale;
 
 		int linelen = hudwidth<640? Scale(hudwidth,9,10)-40 : 560;
-		auto lines = V_BreakLines (SmallFont, linelen, GStrings(CPlayer->LogText));
+		const FString & text = (inter_subtitles && CPlayer->SubtitleCounter) ? CPlayer->SubtitleText : CPlayer->LogText;
+		auto lines = V_BreakLines (SmallFont, linelen, text[0] == '$'? GStrings(text.GetChars()+1) : text.GetChars());
 		int height = 20;
 
 		for (unsigned i = 0; i < lines.Size(); i++) height += SmallFont->GetHeight () + 1;
@@ -1112,7 +1114,7 @@ void DBaseStatusBar::DrawLog ()
 		else
 		{
 			x=(hudwidth>>1)-300;
-			y=hudheight*3/10-(height>>1);
+			y=hudheight/8-(height>>1);
 			if (y<0) y=0;
 			w=600;
 		}
@@ -1122,7 +1124,7 @@ void DBaseStatusBar::DrawLog ()
 		y+=10;
 		for (const FBrokenLines &line : lines)
 		{
-			screen->DrawText (SmallFont, CR_UNTRANSLATED, x, y, line.Text,
+			screen->DrawText (SmallFont, CPlayer->SubtitleCounter? CR_CYAN : CR_UNTRANSLATED, x, y, line.Text,
 				DTA_KeepRatio, true,
 				DTA_VirtualWidth, hudwidth, DTA_VirtualHeight, hudheight, TAG_DONE);
 			y += SmallFont->GetHeight ()+1;
@@ -1202,7 +1204,7 @@ void DBaseStatusBar::DrawTopStuff (EHudState state)
 
 	DrawConsistancy ();
 	DrawWaiting ();
-	if (ShowLog && MustDrawLog(state)) DrawLog ();
+	if ((ShowLog && MustDrawLog(state)) || (inter_subtitles && CPlayer->SubtitleCounter > 0)) DrawLog ();
 
 	if (noisedebug)
 	{
