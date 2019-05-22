@@ -9234,7 +9234,7 @@ scriptwait:
 			break;
 
 		case PCD_CLEARINVENTORY:
-			ScriptUtil::Exec(NAME_ClearInventory, ScriptUtil::Pointer, activator, ScriptUtil::End);
+			ScriptUtil::Exec(NAME_ClearInventory, ScriptUtil::Pointer, activator.Get(), ScriptUtil::End);
 			break;
 
 		case PCD_CLEARACTORINVENTORY:
@@ -9257,7 +9257,7 @@ scriptwait:
 		case PCD_GIVEINVENTORY:
 		{
 			int typeindex = FName(FBehavior::StaticLookupString(STACK(2))).GetIndex();
-			ScriptUtil::Exec(NAME_GiveInventory, ScriptUtil::Pointer, activator, ScriptUtil::Int, typeindex, ScriptUtil::Int, STACK(1), ScriptUtil::End);
+			ScriptUtil::Exec(NAME_GiveInventory, ScriptUtil::Pointer, activator.Get(), ScriptUtil::Int, typeindex, ScriptUtil::Int, STACK(1), ScriptUtil::End);
 			sp -= 2;
 			break;
 		}
@@ -9286,7 +9286,7 @@ scriptwait:
 		case PCD_GIVEINVENTORYDIRECT:
 		{
 			int typeindex = FName(FBehavior::StaticLookupString(TAGSTR(uallong(pc[0])))).GetIndex();
-			ScriptUtil::Exec(NAME_GiveInventory, ScriptUtil::Pointer, activator, ScriptUtil::Int, typeindex, ScriptUtil::Int, uallong(pc[1]), ScriptUtil::End);
+			ScriptUtil::Exec(NAME_GiveInventory, ScriptUtil::Pointer, activator.Get(), ScriptUtil::Int, typeindex, ScriptUtil::Int, uallong(pc[1]), ScriptUtil::End);
 			pc += 2;
 			break;
 		}
@@ -9294,7 +9294,7 @@ scriptwait:
 		case PCD_TAKEINVENTORY:
 		{
 			int typeindex = FName(FBehavior::StaticLookupString(STACK(2))).GetIndex();
-			ScriptUtil::Exec(NAME_TakeInventory, ScriptUtil::Pointer, activator, ScriptUtil::Int, typeindex, ScriptUtil::Int, STACK(1), ScriptUtil::End);
+			ScriptUtil::Exec(NAME_TakeInventory, ScriptUtil::Pointer, activator.Get(), ScriptUtil::Int, typeindex, ScriptUtil::Int, STACK(1), ScriptUtil::End);
 			sp -= 2;
 			break;
 		}
@@ -9323,7 +9323,7 @@ scriptwait:
 		case PCD_TAKEINVENTORYDIRECT:
 		{
 			int typeindex = FName(FBehavior::StaticLookupString(TAGSTR(uallong(pc[0])))).GetIndex();
-			ScriptUtil::Exec(NAME_TakeInventory, ScriptUtil::Pointer, activator, ScriptUtil::Int, typeindex, ScriptUtil::Int, uallong(pc[1]), ScriptUtil::End);
+			ScriptUtil::Exec(NAME_TakeInventory, ScriptUtil::Pointer, activator.Get(), ScriptUtil::Int, typeindex, ScriptUtil::Int, uallong(pc[1]), ScriptUtil::End);
 			pc += 2;
 			break;
 		}
@@ -9753,16 +9753,16 @@ scriptwait:
             break;
 
 		case PCD_SETWEAPON:
-			STACK(1) = ScriptUtil::Exec(NAME_SetWeapon, ScriptUtil::Pointer, activator, ScriptUtil::ACSClass, STACK(1), ScriptUtil::End);
+			STACK(1) = ScriptUtil::Exec(NAME_SetWeapon, ScriptUtil::Pointer, activator.Get(), ScriptUtil::ACSClass, STACK(1), ScriptUtil::End);
 			break;
 
 		case PCD_SETMARINEWEAPON:
-			ScriptUtil::Exec(NAME_SetMarineWeapon, ScriptUtil::Pointer, activator, ScriptUtil::Int, STACK(2), ScriptUtil::Int, STACK(1), ScriptUtil::End);
+			ScriptUtil::Exec(NAME_SetMarineWeapon, ScriptUtil::Pointer, activator.Get(), ScriptUtil::Int, STACK(2), ScriptUtil::Int, STACK(1), ScriptUtil::End);
 			sp -= 2;
 			break;
 
 		case PCD_SETMARINESPRITE:
-			ScriptUtil::Exec(NAME_SetMarineSprite, ScriptUtil::Pointer, activator, ScriptUtil::Int, STACK(2), ScriptUtil::ACSClass, STACK(1), ScriptUtil::End);
+			ScriptUtil::Exec(NAME_SetMarineSprite, ScriptUtil::Pointer, activator.Get(), ScriptUtil::Int, STACK(2), ScriptUtil::ACSClass, STACK(1), ScriptUtil::End);
 			sp -= 2;
 			break;
 
