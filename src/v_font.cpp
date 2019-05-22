@@ -919,6 +919,9 @@ void InitLowerUpper()
 		if (upperforlower[lower] == lower) upperforlower[lower] = upper;
 		isuppermap[upper] = islowermap[lower] = true;
 	}
+	// Special treatment for the two variants of the small sigma in Greek.
+	islowermap[0x3c2] = true;
+	upperforlower[0x3c2] = 0x3a3;
 }
 
 
@@ -928,7 +931,13 @@ bool myislower(int code)
 	return false;
 }
 
-// Returns a character without an accent mark (or one with a similar looking accent in some cases where direct support is unlikely.
+bool myisupper(int code)
+{
+	if (code >= 0 && code < 65536) return isuppermap[code];
+	return false;
+}
+
+// Returns a character without an accent mark (or one with a similar looking accent in some cases where direct support is unlikely).
 
 int stripaccent(int code)
 {
@@ -997,6 +1006,9 @@ int stripaccent(int code)
 		case 0x201e:
 			return '"';	// typographic quotation marks
 			
+		case 0x3c2:
+			return 0x3c3;	// Lowercase Sigma character in Greek, which changes depending on its positioning in a word; if the font is uppercase only or features a smallcaps style, the second variant of the letter will remain unused
+			
 			// Cyrillic characters with equivalents in the Latin alphabet.
 		case 0x400:
 			return 0xc8;
@@ -1015,7 +1027,7 @@ int stripaccent(int code)
 			
 		case 0x408:
 			return 'J';
-
+			
 		case 0x450:
 			return 0xe8;
 			
@@ -1033,7 +1045,7 @@ int stripaccent(int code)
 			
 		case 0x458:
 			return 'j';
-
+			
 	}
 
 	// skip the rest of Latin characters because none of them are relevant for modern languages.
