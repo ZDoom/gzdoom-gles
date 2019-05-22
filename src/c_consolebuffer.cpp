@@ -115,7 +115,7 @@ void FConsoleBuffer::AddText(int printlevel, const char *text, FILE *logfile)
 	if (printlevel >= 0 && printlevel != PRINT_HIGH)
 	{
 		if (printlevel == 200) build = TEXTCOLOR_GREEN;
-		else if (printlevel < PRINTLEVELS) build.Format("%c%c", TEXTCOLOR_ESCAPE, PrintColors[printlevel]);
+		else if (printlevel < PRINTLEVELS) build.Format("%c%c", TEXTCOLOR_ESCAPE, PrintColors[printlevel]+'A');
 	}
 	
 	size_t textsize = strlen(text);
