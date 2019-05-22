@@ -566,7 +566,7 @@ public:
 					else
 					{
 						nameToIndex[key] = i;
-						DPrintf(DMSG_NOTIFY, "GZSDF linker: Assigning pagename '%s' to node %i\n", key, i);
+						DPrintf(DMSG_NOTIFY, "GZSDF linker: Assigning pagename '%s' to node %i\n", key.GetChars(), i);
 					}
 					usedstrings = true;
 				}
@@ -582,7 +582,7 @@ public:
 						if (nameToIndex.CheckKey(itemLinkKey))
 						{
 							StrifeDialogues[i]->ItemCheckNode = nameToIndex[itemLinkKey] + 1;
-							DPrintf(DMSG_NOTIFY, "GZSDF linker: Item Link '%s' in node %i was index %i\n", itemLinkKey, i, nameToIndex[itemLinkKey]);
+							DPrintf(DMSG_NOTIFY, "GZSDF linker: Item Link '%s' in node %i was index %i\n", itemLinkKey.GetChars(), i, nameToIndex[itemLinkKey]);
 						}
 						else
 							Printf("Warning! Reference to non-existent item-linked dialogue page name '%s' in page %i!\n", StrifeDialogues[i]->ItemCheckNodeName.GetChars(), i);
@@ -598,7 +598,7 @@ public:
 							if (nameToIndex.CheckKey(key))
 							{
 								NodeCheck->NextNode = nameToIndex[key] + 1;
-								DPrintf(DMSG_NOTIFY, "GZSDF linker: Nextpage Link '%s' in node %i was index %i\n", key, i, nameToIndex[key]);
+								DPrintf(DMSG_NOTIFY, "GZSDF linker: Nextpage Link '%s' in node %i was index %i\n", key.GetChars(), i, nameToIndex[key]);
 							}
 							else
 								Printf("Warning! Reference to non-existent reply-linked dialogue page name '%s' in page %i!\n", NodeCheck->NextNodeName.GetChars(), i);
