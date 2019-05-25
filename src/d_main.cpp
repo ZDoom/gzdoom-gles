@@ -914,7 +914,6 @@ void D_Display ()
 	{
 		FTexture *tex;
 		int x;
-		FString pstring = GStrings("TXT_BY");
 
 		tex = TexMan(gameinfo.PauseSign);
 		x = (SCREENWIDTH - tex->GetScaledWidth() * CleanXfac)/2 +
@@ -922,7 +921,8 @@ void D_Display ()
 		screen->DrawTexture (tex, x, 4, DTA_CleanNoMove, true, TAG_DONE);
 		if (paused && multiplayer)
 		{
-			pstring << ' ' << players[paused - 1].userinfo.GetName();
+			FString pstring = GStrings("TXT_BY");
+			pstring.Substitute("%s", players[paused - 1].userinfo.GetName());
 			screen->DrawText(SmallFont, CR_RED,
 				(screen->GetWidth() - SmallFont->StringWidth(pstring)*CleanXfac) / 2,
 				(tex->GetScaledHeight() * CleanYfac) + 4, pstring, DTA_CleanNoMove, true, TAG_DONE);
