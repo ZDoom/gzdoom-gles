@@ -1203,7 +1203,7 @@ FFont::FFont (const char *name, const char *nametemplate, const char *filetempla
 	{
 		for (i = 0; i < lcount; i++)
 		{
-			int position = '!' + i;
+			int position = lfirst + i;
 			mysnprintf(buffer, countof(buffer), nametemplate, i + start);
 			
 			lump = TexMan.CheckForTexture(buffer, ETextureType::MiscPatch);
