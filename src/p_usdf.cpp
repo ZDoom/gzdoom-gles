@@ -481,11 +481,74 @@ class USDFParser : public UDMFParserBase
 			return false;
 		}
 		SetConversation(dlgid, type, startpos);
-		for(;startpos < StrifeDialogues.Size(); startpos++)
+
+		auto& dialogues = StrifeDialogues;
+		const auto numnodes = dialogues.Size();
+
+		for (auto i = startpos; i < numnodes; i++)
 		{
-			StrifeDialogues[startpos]->SpeakerType = type;
-			StrifeDialogues[startpos]->MenuClassName = clsid;
+			dialogues[i]->SpeakerType = type;
+			dialogues[i]->MenuClassName = clsid;
 		}
+
+		if (namespace_bits == Gz) // string page name linker
+		{
+			TMap<FString, int> nameToIndex;
+
+			for (auto i = startpos; i < numnodes; i++)
+			{
+				FString key = dialogues[i]->ThisNodeName;
+				if (key.IsNotEmpty())
+				{
+					key.ToLower();
+					if (nameToIndex.CheckKey(key))
+						Printf("Warning! Duplicate page name '%s'!\n", dialogues[i]->ThisNodeName.GetChars());
+					else
+					{
+						nameToIndex[key] = i - startpos;
+						DPrintf(DMSG_NOTIFY, "GZSDF linker: Assigning pagename '%s' to node %i\n", key.GetChars(), i);
+					}
+				}
+			}
+
+			if (nameToIndex.CountUsed())
+			{
+				for (auto i = startpos; i < numnodes; i++)
+				{
+					FString itemLinkKey = dialogues[i]->ItemCheckNodeName;
+					if (itemLinkKey.IsNotEmpty())
+					{
+						itemLinkKey.ToLower();
+						if (nameToIndex.CheckKey(itemLinkKey))
+						{
+							dialogues[i]->ItemCheckNode = nameToIndex[itemLinkKey] + 1;
+							DPrintf(DMSG_NOTIFY, "GZSDF linker: Item Link '%s' in node %i was index %i\n", itemLinkKey.GetChars(), i, nameToIndex[itemLinkKey]);
+						}
+						else
+							Printf("Warning! Reference to non-existent item-linked dialogue page name '%s' in page %i!\n", dialogues[i]->ItemCheckNodeName.GetChars(), i);
+					}
+
+					FStrifeDialogueReply *NodeCheck = dialogues[i]->Children;
+					while (NodeCheck)
+					{
+						if (NodeCheck->NextNodeName.IsNotEmpty())
+						{
+							FString key = NodeCheck->NextNodeName;
+							key.ToLower();
+							if (nameToIndex.CheckKey(key))
+							{
+								NodeCheck->NextNode = nameToIndex[key] + 1;
+								DPrintf(DMSG_NOTIFY, "GZSDF linker: Nextpage Link '%s' in node %i was index %i\n", key.GetChars(), i, nameToIndex[key]);
+							}
+							else
+								Printf("Warning! Reference to non-existent reply-linked dialogue page name '%s' in page %i!\n", NodeCheck->NextNodeName.GetChars(), i);
+						}
+						NodeCheck = NodeCheck->Next;
+					}
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -549,66 +612,6 @@ public:
 			}
 		}
 
-		if (namespace_bits == Gz) // string page name linker
-		{
-			int numnodes = StrifeDialogues.Size();
-			int usedstrings = false;
-
-			TMap<FString, int> nameToIndex;
-			for (int i = 0; i < numnodes; i++)
-			{
-				FString key = StrifeDialogues[i]->ThisNodeName;
-				if (key.IsNotEmpty())
-				{
-					key.ToLower();
-					if (nameToIndex.CheckKey(key))
-						Printf("Warning! Duplicate page name '%s'!\n", StrifeDialogues[i]->ThisNodeName.GetChars());
-					else
-					{
-						nameToIndex[key] = i;
-						DPrintf(DMSG_NOTIFY, "GZSDF linker: Assigning pagename '%s' to node %i\n", key.GetChars(), i);
-					}
-					usedstrings = true;
-				}
-			}
-			if (usedstrings)
-			{
-				for (int i = 0; i < numnodes; i++)
-				{
-					FString itemLinkKey = StrifeDialogues[i]->ItemCheckNodeName;
-					if (itemLinkKey.IsNotEmpty())
-					{
-						itemLinkKey.ToLower();
-						if (nameToIndex.CheckKey(itemLinkKey))
-						{
-							StrifeDialogues[i]->ItemCheckNode = nameToIndex[itemLinkKey] + 1;
-							DPrintf(DMSG_NOTIFY, "GZSDF linker: Item Link '%s' in node %i was index %i\n", itemLinkKey.GetChars(), i, nameToIndex[itemLinkKey]);
-						}
-						else
-							Printf("Warning! Reference to non-existent item-linked dialogue page name '%s' in page %i!\n", StrifeDialogues[i]->ItemCheckNodeName.GetChars(), i);
-					}
-
-					FStrifeDialogueReply *NodeCheck = StrifeDialogues[i]->Children;
-					while (NodeCheck)
-					{
-						if (NodeCheck->NextNodeName.IsNotEmpty())
-						{
-							FString key = NodeCheck->NextNodeName;
-							key.ToLower();
-							if (nameToIndex.CheckKey(key))
-							{
-								NodeCheck->NextNode = nameToIndex[key] + 1;
-								DPrintf(DMSG_NOTIFY, "GZSDF linker: Nextpage Link '%s' in node %i was index %i\n", key.GetChars(), i, nameToIndex[key]);
-							}
-							else
-								Printf("Warning! Reference to non-existent reply-linked dialogue page name '%s' in page %i!\n", NodeCheck->NextNodeName.GetChars(), i);
-						}
-						NodeCheck = NodeCheck->Next;
-					}
-				}
-			}
-
-		}
 		return true;
 	}
 };
