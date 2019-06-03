@@ -494,6 +494,7 @@ Order	// Order in the IWAD selection box
 	"Final Doom: Plutonia Experiment"
 	"Final Doom: TNT - Evilution"
 	"The Ultimate DOOM"
+	"Sigil of Baphomet"
 	"DOOM Registered"
 	"DOOM Shareware"
 	"DOOM 2: BFG Edition"
