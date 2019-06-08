@@ -210,7 +210,7 @@ skill extreme_lzd
 	DamageFactor = 2
 	DisableCheats
 	SpawnFilter = Hard
-	//PicName = "M_EXTR"
+	PicName = "M_EXTR"
 	Name = "$SKILL_EXTREME"
 	MustConfirm
 }
