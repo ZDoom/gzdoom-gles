@@ -101,6 +101,7 @@
 #include "v_text.h"
 #include "version.h"
 #include "events.h"
+#include "atterm.h"
 
 // Prototypes and declarations.
 #include "rawinput.h"

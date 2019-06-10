@@ -53,6 +53,7 @@
 #include "vm.h"
 #include "types.h"
 #include "scriptutil.h"
+#include "atterm.h"
 
 // MACROS ------------------------------------------------------------------
 

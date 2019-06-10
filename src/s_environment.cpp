@@ -48,6 +48,7 @@
 #include "vm.h"
 #include "dobject.h"
 #include "menu/menu.h"
+#include "atterm.h"
 
 
 

@@ -53,6 +53,7 @@
 #include "v_video.h"
 #include "version.h"
 #include "videomodes.h"
+#include "atterm.h"
 
 #include "gl/system/gl_system.h"
 #include "gl/data/gl_vertexbuffer.h"

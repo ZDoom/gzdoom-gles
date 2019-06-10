@@ -44,6 +44,7 @@
 #include "m_joy.h"
 #include "templates.h"
 #include "v_text.h"
+#include "atterm.h"
 
 
 EXTERN_CVAR(Bool, joy_axespolling)

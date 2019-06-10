@@ -1287,6 +1287,7 @@ set (PCH_SOURCES
 	sound/wildmidi/wildmidi_lib.cpp
 	sound/wildmidi/wm_error.cpp
 	events.cpp
+	atterm.cpp
 	GuillotineBinPack.cpp
 	SkylineBinPack.cpp
 )

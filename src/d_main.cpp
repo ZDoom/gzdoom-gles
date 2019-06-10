@@ -118,6 +118,7 @@
 #include "vm.h"
 #include "types.h"
 #include "r_data/r_vanillatrans.h"
+#include "atterm.h"
 
 EXTERN_CVAR(Bool, hud_althud)
 void DrawHUD();

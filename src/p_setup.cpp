@@ -118,6 +118,7 @@
 #include "types.h"
 #include "i_time.h"
 #include "scripting/vm/vm.h"
+#include "atterm.h"
 
 #include "fragglescript/t_fs.h"
 

@@ -82,9 +82,6 @@ void I_Tactile (int on, int off, int total);
 void I_Error (const char *error, ...) GCCPRINTF(1,2);
 void I_FatalError (const char *error, ...) GCCPRINTF(1,2);
 
-void atterm (void (*func)(void));
-void popterm ();
-
 // Set the mouse cursor. The texture must be 32x32.
 class FTexture;
 bool I_SetCursor(FTexture *cursor);

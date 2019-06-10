@@ -67,6 +67,7 @@
 #include "st_start.h"
 #include "m_misc.h"
 #include "doomstat.h"
+#include "atterm.h"
 
 #include "i_net.h"
 

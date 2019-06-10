@@ -85,6 +85,7 @@
 #include "vm.h"
 #include "r_videoscale.h"
 #include "i_time.h"
+#include "atterm.h"
 
 EXTERN_CVAR(Bool, r_blendmethod)
 

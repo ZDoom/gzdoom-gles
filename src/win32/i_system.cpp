@@ -96,6 +96,7 @@
 #include "stats.h"
 #include "textures/bitmap.h"
 #include "textures/textures.h"
+#include "atterm.h"
 
 #include "optwin32.h"
 

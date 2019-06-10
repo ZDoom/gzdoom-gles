@@ -68,6 +68,7 @@
 #include "vm.h"
 #include "i_time.h"
 #include "actorinlines.h"
+#include "atterm.h"
 
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------

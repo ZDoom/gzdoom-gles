@@ -88,6 +88,7 @@
 #include "r_state.h"
 #include "g_levellocals.h"
 #include "vm.h"
+#include "atterm.h"
 
 // MACROS ------------------------------------------------------------------
 

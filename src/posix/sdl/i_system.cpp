@@ -56,6 +56,7 @@
 #include "g_game.h"
 #include "i_system.h"
 #include "c_dispatch.h"
+#include "atterm.h"
 #include "templates.h"
 #include "v_palette.h"
 #include "textures.h"
