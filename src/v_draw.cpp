@@ -131,7 +131,50 @@ DEFINE_ACTION_FUNCTION(_Screen, PaletteColor)
 }
 
 // Dummy ZScript arbitrary textured shape drawing
+IMPLEMENT_CLASS(DShape2DTransform, false, false)
+
+DEFINE_ACTION_FUNCTION(DShape2DTransform, Clear)
+{
+	PARAM_SELF_PROLOGUE(DShape2DTransform);
+
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DShape2DTransform, Rotate)
+{
+	PARAM_SELF_PROLOGUE(DShape2DTransform);
+	PARAM_FLOAT(angle);
+
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DShape2DTransform, Scale)
+{
+	PARAM_SELF_PROLOGUE(DShape2DTransform);
+	PARAM_FLOAT(x);
+	PARAM_FLOAT(y);
+
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DShape2DTransform, Translate)
+{
+	PARAM_SELF_PROLOGUE(DShape2DTransform);
+	PARAM_FLOAT(x);
+	PARAM_FLOAT(y);
+
+	return 0;
+}
+
 IMPLEMENT_CLASS(DShape2D, false, false)
+
+DEFINE_ACTION_FUNCTION(DShape2D, SetTransform)
+{
+	PARAM_SELF_PROLOGUE(DShape2D);
+	PARAM_OBJECT(transform, DShape2DTransform);
+
+	return 0;
+}
 
 DEFINE_ACTION_FUNCTION(DShape2D, Clear)
 {
