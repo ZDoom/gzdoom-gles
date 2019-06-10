@@ -65,9 +65,6 @@ EXTERN_CVAR(Bool, fullscreen   )
 
 // ---------------------------------------------------------------------------
 
-namespace
-{
-
 
 void Mac_I_FatalError(const char* const message)
 {
