@@ -143,6 +143,7 @@ DEFINE_ACTION_FUNCTION(FOptionValues, GetText)
 
 void DeinitMenus()
 {
+	if (CurrentMenu) CurrentMenu->Destroy();
 	{
 		FOptionMap::Iterator it(OptionValues);
 
