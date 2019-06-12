@@ -254,13 +254,13 @@ void FModelRenderer::RenderFrameModels(const FSpriteModelFrame *smf, const FStat
 						inter /= 2.;
 						inter += 0.5;
 					}
-					if ((curState->sprite == nextState->sprite) && (curState->Frame == nextState->Frame))
+					if (nextState && ((curState->sprite == nextState->sprite) && (curState->Frame == nextState->Frame)))
 					{
 						inter /= 2.;
 						nextState = nextState->GetNextState();
 					}
 				}
-				if (inter != 0.0)
+				if (nextState && inter != 0.0)
 					smfNext = FindModelFrame(ti, nextState->sprite, nextState->Frame, false);
 			}
 		}
