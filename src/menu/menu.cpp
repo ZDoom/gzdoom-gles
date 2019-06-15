@@ -59,6 +59,7 @@
 #include "events.h"
 #include "gl/renderer/gl_renderer.h" // for menu blur
 #include "scripting/types.h"
+#include "m_misc.h"
 
 int DMenu::InMenu;
 //
@@ -391,6 +392,12 @@ DEFINE_ACTION_FUNCTION(DMenu, ActivateMenu)
 {
 	PARAM_SELF_PROLOGUE(DMenu);
 	M_ActivateMenu(self);
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DMenu, MakeScreenShot)
+{
+	M_ScreenShot(nullptr);
 	return 0;
 }
 
