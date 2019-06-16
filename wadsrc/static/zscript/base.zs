@@ -753,6 +753,9 @@ struct LevelLocals native
 	{
 		return Floor.CreateFloor(sec, floortype, ln, speed, height, crush, change, crushmode, hereticlower);
 	}
+
+	native static void ExitLevel(int position, bool keepFacing);
+	native static void SecretExitLevel(int position);
 }
 
 struct StringTable native
