@@ -147,7 +147,7 @@ private:
 	GLuint mShadowMapFB = 0;
 	int mCurrentShadowMapSize = 0;
 
-	PPGLTexture mDitherTexture;
+	GLuint mDitherTexture = 0;
 
 	static bool FailedCreate;
 	static bool BuffersActive;

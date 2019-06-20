@@ -769,7 +769,12 @@ void FGLRenderBuffers::BindDitherTexture(int texunit)
 
 		mDitherTexture = Create2DTexture("DitherTexture", GL_R32F, 8, 8, data);
 	}
-	mDitherTexture.Bind(1, GL_NEAREST, GL_REPEAT);
+	glActiveTexture(GL_TEXTURE0 + texunit);
+	glBindTexture(GL_TEXTURE_2D, mDitherTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 //==========================================================================
