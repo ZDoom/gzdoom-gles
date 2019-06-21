@@ -859,8 +859,6 @@ void FGLRenderer::CopyToBackbuffer(const GL_IRECT *bounds, bool applyGamma)
 
 void FGLRenderer::DrawPresentTexture(const GL_IRECT &box, bool applyGamma)
 {
-	float invgamma;
-
 	glViewport(box.left, box.top, box.width, box.height);
 
 	GLRenderer->mBuffers->BindDitherTexture(1);
@@ -881,16 +879,14 @@ void FGLRenderer::DrawPresentTexture(const GL_IRECT &box, bool applyGamma)
 	mPresentShader->InputTexture.Set(0);
 	if (!applyGamma || framebuffer->IsHWGammaActive())
 	{
-		invgamma = 1.0f;
-		mPresentShader->InvGamma.Set(invgamma);
+		mPresentShader->InvGamma.Set(1.0f);
 		mPresentShader->Contrast.Set(1.0f);
 		mPresentShader->Brightness.Set(0.0f);
 		mPresentShader->Saturation.Set(1.0f);
 	}
 	else
 	{
-		invgamma = 1.0f / clamp<float>(Gamma, 0.1f, 4.f);
-		mPresentShader->InvGamma.Set(invgamma);
+		mPresentShader->InvGamma.Set(1.0f / clamp<float>(Gamma, 0.1f, 4.f));
 		mPresentShader->Contrast.Set(clamp<float>(vid_contrast, 0.1f, 3.f));
 		mPresentShader->Brightness.Set(clamp<float>(vid_brightness, -0.8f, 0.8f));
 		mPresentShader->Saturation.Set(clamp<float>(vid_saturation, -15.0f, 15.f));
