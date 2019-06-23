@@ -139,7 +139,8 @@ void ActivateEndGameMenu()
 		M_ClearMenus();
 		if (!netgame)
 		{
-			G_CheckDemoStatus();
+			if (demorecording)
+				G_CheckDemoStatus();
 			D_StartTitle();
 		}
 	});
