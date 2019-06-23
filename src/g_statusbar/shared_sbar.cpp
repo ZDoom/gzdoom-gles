@@ -1161,8 +1161,8 @@ void DBaseStatusBar::SetMugShotState(const char *stateName, bool waitTillDone, b
 
 void DBaseStatusBar::DrawBottomStuff (EHudState state)
 {
-	DrawMessages (HUDMSGLayer_UnderHUD, (state == HUD_StatusBar) ? GetTopOfStatusbar() : SCREENHEIGHT);
 	E_RenderUnderlay(state);
+	DrawMessages (HUDMSGLayer_UnderHUD, (state == HUD_StatusBar) ? GetTopOfStatusbar() : SCREENHEIGHT);
 }
 
 //---------------------------------------------------------------------------
