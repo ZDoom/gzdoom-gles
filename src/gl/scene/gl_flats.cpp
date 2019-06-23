@@ -380,7 +380,7 @@ void GLFlat::Draw(int pass, bool trans)	// trans only has meaning for GLPASS_LIG
 	case GLPASS_ALL:			// Same, but also creates the dynlight data.
 		mDrawer->SetColor(lightlevel, rel, Colormap,1.0f);
 		mDrawer->SetFog(lightlevel, rel, &Colormap, false);
-		gl_RenderState.SetAddColor(flat->AddColor | 0xff000000);
+		gl_RenderState.SetAddColor(AddColor | 0xff000000);
 		if (!gltexture->tex->isFullbright())
 			gl_RenderState.SetObjectColor(FlatColor | 0xff000000);
 		if (sector->special != GLSector_Skybox)
