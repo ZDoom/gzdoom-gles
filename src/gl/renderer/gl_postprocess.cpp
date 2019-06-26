@@ -877,6 +877,7 @@ void FGLRenderer::DrawPresentTexture(const GL_IRECT &box, bool applyGamma)
 
 	mPresentShader->Bind();
 	mPresentShader->InputTexture.Set(0);
+	mPresentShader->DitherTexture.Set(1);
 	if (!applyGamma || framebuffer->IsHWGammaActive())
 	{
 		mPresentShader->InvGamma.Set(1.0f);

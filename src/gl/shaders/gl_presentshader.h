@@ -29,6 +29,7 @@ public:
 	void Bind() override;
 
 	FBufferedUniformSampler InputTexture;
+	FBufferedUniformSampler DitherTexture;
 };
 
 #endif

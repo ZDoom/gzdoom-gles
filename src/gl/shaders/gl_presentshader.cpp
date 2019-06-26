@@ -59,6 +59,7 @@ void FPresentShader::Bind()
 	{
 		Init("shaders/glsl/present.fp", "shaders/glsl/present");
 		InputTexture.Init(mShader, "InputTexture");
+		DitherTexture.Init(mShader, "DitherTexture");
 	}
 	mShader.Bind();
 }
