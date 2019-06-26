@@ -2,13 +2,13 @@
 in vec2 TexCoord;
 out vec4 FragColor;
 
-layout(binding=0) uniform sampler2D InputTexture;
+uniform sampler2D InputTexture;
 uniform float InvGamma;
 uniform float Contrast;
 uniform float Brightness;
 uniform float Saturation;
 uniform int GrayFormula;
-layout(binding=1) uniform sampler2D DitherTexture;
+uniform sampler2D DitherTexture;
 uniform float ColorScale;
 uniform int HdrMode;
 
