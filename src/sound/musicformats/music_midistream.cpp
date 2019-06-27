@@ -49,6 +49,16 @@
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
+#ifdef _WIN32
+MIDIDevice *CreateWinMIDIDevice(int mididevice);
+#endif
+MIDIDevice *CreateFluidSynthMIDIDevice(const char *args, int samplerate);
+MIDIDevice *CreateTimidityMIDIDevice(const char *args, int samplerate);
+MIDIDevice *CreateTimidityPPMIDIDevice(const char *args, int samplerate);
+MIDIDevice *CreateADLMIDIDevice(const char *args);
+MIDIDevice *CreateOPNMIDIDevice(const char *args);
+MIDIDevice *CreateWildMIDIDevice(const char *args, int samplerate);
+
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
@@ -199,15 +209,15 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 			switch (devtype)
 			{
 			case MDEV_GUS:
-				dev = new TimidityMIDIDevice(Args, samplerate);
+				dev = CreateTimidityMIDIDevice(Args, samplerate);
 				break;
 
 			case MDEV_ADL:
-				dev = new ADLMIDIDevice(Args);
+				dev = CreateADLMIDIDevice(Args);
 				break;
 
 			case MDEV_OPN:
-				dev = new OPNMIDIDevice(Args);
+				dev = CreateOPNMIDIDevice(Args);
 				break;
 
 			case MDEV_MMAPI:
@@ -219,7 +229,7 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 				// Intentional fall-through for non-Windows systems.
 
 			case MDEV_FLUIDSYNTH:
-				dev = new FluidSynthMIDIDevice(Args, samplerate);
+				dev = CreateFluidSynthMIDIDevice(Args, samplerate);
 				break;
 
 			case MDEV_OPL:
@@ -231,7 +241,7 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 				break;
 
 			case MDEV_WILDMIDI:
-				dev = new WildMIDIDevice(Args, samplerate);
+				dev = CreateWildMIDIDevice(Args, samplerate);
 				break;
 
 			default:
