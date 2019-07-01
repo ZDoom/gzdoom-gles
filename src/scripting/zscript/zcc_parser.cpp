@@ -405,7 +405,7 @@ static void DoParse(int lumpnum)
 			}
 			if (state.ParseVersion > MakeVersion(VER_MAJOR, VER_MINOR, VER_REVISION) && !Args->CheckParm("-zsvoverride"))
 			{
-				sc.ScriptError("Version mismatch. %d.%d.%d expected but only %d.%d.%d supported.\nTry '-zsvoverride'",
+				sc.ScriptError("ZScript version mismatch. %d.%d.%d required but only %d.%d.%d supported.\nTry '-zsvoverride'",
 				state.ParseVersion.major, state.ParseVersion.minor, state.ParseVersion.revision, VER_MAJOR, VER_MINOR, VER_REVISION);
 			}
 		}
