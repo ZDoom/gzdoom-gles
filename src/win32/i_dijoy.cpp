@@ -52,6 +52,7 @@
 #include "c_dispatch.h"
 #include "doomdef.h"
 #include "doomstat.h"
+#include "version.h"
 #include "win32iface.h"
 #include "templates.h"
 #include "gameconfigfile.h"
@@ -286,6 +287,11 @@ CUSTOM_CVAR(Bool, joy_dinput, true, CVAR_GLOBALCONFIG|CVAR_ARCHIVE|CVAR_NOINITCA
 	D_PostEvent(&ev);
 }
 
+CUSTOM_CVAR(Bool, joy_background, false, CVAR_GLOBALCONFIG|CVAR_ARCHIVE|CVAR_NOINITCALL)
+{
+	Printf("This won't take effect until " GAMENAME " is restarted.\n");
+}
+
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
 static const uint8_t POVButtons[9] = { 0x01, 0x03, 0x02, 0x06, 0x04, 0x0C, 0x08, 0x09, 0x00 };
@@ -389,7 +395,14 @@ bool FDInputJoystick::GetDevice()
 		Printf(TEXTCOLOR_ORANGE "Setting data format for %s failed.\n", Name.GetChars());
 		return false;
 	}
-	hr = Device->SetCooperativeLevel(Window, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
+	if (joy_background)
+	{
+		hr = Device->SetCooperativeLevel(Window, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
+	}
+	else
+	{
+		hr = Device->SetCooperativeLevel(Window, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
+	}
 	if (FAILED(hr))
 	{
 		Printf(TEXTCOLOR_ORANGE "Setting cooperative level for %s failed.\n", Name.GetChars());
