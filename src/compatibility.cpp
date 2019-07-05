@@ -112,6 +112,8 @@ extern bool ForceNodeBuild;
 
 TMap<FMD5Holder, FCompatValues, FMD5HashTraits> BCompatMap;
 
+CVAR (Bool, sv_njnoautolevelcompat, false, CVAR_SERVERINFO | CVAR_LATCH)
+
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
 static FCompatOption Options[] =
@@ -352,6 +354,13 @@ IMPLEMENT_CLASS(DLevelCompatibility, true, false);
 void SetCompatibilityParams(FName checksum)
 {
 	auto lc = Create<DLevelCompatibility>();
+
+	if (sv_njnoautolevelcompat)
+	{
+		Printf("Warning: auto level compatibility disabled. Severe problems could arise.\n");
+		return;
+	}
+
 	for (auto cls : PClass::AllClasses)
 	{
 		if (cls->IsDescendantOf(RUNTIME_CLASS(DLevelCompatibility)))
