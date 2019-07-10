@@ -289,6 +289,21 @@ class Menu : Object native ui version("2.4")
 		screen.DrawText (ConFont, color, x, y, str, DTA_CellX, 8 * CleanXfac_1, DTA_CellY, 8 * CleanYfac_1);
 	}
 
+	static Font OptionFont()
+	{
+		return SmallFont;
+	}
+	
+	static int OptionHeight() 
+	{
+		return OptionFont().GetHeight();
+	}
+	
+	static int OptionWidth(String s)
+	{
+		return OptionFont().StringWidth(s);
+	}
+
 }
 
 class MenuDescriptor : Object native ui version("2.4")
