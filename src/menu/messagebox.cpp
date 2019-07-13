@@ -48,6 +48,7 @@
 #include "vm.h"
 
 EXTERN_CVAR (Bool, saveloadconfirmation) // [mxd]
+EXTERN_CVAR (Bool, quicksaverotation)
 
 typedef void(*hfunc)();
 DEFINE_ACTION_FUNCTION(DMessageBoxMenu, CallHandler)
@@ -178,6 +179,13 @@ CCMD (quicksave)
 
 	if (gamestate != GS_LEVEL)
 		return;
+
+	// If the quick save rotation is enabled, it handles the save slot.
+	if (quicksaverotation)
+	{
+		G_DoQuickSave();
+		return;
+	}
 		
 	if (savegameManager.quickSaveSlot == NULL)
 	{
