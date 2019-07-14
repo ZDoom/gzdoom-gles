@@ -682,7 +682,10 @@ file( GLOB HEADER_FILES
 	g_inventory/*.h
 	intermission/*.h
 	menu/*.h
+	sound/*.h
 	sound/adlmidi/*.h*
+	sound/backend/*.h*
+	sound/music/*.h*
 	sound/opnmidi/*.h*
 	sound/oplsynth/*.h
 	sound/oplsynth/dosbox/*.h
@@ -695,7 +698,6 @@ file( GLOB HEADER_FILES
 	rapidjson/*.h
 	resourcefiles/*.h
 	sfmt/*.h
-	sound/*.h
 	textures/*.h
 	scripting/*.h
 	scripting/backend/*.h
@@ -849,10 +851,10 @@ set( FASTMATH_SOURCES
 	swrenderer/r_all.cpp
 	polyrenderer/poly_all.cpp
 	sound/oplsynth/opl_mus_player.cpp
-	sound/mpg123_decoder.cpp
-	sound/music_midi_base.cpp
-	sound/oalsound.cpp
-	sound/sndfile_decoder.cpp
+	sound/backend/mpg123_decoder.cpp
+	sound/music/music_midi_base.cpp
+	sound/backend/oalsound.cpp
+	sound/backend/sndfile_decoder.cpp
 	sound/timiditypp/fft4g.cpp
 	sound/timiditypp/reverb.cpp
 	gl/utility/gl_clock.cpp
@@ -1223,9 +1225,9 @@ set (PCH_SOURCES
 	scripting/zscript/zcc_compile.cpp
 	scripting/zscript/zcc_parser.cpp
 	sfmt/SFMT.cpp
-	sound/i_music.cpp
-	sound/i_sound.cpp
-	sound/i_soundfont.cpp
+	sound/music/i_music.cpp
+	sound/music/i_soundfont.cpp
+	sound/backend/i_sound.cpp
 	sound/mididevices/music_adlmidi_mididevice.cpp
 	sound/mididevices/music_opldumper_mididevice.cpp
 	sound/mididevices/music_opl_mididevice.cpp
@@ -1361,10 +1363,12 @@ include_directories( .
 	g_shared
 	g_inventory
 	sound
-	textures
+	sound/music
+	sound/backend
 	sound/oplsynth
 	sound/timidity
 	sound/wildmidi
+	textures
 	xlat
 	scripting
 	scripting/vm
@@ -1462,6 +1466,7 @@ install(TARGETS zdoom
 		COMPONENT "Game executable")
 
 source_group("Audio Files" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/.+")
+source_group("Audio Files\\Backend" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/backend/.+")
 source_group("Audio Files\\ADL MIDI" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/adlmidi/.+")
 source_group("Audio Files\\OPN MIDI" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/opnmidi/.+")
 source_group("Audio Files\\OPL Synth" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/oplsynth/.+")
