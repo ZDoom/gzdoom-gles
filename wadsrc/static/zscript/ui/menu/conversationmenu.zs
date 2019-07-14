@@ -83,6 +83,13 @@ class ConversationMenu : Menu
 	int mSelection;
 	int ConversationPauseTic;
 	int LineHeight;
+	int ReplyLineHeight;
+	Font displayFont;
+	int displayWidth;
+	int displayHeight;
+	int fontScale;
+	int refwidth;
+	int refheight;
 	
 	int SpeechWidth;
 	int ReplyWidth;
@@ -106,8 +113,15 @@ class ConversationMenu : Menu
 		ConversationPauseTic = gametic + 20;
 		DontDim = true;
 		
+		displayFont = SmallFont;
+		displayWidth = CleanWidth;
+		displayHeight = CleanHeight;
+		fontScale = CleanXfac;
+		refwidth = 320;
+		refheight = 200;
 		ReplyWidth = 320-50-10;
 		SpeechWidth = screen.GetWidth()/CleanXfac - 24*2;
+		ReplyLineHeight = LineHeight = displayFont.GetHeight();
 		LineHeight = SmallFont.GetHeight();
 
 		FormatSpeakerMessage();
