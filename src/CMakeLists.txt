@@ -1039,12 +1039,12 @@ set (PCH_SOURCES
 	r_utility.cpp
 	r_sky.cpp
 	r_videoscale.cpp
-	s_advsound.cpp
-	s_environment.cpp
-	s_playlist.cpp
-	s_sndseq.cpp
-	s_sound.cpp
+	sound/s_advsound.cpp
+	sound/s_environment.cpp
+	sound/s_sndseq.cpp
+	sound/s_sound.cpp
 	sound/s_music.cpp
+	s_playlist.cpp
 	serializer.cpp
 	sc_man.cpp
 	scriptutil.cpp
