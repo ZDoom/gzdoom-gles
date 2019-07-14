@@ -560,6 +560,11 @@ CUSTOM_CVAR (Int, msgmidcolor2, 4, CVAR_ARCHIVE)
 	setmsgcolor (PRINTLEVELS+1, self);
 }
 
+FFont * C_GetDefaultHUDFont()
+{
+	return SmallFont;
+}
+
 static void maybedrawnow (bool tick, bool force)
 {
 	// FIXME: Does not work right with hw2d

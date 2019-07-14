@@ -170,4 +170,6 @@ EColorRange V_ParseFontColor (const uint8_t *&color_value, int normalcolor, int 
 FFont *V_GetFont(const char *fontname, const char *fontlumpname = nullptr);
 void V_InitFontColors();
 
+FFont * C_GetDefaultHUDFont();
+
 #endif //__V_FONT_H__

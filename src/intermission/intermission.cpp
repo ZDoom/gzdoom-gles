@@ -84,7 +84,7 @@ void DrawFullscreenSubtitle(const char *text)
 	if (!text || !*text || !inter_subtitles) return;
 
 	// This uses the same scaling as regular HUD messages
-	auto scale = active_con_scaletext(generic_ui);
+	auto scale = active_con_scaletext();
 	int hudwidth = SCREENWIDTH / scale;
 	int hudheight = SCREENHEIGHT / scale;
 	FFont *font = C_GetDefaultHUDFont();
