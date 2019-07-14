@@ -1368,8 +1368,8 @@ include_directories( .
 	xlat
 	scripting
 	scripting/vm
-	../gdtoa
-	../dumb/include
+	../libraries/gdtoa
+	../libraries/dumb/include
 	${CMAKE_BINARY_DIR}/gdtoa
 	${SYSTEM_SOURCES_DIR} )
 
