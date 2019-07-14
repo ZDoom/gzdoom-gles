@@ -1374,7 +1374,7 @@ include_directories( .
 	scripting/vm
 	../libraries/gdtoa
 	../libraries/dumb/include
-	${CMAKE_BINARY_DIR}/gdtoa
+	${CMAKE_BINARY_DIR}/libraries/gdtoa
 	${SYSTEM_SOURCES_DIR} )
 
 add_dependencies( zdoom revision_check )
