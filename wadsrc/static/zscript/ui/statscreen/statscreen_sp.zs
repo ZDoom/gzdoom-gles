@@ -170,10 +170,12 @@ class RavenStatusScreen : DoomStatusScreen
 		int lh = IntermissionFont.GetHeight() * 3 / 2;
 
 		drawLF();
-	
-		screen.DrawText (BigFont, Font.CR_UNTRANSLATED, 50, 65, Stringtable.Localize("$TXT_IMKILLS"), DTA_Clean, true, DTA_Shadow, true);
-		screen.DrawText (BigFont, Font.CR_UNTRANSLATED, 50, 90, Stringtable.Localize("$TXT_IMITEMS"), DTA_Clean, true, DTA_Shadow, true);
-		screen.DrawText (BigFont, Font.CR_UNTRANSLATED, 50, 115, Stringtable.Localize("$TXT_IMSECRETS"), DTA_Clean, true, DTA_Shadow, true);
+
+		Font textFont = content.mFont;
+
+		screen.DrawText (textFont, Font.CR_UNTRANSLATED, 50, 65, Stringtable.Localize("$TXT_IMKILLS"), DTA_Clean, true, DTA_Shadow, true);
+		screen.DrawText (textFont, Font.CR_UNTRANSLATED, 50, 90, Stringtable.Localize("$TXT_IMITEMS"), DTA_Clean, true, DTA_Shadow, true);
+		screen.DrawText (textFont, Font.CR_UNTRANSLATED, 50, 115, Stringtable.Localize("$TXT_IMSECRETS"), DTA_Clean, true, DTA_Shadow, true);
 
 		int countpos = gameinfo.gametype==GAME_Strife? 285:270;
 		if (sp_state >= 2)
@@ -190,7 +192,7 @@ class RavenStatusScreen : DoomStatusScreen
 		}
 		if (sp_state >= 8)
 		{
-			screen.DrawText (BigFont, Font.CR_UNTRANSLATED, 85, 160, Stringtable.Localize("$TXT_IMTIME"), DTA_Clean, true, DTA_Shadow, true);
+			screen.DrawText (textFont, Font.CR_UNTRANSLATED, 85, 160, Stringtable.Localize("$TXT_IMTIME"), DTA_Clean, true, DTA_Shadow, true);
 			drawTime (249, 160, cnt_time);
 			if (wi_showtotaltime)
 			{

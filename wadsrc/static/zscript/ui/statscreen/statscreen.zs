@@ -103,6 +103,7 @@ class StatusScreen abstract play version("2.5")
 	PatchInfo 		mapname;
 	PatchInfo 		finished;
 	PatchInfo 		entering;
+	PatchInfo		content;
 
 	TextureID 		p_secret;
 	TextureID 		kills;
@@ -418,6 +419,11 @@ class StatusScreen abstract play version("2.5")
 		}
 	}
 
+	void drawTimeFont (Font printFont, int x, int y, int t, int color) // hack hack
+	{
+		drawTime(x, y, t);
+	}
+
 
 	//====================================================================
 	//
@@ -727,6 +733,7 @@ class StatusScreen abstract play version("2.5")
 		entering.Init(gameinfo.mStatscreenEnteringFont);
 		finished.Init(gameinfo.mStatscreenFinishedFont);
 		mapname.Init(gameinfo.mStatscreenMapNameFont);
+		content.Init(gameinfo.mStatscreenContentFont);
 
 		Kills = TexMan.CheckForTexture("WIOSTK", TexMan.Type_MiscPatch);		// "kills"
 		Secret = TexMan.CheckForTexture("WIOSTS", TexMan.Type_MiscPatch);		// "scrt"
