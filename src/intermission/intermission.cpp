@@ -893,7 +893,6 @@ void DIntermissionController::OnDestroy ()
 
 void F_StartIntermission(FIntermissionDescriptor *desc, bool deleteme, uint8_t state)
 {
-	ScaleOverrider s;
 	if (DIntermissionController::CurrentIntermission != NULL)
 	{
 		DIntermissionController::CurrentIntermission->Destroy();
@@ -940,7 +939,6 @@ void F_StartIntermission(FName seq, uint8_t state)
 
 bool F_Responder (event_t* ev)
 {
-	ScaleOverrider s;
 	if (DIntermissionController::CurrentIntermission != NULL)
 	{
 		return DIntermissionController::CurrentIntermission->Responder(ev);
@@ -956,7 +954,6 @@ bool F_Responder (event_t* ev)
 
 void F_Ticker ()
 {
-	ScaleOverrider s;
 	if (DIntermissionController::CurrentIntermission != NULL)
 	{
 		DIntermissionController::CurrentIntermission->Ticker();
@@ -971,7 +968,6 @@ void F_Ticker ()
 
 void F_Drawer ()
 {
-	ScaleOverrider s;
 	if (DIntermissionController::CurrentIntermission != NULL)
 	{
 		DIntermissionController::CurrentIntermission->Drawer();
@@ -987,7 +983,6 @@ void F_Drawer ()
 
 void F_EndFinale ()
 {
-	ScaleOverrider s;
 	if (DIntermissionController::CurrentIntermission != NULL)
 	{
 		DIntermissionController::CurrentIntermission->Destroy();
@@ -1003,7 +998,6 @@ void F_EndFinale ()
 
 void F_AdvanceIntermission()
 {
-	ScaleOverrider s;
 	if (DIntermissionController::CurrentIntermission != NULL)
 	{
 		DIntermissionController::CurrentIntermission->mAdvance = true;
