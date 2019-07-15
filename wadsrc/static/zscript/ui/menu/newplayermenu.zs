@@ -412,17 +412,17 @@ class NewPlayerMenu : OptionMenu
 	int mRotation;
 	PlayerMenuPlayerDisplay mPlayerDisplay;
 	
-	const PLAYERDISPLAY_X = 170;
+	const PLAYERDISPLAY_X = 70;
 	const PLAYERDISPLAY_Y = 60;
-	const PLAYERDISPLAY_W = 144;
-	const PLAYERDISPLAY_H = 160;
-	const PLAYERDISPLAY_SPACE = 180;
+	const PLAYERDISPLAY_W = 72;
+	const PLAYERDISPLAY_H = 80;
+	const PLAYERDISPLAY_SPACE = 90;
 	
 	override void Init(Menu parent, OptionMenuDescriptor desc)
 	{
 		Super.Init(parent, desc);
 		let BaseColor = gameinfo.gametype == GAME_Hexen? 0x200000 : 0x000700;
-		let AddColor = gameinfo.gametype == GAME_Hexen? 0x800040 : 0x405340;
+		let AddColor = gameinfo.gametype == GAME_Hexen? 0x800040 : 0x461446;
 		mPlayerDisplay = new("PlayerMenuPlayerDisplay");
 		mPlayerDisplay.init(BaseColor, AddColor);
 		PickPlayerClass();
@@ -439,7 +439,7 @@ class NewPlayerMenu : OptionMenu
 
 	override int GetIndent()
 	{
-		return Super.GetIndent() - 75*CleanXfac_1;
+		return Super.GetIndent() - 35*CleanXfac_1;
 	}
 	
 

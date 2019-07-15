@@ -340,11 +340,11 @@ class PlayerMenuPlayerDisplay : ListMenuItemPlayerDisplay
 			{
 				int trans = mTranslate? Translation.MakeID(TRANSLATION_Players, MAXPLAYERS) : 0;
 				let tscale = TexMan.GetScaledSize(sprite);
-				Scale.X *= CleanXfac_1 * tscale.X * 2;
-				Scale.Y *= CleanYfac_1 * tscale.Y * 2;
+				Scale.X *= CleanXfac_1 * tscale.X;
+				Scale.Y *= CleanYfac_1 * tscale.Y;
 				
 				screen.DrawTexture (sprite, false,
-					x + (NewPlayerMenu.PLAYERDISPLAY_W/2) * CleanXfac_1, y + (NewPlayerMenu.PLAYERDISPLAY_H-16) * CleanYfac_1,
+					x + (NewPlayerMenu.PLAYERDISPLAY_W/2) * CleanXfac_1, y + (NewPlayerMenu.PLAYERDISPLAY_H-8) * CleanYfac_1,
 					DTA_DestWidthF, Scale.X, DTA_DestHeightF, Scale.Y,
 					DTA_TranslationIndex, trans,
 					DTA_KeepRatio, mNoPortrait,
