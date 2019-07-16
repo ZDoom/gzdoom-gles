@@ -1535,3 +1535,31 @@ TXT_SPEAKER_GERARD = "Gerard";
 TXT_SPEAKER_GOVERNOR_MOUREL = "Governor Mourel";
 TXT_SPEAKER_BOWYER = "Bowyer";
 TXT_SPEAKER_DERWIN = "Derwin";
+
+// Strife subtitles
+
+TXT_SUB_INTRO1 = "The comet struck our planet without warning. We lost our paradise in a single violent stroke.";
+TXT_SUB_INTRO2 = "The impact released a virus, which swept through the land and killed millions. They turned out to be the lucky ones.";
+TXT_SUB_INTRO3 = "For those who did not die became mutations of humanity. Some became fanatics who heard the voice of a malignant god in their heads and called themselves ""the Order"".";
+TXT_SUB_INTRO4 = "Those of us who are deaf to this voice suffer horribly and are forced to serve these ruthless psychotics who wield weapons more powerful than anything we can muster.";
+TXT_SUB_INTRO5 = "They destroy our women and children so that we must hide them underground and live like animals in constant fear for our lives.";
+TXT_SUB_INTRO6 = "But there are whispers of discontent. If we organize, can we defeat our masters? Weapons are being stolen, soldiers are being trained. A movement is born: born of lifelong strife!";
+TXT_SUB_GOOD1 = "Attention, all troops of the Front: he's done it! It's over. Blackbird's soldier has killed the Evil. The Order is no more. Blackbird, do you read me?";
+TXT_SUB_GOOD2 = "I knew you would win, my gallant hero. All fighting has stopped. Your victory will allow us to create a vaccine to purge the virus from our bodies.";
+TXT_SUB_GOOD3 = "You have saved our planet and set us free. Now I'd like to thank you... personally. Oh, and by the way: the name is Shauna.";
+TXT_SUB_SAD1 = "Yes, the evil was gone, but our future was uncertain and clouded with doubt.";
+TXT_SUB_SAD2 = "It would take generations to purge the virus from our people. If we survived that long.";
+TXT_SUB_SAD3 = "Whatever the evil wanted, it drained from us the one thing we needed: it left us without hope.";
+TXT_SUB_BAD1 = "The sentient virus hit us like a tidal wave, driving us all mad. We heard the siren's song of death and we danced.";
+TXT_SUB_BAD2 = "This evil drained us of all human life and, scornful of procreation, recycled our families.";
+TXT_SUB_BAD3 = "Then one day, the evil left. There was simply nothing for it to feed on. We were extinct.";
+TXT_SUB_MAP03_1 = "The genetic mutations caused by the virus not only warped the psyches of the Order, but caused their bodies to decay.";
+TXT_SUB_MAP03_2 = "Without procreation, the Order found that biomechanical enhancements were the only way to maintain their strengths and numbers.";
+TXT_SUB_MAP03_3 = "The decay has advanced so that most of the troops we face are more machine than man but we believe that their collective consciousness is controlled by one source...";
+TXT_SUB_MAP03_4 = "...the Programmer: creator of the AI which controls the Acolytes. Destroy the Programmer, and we may cripple the Order's troops with a single blow. But caution: we have reports he can vaporize attackers.";
+TXT_SUB_MAP10_1 = "Fragments assembled from the Programmers files tell us that the Order is worshipping an intelligent weapon. They call it ""the Sigil""";
+TXT_SUB_MAP10_2 = "The piece you touched and recovered is one of five. It wields power drawn from the user's own life force. While you live, you control its power.";
+TXT_SUB_MAP10_3 = "The shock which knocked you out was the Sigil piece tuning itself to you, your pulse and brain waves. You can wield it, but at a cost: it will drain you dry.";
+TXT_SUB_MAP10_4 = "One piece constitutes awesome power. Possession of all five pieces would be devastating and would give the user total control of the planet.";
+TXT_SUB_LOG2 = "Sorry. The subtitle feature for voiceover messages is only for mods and not for stock Strife maps, too much copy-pasta.";
+TXT_SUB_LOG3 = "Did i say there are no subtitles for stock Strife? Nothing to see here.";
