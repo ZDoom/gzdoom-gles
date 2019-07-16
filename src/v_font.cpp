@@ -3599,7 +3599,7 @@ void V_InitFonts()
 	}
 	if (!(SmallFont2 = V_GetFont("SmallFont2")))	// Only used by Strife
 	{
-		if (Wads.CheckNumForName ("STBFN033", ns_graphics) >= 0)
+		if (Wads.CheckNumForName("STBFN033", ns_graphics) >= 0)
 		{
 			SmallFont2 = new FFont("SmallFont2", "STBFN%.3d", "defsmallfont2", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
 		}
@@ -3610,10 +3610,16 @@ void V_InitFonts()
 
 	if (!(BigFont = V_GetFont("BigFont")))
 	{
-		if (gameinfo.gametype & GAME_Raven)
+		if (Wads.CheckNumForName("FONTB_S") >= 0)
 		{
 			BigFont = new FFont("BigFont", "FONTB%02u", "defbigfont", HU_FONTSTART, HU_FONTSIZE, 1, -1);
 		}
+	}
+
+	if (!BigFont)
+	{
+		// Load the generic fallback if no BigFont is found.
+		BigFont = V_GetFont("BigFont", "ZBIGFONT");
 	}
 
 	// let PWAD BIGFONTs override the stock BIGUPPER font. (This check needs to be made smarter.)
