@@ -399,6 +399,7 @@ void FMapInfoParser::ParseGameInfo()
 			GAMEINFOKEY_BOOL(swapmenu, "swapmenu")
 			GAMEINFOKEY_BOOL(dontcrunchcorpses, "dontcrunchcorpses")
 			GAMEINFOKEY_BOOL(correctprintbold, "correctprintbold")
+			GAMEINFOKEY_BOOL(forcetextinmenus, "forcetextinmenus") // hack hack
 			GAMEINFOKEY_BOOL(intermissioncounter, "intermissioncounter")
 			GAMEINFOKEY_BOOL(nightmarefast, "nightmarefast")
 			GAMEINFOKEY_COLOR(dimcolor, "dimcolor")

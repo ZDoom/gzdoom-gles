@@ -204,6 +204,31 @@ class StatusScreen abstract play version("2.5")
 
 	//====================================================================
 	//
+	// Draws a text, either as patch or as string from the string table
+	//
+	//====================================================================
+	
+	int DrawPatchOrText(int y, PatchInfo pinfo, TextureID patch, String stringname)
+	{
+		String string = Stringtable.Localize(stringname);
+		int midx = screen.GetWidth() / 2;
+		
+		if (TexMan.OkForLocalization(patch, stringname))
+		{
+			let size = TexMan.GetScaledSize(patch);
+			screen.DrawTexture(patch, true, midx - size.X * CleanXfac/2, y, DTA_CleanNoMove, true);
+			return y + int(size.Y * CleanYfac);
+		}
+		else
+		{
+			screen.DrawText(pinfo.mFont, pinfo.mColor, midx - pinfo.mFont.StringWidth(string) * CleanXfac/2, y, string, DTA_CleanNoMove, true);
+			return y + pinfo.mFont.GetHeight() * CleanYfac;
+		}
+	}
+
+
+	//====================================================================
+	//
 	// Draws "<Levelname> Finished!"
 	//
 	// Either uses the specified patch or the big font
@@ -211,7 +236,7 @@ class StatusScreen abstract play version("2.5")
 	//
 	//====================================================================
 
-	int drawLF ()
+	virtual int drawLF ()
 	{
 		int y = TITLEY * CleanYfac;
 
@@ -239,7 +264,7 @@ class StatusScreen abstract play version("2.5")
 	//
 	//====================================================================
 
-	void drawEL ()
+	virtual void drawEL ()
 	{
 		int y = TITLEY * CleanYfac;
 
