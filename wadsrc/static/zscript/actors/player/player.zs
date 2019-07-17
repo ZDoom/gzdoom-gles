@@ -2558,6 +2558,7 @@ class PSprite : Object native play
 	native bool bPowDouble;
 	native bool bCVarFast;
 	native bool bFlip;	
+	native bool bMirror;
 	
 	native void SetState(State newstate, bool pending = false);
 
