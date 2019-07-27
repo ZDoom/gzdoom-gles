@@ -77,6 +77,8 @@ class ConversationMenu : Menu
 	Array<String> mResponseLines;
 	Array<uint> mResponses;
 	bool mShowGold;
+	bool mHasBackdrop; // hack hack
+	bool mConfineTextToBackdrop;
 	StrifeDialogueNode mCurNode;
 	int mYpos;
 	PlayerInfo mPlayer;
@@ -85,6 +87,7 @@ class ConversationMenu : Menu
 	int LineHeight;
 	int ReplyLineHeight;
 	Font displayFont;
+	int speechDisplayWidth;
 	int displayWidth;
 	int displayHeight;
 	int fontScale;
@@ -101,7 +104,7 @@ class ConversationMenu : Menu
 
 	//=============================================================================
 	//
-	// returns the y position of the replies boy for positioning the terminal response.
+	// returns the y position of the replies box for positioning the terminal response.
 	//
 	//=============================================================================
 
@@ -112,6 +115,8 @@ class ConversationMenu : Menu
 		mShowGold = false;
 		ConversationPauseTic = gametic + 20;
 		DontDim = true;
+
+		mHasBackdrop = false; // hack hack
 		
 		displayFont = SmallFont;
 		displayWidth = CleanWidth;
@@ -122,6 +127,8 @@ class ConversationMenu : Menu
 		ReplyWidth = 320-50-10;
 		SpeechWidth = screen.GetWidth()/CleanXfac - 24*2;
 		ReplyLineHeight = LineHeight = displayFont.GetHeight();
+		mConfineTextToBackdrop = false;
+		speechDisplayWidth = displayWidth;
 		LineHeight = SmallFont.GetHeight();
 
 		FormatSpeakerMessage();
