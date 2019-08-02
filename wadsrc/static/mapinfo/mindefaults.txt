@@ -58,6 +58,7 @@ gameinfo
 	statscreen_finishedpatch = "WIF"
 	statscreen_enteringpatch = "WIENTER"
 	statscreen_contentfont = "*BigFont"
+	statscreen_authorFont = "*SmallFont"
 	messageboxclass = "MessageBoxMenu"
 }
 

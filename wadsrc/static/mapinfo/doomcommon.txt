@@ -68,6 +68,8 @@ gameinfo
 	statscreen_finishedpatch = "WIF"
 	statscreen_enteringpatch = "WIENTER"
 	statscreen_contentfont = "*BigFont", "red"
+	statscreen_authorFont = "*SmallFont", "brick"
+
 	statscreen_coop = "CoopStatusScreen"
 	statscreen_dm = "DeathmatchStatusScreen"
 	statscreen_single = "DoomStatusScreen"

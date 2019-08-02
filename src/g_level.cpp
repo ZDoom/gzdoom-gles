@@ -772,6 +772,7 @@ void G_DoCompleted (void)
 	wminfo.finished_ep = level.cluster - 1;
 	wminfo.LName0 = TexMan.CheckForTexture(level.info->PName, ETextureType::MiscPatch);
 	wminfo.thisname = level.info->LookupLevelName(&langtable[0]);	// re-get the name so we have more info about its origin.
+	wminfo.thisauthor = level.info->AuthorName;
 	wminfo.current = level.MapName;
 
 	if (deathmatch &&
@@ -781,6 +782,7 @@ void G_DoCompleted (void)
 		wminfo.next = level.MapName;
 		wminfo.LName1 = wminfo.LName0;
 		wminfo.nextname = wminfo.thisname;
+		wminfo.nextauthor = wminfo.thisauthor;
 	}
 	else
 	{
@@ -790,12 +792,14 @@ void G_DoCompleted (void)
 			wminfo.next = "";
 			wminfo.LName1.SetInvalid();
 			wminfo.nextname = "";
+			wminfo.nextauthor = "";
 		}
 		else
 		{
 			wminfo.next = nextinfo->MapName;
 			wminfo.LName1 = TexMan.CheckForTexture(nextinfo->PName, ETextureType::MiscPatch);
 			wminfo.nextname = nextinfo->LookupLevelName(&langtable[1]);
+			wminfo.nextauthor = nextinfo->AuthorName;
 		}
 	}
 
@@ -1551,6 +1555,7 @@ void G_InitLevelLocals ()
 	level.NextMap = info->NextMap;
 	level.NextSecretMap = info->NextSecretMap;
 	level.F1Pic = info->F1Pic;
+	level.AuthorName = info->AuthorName;
 	level.hazardcolor = info->hazardcolor;
 	level.hazardflash = info->hazardflash;
 	
