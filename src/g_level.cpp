@@ -771,7 +771,7 @@ void G_DoCompleted (void)
 	uint32_t langtable[2] = {};
 	wminfo.finished_ep = level.cluster - 1;
 	wminfo.LName0 = TexMan.CheckForTexture(level.info->PName, ETextureType::MiscPatch);
-	wminfo.thisname = info->LookupLevelName(&langtable[0]);	// re-get the name so we have more info about its origin.
+	wminfo.thisname = level.info->LookupLevelName(&langtable[0]);	// re-get the name so we have more info about its origin.
 	wminfo.current = level.MapName;
 
 	if (deathmatch &&
@@ -808,7 +808,7 @@ void G_DoCompleted (void)
 		{
 			if (texids[i]->isValid() && langtable[i] != FStringTable::default_table)
 			{
-				FTexture *tex = TexMan.GetTexture(*texids[i]);
+				FTexture *tex = TexMan[*texids[i]];
 				if (tex != nullptr)
 				{
 					int filenum = Wads.GetLumpFile(tex->GetSourceLump());
