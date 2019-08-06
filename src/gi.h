@@ -38,15 +38,18 @@
 #include "zstring.h"
 
 // Flags are not user configurable and only depend on the standard IWADs
-#define GI_MAPxx				0x00000001
-#define GI_SHAREWARE			0x00000002
-#define GI_MENUHACK_EXTENDED	0x00000004	// (Heretic)
-#define GI_TEASER2				0x00000008	// Alternate version of the Strife Teaser
-#define GI_COMPATSHORTTEX		0x00000010	// always force COMPAT_SHORTTEX for IWAD maps.
-#define GI_COMPATSTAIRS			0x00000020	// same for stairbuilding
-#define GI_COMPATPOLY1			0x00000040	// Hexen's MAP36 needs old polyobject drawing
-#define GI_COMPATPOLY2			0x00000080	// so does HEXDD's MAP47
-#define GI_NOTEXTCOLOR			0x00000100	// Chex Quest 3 would have everything green
+enum
+{
+	GI_MAPxx				= 0x00000001,
+	GI_SHAREWARE			= 0x00000002,
+	GI_MENUHACK_EXTENDED	= 0x00000004,	// (Heretic)
+	GI_TEASER2				= 0x00000008,	// Alternate version of the Strife Teaser
+	GI_COMPATSHORTTEX		= 0x00000010,	// always force COMPAT_SHORTTEX for IWAD maps.
+	GI_COMPATSTAIRS			= 0x00000020,	// same for stairbuilding
+	GI_COMPATPOLY1			= 0x00000040,	// Hexen's MAP36 needs old polyobject drawing
+	GI_COMPATPOLY2			= 0x00000080,	// so does HEXDD's MAP47
+	GI_NOTEXTCOLOR			= 0x00000100,	// Chex Quest 3 would have everything green
+};
 
 #include "gametype.h"
 
