@@ -93,7 +93,8 @@ class ConversationMenu : Menu
 	int fontScale;
 	int refwidth;
 	int refheight;
-	
+	double fontfactor;
+
 	int SpeechWidth;
 	int ReplyWidth;
 	
@@ -122,6 +123,7 @@ class ConversationMenu : Menu
 		displayWidth = CleanWidth;
 		displayHeight = CleanHeight;
 		fontScale = CleanXfac;
+		fontFactor = 1;
 		refwidth = 320;
 		refheight = 200;
 		ReplyWidth = 320-50-10;
