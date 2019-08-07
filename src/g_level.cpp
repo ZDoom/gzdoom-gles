@@ -762,7 +762,7 @@ void G_DoCompleted (void)
 
 	// [RH] Mark this level as having been visited
 	if (!(level.flags & LEVEL_CHANGEMAPCHEAT))
-		FindLevelInfo (level.MapName)->flags |= LEVEL_VISITED;
+		level.info->flags |= LEVEL_VISITED;
 
 	if (automapactive)
 		AM_Stop ();
@@ -772,7 +772,7 @@ void G_DoCompleted (void)
 	wminfo.finished_ep = level.cluster - 1;
 	wminfo.LName0 = TexMan.CheckForTexture(level.info->PName, ETextureType::MiscPatch);
 	wminfo.thisname = level.info->LookupLevelName(&langtable[0]);	// re-get the name so we have more info about its origin.
-	wminfo.thisauthor = level.info->AuthorName;
+	if (!(level.info->flags3 & LEVEL3_HIDEAUTHORNAME)) wminfo.thisauthor = level.info->AuthorName;
 	wminfo.current = level.MapName;
 
 	if (deathmatch &&
@@ -799,7 +799,7 @@ void G_DoCompleted (void)
 			wminfo.next = nextinfo->MapName;
 			wminfo.LName1 = TexMan.CheckForTexture(nextinfo->PName, ETextureType::MiscPatch);
 			wminfo.nextname = nextinfo->LookupLevelName(&langtable[1]);
-			wminfo.nextauthor = nextinfo->AuthorName;
+			if (!(nextinfo->flags3 & LEVEL3_HIDEAUTHORNAME)) wminfo.nextauthor = nextinfo->AuthorName;
 		}
 	}
 
