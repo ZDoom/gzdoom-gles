@@ -203,7 +203,7 @@ class StatusScreen abstract play version("2.5")
 			}
 			return y + h;
 		}
-		return 0;
+		return y;
 	}
 	
 	//====================================================================
@@ -274,8 +274,7 @@ class StatusScreen abstract play version("2.5")
 		// Adjustment for different font sizes for map name and 'finished'.
 		y -= ((mapname.mFont.GetHeight() - finished.mFont.GetHeight()) * CleanYfac) / 4;
 
-		if (authortexts[0].Length() != 0)
-			y = DrawAuthor(y, authortexts[0]);
+		y = DrawAuthor(y, authortexts[0]);
 
 		// draw "Finished!"
 		if (y < (NG_STATSY - finished.mFont.GetHeight()*3/4) * CleanYfac)
