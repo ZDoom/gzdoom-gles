@@ -442,6 +442,7 @@ void G_InitNew (const char *mapname, bool bTitleLevel)
 	UnlatchCVars ();
 	G_VerifySkill();
 	UnlatchCVars ();
+	bglobal.freeze = bglobal.changefreeze = 0;
 	DThinker::DestroyThinkersInList(STAT_STATIC);
 
 	if (paused)
@@ -1498,6 +1499,7 @@ void G_InitLevelLocals ()
 	level.flags = 0;
 	level.flags2 = 0;
 	level.flags3 = 0;
+	level.frozenstate = 0;
 
 	info = FindLevelInfo (level.MapName);
 
