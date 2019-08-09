@@ -817,10 +817,10 @@ DSeqNode::DSeqNode (int sequence, int modenum)
 	}
 	else
 	{
-		SequenceListHead->m_Prev = this;		GC::WriteBarrier(SequenceListHead->m_Prev, this);
+		SequenceListHead->m_Prev = this;		GC::WriteBarrier(SequenceListHead, this);
 		m_Next = SequenceListHead;				GC::WriteBarrier(this, SequenceListHead);
 		SequenceListHead = this;
-		m_Prev = NULL;
+		m_Prev = nullptr;
 	}
 	GC::WriteBarrier(this);
 	m_ParentSeqNode = m_ChildSeqNode = nullptr;
