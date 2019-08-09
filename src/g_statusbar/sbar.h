@@ -294,7 +294,8 @@ class FMugShot
 		FMugShotState *CurrentState;
 		int RampageTimer;
 		int LastDamageAngle;
-		int FaceHealth;
+		int FaceHealthNow;
+		int FaceHealthLast;
 		bool bEvilGrin;
 		bool bDamageFaceActive;
 		bool bNormal;

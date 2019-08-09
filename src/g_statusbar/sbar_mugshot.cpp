@@ -234,7 +234,7 @@ FMugShot::FMugShot()
 
 void FMugShot::Reset()
 {
-	FaceHealth = -1;
+	FaceHealthNow = FaceHealthLast = -1;
 	bEvilGrin = false;
 	bNormal = true;
 	bDamageFaceActive = false;
@@ -275,7 +275,8 @@ void FMugShot::Tick(player_t *player)
 	{
 		RampageTimer = 0;
 	}
-	FaceHealth = player->health;
+	FaceHealthLast = FaceHealthNow;
+	FaceHealthNow = player->health;
 }
 
 //===========================================================================
@@ -341,7 +342,7 @@ int FMugShot::UpdateState(player_t *player, StateFlags stateflags)
 {
 	FString		full_state_name;
 
-	if (player->health > 0)
+	if (FaceHealthNow > 0)
 	{
 		if (bEvilGrin && !(stateflags & DISABLEGRIN))
 		{
@@ -353,10 +354,10 @@ int FMugShot::UpdateState(player_t *player, StateFlags stateflags)
 		}
 		bEvilGrin = false;
 
-		bool ouch = (!st_oldouch && FaceHealth - player->health > ST_MUCHPAIN) || (st_oldouch && player->health - FaceHealth > ST_MUCHPAIN);
+		bool ouch = (!st_oldouch && FaceHealthLast - FaceHealthNow > ST_MUCHPAIN) || (st_oldouch && FaceHealthNow - FaceHealthLast > ST_MUCHPAIN);
 		if (player->damagecount && 
 			// Now go in if pain is disabled but we think ouch will be shown (and ouch is not disabled!)
-			(!(stateflags & DISABLEPAIN) || (((FaceHealth != -1 && ouch) || bOuchActive) && !(stateflags & DISABLEOUCH))))
+			(!(stateflags & DISABLEPAIN) || (((FaceHealthLast != -1 && ouch) || bOuchActive) && !(stateflags & DISABLEOUCH))))
 		{
 			int damage_angle = 1;
 			if (player->attacker && player->attacker != player->mo)
@@ -377,7 +378,7 @@ int FMugShot::UpdateState(player_t *player, StateFlags stateflags)
 				}
 			}
 			bool use_ouch = false;
-			if (((FaceHealth != -1 && ouch) || bOuchActive) && !(stateflags & DISABLEOUCH))
+			if (((FaceHealthLast != -1 && ouch) || bOuchActive) && !(stateflags & DISABLEOUCH))
 			{
 				use_ouch = true;
 				full_state_name = "ouch.";
@@ -404,7 +405,7 @@ int FMugShot::UpdateState(player_t *player, StateFlags stateflags)
 			else
 			{
 				bool use_ouch = false;
-				if (((FaceHealth != -1 && ouch) || bOuchActive) && !(stateflags & DISABLEOUCH))
+				if (((FaceHealthLast != -1 && ouch) || bOuchActive) && !(stateflags & DISABLEOUCH))
 				{
 					use_ouch = true;
 					full_state_name = "ouch.";
