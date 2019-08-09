@@ -77,8 +77,8 @@ class ConversationMenu : Menu
 	Array<String> mResponseLines;
 	Array<uint> mResponses;
 	bool mShowGold;
-	bool mHasBackdrop; // hack hack
-	bool mConfineTextToBackdrop;
+	bool mHasBackdrop;
+	bool mConfineTextToBackdrop; // hack hack
 	StrifeDialogueNode mCurNode;
 	int mYpos;
 	PlayerInfo mPlayer;
@@ -117,8 +117,10 @@ class ConversationMenu : Menu
 		ConversationPauseTic = gametic + 20;
 		DontDim = true;
 
-		mHasBackdrop = false; // hack hack
-		
+		let tex = TexMan.CheckForTexture (CurNode.Backdrop, TexMan.Type_MiscPatch);
+		mHasBackdrop = tex.isValid();
+		DontBlur = !mHasBackdrop;
+
 		displayFont = SmallFont;
 		displayWidth = CleanWidth;
 		displayHeight = CleanHeight;
@@ -129,7 +131,7 @@ class ConversationMenu : Menu
 		ReplyWidth = 320-50-10;
 		SpeechWidth = screen.GetWidth()/CleanXfac - 24*2;
 		ReplyLineHeight = LineHeight = displayFont.GetHeight();
-		mConfineTextToBackdrop = false;
+		mConfineTextToBackdrop = false; // hack hack
 		speechDisplayWidth = displayWidth;
 		LineHeight = SmallFont.GetHeight();
 

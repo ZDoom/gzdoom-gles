@@ -269,6 +269,7 @@ public:
 	bool mMouseCapture;
 	bool mBackbuttonSelected;
 	bool DontDim;
+	bool DontBlur;
 	static int InMenu;
 
 	DMenu(DMenu *parent = NULL);

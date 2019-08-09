@@ -827,7 +827,7 @@ void M_Drawer (void)
 
 	if (CurrentMenu != nullptr && menuactive != MENU_Off) 
 	{
-		if (GLRenderer)
+		if (GLRenderer && !CurrentMenu->DontBlur)
 			GLRenderer->BlurScene(gameinfo.bluramount);
 		if (!CurrentMenu->DontDim)
 		{
@@ -1117,6 +1117,7 @@ DEFINE_FIELD(DMenu, mParentMenu)
 DEFINE_FIELD(DMenu, mMouseCapture);
 DEFINE_FIELD(DMenu, mBackbuttonSelected);
 DEFINE_FIELD(DMenu, DontDim);
+DEFINE_FIELD(DMenu, DontBlur);
 
 DEFINE_FIELD(DMenuDescriptor, mMenuName)
 DEFINE_FIELD(DMenuDescriptor, mNetgameMessage)
