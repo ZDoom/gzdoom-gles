@@ -400,10 +400,6 @@ void FSavegameManager::NotifyNewSave(const FString &file, const FString &title, 
 void FSavegameManager::LoadSavegame(int Selected)
 {
 	G_LoadGame(SaveGames[Selected]->Filename.GetChars(), true);
-	if (quickSaveSlot == (FSaveGameNode*)1)
-	{
-		quickSaveSlot = SaveGames[Selected];
-	}
 	M_ClearMenus();
 	V_SetBorderNeedRefresh();
 	LastAccessed = Selected;
@@ -429,6 +425,10 @@ void FSavegameManager::DoSave(int Selected, const char *savegamestring)
 	{
 		auto node = SaveGames[Selected];
 		G_SaveGame(node->Filename.GetChars(), savegamestring);
+		if (quickSaveSlot == (FSaveGameNode*)1)
+		{
+			quickSaveSlot = SaveGames[Selected];
+		}
 	}
 	else
 	{
