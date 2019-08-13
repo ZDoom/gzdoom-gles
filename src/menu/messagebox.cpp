@@ -191,7 +191,7 @@ CCMD (quicksave)
 	{
 		S_Sound(CHAN_VOICE | CHAN_UI, "menu/activate", snd_menuvolume, ATTN_NONE);
 		M_StartControlPanel(false);
-		// signal that whatever gets loaded should be the new quicksave
+		// signal that whatever gets saved should be the new quicksave
 		savegameManager.quickSaveSlot = (FSaveGameNode *)1;
 		M_SetMenu(NAME_Savegamemenu);
 		return;

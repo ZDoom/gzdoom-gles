@@ -1082,7 +1082,7 @@ void G_Ticker ()
 			G_DoLoadGame ();
 			break;
 		case ga_savegame:
-			G_DoSaveGame (true, false, savegamefile, savedescription);
+			G_DoSaveGame (false, false, savegamefile, savedescription);
 			gameaction = ga_nothing;
 			savegamefile = "";
 			savedescription = "";
