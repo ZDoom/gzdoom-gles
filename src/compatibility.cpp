@@ -515,6 +515,22 @@ DEFINE_ACTION_FUNCTION(DLevelCompatibility, SetVertex)
 	return 0;
 }
 
+DEFINE_ACTION_FUNCTION(DLevelCompatibility, FlipLine)
+{
+	PARAM_SELF_PROLOGUE(DLevelCompatibility);
+	PARAM_UINT(lineidx);
+
+	line_t *line = &level.lines[lineidx];
+	vertex_t *v1 = line->v1;
+	vertex_t *v2 = line->v2;
+
+	line->v1 = v2;
+	line->v2 = v1;
+
+	ForceNodeBuild = true;
+	return 0;
+}
+
 DEFINE_ACTION_FUNCTION(DLevelCompatibility, SetLineSectorRef)
 {
 	PARAM_SELF_PROLOGUE(DLevelCompatibility);

@@ -1412,6 +1412,7 @@ class LevelCompatibility native play
 	protected native void SetThingFlags(int thing, int flags);
 	protected native void SetVertex(uint vertex, double x, double y);
 	protected native void SetLineSectorRef(uint line, uint side, uint sector);
+	protected native void FlipLine(uint Line);
 	protected native Actor GetDefaultActor(Name actorclass);
 	
 	protected void SetWallTexture(int line, int side, int texpart, String texture)
