@@ -559,6 +559,42 @@ DEFINE_ACTION_FUNCTION(DLevelCompatibility, GetDefaultActor)
 	ACTION_RETURN_OBJECT(GetDefaultByName(actorclass));
 }
 
+DEFINE_ACTION_FUNCTION(DLevelCompatibility, GetNumMapThings)
+{
+	PARAM_SELF_PROLOGUE(DLevelCompatibility);
+	ACTION_RETURN_INT(MapThingsConverted.Size());
+}
+
+DEFINE_ACTION_FUNCTION(DLevelCompatibility, GetMapThingPos)
+{
+	PARAM_SELF_PROLOGUE(DLevelCompatibility);
+	PARAM_INT(thingnum);
+	if (MapThingsConverted.Size())
+		ACTION_RETURN_VEC3(MapThingsConverted[thingnum].pos);
+	else
+		return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DLevelCompatibility, GetMapThingAngle)
+{
+	PARAM_SELF_PROLOGUE(DLevelCompatibility);
+	PARAM_INT(thingnum);
+	if (MapThingsConverted.Size())
+		ACTION_RETURN_INT(MapThingsConverted[thingnum].angle);
+	else
+		return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DLevelCompatibility, SetMapThingAngle)
+{
+	PARAM_SELF_PROLOGUE(DLevelCompatibility);
+	PARAM_INT(thingnum);
+	PARAM_INT(thingangle);
+	if (MapThingsConverted.Size())
+		MapThingsConverted[thingnum].angle = thingangle;
+	return 0;
+}
+
 
 //==========================================================================
 //
