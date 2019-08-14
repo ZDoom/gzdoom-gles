@@ -105,6 +105,7 @@ CMPTMNU_PHYSICSBEHAVIOR = "Physics Behaviour";
 CMPTMNU_RENDERINGBEHAVIOR = "Rendering Behaviour";
 CMPTMNU_SOUNDBEHAVIOR = "Sound Behaviour";
 CMPTMNU_SECTORSOUNDS = "Sector sounds use centre as source";
+CMPTMNU_EXPLODE2 = "Use original Doom explosion behaviour";
 OPTVAL_MAPDEFINEDCOLORSONLY = "Map defined colours only";
 C_GRAY = "\ccgrey";
 C_DARKGRAY = "\cudark grey";

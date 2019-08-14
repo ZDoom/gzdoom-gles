@@ -2218,6 +2218,9 @@ CMPTMNU_SOUNDCUTOFF			= "Sons s'arrêtent quand acteur disparait";
 CMPTMNU_SOUNDTARGET			= "Ciblage des sons selon algorithme original";
 CMPTMNU_TELEPORT			= "Téléports par scripts n'activent pas le secteur";
 CMPTMNU_PUSHWINDOW			= "Lignes non-bloquantes sont non-poussables";
+CMPTMNU_CHECKSWITCHRANGE	= "Fonction CheckSwitchRange buggée";
+CMPTMNU_EXPLODE1			= "Explosions sans propulsion verticale";
+CMPTMNU_CMPTMNU_EXPLODE2	= "Utiliser comportement Doom original";
 
 // Sound Options
 SNDMNU_TITLE			= "OPTIONS SONORES";
