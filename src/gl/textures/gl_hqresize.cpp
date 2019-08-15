@@ -109,7 +109,7 @@ static void xbrzApplyOptions()
 		}
 		else
 		{
-			TexMan.FlushAll();
+			GLRenderer->FlushTextures();
 		}
 	}
 }
