@@ -38,6 +38,7 @@ class AActor;
 //
 // GAME
 //
+
 void G_DeathMatchSpawnPlayer (int playernum);
 
 struct FPlayerStart *G_PickPlayerStart (int playernum, int flags = 0);
@@ -102,6 +103,7 @@ void G_AddViewAngle (int yaw, bool mouse = false);
 
 extern const AActor *SendItemUse, *SendItemDrop;
 extern int SendItemDropAmount;
+extern bool doquicksave;
 
 
 #endif

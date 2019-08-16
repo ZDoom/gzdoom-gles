@@ -180,6 +180,8 @@ CCMD (quicksave)
 	if (gamestate != GS_LEVEL)
 		return;
 
+	doquicksave = true;
+
 	// If the quick save rotation is enabled, it handles the save slot.
 	if (quicksaverotation)
 	{

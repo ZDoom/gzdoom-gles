@@ -164,6 +164,7 @@ bool			sendsave;				// send a save event next tic
 bool			sendturn180;			// [RH] send a 180 degree turn next tic
 bool 			usergame;				// ok to save / end game
 bool			insave;					// Game is saving - used to block exit commands
+bool			doquicksave = false;
 
 bool			timingdemo; 			// if true, exit with report on completion 
 bool 			nodrawers;				// for comparative timing purposes 
@@ -1082,12 +1083,13 @@ void G_Ticker ()
 			G_DoLoadGame ();
 			break;
 		case ga_savegame:
-			G_DoSaveGame (true, false, savegamefile, savedescription);
+			G_DoSaveGame (doquicksave, false, savegamefile, savedescription);
 			gameaction = ga_nothing;
 			savegamefile = "";
 			savedescription = "";
 			break;
 		case ga_autosave:
+			doquicksave = false;
 			G_DoAutoSave ();
 			gameaction = ga_nothing;
 			break;
@@ -2066,7 +2068,7 @@ void G_DoAutoSave ()
 	UCVarValue num;
 	const char *readableTime;
 	int count = autosavecount != 0 ? autosavecount : 1;
-	
+
 	if (nextautosave == -1) 
 	{
 		nextautosave = (autosavenum + 1) % count;
@@ -2089,7 +2091,7 @@ void G_DoAutoSave ()
 
 	readableTime = myasctime ();
 	description.Format("Autosave %s", readableTime);
-	G_DoSaveGame (false, false, file, description);
+	G_DoSaveGame (doquicksave, false, file, description);
 }
 
 void G_DoQuickSave ()
@@ -2100,7 +2102,7 @@ void G_DoQuickSave ()
 	UCVarValue num;
 	const char *readableTime;
 	int count = quicksaverotationcount != 0 ? quicksaverotationcount : 1;
-	
+
 	if (quicksavenum < 0) 
 	{
 		lastquicksave = 0;
@@ -2117,7 +2119,7 @@ void G_DoQuickSave ()
 
 	readableTime = myasctime ();
 	description.Format("Quicksave %s", readableTime);
-	G_DoSaveGame (true, true, file, description);
+	G_DoSaveGame (doquicksave, true, file, description);
 }
 
 
