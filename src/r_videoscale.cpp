@@ -30,8 +30,11 @@
 #define NUMSCALEMODES 6
 
 extern bool setsizeneeded;
+extern int currentrenderer;
+extern int currentcanvas;
 
 EXTERN_CVAR(Int, vid_aspect)
+
 CUSTOM_CVAR(Int, vid_scale_customwidth, 320, CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
 {
 	if (self < 160)
@@ -75,6 +78,10 @@ namespace
 	{
 		return (x < 0 || x >= NUMSCALEMODES || vScaleTable[x].isValid == false);
 	}
+	bool isClassicSoftware()
+	{
+		return (currentrenderer == 0 && currentcanvas == 0);
+	}
 }
 
 CUSTOM_CVAR(Float, vid_scalefactor, 1.0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
@@ -109,6 +116,11 @@ bool ViewportLinearScale()
 
 int ViewportScaledWidth(int width, int height)
 {
+	if (isClassicSoftware())
+	{
+		vid_scalemode = 0;
+		vid_scalefactor = 1.0;
+	}
 	if (isOutOfBounds(vid_scalemode))
 		vid_scalemode = 0;
 	if (vid_cropaspect && height > 0)
@@ -118,6 +130,11 @@ int ViewportScaledWidth(int width, int height)
 
 int ViewportScaledHeight(int width, int height)
 {
+	if (isClassicSoftware())
+	{
+		vid_scalemode = 0;
+		vid_scalefactor = 1.0;
+	}
 	if (isOutOfBounds(vid_scalemode))
 		vid_scalemode = 0;
 	if (vid_cropaspect && height > 0)
@@ -127,6 +144,8 @@ int ViewportScaledHeight(int width, int height)
 
 bool ViewportIsScaled43()
 {
+	if (isClassicSoftware())
+		vid_scalemode = 0;
 	if (isOutOfBounds(vid_scalemode))
 		vid_scalemode = 0;
 	// hack - use custom scaling if in "custom" mode
@@ -142,6 +161,11 @@ void R_ShowCurrentScaling()
 
 bool R_CalcsShouldBeBlocked()
 {
+	if (isClassicSoftware())
+	{
+		Printf("This command is not available for the classic software renderer.\n");
+		return true;
+	}
 	if (vid_scalemode < 0 || vid_scalemode > 1)
 	{
 		Printf("vid_scalemode should be 0 or 1 before using this command.\n");
