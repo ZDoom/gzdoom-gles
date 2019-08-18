@@ -329,32 +329,6 @@ void P_SpawnParticle(const DVector3 &pos, const DVector3 &vel, const DVector3 &a
 }
 
 //
-// P_RunEffects
-//
-// Run effects on all actors in the world
-//
-void P_RunEffects ()
-{
-	if (players[consoleplayer].camera == NULL) return;
-
-	int	pnum = players[consoleplayer].camera->Sector->Index() * level.sectors.Size();
-
-	AActor *actor;
-	TThinkerIterator<AActor> iterator;
-
-	while ( (actor = iterator.Next ()) )
-	{
-		if (actor->effects || actor->fountaincolor)
-		{
-			// Only run the effect if the actor is potentially visible
-			int rnum = pnum + actor->Sector->Index();
-			if (level.rejectmatrix.Size() == 0 || !(level.rejectmatrix[rnum>>3] & (1 << (rnum & 7))))
-				P_RunEffect (actor, actor->effects);
-		}
-	}
-}
-
-//
 // JitterParticle
 //
 // Creates a particle with "jitter"

@@ -36,6 +36,7 @@
 #include "i_sound.h"
 #include "d_player.h"
 #include "g_level.h"
+#include "r_renderer.h"
 #include "r_utility.h"
 #include "p_spec.h"
 #include "g_levellocals.h"
@@ -149,7 +150,31 @@ void P_Ticker (void)
 	if (!level.isFrozen())
 	{
 		P_UpdateSpecials ();
-		P_RunEffects ();	// [RH] Run particle effects
+	}
+
+	it = TThinkerIterator<AActor>();
+
+	// Set dynamic lights at the end of the tick, so that this catches all changes being made through the last frame.
+	while (ac = it.Next())
+	{
+		if (ac->flags8 & MF8_RECREATELIGHTS && Renderer != nullptr)
+		{
+			ac->flags8 &= ~MF8_RECREATELIGHTS;
+			ac->SetDynamicLights();
+		}
+		// This was merged from P_RunEffects to eliminate the costly duplicate ThinkerIterator loop.
+		// [RH] Run particle effects
+		if (players[consoleplayer].camera != nullptr && !level.isFrozen())
+		{
+			int pnum = players[consoleplayer].camera->Sector->Index() * level.sectors.Size();
+			if ((ac->effects || ac->fountaincolor))
+			{
+				// Only run the effect if the actor is potentially visible
+				int rnum = pnum + ac->Sector->Index();
+				if (level.rejectmatrix.Size() == 0 || !(level.rejectmatrix[rnum>>3] & (1 << (rnum & 7))))
+					P_RunEffect(ac, ac->effects);
+			}
+		}
 	}
 
 	// for par times

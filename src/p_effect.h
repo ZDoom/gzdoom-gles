@@ -79,7 +79,6 @@ particle_t *JitterParticle (int ttl, double drift);
 void P_ThinkParticles (void);
 void P_SpawnParticle(const DVector3 &pos, const DVector3 &vel, const DVector3 &accel, PalEntry color, double startalpha, int lifetime, double size, double fadestep, double sizestep, int flags = 0);
 void P_InitEffects (void);
-void P_RunEffects (void);
 
 void P_RunEffect (AActor *actor, int effects);
 
