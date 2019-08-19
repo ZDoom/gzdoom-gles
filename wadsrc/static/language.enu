@@ -2009,6 +2009,8 @@ MISCMNU_INTERSCROLL				= "Allow skipping of intermission scrollers";
 MISCMNU_QUICKEXIT				= "Allow quick exit";
 MISCMNU_NOCHEATS				= "Disable classic keyboard cheats";
 MISCMNU_ALWAYSTALLY				= "Show Tally Screen On Level Exit";
+MISCMNU_SETSLOTSTRICT			= "Strict KEYCONF Weapons/Players";
+
 // Automap Options
 AUTOMAPMNU_TITLE				= "AUTOMAP OPTIONS";
 AUTOMAPMNU_COLORSET				= "Map color set";
