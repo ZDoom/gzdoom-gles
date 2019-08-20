@@ -8733,10 +8733,7 @@ scriptwait:
 				if (pcd == PCD_ENDPRINTBOLD || screen == NULL ||
 					screen->CheckLocalView (consoleplayer))
 				{
-					if (pcd == PCD_ENDPRINTBOLD && (gameinfo.correctprintbold || (level.flags2 & LEVEL2_HEXENHACK)))
-						C_MidPrintBold(activefont, work);
-					else
-						C_MidPrint (activefont, work);
+					C_MidPrint(activefont, work, pcd == PCD_ENDPRINTBOLD && (gameinfo.correctprintbold || (level.flags2 & LEVEL2_HEXENHACK)));
 				}
 				STRINGBUILDER_FINISH(work);
 			}

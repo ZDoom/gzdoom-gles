@@ -1852,36 +1852,21 @@ static const char bar2[] = TEXTCOLOR_RED "\n\35\36\36\36\36\36\36\36\36\36\36\36
 static const char bar3[] = TEXTCOLOR_RED "\n\35\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36\36"
 						  "\36\36\36\36\36\36\36\36\36\36\36\36\37" TEXTCOLOR_NORMAL "\n";
 
-void C_MidPrint (FFont *font, const char *msg)
+void C_MidPrint (FFont *font, const char *msg, bool bold)
 {
-	if (StatusBar == NULL || screen == NULL)
+	if (StatusBar == nullptr || screen == nullptr)
 		return;
 
-	if (msg != NULL)
+	if (msg != nullptr)
 	{
 		AddToConsole (-1, bar1);
 		AddToConsole (-1, msg);
 		AddToConsole (-1, bar3);
 
+		auto color = (EColorRange)PrintColors[bold? PRINTLEVELS+1 : PRINTLEVELS];
+
 		StatusBar->AttachMessage (Create<DHUDMessage>(font, msg, 1.5f, 0.375f, 0, 0,
-			(EColorRange)PrintColors[PRINTLEVELS], con_midtime), MAKE_ID('C','N','T','R'));
-	}
-	else
-	{
-		StatusBar->DetachMessage (MAKE_ID('C','N','T','R'));
-	}
-}
-
-void C_MidPrintBold (FFont *font, const char *msg)
-{
-	if (msg)
-	{
-		AddToConsole (-1, bar2);
-		AddToConsole (-1, msg);
-		AddToConsole (-1, bar3);
-
-		StatusBar->AttachMessage (Create<DHUDMessage> (font, msg, 1.5f, 0.375f, 0, 0,
-			(EColorRange)PrintColors[PRINTLEVELS+1], con_midtime), MAKE_ID('C','N','T','R'));
+			color, con_midtime), MAKE_ID('C','N','T','R'));
 	}
 	else
 	{
@@ -1897,8 +1882,7 @@ DEFINE_ACTION_FUNCTION(_Console, MidPrint)
 	PARAM_BOOL(bold);
 
 	const char *txt = text[0] == '$'? GStrings(&text[1]) : text.GetChars();
-	if (!bold) C_MidPrint(fnt, txt);
-	else C_MidPrintBold(fnt, txt);
+	C_MidPrint(fnt, txt, bold);
 	return 0;
 }
 

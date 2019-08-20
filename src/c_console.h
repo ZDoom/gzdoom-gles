@@ -78,8 +78,7 @@ void C_InitTicker (const char *label, unsigned int max, bool showpercent=true);
 void C_SetTicker (unsigned int at, bool forceUpdate=false);
 
 class FFont;
-void C_MidPrint (FFont *font, const char *message);
-void C_MidPrintBold (FFont *font, const char *message);
+void C_MidPrint (FFont *font, const char *message, bool bold = false);
 
 bool C_Responder (event_t *ev);
 
