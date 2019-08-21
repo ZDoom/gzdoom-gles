@@ -111,30 +111,30 @@ const char *KeyNames[NUM_KEYS] =
 	"Joy21",	"Joy22",	"Joy23",	"Joy24",
 	"Joy25",	"Joy26",	"Joy27",	"Joy28",
 	"Joy29",	"Joy30",	"Joy31",	"Joy32",
-	"Joy33",	"Joy34",	"Joy35",	"Joy36",
-	"Joy37",	"Joy38",	"Joy39",	"Joy40",
-	"Joy41",	"Joy42",	"Joy43",	"Joy44",
-	"Joy45",	"Joy46",	"Joy47",	"Joy48",
-	"Joy49",	"Joy50",	"Joy51",	"Joy52",
-	"Joy53",	"Joy54",	"Joy55",	"Joy56",
-	"Joy57",	"Joy58",	"Joy59",	"Joy60",
-	"Joy61",	"Joy62",	"Joy63",	"Joy64",
-	"Joy65",	"Joy66",	"Joy67",	"Joy68",
-	"Joy69",	"Joy70",	"Joy71",	"Joy72",
-	"Joy73",	"Joy74",	"Joy75",	"Joy76",
-	"Joy77",	"Joy78",	"Joy79",	"Joy80",
-	"Joy81",	"Joy82",	"Joy83",	"Joy84",
-	"Joy85",	"Joy86",	"Joy87",	"Joy88",
-	"Joy89",	"Joy90",	"Joy91",	"Joy92",
-	"Joy93",	"Joy94",	"Joy95",	"Joy96",
-	"Joy97",	"Joy98",	"Joy99",	"Joy100",
-	"Joy101",	"Joy102",	"Joy103",	"Joy104",
-	"Joy105",	"Joy106",	"Joy107",	"Joy108",
-	"Joy109",	"Joy110",	"Joy111",	"Joy112",
-	"Joy113",	"Joy114",	"Joy115",	"Joy116",
-	"Joy117",	"Joy118",	"Joy119",	"Joy120",
-	"Joy121",	"Joy122",	"Joy123",	"Joy124",
-	"Joy125",	"Joy126",	"Joy127",	"Joy128",
+	"Joy2_1",	"Joy2_2",	"Joy2_3",	"Joy2_4",
+	"Joy2_5",	"Joy2_6",	"Joy2_7",	"Joy2_8",
+	"Joy2_9",	"Joy2_10",	"Joy2_11",	"Joy2_12",
+	"Joy2_13",	"Joy2_14",	"Joy2_15",	"Joy2_16",
+	"Joy2_17",	"Joy2_18",	"Joy2_19",	"Joy2_20",
+	"Joy2_21",	"Joy2_22",	"Joy2_23",	"Joy2_24",
+	"Joy2_25",	"Joy2_26",	"Joy2_27",	"Joy2_28",
+	"Joy2_29",	"Joy2_30",	"Joy2_31",	"Joy2_32",
+	"Joy3_1",	"Joy3_2",	"Joy3_3",	"Joy3_4",
+	"Joy3_5",	"Joy3_6",	"Joy3_7",	"Joy3_8",
+	"Joy3_9",	"Joy3_10",	"Joy3_11",	"Joy3_12",
+	"Joy3_13",	"Joy3_14",	"Joy3_15",	"Joy3_16",
+	"Joy3_17",	"Joy3_18",	"Joy3_19",	"Joy3_20",
+	"Joy3_21",	"Joy3_22",	"Joy3_23",	"Joy3_24",
+	"Joy3_25",	"Joy3_26",	"Joy3_27",	"Joy3_28",
+	"Joy3_29",	"Joy3_30",	"Joy3_31",	"Joy3_32",
+	"Joy4_1",	"Joy4_2",	"Joy4_3",	"Joy4_4",
+	"Joy4_5",	"Joy4_6",	"Joy4_7",	"Joy4_8",
+	"Joy4_9",	"Joy4_10",	"Joy4_11",	"Joy4_12",
+	"Joy4_13",	"Joy4_14",	"Joy4_15",	"Joy4_16",
+	"Joy4_17",	"Joy4_18",	"Joy4_19",	"Joy4_20",
+	"Joy4_21",	"Joy4_22",	"Joy4_23",	"Joy4_24",
+	"Joy4_25",	"Joy4_26",	"Joy4_27",	"Joy4_28",
+	"Joy4_29",	"Joy4_30",	"Joy4_31",	"Joy4_32",
 
 	"POV1Up",	"POV1Right","POV1Down",	"POV1Left",		// First POV hat
 	"POV2Up",	"POV2Right","POV2Down",	"POV2Left",		// Second POV hat
@@ -155,7 +155,37 @@ const char *KeyNames[NUM_KEYS] =
 	"DPadUp","DPadDown","DPadLeft","DPadRight",	// Gamepad buttons
 	"Pad_Start","Pad_Back","LThumb","RThumb",
 	"LShoulder","RShoulder","LTrigger","RTrigger",
-	"Pad_A", "Pad_B", "Pad_X", "Pad_Y"
+	"Pad_A", "Pad_B", "Pad_X", "Pad_Y",
+
+	"POV21Up",	"POV21Right","POV21Down",	"POV21Left",		// First POV hat
+	"POV22Up",	"POV22Right","POV22Down",	"POV22Left",		// Second POV hat
+	"POV23Up",	"POV23Right","POV23Down",	"POV23Left",		// Third POV hat
+	"POV24Up",	"POV24Right","POV24Down",	"POV24Left",		// Fourth POV hat
+
+	"POV31Up",	"POV31Right","POV31Down",	"POV31Left",		// First POV hat
+	"POV32Up",	"POV32Right","POV32Down",	"POV32Left",		// Second POV hat
+	"POV33Up",	"POV33Right","POV33Down",	"POV33Left",		// Third POV hat
+	"POV34Up",	"POV34Right","POV34Down",	"POV34Left",		// Fourth POV hat
+
+	"POV41Up",	"POV41Right","POV41Down",	"POV41Left",		// First POV hat
+	"POV42Up",	"POV42Right","POV42Down",	"POV42Left",		// Second POV hat
+	"POV43Up",	"POV43Right","POV43Down",	"POV43Left",		// Third POV hat
+	"POV44Up",	"POV44Right","POV44Down",	"POV44Left",		// Fourth POV hat
+
+	"Axis21Plus","Axis21Minus","Axis22Plus","Axis22Minus",	// joystick axes as buttons
+	"Axis23Plus","Axis23Minus","Axis24Plus","Axis24Minus",
+	"Axis25Plus","Axis25Minus","Axis26Plus","Axis26Minus",
+	"Axis27Plus","Axis27Minus","Axis28Plus","Axis28Minus",
+
+	"Axis31Plus","Axis31Minus","Axis32Plus","Axis32Minus",	// joystick axes as buttons
+	"Axis33Plus","Axis33Minus","Axis34Plus","Axis34Minus",
+	"Axis35Plus","Axis35Minus","Axis36Plus","Axis36Minus",
+	"Axis37Plus","Axis37Minus","Axis38Plus","Axis38Minus",
+
+	"Axis41Plus","Axis41Minus","Axis42Plus","Axis42Minus",	// joystick axes as buttons
+	"Axis43Plus","Axis43Minus","Axis44Plus","Axis44Minus",
+	"Axis45Plus","Axis45Minus","Axis46Plus","Axis46Minus",
+	"Axis47Plus","Axis47Minus","Axis48Plus","Axis48Minus"
 };
 
 FKeyBindings Bindings;
