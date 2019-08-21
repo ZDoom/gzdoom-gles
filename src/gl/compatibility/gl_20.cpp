@@ -73,7 +73,7 @@ void gl_PatchMenu()
 		for(int i = (*opt)->mValues.Size()-1; i>=0; i--)
 		{
 			// Delete 'Doom' lighting mode
-			if ((*opt)->mValues[i].Value == 2.0 || (*opt)->mValues[i].Value == 8.0)
+			if ((*opt)->mValues[i].Value == 2.0 || (*opt)->mValues[i].Value == 8.0 || (*opt)->mValues[i].Value == 16.0)
 			{
 				(*opt)->mValues.Delete(i);
 			}
@@ -94,7 +94,7 @@ void gl_PatchMenu()
 	}
 
 	// disable features that don't work without shaders.
-	if (gl_lightmode == 2 || gl_lightmode == 8) gl_lightmode = 3;
+	if (gl_lightmode == 2 || gl_lightmode == 8 || gl_lightmode == 16) gl_lightmode = 3;
 	if (gl_fogmode == 2) gl_fogmode = 1;
 
 	// remove more unsupported stuff like postprocessing options.
