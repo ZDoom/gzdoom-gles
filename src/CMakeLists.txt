@@ -1041,6 +1041,7 @@ set (PCH_SOURCES
 	s_playlist.cpp
 	s_sndseq.cpp
 	s_sound.cpp
+	sound/s_music.cpp
 	serializer.cpp
 	sc_man.cpp
 	scriptutil.cpp

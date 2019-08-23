@@ -36,6 +36,7 @@
 #include "gi.h"
 #include "g_levellocals.h"
 #include "xlat/xlat.h"
+#include "s_music.h"
 
 void T_Init();
 

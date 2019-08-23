@@ -90,6 +90,7 @@
 #include "types.h"
 #include "vm.h"
 #include "scriptutil.h"
+#include "s_music.h"
 
 	// P-codes for ACS scripts
 	enum

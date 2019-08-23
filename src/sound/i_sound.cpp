@@ -61,6 +61,7 @@
 #include "gi.h"
 #include "c_cvars.h"
 #include "stats.h"
+#include "s_music.h"
 
 #include "doomdef.h"
 

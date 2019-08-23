@@ -90,6 +90,7 @@ struct FLevelLocals : public FLevelData
 	void AddScroller(int secnum);
 	void SetInterMusic(const char *nextmap);
 	void SetMusicVolume(float v);
+	void SetMusic();
 
 	int li_compatflags = i_compatflags;
 	int li_compatflags2 = i_compatflags2;

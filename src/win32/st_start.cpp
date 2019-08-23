@@ -53,6 +53,7 @@
 #include "m_argv.h"
 #include "d_main.h"
 #include "v_palette.h"
+#include "s_music.h"
 
 // MACROS ------------------------------------------------------------------
 

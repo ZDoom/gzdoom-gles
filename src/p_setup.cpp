@@ -119,6 +119,7 @@
 #include "i_time.h"
 #include "scripting/vm/vm.h"
 #include "atterm.h"
+#include "s_music.h"
 
 #include "fragglescript/t_fs.h"
 
@@ -3267,6 +3268,7 @@ void P_SetupLevel(const char *lumpname, int position, bool newGame)
 
 	// Make sure all sounds are stopped before Z_FreeTags.
 	S_Start();
+	S_StartMusic();
 
 	// [RH] clear out the mid-screen message
 	C_MidPrint(NULL, NULL);

@@ -61,6 +61,7 @@
 #include "actorinlines.h"
 #include "scriptutil.h"
 #include "vm.h"
+#include "s_music.h"
 
 static FRandom pr_script("FScript");
 

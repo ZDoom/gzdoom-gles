@@ -77,6 +77,7 @@
 #include "i_time.h"
 #include "vm.h"
 #include "gstrings.h"
+#include "s_music.h"
 
 EXTERN_CVAR (Int, disableautosave)
 EXTERN_CVAR (Int, autosavecount)

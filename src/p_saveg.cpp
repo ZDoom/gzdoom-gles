@@ -65,6 +65,7 @@
 #include "g_levellocals.h"
 #include "events.h"
 #include "p_destructible.h"
+#include "s_music.h"
 
 //==========================================================================
 //
