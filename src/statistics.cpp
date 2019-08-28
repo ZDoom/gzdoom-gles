@@ -41,6 +41,7 @@
 #include "g_level.h"
 #include "gstrings.h"
 #include "doomstat.h"
+#include "d_player.h"
 #include "configfile.h"
 #include "c_dispatch.h"
 #include "c_console.h"
@@ -613,4 +614,14 @@ ADD_STAT(statistics)
 {
 	StoreLevelStats();	// Refresh the current level's results.
 	return GetStatString();
+}
+
+ADD_STAT(velocity)
+{
+	FString compose;
+	if (players[consoleplayer].mo != NULL && gamestate == GS_LEVEL) {
+		compose.AppendFormat("Current velocity: %.2f\n", players[consoleplayer].mo->Vel.Length());
+		compose.AppendFormat("Level %s - Velocity Max: %.2f, Velocity Average: %.2f\n", level.MapName.GetChars(), level.max_velocity, level.avg_velocity);
+	}
+	return compose;
 }

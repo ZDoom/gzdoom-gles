@@ -3145,7 +3145,9 @@ void P_FreeLevelData ()
 	tagManager.Clear();
 	level.total_monsters = level.total_items = level.total_secrets =
 	level.killed_monsters = level.found_items = level.found_secrets = 0;
-		
+
+	level.max_velocity = level.avg_velocity = 0;
+
 	if (level.sectors.Size() > 0)
 	{
 		delete[] level.sectors[0].e;

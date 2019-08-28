@@ -181,4 +181,8 @@ void P_Ticker (void)
 	level.time++;
 	level.maptime++;
 	level.totaltime++;
+	if (players[consoleplayer].mo != NULL) {
+		if (players[consoleplayer].mo->Vel.Length() > level.max_velocity) { level.max_velocity = players[consoleplayer].mo->Vel.Length(); }
+		level.avg_velocity += (players[consoleplayer].mo->Vel.Length() - level.avg_velocity) / level.maptime;
+	}
 }
