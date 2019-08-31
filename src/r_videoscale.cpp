@@ -31,7 +31,11 @@
 
 extern bool setsizeneeded;
 extern int currentrenderer;
+#ifdef _WIN32
 extern int currentcanvas;
+#else
+int currentcanvas = -1;
+#endif
 
 EXTERN_CVAR(Int, vid_aspect)
 
