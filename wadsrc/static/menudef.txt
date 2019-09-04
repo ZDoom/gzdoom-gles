@@ -2595,6 +2595,7 @@ OptionMenu "OpenGLOptions" protected
 	Option "$GLPREFMNU_PARTICLESTYLE",			gl_particles_style,				"Particles"
 	Option "$GLPREFMNU_RENDERQUALITY",			gl_render_precise,				"Precision"
 	StaticText " "
+	ScaleSlider "$DSPLYMNU_SPRITECULL",			gl_sprite_distance_cull, 0.0, 8000.0, 500.0, "Disabled"
 	ScaleSlider "$DSPLYMNU_LINECULL",			gl_line_distance_cull, 0.0, 16000.0, 1000.0, "Disabled"
 	StaticText " "
 	Slider "$GLPREFMNU_MENUBLUR",				gl_menu_blur, 0, 5.0, 0.5, 2
