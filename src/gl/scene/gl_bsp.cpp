@@ -77,7 +77,7 @@ void GLSceneDrawer::UnclipSubsector(subsector_t *sub)
 //
 //==========================================================================
 
-CVAR(Float, gl_line_distance_cull, 0.0, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
+CVAR(Float, gl_line_distance_cull, 8000.0, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 
 inline bool IsDistanceCulled(seg_t *line)
 {
