@@ -77,7 +77,7 @@ void GLSceneDrawer::UnclipSubsector(subsector_t *sub)
 //
 //==========================================================================
 
-CVAR(Float, gl_line_distance_cull, 0.0, 0 /*CVAR_ARCHIVE|CVAR_GLOBALCONFIG*/) // this is deactivated, for now
+CVAR(Float, gl_line_distance_cull, 0.0, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 
 inline bool IsDistanceCulled(seg_t *line)
 {
@@ -138,7 +138,14 @@ void GLSceneDrawer::AddLine (seg_t *seg, bool portalclip)
 
 	uint8_t ispoly = uint8_t(seg->sidedef->Flags & WALLF_POLYOBJ);
 
-	if (IsDistanceCulled(seg)) { clipper.SafeAddClipRange(startAngle, endAngle); return; }
+	if (IsDistanceCulled(seg))
+	{
+		GLWall wall(this);
+		wall.sub = currentsubsector;
+		wall.Process(seg, seg->frontsector, seg->backsector, true);
+		clipper.SafeAddClipRange(startAngle, endAngle);
+		return;
+	}
 
 	if (!seg->backsector)
 	{
