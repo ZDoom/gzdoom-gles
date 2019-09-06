@@ -1436,3 +1436,16 @@ CCMD(r_showcaps)
 	PRINT_CAP("Truecolor Enabled", RFF_TRUECOLOR)
 	PRINT_CAP("Voxels", RFF_VOXELS)
 }
+
+EXTERN_CVAR(Float, r_sprite_distance_cull)
+EXTERN_CVAR(Float, r_line_distance_cull)
+EXTERN_CVAR(Float, gl_sprite_distance_cull)
+EXTERN_CVAR(Float, gl_line_distance_cull)
+
+CCMD(disablerendercull)
+{
+		r_sprite_distance_cull = 0.0;
+		r_line_distance_cull = 0.0;
+		gl_sprite_distance_cull = 0.0;
+		gl_line_distance_cull = 0.0;
+}
