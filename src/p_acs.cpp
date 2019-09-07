@@ -8436,9 +8436,21 @@ scriptwait:
 			break;
 
 		case PCD_SCRIPTWAITDIRECT:
-			statedata = uallong(pc[0]);
-			pc++;
-			goto scriptwait;
+			if (!(i_compatflags2 & COMPATF2_SCRIPTWAIT))
+			{
+				statedata = uallong(pc[0]);
+				pc++;
+				goto scriptwait;
+			}
+			else
+			{
+				// Old implementation for compatibility with Daedalus MAP19
+				state = SCRIPT_ScriptWait;
+				statedata = uallong(pc[0]);
+				pc++;
+				PutLast();
+				break;
+			}
 
 		case PCD_SCRIPTWAITNAMED:
 			statedata = -FName(FBehavior::StaticLookupString(STACK(1)));
