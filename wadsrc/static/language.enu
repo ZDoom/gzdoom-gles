@@ -2515,6 +2515,8 @@ OPTVAL_LETTERBOX			= "Letterbox";
 OPTVAL_SMALL				= "Small";
 OPTVAL_LARGE				= "Large";
 OPTVAL_CONSOLE				= "Console";
+OPTVAL_YES_STANDARD			= "Standard";
+OPTVAL_YES_ENHANCED			= "Enhanced";
 
 // Colors
 C_BRICK					= "\cabrick";
