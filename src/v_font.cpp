@@ -3716,6 +3716,7 @@ void V_InitFonts()
 	}
 	// hack hack
 	NewConsoleFont = ConFont;
+	CurrentConsoleFont = ConFont;
 	NewSmallFont = SmallFont;
 	AlternativeSmallFont = SmallFont;
 	OriginalSmallFont = SmallFont;
