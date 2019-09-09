@@ -1149,11 +1149,6 @@ int FScriptPosition::WarnCounter;
 bool FScriptPosition::StrictErrors;	// makes all OPTERROR messages real errors.
 bool FScriptPosition::errorout;		// call I_Error instead of printing the error itself.
 
-FScriptPosition::FScriptPosition(const FScriptPosition &other)
-{
-	FileName = other.FileName;
-	ScriptLine = other.ScriptLine;
-}
 
 FScriptPosition::FScriptPosition(FString fname, int line)
 {
@@ -1165,13 +1160,6 @@ FScriptPosition::FScriptPosition(FScanner &sc)
 {
 	FileName = sc.ScriptName;
 	ScriptLine = sc.GetMessageLine();
-}
-
-FScriptPosition &FScriptPosition::operator=(const FScriptPosition &other)
-{
-	FileName = other.FileName;
-	ScriptLine = other.ScriptLine;
-	return *this;
 }
 
 FScriptPosition &FScriptPosition::operator=(FScanner &sc)
