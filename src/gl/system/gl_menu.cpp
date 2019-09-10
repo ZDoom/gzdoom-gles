@@ -33,13 +33,13 @@
 
 // OpenGL stuff moved here
 // GL related CVARs
-CVAR(Bool, gl_portals, true, 0)
+CVAR(Bool, gl_portals, true, 0)	// This is for debugging only!
 CVAR(Bool, gl_noquery, false, 0)
-CVAR(Bool,gl_mirrors,true,0)	// This is for debugging only!
-CVAR(Bool,gl_mirror_envmap, true, CVAR_GLOBALCONFIG|CVAR_ARCHIVE)
+CVAR(Bool, gl_mirrors, true, CVAR_GLOBALCONFIG|CVAR_ARCHIVE)
+CVAR(Bool, gl_mirror_envmap, true, CVAR_GLOBALCONFIG|CVAR_ARCHIVE)
 CVAR(Bool, gl_seamless, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 
-CUSTOM_CVAR(Int, r_mirror_recursions,4,CVAR_GLOBALCONFIG|CVAR_ARCHIVE)
+CUSTOM_CVAR(Int, r_mirror_recursions,2,CVAR_GLOBALCONFIG|CVAR_ARCHIVE)
 {
 	if (self<0) self=0;
 	if (self>10) self=10;
