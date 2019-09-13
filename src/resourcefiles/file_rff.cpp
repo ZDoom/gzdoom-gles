@@ -185,6 +185,7 @@ bool FRFFFile::Open(bool quiet)
 		}
 	}
 	delete[] lumps;
+	GenerateHash();
 	return true;
 }
 

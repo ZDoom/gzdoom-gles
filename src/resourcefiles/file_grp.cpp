@@ -121,7 +121,7 @@ bool FGrpFile::Open(bool quiet)
 		Lumps[i].LumpNameSetup(fileinfo[i].NameWithZero);
 	}
 	if (!quiet && !batchrun) Printf(", %d lumps\n", NumLumps);
-
+	GenerateHash();
 	delete[] fileinfo;
 	return true;
 }

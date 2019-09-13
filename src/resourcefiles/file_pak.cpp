@@ -114,7 +114,7 @@ bool FPakFile::Open(bool quiet)
 		Lumps[i].LumpSize = LittleLong(fileinfo[i].filelen);
 		Lumps[i].CheckEmbedded();
 	}
-
+	GenerateHash();
 	return true;
 }
 
