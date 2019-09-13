@@ -152,6 +152,10 @@ void FWadCollection::InitMultipleFiles (TArray<FString> &filenames)
 	{
 		int baselump = NumLumps;
 		AddFile (filenames[i]);
+
+		if (i == (unsigned)MaxIwadIndex) MoveLumpsInFolder("after_iwad/");
+		FStringf path("filter/%s", Files.Last()->GetHash().GetChars());
+		MoveLumpsInFolder(path);
 	}
 
 	NumLumps = LumpInfo.Size();
@@ -1029,6 +1033,42 @@ void FWadCollection::FixMacHexen()
 	for (int i = lastLump - EXTRA_LUMPS + 1; i <= lastLump; ++i)
 	{
 		LumpInfo[i].lump->Name[0] = '\0';
+	}
+}
+
+//==========================================================================
+//
+// MoveLumpsInFolder
+//
+// Moves all content from the given subfolder of the internal
+// resources to the current end of the directory.
+// Used to allow modifying content in the base files, this is needed
+// so that Hacx and Harmony can override some content that clashes
+// with localization, and to inject modifying data into mods, in case
+// this is needed for some compatibility requirement.
+//
+//==========================================================================
+
+static FResourceLump placeholderLump;
+
+void FWadCollection::MoveLumpsInFolder(const char *path)
+{
+	auto len = strlen(path);
+	auto wadnum = LumpInfo.Last().wadnum;
+	
+	unsigned i;
+	for (i = 0; i < LumpInfo.Size(); i++)
+	{
+		auto& li = LumpInfo[i];
+		if (li.wadnum >= GetIwadNum()) break;
+		if (li.lump->FullName.Left(len).CompareNoCase(path) == 0)
+		{
+			LumpInfo.Push(li);
+			li.lump = &placeholderLump;			// Make the old entry point to something empty. We cannot delete the lump record here because it'd require adjustment of all indices in the list.
+			auto &ln = LumpInfo.Last();
+			ln.wadnum = wadnum;					// pretend this is from the WAD this is injected into.
+			ln.lump->LumpNameSetup(ln.lump->FullName.Mid(len));
+		}
 	}
 }
 
