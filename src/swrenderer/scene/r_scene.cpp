@@ -68,7 +68,7 @@ EXTERN_CVAR(Int, r_clearbuffer)
 EXTERN_CVAR(Int, r_debug_draw)
 
 CVAR(Int, r_scene_multithreaded, 0, 0);
-CVAR(Bool, r_models, true, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
+CVAR(Bool, r_models, false, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
 
 bool r_modelscene = false;
 
