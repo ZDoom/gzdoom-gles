@@ -371,8 +371,8 @@ void FSavegameManager::NotifyNewSave(const FString &file, const FString &title, 
 			if (okForQuicksave)
 			{
 				if (quickSaveSlot == nullptr || quickSaveSlot == (FSaveGameNode*)1 || forceQuicksave) quickSaveSlot = node;
-				LastAccessed = LastSaved = i;
 			}
+			if (!strstr(node->SaveTitle.GetChars(),"auto")) LastAccessed = LastSaved = i;
 			return;
 		}
 	}
@@ -387,8 +387,8 @@ void FSavegameManager::NotifyNewSave(const FString &file, const FString &title, 
 	if (okForQuicksave)
 	{
 		if (quickSaveSlot == nullptr || quickSaveSlot == (FSaveGameNode*)1 || forceQuicksave) quickSaveSlot = node;
-		LastAccessed = LastSaved = index;
 	}
+	if (!strstr(node->SaveTitle.GetChars(),"auto")) LastAccessed = LastSaved = index;
 }
 
 //=============================================================================
