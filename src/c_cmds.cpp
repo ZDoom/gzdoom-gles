@@ -847,6 +847,8 @@ UNSAFE_CCMD (save)
         return;
     }
 
+	doquicksave = false;
+
 	FString fname;
 	for (int i = 0;; ++i)
 	{
