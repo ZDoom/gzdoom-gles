@@ -940,7 +940,7 @@ namespace swrenderer
 				int spritenum = thing->sprite;
 				bool isPicnumOverride = thing->picnum.isValid();
 				FSpriteModelFrame *modelframe = isPicnumOverride ? nullptr : FindModelFrame(thing->GetClass(), spritenum, thing->frame, !!(thing->flags & MF_DROPPED));
-				if (r_modelscene && modelframe && (thing->Pos() - Thread->Viewport->viewpoint.Pos).LengthSquared() < model_distance_cull)
+				if (r_modelscene && r_models_carmack && modelframe && (thing->Pos() - Thread->Viewport->viewpoint.Pos).LengthSquared() < model_distance_cull)
 				{
 					DVector3 pos = thing->InterpolatedPosition(Thread->Viewport->viewpoint.TicFrac);
 					RenderModel::Project(Thread, (float)pos.X, (float)pos.Y, (float)pos.Z, modelframe, thing);

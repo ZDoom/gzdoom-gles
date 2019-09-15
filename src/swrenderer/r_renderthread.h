@@ -31,6 +31,7 @@ class RenderMemory;
 struct FDynamicLight;
 
 EXTERN_CVAR(Bool, r_models);
+EXTERN_CVAR(Bool, r_models_carmack);
 extern bool r_modelscene;
 
 namespace swrenderer

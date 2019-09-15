@@ -225,7 +225,7 @@ namespace swrenderer
 		else
 			drawerargs.DrawDoubleSkyColumn(Thread);
 
-		if (r_modelscene)
+		if (r_modelscene && r_models_carmack)
 			drawerargs.DrawDepthSkyColumn(Thread, 1.0f / 65536.0f);
 	}
 

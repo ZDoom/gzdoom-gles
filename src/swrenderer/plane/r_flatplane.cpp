@@ -284,7 +284,7 @@ namespace swrenderer
 		drawerargs.SetDestX2(x2);
 
 		drawerargs.DrawSpan(Thread);
-		if (r_modelscene)
+		if (r_modelscene && r_models_carmack)
 			drawerargs.DrawDepthSpan(Thread, zbufferdepth, zbufferdepth);
 	}
 
