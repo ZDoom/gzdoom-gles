@@ -1334,9 +1334,9 @@ DEFINE_ACTION_FUNCTION_NATIVE(_Sector, RemoveForceField, RemoveForceField)
 	 return 0;
  }
 
- static F3DFloor* Get3DFloor(sector_t *self, int index)
+ static F3DFloor* Get3DFloor(sector_t *self, unsigned int index)
  {
- 	 if ((index < 0) || ((unsigned int)index >= self->e->XFloor.ffloors.Size()))
+ 	 if (index >= self->e->XFloor.ffloors.Size())
  	 	return nullptr;
 	 return self->e->XFloor.ffloors[index];
  }
@@ -1359,9 +1359,9 @@ DEFINE_ACTION_FUNCTION_NATIVE(_Sector, RemoveForceField, RemoveForceField)
 	 ACTION_RETURN_INT(self->e->XFloor.ffloors.Size());
  }
 
- static sector_t* GetAttached(sector_t *self, int index)
+ static sector_t* GetAttached(sector_t *self, unsigned int index)
  {
- 	 if ((index < 0) || ((unsigned int)index >= self->e->XFloor.attached.Size()))
+ 	 if (index >= self->e->XFloor.attached.Size())
  	 	return nullptr;
 	 return self->e->XFloor.attached[index];
  }
