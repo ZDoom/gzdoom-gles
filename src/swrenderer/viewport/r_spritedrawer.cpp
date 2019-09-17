@@ -90,6 +90,9 @@ namespace swrenderer
 			dc_yl = (int)(sprtopscreen + spryscale * top + 0.5);
 			dc_yh = (int)(sprtopscreen + spryscale * (top + length) + 0.5) - 1;
 
+			if (dc_yh > viewport->RenderTarget->GetHeight() - 1)
+				dc_yh = viewport->RenderTarget->GetHeight() - 1;
+
 			if (sprflipvert)
 			{
 				swapvalues(dc_yl, dc_yh);
