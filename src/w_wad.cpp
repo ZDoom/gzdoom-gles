@@ -153,7 +153,7 @@ void FWadCollection::InitMultipleFiles (TArray<FString> &filenames)
 		int baselump = NumLumps;
 		AddFile (filenames[i]);
 
-		if (i == (unsigned)MaxIwadIndex) MoveLumpsInFolder("after_iwad/");
+		if (i == (unsigned)IwadIndex) MoveLumpsInFolder("after_iwad/");
 		FStringf path("filter/%s", Files.Last()->GetHash().GetChars());
 		MoveLumpsInFolder(path);
 	}
