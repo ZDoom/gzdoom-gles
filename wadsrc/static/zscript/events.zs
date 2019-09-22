@@ -115,7 +115,8 @@ struct UiEvent native ui version("2.4")
         Key_Free1       = 28,
         Key_Free2       = 29,
         Key_Back        = 30,        // browser back key
-        Key_CEscape     = 31         // color escape
+        Key_CEscape     = 31,        // color escape
+        Key_SysRq       = 32         // PrtSc
     }
     
     // 
@@ -189,6 +190,8 @@ struct InputEvent native play version("2.4")
         Key_Home = 0xc7, // DIK_HOME
         Key_PgUp = 0xc9, // DIK_PRIOR
         Key_PgDn = 0xd1, // DIK_NEXT
+
+        Key_SysRq = 0xb7, // DIK_SYSRQ
 
         Key_Mouse1 = 0x100,
         Key_Mouse2 = 0x101,
@@ -270,7 +273,7 @@ struct InputEvent native play version("2.4")
         Key_Pad_X = 0x1C2,
         Key_Pad_Y = 0x1C3,
 
-        Num_Keys = 0x1C4
+        Num_Keys = 0x224
     }
     
     //

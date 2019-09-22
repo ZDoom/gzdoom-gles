@@ -211,7 +211,7 @@ class Menu : Object native ui version("2.4")
 				res |= MouseEvent(MOUSE_Release, ev.MouseX, y);
 			}
 		}
-		else if (ev.type == UIEvent.Type_KeyDown)
+		else if (ev.type == UIEvent.Type_KeyDown || ev.KeyChar == UiEvent.Key_SysRq)
 		{
 			checkPrintScreen(ev);
 		}
@@ -321,71 +321,50 @@ class Menu : Object native ui version("2.4")
 		int overlay = grayed? Color(96,48,0,0) : 0;
 		screen.DrawText (OptionFont(), color, x, y, text, DTA_CleanNoMove_1, true, DTA_ColorOverlay, overlay);
 	}
-	private static int uiKeyToInputKey(UiEvent ev)
-	{
-		int uiKey = ev.KeyChar;
-
-		switch (uiKey)
-		{
-		case UiEvent.Key_PgDn      : return 0; // used by menu
-		case UiEvent.Key_PgUp      : return 0; // used by menu
-		case UiEvent.Key_Home      : return InputEvent.Key_Home;
-		case UiEvent.Key_End       : return InputEvent.Key_End;
-
-		case UiEvent.Key_Left      : return 0; // used by menu
-		case UiEvent.Key_Right     : return 0; // used by menu
-		case UiEvent.Key_Alert     : return 0; // ASCII bell, not present in EDoomInputKeys
-		case UiEvent.Key_Backspace : return 0; // used by menu
-		case UiEvent.Key_Tab       : return InputEvent.Key_Tab;
-		case UiEvent.Key_LineFeed  : return 0; // ASCII, not present in EDoomInputKeys
-		case UiEvent.Key_Down      : return 0; // used by menu
-		case UiEvent.Key_VTab      : return 0; // not present in EDoomInputKeys
-		case UiEvent.Key_Up        : return 0; // used by menu
-		case UiEvent.Key_FormFeed  : return 0; // ASCII, not present in EDoomInputKeys
-		case UiEvent.Key_Return    : return 0; // used by menu
-
-		case UiEvent.Key_F1        : return InputEvent.Key_F1;
-		case UiEvent.Key_F2        : return InputEvent.Key_F2;
-		case UiEvent.Key_F3        : return InputEvent.Key_F3;
-		case UiEvent.Key_F4        : return InputEvent.Key_F4;
-		case UiEvent.Key_F5        : return InputEvent.Key_F5;
-		case UiEvent.Key_F6        : return InputEvent.Key_F6;
-		case UiEvent.Key_F7        : return InputEvent.Key_F7;
-		case UiEvent.Key_F8        : return InputEvent.Key_F8;
-		case UiEvent.Key_F9        : return InputEvent.Key_F9;
-		case UiEvent.Key_F10       : return InputEvent.Key_F10;
-		case UiEvent.Key_F11       : return InputEvent.Key_F11;
-		case UiEvent.Key_F12       : return InputEvent.Key_F12;
-
-		case UiEvent.Key_Del       : return InputEvent.Key_Del;
-		case UiEvent.Key_Escape    : return 0; // used by menu
-		case UiEvent.Key_Free1     : return 0; // ?
-		case UiEvent.Key_Free2     : return 0; // ?
-		case UiEvent.Key_Back      : return 0; // browser back key, ?
-		case UiEvent.Key_CEscape   : return 0; // color escape, not present in EDoomInputKeys
-		}
-
-		if (ev.IsShift) { return InputEvent.Key_LShift; }
-		if (ev.IsCtrl)  { return InputEvent.Key_LCtrl; }
-		if (ev.IsAlt)   { return InputEvent.Key_LAlt; }
-
-		return 0;
-	}
 
 	private static bool uiKeyIsInputKey(UiEvent ev, int inputKey)
 	{
-		int convertedKey = uiKeyToInputKey(ev);
+		int convertedKey;
+
+		switch (ev.KeyChar)
+		{
+		case UiEvent.Key_Home:			convertedKey = InputEvent.Key_Home;		break;
+		case UiEvent.Key_End:			convertedKey = InputEvent.Key_End;		break;
+		case UiEvent.Key_Tab:			convertedKey = InputEvent.Key_Tab;		break;
+		case UiEvent.Key_Del:			convertedKey = InputEvent.Key_Del;		break;
+		case UiEvent.Key_SysRq:			convertedKey = InputEvent.Key_SysRq;	break;
+
+		case UiEvent.Key_F1:			convertedKey = InputEvent.Key_F1;		break;
+		case UiEvent.Key_F2:			convertedKey = InputEvent.Key_F2;		break;
+		case UiEvent.Key_F3:			convertedKey = InputEvent.Key_F3;		break;
+		case UiEvent.Key_F4:			convertedKey = InputEvent.Key_F4;		break;
+		case UiEvent.Key_F5:			convertedKey = InputEvent.Key_F5;		break;
+		case UiEvent.Key_F6:			convertedKey = InputEvent.Key_F6;		break;
+		case UiEvent.Key_F7:			convertedKey = InputEvent.Key_F7;		break;
+		case UiEvent.Key_F8:			convertedKey = InputEvent.Key_F8;		break;
+		case UiEvent.Key_F9:			convertedKey = InputEvent.Key_F9;		break;
+		case UiEvent.Key_F10:			convertedKey = InputEvent.Key_F10;		break;
+		case UiEvent.Key_F11:			convertedKey = InputEvent.Key_F11;		break;
+		case UiEvent.Key_F12:			convertedKey = InputEvent.Key_F12;		break;
+
+		default:
+			// either used by menu or not present in EDoomInputKeys
+			convertedKey = 0;
+		}
+
+		if (ev.IsShift) convertedKey = InputEvent.Key_LShift;
+		else if (ev.IsCtrl) convertedKey = InputEvent.Key_LCtrl;
+		else if (ev.IsAlt) convertedKey = InputEvent.Key_LAlt;
+
 		if (convertedKey)
 		{
-			return (convertedKey == inputKey);
+			return convertedKey == inputKey;
 		}
 
 		String inputKeyName = KeyBindings.NameKeys(inputKey, 0);
 		if (inputKeyName.length() == 1)
 		{
-			int byte  = inputKeyName.ByteAt(0);
-			int uiKey = ev.KeyChar;
-			return (byte == uiKey);
+			return inputKeyName.ByteAt(0) == ev.KeyChar;
 		}
 
 		return false;

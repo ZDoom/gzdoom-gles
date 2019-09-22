@@ -268,6 +268,7 @@ bool GUIWndProcHook(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESU
 			case VK_F11:			ev.data1 = GK_F11;		break;
 			case VK_F12:			ev.data1 = GK_F12;		break;
 			case VK_BROWSER_BACK:	ev.data1 = GK_BACK;		break;
+			case VK_SNAPSHOT:		ev.data1 = GK_SYSRQ;	break;
 			}
 			if (ev.data1 != 0)
 			{
