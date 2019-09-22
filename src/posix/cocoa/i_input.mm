@@ -445,6 +445,7 @@ void ProcessKeyboardEventInMenu(NSEvent* theEvent)
 		case kVK_F10:           event.data1 = GK_F10;       break;
 		case kVK_F11:           event.data1 = GK_F11;       break;
 		case kVK_F12:           event.data1 = GK_F12;       break;
+		case kVK_F13:           event.data1 = GK_SYSRQ;     break;
 		default:
 			event.data1 = KEYCODE_TO_ASCII[keyCode];
 			break;

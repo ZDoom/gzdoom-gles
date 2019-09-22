@@ -512,6 +512,7 @@ void MessagePump (const SDL_Event &sev)
 			case SDLK_F10:		event.data1 = GK_F10;		break;
 			case SDLK_F11:		event.data1 = GK_F11;		break;
 			case SDLK_F12:		event.data1 = GK_F12;		break;
+			case SDLK_SYSREQ:	event.data1 = GK_SYSRQ;		break;
 			default:
 				if (sev.key.keysym.sym < 256)
 				{
