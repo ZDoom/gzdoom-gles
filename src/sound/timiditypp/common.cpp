@@ -28,7 +28,6 @@
 
 #include <string.h>
 #include <ctype.h>
-#include "m_random.h"
 #include "common.h"
 #include "cmdlib.h"
 
@@ -116,16 +115,19 @@ int string_to_7bit_range(const char *string_, int *start, int *end)
 }
 
 
-static FRandom pr_rnd;
+double GenRand_Real1()
+{
+	return rand() * (1. / RAND_MAX);
+}
 
 int int_rand(int n)
 {
-	return (int)pr_rnd.GenRand_Real1() * n;
+	return (int)GenRand_Real1() * n;
 }
 
 double flt_rand()
 {
-	return (int)pr_rnd.GenRand_Real1();
+	return (int)GenRand_Real1();
 }
 
 struct timidity_file *open_file(const char *name, FSoundFontReader *sfreader)
