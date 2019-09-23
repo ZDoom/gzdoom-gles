@@ -38,6 +38,7 @@
 #include "common.h"
 #include "instrum.h"
 #include "filter.h"
+#include "sysdep.h"
 
 namespace TimidityPlus
 {
