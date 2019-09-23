@@ -51,6 +51,7 @@
 class TimidityPPMIDIDevice : public SoftSynthMIDIDevice
 {
 	static TimidityPlus::Instruments *instruments;
+	static FString configName;
 	int sampletime;
 public:
 	TimidityPPMIDIDevice(const char *args, int samplerate);
@@ -76,6 +77,7 @@ protected:
 	void ComputeOutput(float *buffer, int len);
 };
 TimidityPlus::Instruments *TimidityPPMIDIDevice::instruments;
+FString TimidityPPMIDIDevice::configName;
 
 // Config file to use
 CUSTOM_CVAR(String, timidity_config, "gzdoom", CVAR_ARCHIVE | CVAR_GLOBALCONFIG)
@@ -101,7 +103,7 @@ TimidityPPMIDIDevice::TimidityPPMIDIDevice(const char *args, int samplerate)
 	if (args == NULL || *args == 0) args = timidity_config;
 
 	Renderer = nullptr;
-	if (instruments != nullptr && !instruments->checkConfig(args))
+	if (instruments != nullptr && configName.CompareNoCase(args))	// Only load instruments if they have changed from the last played song.
 	{
 		delete instruments;
 		instruments = nullptr;
@@ -110,11 +112,16 @@ TimidityPPMIDIDevice::TimidityPPMIDIDevice(const char *args, int samplerate)
 
 	if (instruments == nullptr)
 	{
-		instruments = new TimidityPlus::Instruments;
-		if (!instruments->load(args))
+
+		auto sfreader = sfmanager.OpenSoundFont(args, SF_SF2 | SF_GUS);
+		if (sfreader != nullptr)
 		{
-			delete instruments;
-			instruments = nullptr;
+			instruments = new TimidityPlus::Instruments;
+			if (!instruments->load(sfreader))
+			{
+				delete instruments;
+				instruments = nullptr;
+			}
 		}
 	}
 	if (instruments != nullptr)
