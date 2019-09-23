@@ -488,7 +488,7 @@ add_custom_target( revision_check ALL
 
 message( STATUS "Fluid synth libs: ${FLUIDSYNTH_LIBRARIES}" )
 set( ZDOOM_LIBS ${ZDOOM_LIBS} "${ZLIB_LIBRARIES}" "${JPEG_LIBRARIES}" "${BZIP2_LIBRARIES}" "${GME_LIBRARIES}" "${CMAKE_DL_LIBS}" )
-include_directories( "${ZLIB_INCLUDE_DIR}" "${BZIP2_INCLUDE_DIR}" "${LZMA_INCLUDE_DIR}" "${JPEG_INCLUDE_DIR}" "${GME_INCLUDE_DIR}" "${ADL_INCLUDE_DIR}" "${OPN_INCLUDE_DIR}" )
+include_directories( "${ZLIB_INCLUDE_DIR}" "${BZIP2_INCLUDE_DIR}" "${LZMA_INCLUDE_DIR}" "${JPEG_INCLUDE_DIR}" "${GME_INCLUDE_DIR}" "${ADL_INCLUDE_DIR}" "${OPN_INCLUDE_DIR}" "${TIMIDITYPP_INCLUDE_DIR}" )
 
 if( ${HAVE_VM_JIT} )
 	add_definitions( -DHAVE_VM_JIT )
@@ -700,7 +700,6 @@ file( GLOB HEADER_FILES
 	sound/oplsynth/dosbox/*.h
 	sound/thirdparty/*.h
 	sound/timidity/*.h
-	sound/timiditypp/*.h
 	sound/wildmidi/*.h
 	xlat/*.h
 	swrenderer/*.h
@@ -846,8 +845,6 @@ set( FASTMATH_SOURCES
 	sound/music/music_midi_base.cpp
 	sound/backend/oalsound.cpp
 	sound/backend/sndfile_decoder.cpp
-	sound/timiditypp/fft4g.cpp
-	sound/timiditypp/reverb.cpp
 	gl/utility/gl_clock.cpp
 	gl/renderer/gl_2ddrawer.cpp
 	gl/hqnx/init.cpp
@@ -1231,25 +1228,6 @@ set (PCH_SOURCES
 	sound/timidity/playmidi.cpp
 	sound/timidity/resample.cpp
 	sound/timidity/timidity.cpp
-	sound/timiditypp/common.cpp
-	sound/timiditypp/configfile.cpp
-	sound/timiditypp/effect.cpp
-	sound/timiditypp/filter.cpp
-	sound/timiditypp/freq.cpp
-	sound/timiditypp/instrum.cpp
-	sound/timiditypp/mblock.cpp
-	sound/timiditypp/mix.cpp
-	sound/timiditypp/playmidi.cpp
-	sound/timiditypp/quantity.cpp
-	sound/timiditypp/readmidic.cpp
-	sound/timiditypp/recache.cpp
-	sound/timiditypp/resample.cpp
-	sound/timiditypp/sbkconv.cpp
-	sound/timiditypp/sffile.cpp
-	sound/timiditypp/sfitem.cpp
-	sound/timiditypp/smplfile.cpp
-	sound/timiditypp/sndfont.cpp
-	sound/timiditypp/tables.cpp
 	sound/wildmidi/file_io.cpp
 	sound/wildmidi/gus_pat.cpp
 	sound/wildmidi/reverb.cpp
@@ -1321,7 +1299,7 @@ if( UNIX )
 	endif()
 endif()
 
-target_link_libraries( zdoom ${ZDOOM_LIBS} gdtoa dumb lzma adl opn )
+target_link_libraries( zdoom ${ZDOOM_LIBS} gdtoa dumb lzma adl opn timidityplus )
 
 include_directories( .
 	g_statusbar
@@ -1435,7 +1413,6 @@ source_group("Audio Files\\Backend" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_
 source_group("Audio Files\\OPL Synth" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/oplsynth/.+")
 source_group("Audio Files\\OPL Synth\\DOSBox" FILES sound/oplsynth/dosbox/opl.cpp sound/oplsynth/dosbox/opl.h)
 source_group("Audio Files\\Timidity" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/timidity/.+")
-source_group("Audio Files\\Timiditypp" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/timiditypp/.+")
 source_group("Audio Files\\WildMidi" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/wildmidi/.+")
 source_group("Audio Files\\MIDI Devices" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/mididevices/.+")
 source_group("Audio Files\\MIDI Sources" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/midisources/.+")
