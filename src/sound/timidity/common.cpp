@@ -23,14 +23,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <errno.h>
+#include <exception>
 #include "timidity.h"
-#include "tarray.h"
-#include "i_system.h"
-#include "w_wad.h"
-#include "files.h"
-#include "cmdlib.h"
+
 
 namespace Timidity
 {
@@ -40,10 +35,12 @@ namespace Timidity
 /* This'll allocate memory or die. */
 void *safe_malloc(size_t count)
 {
+	char buffer[80];
 	void *p;
 	if (count > (1 << 21))
 	{
-		I_Error("Timidity: Tried allocating %zu bytes. This must be a bug.", count);
+		snprintf(buffer, 80, "Timidity: Tried allocating %zu bytes. This must be a bug.", count);
+		throw std::runtime_error(buffer);
 	}
 	else if ((p = malloc(count)))
 	{
@@ -51,7 +48,8 @@ void *safe_malloc(size_t count)
 	}
 	else
 	{
-		I_Error("Timidity: Couldn't malloc %zu bytes.", count);
+		snprintf(buffer, 80, "Timidity: Couldn't malloc %zu bytes.", count);
+		throw std::runtime_error(buffer);
 	}
 	return 0;	// Unreachable.
 }
