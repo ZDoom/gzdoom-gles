@@ -35,12 +35,8 @@
 // HEADER FILES ------------------------------------------------------------
 
 #include "i_musicinterns.h"
-#include "templates.h"
-#include "doomdef.h"
-#include "m_swap.h"
-#include "w_wad.h"
-#include "v_text.h"
-#include "i_system.h"
+#include "doomerrors.h"
+#include "i_soundfont.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -128,6 +124,13 @@ WildMIDIDevice::WildMIDIDevice(const char *args, int samplerate)
 			WildMidi_Shutdown();
 			CurrentConfig = "";
 		}
+
+		auto reader = sfmanager.OpenSoundFont(CurrentConfig, SF_GUS);
+		if (reader == nullptr)
+		{
+			I_Error("WildMidi: Unable to open sound font %s\n", CurrentConfig.GetChars());
+		}
+
 		if (!WildMidi_Init(args, SampleRate, 0))
 		{
 			CurrentConfig = args;
