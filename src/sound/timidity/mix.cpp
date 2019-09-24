@@ -26,8 +26,10 @@
 #include <stdlib.h>
 
 #include "timidity.h"
-#include "templates.h"
-#include "c_cvars.h"
+#include "common.h"
+#include "instrum.h"
+#include "playmidi.h"
+
 
 namespace Timidity
 {
