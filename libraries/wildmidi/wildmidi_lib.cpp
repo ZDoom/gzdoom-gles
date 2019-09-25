@@ -44,7 +44,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <memory>
-#include <mutex>
+#include <algorithm>
 
 #include "common.h"
 #include "wm_error.h"
