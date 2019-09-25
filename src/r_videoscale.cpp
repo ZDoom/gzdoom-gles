@@ -128,6 +128,8 @@ int ViewportScaledWidth(int width, int height)
 	}
 	if (isOutOfBounds(vid_scalemode))
 		vid_scalemode = 0;
+	if (vid_scalemode == 6)
+		vid_scalefactor = 1.0;
 	if (vid_cropaspect && height > 0)
 		width = ((float)width/height > ActiveRatio(width, height)) ? (int)(height * ActiveRatio(width, height)) : width;
 	return (int)MAX((int32_t)160, (int32_t)(vid_scalefactor * vScaleTable[vid_scalemode].GetScaledWidth(width)));
@@ -142,6 +144,8 @@ int ViewportScaledHeight(int width, int height)
 	}
 	if (isOutOfBounds(vid_scalemode))
 		vid_scalemode = 0;
+	if (vid_scalemode == 6)
+		vid_scalefactor = 1.0;
 	if (vid_cropaspect && height > 0)
 		height = ((float)width/height < ActiveRatio(width, height)) ? (int)(width / ActiveRatio(width, height)) : height;
 	return (int)MAX((int32_t)100, (int32_t)(vid_scalefactor * vScaleTable[vid_scalemode].GetScaledHeight(height)));
