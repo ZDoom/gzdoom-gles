@@ -34,7 +34,6 @@
  */
 
 
-#include "i_musicinterns.h"
 #include "midisource.h"
 
 
