@@ -721,7 +721,8 @@ void OpenGLSWFrameBuffer::GetLetterboxFrame(int &letterboxX, int &letterboxY, in
 		scaleY = scaleX;
 	}
 
-	letterboxWidth = (int)round(Width * scaleX);
+	int factor = Width == 160 && Height == 200? 2 : 1;
+	letterboxWidth = (int)round(Width * scaleX * factor);
 	letterboxHeight = (int)round(Height * scaleY);
 	letterboxX = (clientWidth - letterboxWidth) / 2;
 	letterboxY = (clientHeight - letterboxHeight) / 2;

@@ -27,7 +27,7 @@
 #include "v_video.h"
 #include "templates.h"
 
-#define NUMSCALEMODES 6
+#define NUMSCALEMODES 7
 
 extern bool setsizeneeded;
 extern int currentrenderer;
@@ -77,6 +77,7 @@ namespace
 		{ true,			false,		[](uint32_t Width)->uint32_t { return 640; },		            	[](uint32_t Height)->uint32_t { return 400; },				        true,   	false   },	// 3  - 640x400
 		{ true,			true,		[](uint32_t Width)->uint32_t { return 1280; },		            	[](uint32_t Height)->uint32_t { return 800; },	        			true,   	false   },	// 4  - 1280x800		
 		{ true,			true,		[](uint32_t Width)->uint32_t { return vid_scale_customwidth; },	[](uint32_t Height)->uint32_t { return vid_scale_customheight; },	true,   	true    },	// 5  - Custom
+		{ true,			false,		[](uint32_t Width)->uint32_t { return 160; },		            	[](uint32_t Height)->uint32_t { return 200; },			        	true,   	false   },	// 6  - 160x200
 	};
 	bool isOutOfBounds(int x)
 	{
