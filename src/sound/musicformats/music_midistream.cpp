@@ -55,7 +55,7 @@ MIDIDevice *CreateWinMIDIDevice(int mididevice);
 MIDIDevice *CreateFluidSynthMIDIDevice(const char *args, int samplerate);
 MIDIDevice *CreateTimidityMIDIDevice(const char *args, int samplerate);
 MIDIDevice *CreateTimidityPPMIDIDevice(const char *args, int samplerate);
-MIDIDevice *CreateADLMIDIDevice(const char *args);
+MIDIDevice *CreateADLMIDIDevice(const char *args, const ADLConfig* config);
 MIDIDevice *CreateOPNMIDIDevice(const char *args);
 MIDIDevice *CreateWildMIDIDevice(const char *args, int samplerate);
 
@@ -213,7 +213,7 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 				break;
 
 			case MDEV_ADL:
-				dev = CreateADLMIDIDevice(Args);
+				dev = CreateADLMIDIDevice(Args, &adlConfig);
 				break;
 
 			case MDEV_OPN:
