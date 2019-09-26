@@ -44,6 +44,7 @@
  */
 
 #include <math.h>
+#include <stdlib.h>
 #include <limits>
 
 #include "opl.h"

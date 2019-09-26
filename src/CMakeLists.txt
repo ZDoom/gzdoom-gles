@@ -488,7 +488,7 @@ add_custom_target( revision_check ALL
 
 message( STATUS "Fluid synth libs: ${FLUIDSYNTH_LIBRARIES}" )
 set( ZDOOM_LIBS ${ZDOOM_LIBS} "${ZLIB_LIBRARIES}" "${JPEG_LIBRARIES}" "${BZIP2_LIBRARIES}" "${GME_LIBRARIES}" "${CMAKE_DL_LIBS}" )
-include_directories( "${ZLIB_INCLUDE_DIR}" "${BZIP2_INCLUDE_DIR}" "${LZMA_INCLUDE_DIR}" "${JPEG_INCLUDE_DIR}" "${GME_INCLUDE_DIR}" "${ADL_INCLUDE_DIR}" "${OPN_INCLUDE_DIR}" "${TIMIDITYPP_INCLUDE_DIR}" "${TIMIDITY_INCLUDE_DIR}" "${WILDMIDI_INCLUDE_DIR}" )
+include_directories( "${ZLIB_INCLUDE_DIR}" "${BZIP2_INCLUDE_DIR}" "${LZMA_INCLUDE_DIR}" "${JPEG_INCLUDE_DIR}" "${GME_INCLUDE_DIR}" "${ADL_INCLUDE_DIR}" "${OPN_INCLUDE_DIR}" "${TIMIDITYPP_INCLUDE_DIR}" "${TIMIDITY_INCLUDE_DIR}" "${WILDMIDI_INCLUDE_DIR}" "${OPLSYNTH_INCLUDE_DIR}" )
 
 if( ${HAVE_VM_JIT} )
 	add_definitions( -DHAVE_VM_JIT )
@@ -678,8 +678,6 @@ file( GLOB HEADER_FILES
 	sound/*.h
 	sound/backend/*.h*
 	sound/music/*.h*
-	sound/oplsynth/*.h
-	sound/oplsynth/dosbox/*.h
 	posix/*.h
 	posix/cocoa/*.h
 	posix/sdl/*.h
@@ -696,8 +694,6 @@ file( GLOB HEADER_FILES
 	scripting/zscript/*.h
 	scripting/vm/*.h
 	sound/midisources/*.h
-	sound/oplsynth/*.h
-	sound/oplsynth/dosbox/*.h
 	sound/thirdparty/*.h
 	xlat/*.h
 	swrenderer/*.h
@@ -838,7 +834,6 @@ set( VM_JIT_SOURCES
 set( FASTMATH_SOURCES
 	swrenderer/r_all.cpp
 	polyrenderer/poly_all.cpp
-	sound/oplsynth/opl_mus_player.cpp
 	sound/backend/mpg123_decoder.cpp
 	sound/music/music_midi_base.cpp
 	sound/backend/oalsound.cpp
@@ -1210,12 +1205,6 @@ set (PCH_SOURCES
 	sound/musicformats/music_opl.cpp
 	sound/musicformats/music_stream.cpp
 	sound/musicformats/music_xa.cpp
-	sound/oplsynth/fmopl.cpp
-	sound/oplsynth/musicblock.cpp
-	sound/oplsynth/oplio.cpp
-	sound/oplsynth/dosbox/opl.cpp
-	sound/oplsynth/OPL3.cpp
-	sound/oplsynth/nukedopl3.cpp
 	events.cpp
 	atterm.cpp
 	GuillotineBinPack.cpp
@@ -1282,7 +1271,7 @@ if( UNIX )
 	endif()
 endif()
 
-target_link_libraries( zdoom ${ZDOOM_LIBS} gdtoa dumb lzma adl opn timidity timidityplus wildmidi )
+target_link_libraries( zdoom ${ZDOOM_LIBS} gdtoa dumb lzma adl opn timidity timidityplus wildmidi oplsynth )
 
 include_directories( .
 	g_statusbar
@@ -1291,7 +1280,6 @@ include_directories( .
 	sound
 	sound/music
 	sound/backend
-	sound/oplsynth
 	textures
 	xlat
 	scripting
@@ -1391,8 +1379,6 @@ install(TARGETS zdoom
 
 source_group("Audio Files" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/.+")
 source_group("Audio Files\\Backend" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/backend/.+")
-source_group("Audio Files\\OPL Synth" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/oplsynth/.+")
-source_group("Audio Files\\OPL Synth\\DOSBox" FILES sound/oplsynth/dosbox/opl.cpp sound/oplsynth/dosbox/opl.h)
 source_group("Audio Files\\MIDI Devices" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/mididevices/.+")
 source_group("Audio Files\\MIDI Sources" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/midisources/.+")
 source_group("Audio Files\\Music formats" REGULAR_EXPRESSION "^${CMAKE_CURRENT_SOURCE_DIR}/sound/musicformats/.+")
