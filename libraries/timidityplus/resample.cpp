@@ -920,7 +920,7 @@ void pre_resample(Sample * sp)
 	if ((int64_t)sp->data_length * a >= 0x7fffffffL)
 	{
 		/* Too large to compute */
-		ctl_cmsg(CMSG_INFO, VERB_DEBUG, " *** Can't pre-resampling for note %d",
+		printMessage(CMSG_INFO, VERB_DEBUG, " *** Can't pre-resampling for note %d",
 			sp->note_to_use);
 		return;
 	}
@@ -931,7 +931,7 @@ void pre_resample(Sample * sp)
 	if ((double)newlen + incr >= 0x7fffffffL)
 	{
 		/* Too large to compute */
-		ctl_cmsg(CMSG_INFO, VERB_DEBUG, " *** Can't pre-resampling for note %d",
+		printMessage(CMSG_INFO, VERB_DEBUG, " *** Can't pre-resampling for note %d",
 			sp->note_to_use);
 		return;
 	}
