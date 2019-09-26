@@ -1189,7 +1189,6 @@ set (PCH_SOURCES
 	sound/music/i_soundfont.cpp
 	sound/backend/i_sound.cpp
 	sound/mididevices/music_adlmidi_mididevice.cpp
-	sound/mididevices/music_opldumper_mididevice.cpp
 	sound/mididevices/music_opl_mididevice.cpp
 	sound/mididevices/music_opnmidi_mididevice.cpp
 	sound/mididevices/music_timiditypp_mididevice.cpp
