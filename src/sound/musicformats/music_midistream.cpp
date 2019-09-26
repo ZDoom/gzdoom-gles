@@ -58,6 +58,7 @@ MIDIDevice *CreateTimidityPPMIDIDevice(const char *args, int samplerate);
 MIDIDevice *CreateADLMIDIDevice(const char *args, const ADLConfig* config);
 MIDIDevice *CreateOPNMIDIDevice(const char *args);
 MIDIDevice *CreateWildMIDIDevice(const char *args, int samplerate);
+MIDIDevice* CreateOplMIDIDevice(OPLMidiConfig* config);
 int BuildFluidPatchSetList(const char* patches, bool systemfallback);
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
@@ -235,7 +236,9 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 				break;
 
 			case MDEV_OPL:
-				dev = new OPLMIDIDevice(Args);
+				LoadGenMidi();
+				oplMidiConfig.core = getOPLCore(Args);
+				dev = CreateOplMIDIDevice(&oplMidiConfig);
 				break;
 
 			case MDEV_TIMIDITY:
