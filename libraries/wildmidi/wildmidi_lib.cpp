@@ -1673,7 +1673,6 @@ static void do_control_data_entry_course(struct _mdi *mdi,
 
 void Renderer::do_control_channel_volume(struct _mdi *mdi, struct _event_data *data)
 {
-	struct _note *note_data = mdi->note;
 	unsigned char ch = data->channel;
 
 	mdi->channel[ch].volume = (unsigned char)data->data;
@@ -1698,7 +1697,6 @@ void Renderer::do_control_channel_pan(struct _mdi *mdi, struct _event_data *data
 
 void Renderer::do_control_channel_expression(struct _mdi *mdi, struct _event_data *data)
 {
-	struct _note *note_data = mdi->note;
 	unsigned char ch = data->channel;
 
 	mdi->channel[ch].expression = (unsigned char)data->data;
@@ -1844,7 +1842,6 @@ static void do_control_channel_sound_off(struct _mdi *mdi,
 
 void Renderer::do_control_channel_controllers_off(struct _mdi *mdi, struct _event_data *data)
 {
-	struct _note *note_data = mdi->note;
 	unsigned char ch = data->channel;
 
 	mdi->channel[ch].expression = 127;
