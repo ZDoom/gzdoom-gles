@@ -39,13 +39,12 @@
 #include <math.h>
 
 #include "opl_mus_player.h"
-#include "doomtype.h"
 #include "opl.h"
 #include "w_wad.h"
 #include "templates.h"
 #include "c_cvars.h"
-#include "i_system.h"
-#include "stats.h"
+#include "doomtype.h"
+#include "i_musicinterns.h"
 
 #define IMF_RATE				700.0
 
