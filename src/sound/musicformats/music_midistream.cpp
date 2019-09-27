@@ -49,9 +49,6 @@
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
-#ifdef _WIN32
-MIDIDevice *CreateWinMIDIDevice(int mididevice);
-#endif
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
@@ -241,7 +238,8 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 				break;
 
 			case MDEV_WILDMIDI:
-				dev = CreateWildMIDIDevice(Args, samplerate);
+				WildMidi_SetupConfig(&wildMidiConfig, Args);
+				dev = CreateWildMIDIDevice(&wildMidiConfig, samplerate);
 				break;
 
 			default:
@@ -305,7 +303,7 @@ void MIDIStreamer::Play(bool looping, int subsong)
 	m_Looping = looping;
 	source->SetMIDISubsong(subsong);
 	devtype = SelectMIDIDevice(DeviceType);
-	MIDI = CreateMIDIDevice(devtype, 0);
+	MIDI = CreateMIDIDevice(devtype, (int)GSnd->GetOutputRate());
 	InitPlayback();
 }
 
@@ -594,21 +592,6 @@ void MIDIStreamer::ChangeSettingString(const char *setting, const char *value)
 	if (MIDI != NULL)
 	{
 		MIDI->ChangeSettingString(setting, value);
-	}
-}
-
-
-//==========================================================================
-//
-// MIDIDeviceStreamer :: WildMidiSetOption
-//
-//==========================================================================
-
-void MIDIStreamer::WildMidiSetOption(int opt, int set)
-{
-	if (MIDI != NULL)
-	{
-		MIDI->WildMidiSetOption(opt, set);
 	}
 }
 
@@ -1069,16 +1052,6 @@ void MIDIDevice::ChangeSettingNum(const char *setting, double value)
 //==========================================================================
 
 void MIDIDevice::ChangeSettingString(const char *setting, const char *value)
-{
-}
-
-//==========================================================================
-//
-// MIDIDevice :: WildMidiSetOption
-//
-//==========================================================================
-
-void MIDIDevice::WildMidiSetOption(int opt, int set)
 {
 }
 
