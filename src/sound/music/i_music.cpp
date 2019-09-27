@@ -176,7 +176,6 @@ void I_ShutdownMusic(bool onexit)
 	}
 	if (onexit)
 	{
-		Timidity_Shutdown();
 		WildMidi_Shutdown();
 		TimidityPP_Shutdown();
 		dumb_exit();
