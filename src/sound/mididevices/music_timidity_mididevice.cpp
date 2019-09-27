@@ -116,7 +116,6 @@ void TimidityMIDIDevice::LoadInstruments(GUSConfig *config)
 			config->instruments.reset(new Timidity::Instruments(psreader));
 			bool success = config->instruments->LoadDMXGUS(config->gus_memsize) >= 0;
 			
-			delete psreader;
 			config->dmxgus.clear();
 			
 			if (success)
@@ -134,7 +133,6 @@ void TimidityMIDIDevice::LoadInstruments(GUSConfig *config)
 		config->loadedConfig = config->readerName;
 		config->instruments.reset(new Timidity::Instruments(config->reader));
 		bool err = config->instruments->LoadConfig() < 0;
-		delete config->reader;
 		config->reader = nullptr;
 		
 		if (err)
