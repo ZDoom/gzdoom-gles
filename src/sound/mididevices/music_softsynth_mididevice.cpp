@@ -34,13 +34,8 @@
 
 // HEADER FILES ------------------------------------------------------------
 
-#include "i_musicinterns.h"
-#include "templates.h"
-#include "doomdef.h"
-#include "m_swap.h"
-#include "w_wad.h"
-#include "v_text.h"
-#include "i_system.h"
+#include <mutex>
+#include "mididevice.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -383,7 +378,7 @@ bool SoftSynthMIDIDevice::ServiceStream (void *buff, int numbytes)
 	{
 		double ticky = NextTickIn;
 		int tick_in = int(NextTickIn);
-		int samplesleft = MIN(numsamples, tick_in);
+		int samplesleft = std::min(numsamples, tick_in);
 
 		if (samplesleft > 0)
 		{

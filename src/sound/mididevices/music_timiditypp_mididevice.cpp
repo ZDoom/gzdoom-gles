@@ -32,18 +32,8 @@
 **
 */
 
-#include <string>
+#include "mididevice.h"
 #include <vector>
-
-#include "i_musicinterns.h"
-#include "c_cvars.h"
-#include "cmdlib.h"
-#include "templates.h"
-#include "version.h"
-#include "m_misc.h"
-#include "v_text.h"
-#include "doomerrors.h"
-#include "i_soundfont.h"
 
 #include "timiditypp/timidity.h"
 #include "timiditypp/instrum.h"
@@ -61,7 +51,7 @@ public:
 
 	int OpenRenderer();
 	void PrecacheInstruments(const uint16_t *instruments, int count);
-	//FString GetStats();
+	//std::string GetStats();
 	int GetDeviceType() const override { return MDEV_TIMIDITY; }
 
 	double test[3] = { 0, 0, 0 };
