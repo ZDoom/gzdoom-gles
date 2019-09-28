@@ -61,9 +61,9 @@
 #include "templates.h"
 #include "m_misc.h"
 #include "stats.h"
-#include "timidity/timidity.h"
 #include "vm.h"
 #include "s_music.h"
+#include "..//libraries/zmusic/midisources/midisource.h"
 
 
 

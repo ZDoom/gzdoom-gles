@@ -42,7 +42,7 @@
 #include "i_system.h"
 #include "gameconfigfile.h"
 #include "resourcefiles/resourcefile.h"
-#include "timiditypp/common.h"
+#include "../libraries/timidityplus/timiditypp/common.h"
 
 //==========================================================================
 //

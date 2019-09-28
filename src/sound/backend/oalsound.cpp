@@ -49,7 +49,6 @@
 #include "w_wad.h"
 #include "i_module.h"
 #include "i_music.h"
-#include "i_musicinterns.h"
 #include "cmdlib.h"
 #include "menu/menu.h"
 

@@ -32,8 +32,8 @@
 */
 
 #include "i_musicinterns.h"
-#include "oplsynth/musicblock.h"
-#include "oplsynth/opl.h"
+#include "../libraries/oplsynth/oplsynth/opl.h"
+#include "../libraries/oplsynth/oplsynth/opl_mus_player.h"
 
 static bool OPL_Active;
 
