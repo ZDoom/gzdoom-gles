@@ -189,7 +189,7 @@ TimidityMIDIDevice::~TimidityMIDIDevice()
 int TimidityMIDIDevice::OpenRenderer()
 {
 	Renderer->Reset();
-	return 9;
+	return 0;
 }
 
 //==========================================================================
