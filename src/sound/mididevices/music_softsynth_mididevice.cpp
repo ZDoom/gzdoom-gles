@@ -70,7 +70,6 @@
 
 SoftSynthMIDIDevice::SoftSynthMIDIDevice(int samplerate, int minrate, int maxrate)
 {
-	Stream = NULL;
 	Tempo = 0;
 	Division = 0;
 	Events = NULL;
@@ -92,29 +91,33 @@ SoftSynthMIDIDevice::~SoftSynthMIDIDevice()
 
 //==========================================================================
 //
-// SoftSynthMIDIDevice :: OpenStream
+// SoftSynthMIDIDevice :: GwrStreamInfo
 //
 //==========================================================================
 
-int SoftSynthMIDIDevice::OpenStream(int chunks, int flags, MidiCallback callback, void *userdata)
+SoundStreamInfo SoftSynthMIDIDevice::GetStreamInfo() const
 {
-	int chunksize = (SampleRate / chunks) * 4;
-	if (!(flags & SoundStream::Mono))
+	int chunksize = (SampleRate / StreamBlockSize) * 4;
+	if (!isMono)
 	{
 		chunksize *= 2;
 	}
-	Stream = GSnd->CreateStream(FillStream, chunksize, SoundStream::Float | flags, SampleRate, this);
-	if (Stream == NULL)
-	{
-		return 2;
-	}
+	return { chunksize, SampleRate, isMono };
+}
 
-	Callback = callback;
-	CallbackData = userdata;
+//==========================================================================
+//
+// SoftSynthMIDIDevice :: Open
+//
+//==========================================================================
+
+int SoftSynthMIDIDevice::Open()
+{
 	Tempo = 500000;
 	Division = 100;
 	CalcTickRate();
-	return 0;
+	isOpen = true;
+	return OpenRenderer();
 }
 
 //==========================================================================
@@ -125,11 +128,6 @@ int SoftSynthMIDIDevice::OpenStream(int chunks, int flags, MidiCallback callback
 
 void SoftSynthMIDIDevice::Close()
 {
-	if (Stream != NULL)
-	{
-		delete Stream;
-		Stream = NULL;
-	}
 	Started = false;
 }
 
@@ -141,7 +139,7 @@ void SoftSynthMIDIDevice::Close()
 
 bool SoftSynthMIDIDevice::IsOpen() const
 {
-	return Stream != NULL;
+	return isOpen;
 }
 
 //==========================================================================
@@ -203,15 +201,7 @@ void SoftSynthMIDIDevice::CalcTickRate()
 
 int SoftSynthMIDIDevice::Resume()
 {
-	if (!Started)
-	{
-		if (Stream->Play(true, 1))
-		{
-			Started = true;
-			return 0;
-		}
-		return 1;
-	}
+	Started = 1;
 	return 0;
 }
 
@@ -223,11 +213,6 @@ int SoftSynthMIDIDevice::Resume()
 
 void SoftSynthMIDIDevice::Stop()
 {
-	if (Started)
-	{
-		Stream->Stop();
-		Started = false;
-	}
 }
 
 //==========================================================================
@@ -283,10 +268,6 @@ int SoftSynthMIDIDevice::StreamOut(MidiHeader *header)
 
 bool SoftSynthMIDIDevice::Pause(bool paused)
 {
-	if (Stream != NULL)
-	{
-		return Stream->SetPaused(paused);
-	}
 	return true;
 }
 
@@ -440,16 +421,4 @@ bool SoftSynthMIDIDevice::ServiceStream (void *buff, int numbytes)
 		res = false;
 	}
 	return res;
-}
-
-//==========================================================================
-//
-// SoftSynthMIDIDevice :: FillStream								static
-//
-//==========================================================================
-
-bool SoftSynthMIDIDevice::FillStream(SoundStream *stream, void *buff, int len, void *userdata)
-{
-	SoftSynthMIDIDevice *device = (SoftSynthMIDIDevice *)userdata;
-	return device->ServiceStream(buff, len);
 }

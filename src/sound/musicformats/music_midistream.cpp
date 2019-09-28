@@ -79,7 +79,7 @@ extern unsigned mididevice;
 
 MIDIStreamer::MIDIStreamer(EMidiDevice type, const char *args)
 :
-  MIDI(0), DeviceType(type), Args(args)
+  DeviceType(type), Args(args)
 {
 	memset(Buffer, 0, sizeof(Buffer));
 }
@@ -93,9 +93,13 @@ MIDIStreamer::MIDIStreamer(EMidiDevice type, const char *args)
 MIDIStreamer::~MIDIStreamer()
 {
 	Stop();
-	if (MIDI != NULL)
+	if (MIDI != nullptr)
 	{
 		delete MIDI;
+	}
+	if (Stream != nullptr)
+	{
+		delete Stream;
 	}
 	if (source != nullptr)
 	{
@@ -344,8 +348,9 @@ bool MIDIStreamer::InitPlayback()
 	VolumeChanged = false;
 	Restarting = true;
 	InitialPlayback = true;
+	if (MIDI) MIDI->SetCallback(Callback, this);
 
-	if (MIDI == NULL || 0 != MIDI->Open(Callback, this))
+	if (MIDI == NULL || 0 != MIDI->Open())
 	{
 		Printf(PRINT_BOLD, "Could not open MIDI out device\n");
 		if (MIDI != NULL)
@@ -359,16 +364,31 @@ bool MIDIStreamer::InitPlayback()
 	source->CheckCaps(MIDI->GetTechnology());
 	if (!MIDI->CanHandleSysex()) source->SkipSysex();
 
+	auto streamInfo = MIDI->GetStreamInfo();
+	if (streamInfo.mBufferSize > 0)
+	{
+		Stream = GSnd->CreateStream(FillStream, streamInfo.mBufferSize, streamInfo.mNumChannels == 1 ? SoundStream::Float | SoundStream::Mono : SoundStream::Float, streamInfo.mSampleRate, MIDI);
+	}
+
 	if (MIDI->Preprocess(this, m_Looping))
 	{
 		StartPlayback();
-		if (MIDI == NULL)
+		if (MIDI == nullptr)
 		{ // The MIDI file had no content and has been automatically closed.
+			if (Stream)
+			{
+				delete Stream;
+				Stream = nullptr;
+			}
 			return false;
 		}
 	}
 
-	if (0 != MIDI->Resume())
+	int res = 1;
+	if (Stream) res = Stream->Play(true, 1);
+	if (res) res = MIDI->Resume();
+
+	if (res)
 	{
 		Printf ("Starting MIDI playback failed\n");
 		Stop();
@@ -456,6 +476,10 @@ void MIDIStreamer::Pause()
 		{
 			OutputVolume(0);
 		}
+		if (Stream != nullptr)
+		{
+			Stream->SetPaused(true);
+		}
 	}
 }
 
@@ -475,6 +499,10 @@ void MIDIStreamer::Resume()
 		if (!MIDI->Pause(false))
 		{
 			OutputVolume(Volume);
+		}
+		if (Stream != nullptr)
+		{
+			Stream->SetPaused(false);
 		}
 		m_Status = STATE_Playing;
 	}
@@ -499,11 +527,18 @@ void MIDIStreamer::Stop()
 		MIDI->UnprepareHeader(&Buffer[1]);
 		MIDI->Close();
 	}
-	if (MIDI != NULL)
+	if (MIDI != nullptr)
 	{
 		delete MIDI;
-		MIDI = NULL;
+		MIDI = nullptr;
 	}
+	if (Stream != nullptr)
+	{
+		Stream->Stop();
+		delete Stream;
+		Stream = nullptr;
+	}
+
 	m_Status = STATE_Stopped;
 }
 
@@ -914,4 +949,14 @@ bool MIDIStreamer::SetSubsong(int subsong)
 	return false;
 }
 
+//==========================================================================
+//
+// SoftSynthMIDIDevice :: FillStream								static
+//
+//==========================================================================
 
+bool MIDIStreamer::FillStream(SoundStream* stream, void* buff, int len, void* userdata)
+{
+	SoftSynthMIDIDevice* device = (SoftSynthMIDIDevice*)userdata;
+	return device->ServiceStream(buff, len);
+}
