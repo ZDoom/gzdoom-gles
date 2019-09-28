@@ -45,6 +45,7 @@
 #include "v_text.h"
 #include "files.h"
 #include "templates.h"
+#include "streamsource.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -58,7 +59,7 @@ public:
 	bool SetSubsong(int subsong) override;
 	bool Start() override;
 	void ChangeSettingNum(const char *name, double val) override;
-	FString GetStats() override;
+	std::string GetStats() override;
 	bool GetData(void *buffer, size_t len) override;
 	SoundStreamInfo GetFormat() override;
 
@@ -283,17 +284,15 @@ bool GMESong::StartTrack(int track, bool getcritsec)
 //
 //==========================================================================
 
-FString GMESong::GetStats()
+std::string GMESong::GetStats()
 {
-	FString out;
+	char out[80];
 
 	if (TrackInfo != NULL)
 	{
 		int time = gme_tell(Emu);
-		out.Format(
-			"Track: " TEXTCOLOR_YELLOW "%d" TEXTCOLOR_NORMAL
-			"  Time:" TEXTCOLOR_YELLOW "%3d:%02d:%03d" TEXTCOLOR_NORMAL
-			"  System: " TEXTCOLOR_YELLOW "%s" TEXTCOLOR_NORMAL,
+		snprintf(out, 80, 
+			"Track: %d  Time: %3d:%02d:%03d  System: %s",
 			CurrTrack,
 			time/60000,
 			(time/1000) % 60,
