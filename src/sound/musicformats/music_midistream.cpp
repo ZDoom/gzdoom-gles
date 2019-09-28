@@ -93,18 +93,6 @@ MIDIStreamer::MIDIStreamer(EMidiDevice type, const char *args)
 MIDIStreamer::~MIDIStreamer()
 {
 	Stop();
-	if (MIDI != nullptr)
-	{
-		delete MIDI;
-	}
-	if (Stream != nullptr)
-	{
-		delete Stream;
-	}
-	if (source != nullptr)
-	{
-		delete source;
-	}
 }
 
 //==========================================================================
@@ -307,7 +295,7 @@ void MIDIStreamer::Play(bool looping, int subsong)
 	m_Looping = looping;
 	source->SetMIDISubsong(subsong);
 	devtype = SelectMIDIDevice(DeviceType);
-	MIDI = CreateMIDIDevice(devtype, (int)GSnd->GetOutputRate());
+	MIDI.reset(CreateMIDIDevice(devtype, (int)GSnd->GetOutputRate()));
 	InitPlayback();
 }
 
@@ -327,11 +315,10 @@ bool MIDIStreamer::DumpWave(const char *filename, int subsong, int samplerate)
 	auto devtype = SelectMIDIDevice(DeviceType);
 	if (devtype == MDEV_MMAPI)
 	{
-		Printf("MMAPI device is not supported\n");
-		return false;
+		throw std::runtime_error("MMAPI device is not supported");
 	}
-	MIDI = CreateMIDIDevice(devtype, samplerate);
-	MIDI = new MIDIWaveWriter(filename, reinterpret_cast<SoftSynthMIDIDevice *>(MIDI));
+	auto iMIDI = CreateMIDIDevice(devtype, samplerate);
+	MIDI.reset(new MIDIWaveWriter(filename, static_cast<SoftSynthMIDIDevice *>(iMIDI)));
 	return InitPlayback();
 }
 
@@ -352,13 +339,7 @@ bool MIDIStreamer::InitPlayback()
 
 	if (MIDI == NULL || 0 != MIDI->Open())
 	{
-		Printf(PRINT_BOLD, "Could not open MIDI out device\n");
-		if (MIDI != NULL)
-		{
-			delete MIDI;
-			MIDI = NULL;
-		}
-		return false;
+		throw std::runtime_error("Could not open MIDI out device");
 	}
 
 	source->CheckCaps(MIDI->GetTechnology());
@@ -367,7 +348,7 @@ bool MIDIStreamer::InitPlayback()
 	auto streamInfo = MIDI->GetStreamInfo();
 	if (streamInfo.mBufferSize > 0)
 	{
-		Stream = GSnd->CreateStream(FillStream, streamInfo.mBufferSize, streamInfo.mNumChannels == 1 ? SoundStream::Float | SoundStream::Mono : SoundStream::Float, streamInfo.mSampleRate, MIDI);
+		Stream.reset(GSnd->CreateStream(FillStream, streamInfo.mBufferSize, streamInfo.mNumChannels == 1 ? SoundStream::Float | SoundStream::Mono : SoundStream::Float, streamInfo.mSampleRate, MIDI.get()));
 	}
 
 	if (MIDI->Preprocess(this, m_Looping))
@@ -375,11 +356,6 @@ bool MIDIStreamer::InitPlayback()
 		StartPlayback();
 		if (MIDI == nullptr)
 		{ // The MIDI file had no content and has been automatically closed.
-			if (Stream)
-			{
-				delete Stream;
-				Stream = nullptr;
-			}
 			return false;
 		}
 	}
@@ -390,9 +366,7 @@ bool MIDIStreamer::InitPlayback()
 
 	if (res)
 	{
-		Printf ("Starting MIDI playback failed\n");
-		Stop();
-		return false;
+		throw std::runtime_error("Starting MIDI playback failed");
 	}
 	else
 	{
@@ -410,16 +384,14 @@ bool MIDIStreamer::InitPlayback()
 void MIDIStreamer::StartPlayback()
 {
 	auto data = source->PrecacheData();
-	MIDI->PrecacheInstruments(&data[0], data.Size());
+	MIDI->PrecacheInstruments(data.data(), (int)data.size());
 	source->StartPlayback(m_Looping);
 	
 	// Set time division and tempo.
 	if (0 != MIDI->SetTimeDiv(source->getDivision()) ||
 		0 != MIDI->SetTempo(source->getInitialTempo()))
 	{
-		Printf(PRINT_BOLD, "Setting MIDI stream speed failed\n");
-		MIDI->Close();
-		return;
+		throw std::runtime_error("Setting MIDI stream speed failed");
 	}
 
 	MusicVolumeChanged();	// set volume to current music's properties
@@ -436,9 +408,7 @@ void MIDIStreamer::StartPlayback()
 		{
 			if (0 != MIDI->StreamOutSync(&Buffer[BufferNum]))
 			{
-				Printf ("Initial midiStreamOut failed\n");
-				Stop();
-				return;
+				throw std::runtime_error("Initial midiStreamOut failed");
 			}
 			BufferNum ^= 1;
 		}
@@ -529,14 +499,12 @@ void MIDIStreamer::Stop()
 	}
 	if (MIDI != nullptr)
 	{
-		delete MIDI;
-		MIDI = nullptr;
+		MIDI.reset();
 	}
 	if (Stream != nullptr)
 	{
 		Stream->Stop();
-		delete Stream;
-		Stream = nullptr;
+		Stream.reset();
 	}
 
 	m_Status = STATE_Stopped;
@@ -910,7 +878,7 @@ uint32_t *MIDIStreamer::WriteStopNotes(uint32_t *events)
 
 void MIDIStreamer::SetMIDISource(MIDISource *_source)
 {
-	source = _source;
+	source.reset(_source);
 	source->setTempoCallback([=](int tempo) { return !!MIDI->SetTempo(tempo); } );
 }
 

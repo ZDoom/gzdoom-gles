@@ -296,19 +296,21 @@ MusInfo *MusInfo::GetWaveDumper(const char *filename, int rate)
 static MIDISource *CreateMIDISource(FileReader &reader, EMIDIType miditype)
 {
 	MIDISource *source = nullptr;
+	auto data = reader.Read();
+	if (data.Size() <= 0) return nullptr;
 	switch (miditype)
 	{
 	case MIDI_MUS:
-		return new MUSSong2(reader);
+		return new MUSSong2(data.Data(), data.Size());
 
 	case MIDI_MIDI:
-		return new MIDISong2(reader);
+		return new MIDISong2(data.Data(), data.Size());
 
 	case MIDI_HMI:
-		return new HMISong(reader);
+		return new HMISong(data.Data(), data.Size());
 
 	case MIDI_XMI:
-		return new XMISong(reader);
+		return new XMISong(data.Data(), data.Size());
 
 	default:
 		return nullptr;
@@ -776,7 +778,7 @@ UNSAFE_CCMD(writemidi)
 	auto source = GetMIDISource(argv[1]);
 	if (source == nullptr) return;
 
-	TArray<uint8_t> midi;
+	std::vector<uint8_t> midi;
 	bool success;
 
 	source->CreateSMF(midi, 1);
@@ -786,7 +788,7 @@ UNSAFE_CCMD(writemidi)
 		Printf("Could not open %s.\n", argv[2]);
 		return;
 	}
-	success = (f->Write(&midi[0], midi.Size()) == (size_t)midi.Size());
+	success = (f->Write(&midi[0], midi.size()) == midi.size());
 	delete f;
 
 	if (!success)
