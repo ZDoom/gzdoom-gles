@@ -200,8 +200,7 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 				break;
 
 			case MDEV_ADL:
-				ADL_SetupConfig(&adlConfig, Args);
-				dev = CreateADLMIDIDevice(&adlConfig);
+				dev = CreateADLMIDIDevice(Args);
 				break;
 
 			case MDEV_OPN:
@@ -212,14 +211,13 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 			case MDEV_MMAPI:
 
 #ifdef _WIN32
-				dev = CreateWinMIDIDevice(mididevice, snd_midiprecache);
+				dev = CreateWinMIDIDevice(mididevice);
 				break;
 #endif
 				// Intentional fall-through for non-Windows systems.
 
 			case MDEV_FLUIDSYNTH:
-				Fluid_SetupConfig(&fluidConfig, Args, true);
-				dev = CreateFluidSynthMIDIDevice(samplerate, &fluidConfig, Printf);
+				dev = CreateFluidSynthMIDIDevice(samplerate, Args);
 				break;
 
 			case MDEV_OPL:
