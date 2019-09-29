@@ -31,9 +31,10 @@
 **
 */
 
-#include "i_musicinterns.h"
+#include "zmusic/musinfo.h"
+#include "zmusic/zmusic.h"
+#include "zmusic/m_swap.h"
 #include "i_cd.h"
-#include "files.h"
 
 
 // CD track/disk played through the multimedia system -----------------------

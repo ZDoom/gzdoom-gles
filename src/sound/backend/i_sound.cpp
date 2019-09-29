@@ -34,38 +34,23 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 
 #include "doomtype.h"
-#include <math.h>
 
 #include "oalsound.h"
 
 #include "i_module.h"
 #include "cmdlib.h"
-#include "zmusic/mpg123_decoder.h"
-#include "zmusic/sndfile_decoder.h"
+#include "zmusic/sounddecoder.h"
 
-#include "m_swap.h"
-#include "stats.h"
-#include "files.h"
-#include "c_cvars.h"
 #include "c_dispatch.h"
-#include "i_system.h"
-#include "i_sound.h"
 #include "i_music.h"
 #include "m_argv.h"
-#include "m_misc.h"
-#include "w_wad.h"
-#include "i_video.h"
-#include "s_sound.h"
 #include "v_text.h"
-#include "gi.h"
 #include "c_cvars.h"
 #include "stats.h"
 #include "s_music.h"
-
-#include "doomdef.h"
+#include "zmusic/zmusic.h"
 
 EXTERN_CVAR (Float, snd_sfxvolume)
 EXTERN_CVAR (Float, snd_musicvolume)
@@ -108,6 +93,8 @@ CUSTOM_CVAR(Float, snd_mastervolume, 1.f, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVA
 		self = 0.f;
 	else if (self > 1.f)
 		self = 1.f;
+
+	ChangeMusicSetting(ZMusic::snd_mastervolume, nullptr, self);
 	snd_sfxvolume.Callback();
 	snd_musicvolume.Callback();
 }
