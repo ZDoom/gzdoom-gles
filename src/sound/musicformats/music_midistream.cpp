@@ -195,8 +195,7 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 			switch (devtype)
 			{
 			case MDEV_GUS:
-				GUS_SetupConfig(&gusConfig, Args);
-				dev = CreateTimidityMIDIDevice(&gusConfig, samplerate);
+				dev = CreateTimidityMIDIDevice(Args, samplerate);
 				break;
 
 			case MDEV_ADL:
@@ -204,8 +203,7 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 				break;
 
 			case MDEV_OPN:
-				OPN_SetupConfig(&opnConfig, Args);
-				dev = CreateOPNMIDIDevice(&opnConfig);
+				dev = CreateOPNMIDIDevice(Args);
 				break;
 
 			case MDEV_MMAPI:
@@ -221,18 +219,15 @@ MIDIDevice *MIDIStreamer::CreateMIDIDevice(EMidiDevice devtype, int samplerate)
 				break;
 
 			case MDEV_OPL:
-				OPL_SetupConfig(&oplConfig, Args);
-				dev = CreateOplMIDIDevice(&oplConfig);
+				dev = CreateOplMIDIDevice(Args);
 				break;
 
 			case MDEV_TIMIDITY:
-				Timidity_SetupConfig(&timidityConfig, Args);
-				dev = CreateTimidityPPMIDIDevice(&timidityConfig, samplerate);
+				dev = CreateTimidityPPMIDIDevice(Args, samplerate);
 				break;
 
 			case MDEV_WILDMIDI:
-				WildMidi_SetupConfig(&wildMidiConfig, Args);
-				dev = CreateWildMIDIDevice(&wildMidiConfig, samplerate);
+				dev = CreateWildMIDIDevice(Args, samplerate);
 				break;
 
 			default:
