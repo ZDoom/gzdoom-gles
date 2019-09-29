@@ -483,7 +483,7 @@ add_custom_target( revision_check ALL
 
 message( STATUS "Fluid synth libs: ${FLUIDSYNTH_LIBRARIES}" )
 set( ZDOOM_LIBS ${ZDOOM_LIBS} "${ZLIB_LIBRARIES}" "${JPEG_LIBRARIES}" "${BZIP2_LIBRARIES}" "${GME_LIBRARIES}" "${CMAKE_DL_LIBS}" )
-include_directories( "${ZLIB_INCLUDE_DIR}" "${BZIP2_INCLUDE_DIR}" "${LZMA_INCLUDE_DIR}" "${JPEG_INCLUDE_DIR}" "${GME_INCLUDE_DIR}" "${ZMUSIC_INCLUDE_DIR}" )
+include_directories( "${ZLIB_INCLUDE_DIR}" "${BZIP2_INCLUDE_DIR}" "${LZMA_INCLUDE_DIR}" "${JPEG_INCLUDE_DIR}" "${ZMUSIC_INCLUDE_DIR}" )
 
 if( ${HAVE_VM_JIT} )
 	add_definitions( -DHAVE_VM_JIT )
@@ -1158,13 +1158,8 @@ set (PCH_SOURCES
 	sound/backend/i_sound.cpp
 	sound/music/midi_cvars.cpp
 	sound/musicformats/music_cd.cpp
-	sound/musicformats/music_dumb.cpp
-	sound/musicformats/music_gme.cpp
-	sound/musicformats/music_libsndfile.cpp
 	sound/musicformats/music_midistream.cpp
-	sound/musicformats/music_opl.cpp
 	sound/musicformats/music_stream.cpp
-	sound/musicformats/music_xa.cpp
 	events.cpp
 	atterm.cpp
 	GuillotineBinPack.cpp
@@ -1245,7 +1240,6 @@ include_directories( .
 	scripting
 	scripting/vm
 	../libraries/gdtoa
-	../libraries/dumb/include
 	${CMAKE_BINARY_DIR}/libraries/gdtoa
 	${SYSTEM_SOURCES_DIR} )
 

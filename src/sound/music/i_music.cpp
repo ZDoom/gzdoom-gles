@@ -63,6 +63,7 @@
 #include "stats.h"
 #include "vm.h"
 #include "s_music.h"
+#include "streamsources/streamsource.h"
 #include "filereadermusicinterface.h"
 #include "../libraries/zmusic/midisources/midisource.h"
 #include "../libraries/dumb/include/dumb.h"
