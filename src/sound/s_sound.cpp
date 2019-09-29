@@ -70,7 +70,6 @@
 #include "c_dispatch.h"
 #include "m_random.h"
 #include "w_wad.h"
-#include "doomdef.h"
 #include "p_local.h"
 #include "doomstat.h"
 #include "cmdlib.h"
@@ -79,13 +78,9 @@
 #include "a_sharedglobal.h"
 #include "gstrings.h"
 #include "gi.h"
-#include "templates.h"
-#include "timidity/timidity.h"
-#include "g_level.h"
 #include "po_man.h"
 #include "serializer.h"
 #include "d_player.h"
-#include "r_state.h"
 #include "g_levellocals.h"
 #include "vm.h"
 #include "atterm.h"
@@ -1535,7 +1530,7 @@ static void S_LoadSound3D(sfxinfo_t *sfx, FSoundLoadBuffer *pBuffer)
 
 	std::pair<SoundHandle, bool> snd;
 
-	if (pBuffer->mBuffer.Size() > 0)
+	if (pBuffer->mBuffer.size() > 0)
 	{
 		snd = GSnd->LoadSoundBuffered(pBuffer, true);
 	}
