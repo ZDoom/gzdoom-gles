@@ -375,10 +375,6 @@ void MusInfo::MusicVolumeChanged()
 {
 }
 
-void MusInfo::GMEDepthChanged(float val)
-{
-}
-
 void MusInfo::ChangeSettingInt(const char *, int)
 {
 }
@@ -401,18 +397,6 @@ MusInfo *MusInfo::GetWaveDumper(const char *filename, int rate)
 	return nullptr;
 }
 
-
-//==========================================================================
-//
-// create a streamer
-//
-//==========================================================================
-
-static MIDIStreamer *CreateMIDIStreamer(EMidiDevice devtype, const char *args)
-{
-	auto me = new MIDIStreamer(devtype, args);
-	return me;
-}
 
 //==========================================================================
 //
@@ -490,15 +474,7 @@ MusInfo *I_RegisterSong (MusicIO::FileInterface *reader, MidiDeviceSetting *devi
 				devtype = MDEV_SNDSYS;
 #endif
 
-			MIDIStreamer* streamer = CreateMIDIStreamer(devtype, device != nullptr ? device->args.GetChars() : "");
-			if (streamer == nullptr)
-			{
-				delete source;
-				reader->close();
-				return nullptr;
-			}
-			streamer->SetMIDISource(source);
-			info = streamer;
+			info = CreateMIDIStreamer(source, devtype, device != nullptr ? device->args.GetChars() : "");
 		}
 
 		// Check for CDDA "format"
@@ -514,7 +490,7 @@ MusInfo *I_RegisterSong (MusicIO::FileInterface *reader, MidiDeviceSetting *devi
 				if (subid == (('C') | (('D') << 8) | (('D') << 16) | (('A') << 24)))
 				{
 					// This is a CDDA file
-					info = new CDDAFile(reader);
+					info = CDDA_OpenSong(reader);
 				}
 			}
 		}
@@ -587,7 +563,7 @@ MusInfo *I_RegisterSong (MusicIO::FileInterface *reader, MidiDeviceSetting *devi
 
 MusInfo *I_RegisterCDSong (int track, int id)
 {
-	MusInfo *info = new CDSong (track, id);
+	MusInfo *info = CD_OpenSong (track, id);
 
 	if (info && !info->IsValid ())
 	{
@@ -820,9 +796,7 @@ UNSAFE_CCMD (writewave)
 		if (dev == MDEV_DEFAULT && snd_mididevice >= 0) dev = MDEV_FLUIDSYNTH;	// The Windows system synth cannot dump a wave.
 		try
 		{
-			MIDIStreamer streamer(dev, argv.argc() < 6 ? nullptr : argv[6]);
-			streamer.SetMIDISource(source);
-			streamer.DumpWave(argv[2], argv.argc() < 4 ? 0 : (int)strtol(argv[3], nullptr, 10), argv.argc() < 5 ? 0 : (int)strtol(argv[4], nullptr, 10));
+			MIDIDumpWave(source, dev, argv.argc() < 6 ? nullptr : argv[6], argv[2], argv.argc() < 4 ? 0 : (int)strtol(argv[3], nullptr, 10), argv.argc() < 5 ? 0 : (int)strtol(argv[4], nullptr, 10));
 		}
 		catch (const std::runtime_error& err)
 		{
