@@ -110,6 +110,7 @@ EXTERN_CVAR(Bool, hud_althud)
 EXTERN_CVAR(Bool, cl_customizeinvulmap)
 void DrawHUD();
 void D_DoAnonStats();
+void I_DetectOS();
 
 
 // MACROS ------------------------------------------------------------------
@@ -2316,6 +2317,16 @@ static void CheckCmdLine()
 	}
 }
 
+void I_Quit()
+{
+	if (demorecording)
+	{
+		G_CheckDemoStatus();
+	}
+	
+	C_DeinitConsole();
+}
+
 //==========================================================================
 //
 // D_DoomMain
@@ -2335,6 +2346,7 @@ void D_DoomMain (void)
 	
 	C_InitConsole(80*8, 25*8, false);
 	I_DetectOS();
+	atterm(I_Quit);
 
 	// +logfile gets checked too late to catch the full startup log in the logfile so do some extra check for it here.
 	FString logfile = Args->TakeValue("+logfile");

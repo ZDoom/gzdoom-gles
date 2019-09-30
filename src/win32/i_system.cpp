@@ -159,7 +159,6 @@ int sys_ostype = 0;
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
 static ticcmd_t emptycmd;
-static bool HasExited;
 
 static WadStuff *WadList;
 static int NumWads;
@@ -358,26 +357,6 @@ void I_Init()
 	I_InitSound ();
 }
 
-//==========================================================================
-//
-// I_Quit
-//
-//==========================================================================
-
-void I_Quit()
-{
-	HasExited = true;		/* Prevent infinitely recursive exits -- killough */
-
-	timeEndPeriod(TimerPeriod);
-
-	if (demorecording)
-	{
-		G_CheckDemoStatus();
-	}
-
-	C_DeinitConsole();
-}
-
 
 //==========================================================================
 //
@@ -411,12 +390,7 @@ void I_FatalError(const char *error, ...)
 
 		throw CFatalError(errortext);
 	}
-
-	if (!HasExited)		// If it hasn't exited yet, exit now -- killough
-	{
-		HasExited = 1;	// Prevent infinitely recursive exits -- killough
-		exit(-1);
-	}
+	std::terminate();
 }
 
 //==========================================================================
