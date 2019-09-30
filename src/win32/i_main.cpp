@@ -999,7 +999,6 @@ void DoMain (HINSTANCE hInstance)
 		CoInitialize (NULL);
 		atexit (UnCOM);
 		
-		I_DetectOS ();
 		D_DoomMain ();
 	}
 	catch (class CNoRunExit &)
