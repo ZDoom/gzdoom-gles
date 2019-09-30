@@ -38,16 +38,13 @@
 #ifdef HAVE_FPU_CONTROL
 #include <fpu_control.h>
 #endif
-#include <float.h>
 
 #if defined(__unix__) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 
-#include <time.h>
 #include <math.h>
 #include <assert.h>
-#include <sys/stat.h>
 
 #include "doomerrors.h"
 
@@ -67,7 +64,6 @@
 #include "menu/menu.h"
 #include "c_console.h"
 #include "c_dispatch.h"
-#include "i_system.h"
 #include "i_sound.h"
 #include "i_video.h"
 #include "g_game.h"
@@ -81,40 +77,29 @@
 #include "d_main.h"
 #include "d_dehacked.h"
 #include "cmdlib.h"
-#include "s_sound.h"
-#include "m_swap.h"
 #include "v_text.h"
 #include "gi.h"
-#include "b_bot.h"		//Added by MC:
-#include "stats.h"
 #include "gameconfigfile.h"
 #include "sbar.h"
 #include "decallib.h"
 #include "version.h"
-#include "v_text.h"
 #include "st_start.h"
-#include "templates.h"
 #include "teaminfo.h"
 #include "hardware.h"
 #include "sbarinfo.h"
 #include "d_net.h"
-#include "g_level.h"
 #include "d_event.h"
 #include "d_netinf.h"
-#include "v_palette.h"
 #include "m_cheat.h"
 #include "compatibility.h"
 #include "m_joy.h"
-#include "sc_man.h"
 #include "po_man.h"
-#include "resourcefiles/resourcefile.h"
 #include "r_renderer.h"
 #include "p_local.h"
 #include "autosegs.h"
 #include "fragglescript/t_fs.h"
 #include "g_levellocals.h"
 #include "events.h"
-#include "r_utility.h"
 #include "vm.h"
 #include "types.h"
 #include "r_data/r_vanillatrans.h"
@@ -153,6 +138,7 @@ void D_AddWildFile (TArray<FString> &wadfiles, const char *pattern);
 void D_LoadWadSettings ();
 void ParseGLDefs();
 void DrawFullscreenSubtitle(const char *text);
+void D_Cleanup();
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
@@ -2801,68 +2787,79 @@ void D_DoomMain (void)
 		// Clean up after a restart
 		//
 
-		// Music and sound should be stopped first
-		S_StopMusic(true);
-		S_StopAllChannels ();
-
-		M_ClearMenus();					// close menu if open
-		F_EndFinale();					// If an intermission is active, end it now
-		AM_ClearColorsets();
-
-		// clean up game state
-		ST_Clear();
-		D_ErrorCleanup ();
-		DThinker::DestroyThinkersInList(STAT_STATIC);
-		E_Shutdown(false);
-		P_FreeLevelData();
-
-		M_SaveDefaults(NULL);			// save config before the restart
-
-		// delete all data that cannot be left until reinitialization
-		V_ClearFonts();					// must clear global font pointers
-		ColorSets.Clear();
-		PainFlashes.Clear();
-		R_DeinitTranslationTables();	// some tables are initialized from outside the translation code.
-		gameinfo.~gameinfo_t();
-		new (&gameinfo) gameinfo_t;		// Reset gameinfo
-		S_ShutdownMusic();
-		S_Shutdown();					// free all channels and delete playlist
-		C_ClearAliases();				// CCMDs won't be reinitialized so these need to be deleted here
-		DestroyCVarsFlagged(CVAR_MOD);	// Delete any cvar left by mods
-		FS_Close();						// destroy the global FraggleScript.
-		DeinitMenus();
-		LightDefaults.Clear();			// this can leak heap memory if it isn't cleared.
-
-		// delete DoomStartupInfo data
-		DoomStartupInfo.Name = "";
-		DoomStartupInfo.BkColor = DoomStartupInfo.FgColor = DoomStartupInfo.Type = 0;
-		DoomStartupInfo.LoadLights = DoomStartupInfo.LoadBrightmaps = -1;
-
-		GC::FullGC();					// clean up before taking down the object list.
-
-		// Delete the reference to the VM functions here which were deleted and will be recreated after the restart.
-		FAutoSegIterator probe(ARegHead, ARegTail);
-		while (*++probe != NULL)
-		{
-			AFuncDesc *afunc = (AFuncDesc *)*probe;
-			*(afunc->VMPointer) = NULL;
-		}
-
-		GC::DelSoftRootHead();
-
-		PClass::StaticShutdown();
-
-		GC::FullGC();					// perform one final garbage collection after shutdown
-
-		assert(GC::Root == nullptr);
-
-		restart++;
-		PClass::bShutdown = false;
-		PClass::bVMOperational = false;
+		D_Cleanup();
 
 		gamestate = GS_STARTUP;
 	}
 	while (1);
+}
+
+//==========================================================================
+//
+// clean up the resources
+//
+//==========================================================================
+
+void D_Cleanup()
+{
+	// Music and sound should be stopped first
+	S_StopMusic(true);
+	S_StopAllChannels ();
+
+	M_ClearMenus();					// close menu if open
+	F_EndFinale();					// If an intermission is active, end it now
+	AM_ClearColorsets();
+
+	// clean up game state
+	ST_Clear();
+	D_ErrorCleanup ();
+	DThinker::DestroyThinkersInList(STAT_STATIC);
+	E_Shutdown(false);
+	P_FreeLevelData();
+
+	M_SaveDefaults(NULL);			// save config before the restart
+
+	// delete all data that cannot be left until reinitialization
+	V_ClearFonts();					// must clear global font pointers
+	ColorSets.Clear();
+	PainFlashes.Clear();
+	R_DeinitTranslationTables();	// some tables are initialized from outside the translation code.
+	gameinfo.~gameinfo_t();
+	new (&gameinfo) gameinfo_t;		// Reset gameinfo
+	S_ShutdownMusic();
+	S_Shutdown();					// free all channels and delete playlist
+	C_ClearAliases();				// CCMDs won't be reinitialized so these need to be deleted here
+	DestroyCVarsFlagged(CVAR_MOD);	// Delete any cvar left by mods
+	FS_Close();						// destroy the global FraggleScript.
+	DeinitMenus();
+	LightDefaults.Clear();			// this can leak heap memory if it isn't cleared.
+
+	// delete DoomStartupInfo data
+	DoomStartupInfo.Name = "";
+	DoomStartupInfo.BkColor = DoomStartupInfo.FgColor = DoomStartupInfo.Type = 0;
+	DoomStartupInfo.LoadLights = DoomStartupInfo.LoadBrightmaps = -1;
+
+	GC::FullGC();					// clean up before taking down the object list.
+
+	// Delete the reference to the VM functions here which were deleted and will be recreated after the restart.
+	FAutoSegIterator probe(ARegHead, ARegTail);
+	while (*++probe != NULL)
+	{
+		AFuncDesc *afunc = (AFuncDesc *)*probe;
+		*(afunc->VMPointer) = NULL;
+	}
+
+	GC::DelSoftRootHead();
+
+	PClass::StaticShutdown();
+
+	GC::FullGC();					// perform one final garbage collection after shutdown
+
+	assert(GC::Root == nullptr);
+
+	restart++;
+	PClass::bShutdown = false;
+	PClass::bVMOperational = false;
 }
 
 //==========================================================================
