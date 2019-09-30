@@ -45,7 +45,6 @@
 #include "a_weapons.h"
 #include "d_player.h"
 #include "p_setup.h"
-#include "i_music.h"
 #include "fontinternals.h"
 
 #include <time.h>
