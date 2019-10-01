@@ -113,7 +113,6 @@
 LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 void CreateCrashLog (char *custominfo, DWORD customsize, HWND richedit);
 void DisplayCrashLog ();
-extern uint8_t *ST_Util_BitsForBitmap (BITMAPINFO *bitmap_info);
 void I_FlushBufferedConsoleStuff();
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
@@ -123,7 +122,6 @@ void I_FlushBufferedConsoleStuff();
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
 extern EXCEPTION_POINTERS CrashPointers;
-extern BITMAPINFO *StartupBitmap;
 extern UINT TimerPeriod;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
@@ -504,7 +502,7 @@ LRESULT CALLBACK LConProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				// so flip it vertically while drawing it.
 				StretchDIBits (drawitem->hDC, rect.left, rect.bottom - 1, rect.right - rect.left, rect.top - rect.bottom,
 					0, 0, StartupBitmap->bmiHeader.biWidth, StartupBitmap->bmiHeader.biHeight,
-					ST_Util_BitsForBitmap(StartupBitmap), StartupBitmap, DIB_RGB_COLORS, SRCCOPY);
+					ST_Util_BitsForBitmap(StartupBitmap), reinterpret_cast<const BITMAPINFO*>(StartupBitmap), DIB_RGB_COLORS, SRCCOPY);
 
 				// If the title banner is gone, then this is an ENDOOM screen, so draw a short prompt
 				// where the command prompt would have been in DOS.
