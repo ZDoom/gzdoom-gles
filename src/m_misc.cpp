@@ -338,7 +338,7 @@ void M_LoadDefaults ()
 {
 	GameConfig = new FGameConfigFile;
 	GameConfig->DoGlobalSetup ();
-	atterm (M_SaveDefaultsFinal);
+	atterm(M_SaveDefaultsFinal);
 }
 
 

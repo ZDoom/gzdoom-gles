@@ -303,7 +303,7 @@ void MessagePump (const SDL_Event &sev)
 	switch (sev.type)
 	{
 	case SDL_QUIT:
-		exit (0);
+		exit(0);
 
 	case SDL_WINDOWEVENT:
 		switch (sev.window.event)

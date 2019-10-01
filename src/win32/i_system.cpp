@@ -353,7 +353,7 @@ void I_Init()
 	CalculateCPUSpeed();
 	DumpCPUInfo(&CPU);
 
-	atterm (I_ShutdownSound);
+	atterm(I_ShutdownSound);
 	I_InitSound ();
 }
 

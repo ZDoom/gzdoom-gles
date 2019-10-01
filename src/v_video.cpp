@@ -1501,7 +1501,7 @@ void V_Init (bool restart)
 	const char *i;
 	int width, height, bits;
 
-	atterm (V_Shutdown);
+	atterm(V_Shutdown);
 
 	// [RH] Initialize palette management
 	InitPalette ();

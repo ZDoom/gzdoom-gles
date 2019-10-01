@@ -3874,7 +3874,7 @@ void P_SetupLevel(const char *lumpname, int position, bool newGame)
 //
 void P_Init ()
 {
-	atterm (P_Shutdown);
+	atterm(P_Shutdown);
 
 	P_InitEffects ();		// [RH]
 	P_InitTerrainTypes ();

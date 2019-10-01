@@ -129,7 +129,7 @@ void I_InitGraphics ()
 	if (Video == NULL)
 		I_FatalError ("Failed to initialize display");
 
-	atterm (I_ShutdownGraphics);
+	atterm(I_ShutdownGraphics);
 
 	Video->SetWindowedScale (vid_winscale);
 }

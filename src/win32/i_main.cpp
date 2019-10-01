@@ -954,7 +954,10 @@ void DoMain (HINSTANCE hInstance)
 				NULL);
 
 		if (!Window)
-			I_FatalError ("Could not open window");
+		{
+			MessageBoxA(nullptr, "Unable to create main window", "Fatal", MB_ICONEXCLAMATION|MB_OK);
+			exit(-1);
+		}
 
 		if (kernel != NULL)
 		{
@@ -1039,7 +1042,7 @@ void DoMain (HINSTANCE hInstance)
 				Printf("%s\n", msg);
 			}
 		}
-		exit (-1);
+		exit(-1);
 	}
 }
 
@@ -1152,7 +1155,7 @@ void CALLBACK ExitFatally (ULONG_PTR dummy)
 	I_ShutdownGraphics ();
 	RestoreConView ();
 	DisplayCrashLog ();
-	exit (-1);
+	exit(-1);
 }
 
 //==========================================================================
@@ -1252,7 +1255,7 @@ int WINAPI wWinMain (HINSTANCE hInstance, HINSTANCE nothing, LPWSTR cmdline, int
 		// don't support Windows 95, we have no obligation to provide assistance in
 		// getting it installed.
 		MessageBoxA(NULL, "Could not load riched20.dll", GAMENAME " Error", MB_OK | MB_ICONSTOP);
-		exit(0);
+		return 0;
 	}
 
 #if !defined(__GNUC__) && defined(_DEBUG)
@@ -1267,7 +1270,7 @@ int WINAPI wWinMain (HINSTANCE hInstance, HINSTANCE nothing, LPWSTR cmdline, int
 		{
 		}
 		DisplayCrashLog ();
-		exit (0);
+		return 0;
 	}
 	if (__argc == 2 && __wargv != nullptr && wcscmp (__wargv[1], L"TestStackCrash") == 0)
 	{
@@ -1280,7 +1283,7 @@ int WINAPI wWinMain (HINSTANCE hInstance, HINSTANCE nothing, LPWSTR cmdline, int
 		{
 		}
 		DisplayCrashLog ();
-		exit (0);
+		return 0;
 	}
 #endif
 

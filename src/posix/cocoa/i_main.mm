@@ -499,7 +499,7 @@ int main(int argc, char** argv)
 
 	CreateMenu();
 
-	atterm(ReleaseApplicationController);
+	atexit(ReleaseApplicationController);
 
 	appCtrl = [ApplicationController new];
 	[NSApp setDelegate:appCtrl];
