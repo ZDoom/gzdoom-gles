@@ -104,8 +104,7 @@ static void S_ActivatePlayList(bool goBack);
 
 static bool		MusicPaused;		// whether music is paused
 MusPlayingInfo mus_playing;	// music currently being played
-static FString	 LastSong;			// last music that was played
-static FPlayList *PlayList;
+static FPlayList PlayList;
 float	relative_volume = 1.f;
 float	saved_relative_volume = 1.0f;	// this could be used to implement an ACS FadeMusic function
 
@@ -115,46 +114,8 @@ DEFINE_FIELD_X(MusPlayingInfo, MusPlayingInfo, baseorder);
 DEFINE_FIELD_X(MusPlayingInfo, MusPlayingInfo, loop);
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
-void S_ShutdownMusic ();
 
 // CODE --------------------------------------------------------------------
-
-//==========================================================================
-//
-// S_Init
-//
-// Initializes sound stuff, including volume. Sets channels, SFX and
-// music volume, allocates channel buffer, and sets S_sfx lookup.
-//==========================================================================
-
-void S_InitMusic ()
-{
-	// no sounds are playing, and they are not paused
-	mus_playing.name = "";
-	LastSong = "";
-	mus_playing.handle = nullptr;
-	mus_playing.baseorder = 0;
-	MusicPaused = false;
-	atterm(S_ShutdownMusic);
-}
-
-//==========================================================================
-//
-// S_Shutdown
-//
-//==========================================================================
-
-void S_ShutdownMusic ()
-{
-	if (PlayList != nullptr)
-	{
-		delete PlayList;
-		PlayList = nullptr;
-	}
-	S_StopMusic (true);
-	mus_playing.name = "";
-	LastSong = "";
-}
 
 //==========================================================================
 //
@@ -280,9 +241,9 @@ void S_UpdateMusic ()
 		// playlist when the current song finishes.
 		if (!mus_playing.handle->IsPlaying())
 		{
-			if (PlayList)
+			if (PlayList.GetNumSongs())
 			{
-				PlayList->Advance();
+				PlayList.Advance();
 				S_ActivatePlayList(false);
 			}
 			else
@@ -332,15 +293,14 @@ void S_ActivatePlayList (bool goBack)
 {
 	int startpos, pos;
 
-	startpos = pos = PlayList->GetPosition ();
+	startpos = pos = PlayList.GetPosition ();
 	S_StopMusic (true);
-	while (!S_ChangeMusic (PlayList->GetSong (pos), 0, false, true))
+	while (!S_ChangeMusic (PlayList.GetSong (pos), 0, false, true))
 	{
-		pos = goBack ? PlayList->Backup () : PlayList->Advance ();
+		pos = goBack ? PlayList.Backup () : PlayList.Advance ();
 		if (pos == startpos)
 		{
-			delete PlayList;
-			PlayList = nullptr;
+			PlayList.Clear();
 			Printf ("Cannot play anything in the playlist.\n");
 			return;
 		}
@@ -395,7 +355,7 @@ bool S_StartMusic (const char *m_id)
 bool S_ChangeMusic (const char *musicname, int order, bool looping, bool force)
 {
 	if (nomusic) return false;	// skip the entire procedure if music is globally disabled.
-	if (!force && PlayList)
+	if (!force && PlayList.GetNumSongs())
 	{ // Don't change if a playlist is active
 		return false;
 	}
@@ -419,7 +379,7 @@ bool S_ChangeMusic (const char *musicname, int order, bool looping, bool force)
 		// Don't choke if the map doesn't have a song attached
 		S_StopMusic (true);
 		mus_playing.name = "";
-		LastSong = "";
+		mus_playing.LastSong = "";
 		return true;
 	}
 
@@ -536,7 +496,7 @@ bool S_ChangeMusic (const char *musicname, int order, bool looping, bool force)
 			mus_playing.loop = looping;
 			mus_playing.name = musicname;
 			mus_playing.baseorder = order;
-			LastSong = musicname;
+			mus_playing.LastSong = musicname;
 			return true;
 		}
 
@@ -562,7 +522,7 @@ bool S_ChangeMusic (const char *musicname, int order, bool looping, bool force)
 	mus_playing.loop = looping;
 	mus_playing.name = musicname;
 	mus_playing.baseorder = 0;
-	LastSong = "";
+	mus_playing.LastSong = "";
 
 	if (mus_playing.handle != 0)
 	{ // play it
@@ -601,10 +561,10 @@ DEFINE_ACTION_FUNCTION(DObject, S_ChangeMusic)
 
 void S_RestartMusic ()
 {
-	if (!LastSong.IsEmpty())
+	if (!mus_playing.LastSong.IsEmpty())
 	{
-		FString song = LastSong;
-		LastSong = "";
+		FString song = mus_playing.LastSong;
+		mus_playing.LastSong = "";
 		S_ChangeMusic (song, mus_playing.baseorder, mus_playing.loop, true);
 	}
 }
@@ -681,7 +641,7 @@ void S_StopMusic (bool force)
 	try
 	{
 		// [RH] Don't stop if a playlist is active.
-		if ((force || PlayList == nullptr) && !mus_playing.name.IsEmpty())
+		if ((force || PlayList.GetNumSongs() == 0) && !mus_playing.name.IsEmpty())
 		{
 			if (mus_playing.handle != nullptr)
 			{
@@ -691,8 +651,7 @@ void S_StopMusic (bool force)
 				delete mus_playing.handle;
 				mus_playing.handle = nullptr;
 			}
-			LastSong = mus_playing.name;
-			mus_playing.name = "";
+			mus_playing.LastSong = std::move(mus_playing.name);
 		}
 	}
 	catch (const std::runtime_error& )
@@ -773,11 +732,7 @@ CCMD (changemus)
 	{
 		if (argv.argc() > 1)
 		{
-			if (PlayList)
-			{
-				delete PlayList;
-				PlayList = nullptr;
-			}
+			PlayList.Clear();
 			S_ChangeMusic (argv[1], argv.argc() > 2 ? atoi (argv[2]) : 0);
 		}
 		else
@@ -807,13 +762,9 @@ CCMD (changemus)
 
 CCMD (stopmus)
 {
-	if (PlayList)
-	{
-		delete PlayList;
-		PlayList = nullptr;
-	}
+	PlayList.Clear();
 	S_StopMusic (false);
-	LastSong = "";	// forget the last played song so that it won't get restarted if some volume changes occur
+	mus_playing.LastSong = "";	// forget the last played song so that it won't get restarted if some volume changes occur
 }
 
 //==========================================================================
@@ -910,30 +861,25 @@ UNSAFE_CCMD (playlist)
 	}
 	else
 	{
-		if (PlayList != nullptr)
+		if (PlayList.GetNumSongs() > 0)
 		{
-			PlayList->ChangeList (argv[1]);
+			PlayList.ChangeList (argv[1]);
 		}
 		else
 		{
-			PlayList = new FPlayList (argv[1]);
+			PlayList.ChangeList(argv[1]);
 		}
-		if (PlayList->GetNumSongs () == 0)
-		{
-			delete PlayList;
-			PlayList = nullptr;
-		}
-		else
+		if (PlayList.GetNumSongs () > 0)
 		{
 			if (argc == 3)
 			{
 				if (stricmp (argv[2], "shuffle") == 0)
 				{
-					PlayList->Shuffle ();
+					PlayList.Shuffle ();
 				}
 				else
 				{
-					PlayList->SetPosition (atoi (argv[2]));
+					PlayList.SetPosition (atoi (argv[2]));
 				}
 			}
 			S_ActivatePlayList (false);
@@ -949,7 +895,7 @@ UNSAFE_CCMD (playlist)
 
 static bool CheckForPlaylist ()
 {
-	if (PlayList == nullptr)
+	if (PlayList.GetNumSongs() == 0)
 	{
 		Printf ("No playlist is playing.\n");
 		return false;
@@ -961,7 +907,7 @@ CCMD (playlistpos)
 {
 	if (CheckForPlaylist() && argv.argc() > 1)
 	{
-		PlayList->SetPosition (atoi (argv[1]) - 1);
+		PlayList.SetPosition (atoi (argv[1]) - 1);
 		S_ActivatePlayList (false);
 	}
 }
@@ -976,7 +922,7 @@ CCMD (playlistnext)
 {
 	if (CheckForPlaylist())
 	{
-		PlayList->Advance ();
+		PlayList.Advance ();
 		S_ActivatePlayList (false);
 	}
 }
@@ -991,7 +937,7 @@ CCMD (playlistprev)
 {
 	if (CheckForPlaylist())
 	{
-		PlayList->Backup ();
+		PlayList.Backup ();
 		S_ActivatePlayList (true);
 	}
 }
@@ -1007,9 +953,9 @@ CCMD (playliststatus)
 	if (CheckForPlaylist ())
 	{
 		Printf ("Song %d of %d:\n%s\n",
-			PlayList->GetPosition () + 1,
-			PlayList->GetNumSongs (),
-			PlayList->GetSong (PlayList->GetPosition ()));
+			PlayList.GetPosition () + 1,
+			PlayList.GetNumSongs (),
+			PlayList.GetSong (PlayList.GetPosition ()));
 	}
 }
 
