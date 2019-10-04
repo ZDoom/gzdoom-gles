@@ -149,7 +149,7 @@ int FSavegameManager::InsertSaveNode(FSaveGameNode *node)
 			{
 				if (strstr(node->Filename.GetChars(),"quick"))
 				{
-					for (i; strstr(SaveGames[i]->Filename.GetChars(),"auto"); i++) {}
+					for (i; i < SaveGames.Size() && strstr(SaveGames[i]->Filename.GetChars(),"auto"); i++) {}
 				}
 			}
 		}
