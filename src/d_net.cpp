@@ -1562,7 +1562,7 @@ bool DoArbitrate (void *userdata)
 	return false;
 }
 
-void D_ArbitrateNetStart (void)
+bool D_ArbitrateNetStart (void)
 {
 	ArbitrateData data;
 	int i;
@@ -1625,7 +1625,7 @@ void D_ArbitrateNetStart (void)
 	StartScreen->NetInit ("Exchanging game information", 1);
 	if (!StartScreen->NetLoop (DoArbitrate, &data))
 	{
-		exit(0);
+		return false;
 	}
 
 	if (consoleplayer == Net_Arbitrator)
@@ -1642,6 +1642,7 @@ void D_ArbitrateNetStart (void)
 		}
 	}
 	StartScreen->NetDone();
+	return true;
 }
 
 static void SendSetup (uint32_t playersdetected[MAXNETNODES], uint8_t gotsetup[MAXNETNODES], int len)
@@ -1747,7 +1748,7 @@ bool D_CheckNetGame (void)
 	if (netgame)
 	{
 		GameConfig->ReadNetVars ();	// [RH] Read network ServerInfo cvars
-		D_ArbitrateNetStart ();
+		if (!D_ArbitrateNetStart ()) return false;
 	}
 
 	// read values out of doomcom
