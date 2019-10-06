@@ -2508,6 +2508,7 @@ static int D_DoomMain_Internal (void)
 			iwad_man = new FIWadManager(basewad, optionalwad);
 		}
 		const FIWADInfo *iwad_info = iwad_man->FindIWAD(allwads, iwad, basewad, optionalwad);
+		if (!iwad_info) return 0;	// user exited the selection popup via cancel button.
 		gameinfo.gametype = iwad_info->gametype;
 		gameinfo.flags = iwad_info->flags;
 		gameinfo.nokeyboardcheats = iwad_info->nokeyboardcheats;
@@ -2889,7 +2890,11 @@ int D_DoomMain()
 	{
 		ret = D_DoomMain_Internal();
 	}
-	catch (std::exception &error)
+	catch (const CExitEvent &exit)	// This is a regular exit initiated from deeply nested code.
+	{
+		ret = exit.Reason();
+	}
+	catch (const std::exception &error)
 	{
 		I_ShowFatalError(error.what());
 		ret = -1;

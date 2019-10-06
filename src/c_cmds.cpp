@@ -106,12 +106,12 @@ bool CheckCheatmode (bool printmsg)
 
 CCMD (quit)
 {
-	if (!insave) exit(0);
+	if (!insave) throw CExitEvent(0);
 }
 
 CCMD (exit)
 {
-	if (!insave) exit(0);
+	if (!insave) throw CExitEvent(0);
 }
 
 /*
