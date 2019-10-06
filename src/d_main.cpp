@@ -131,7 +131,7 @@ const FIWADInfo *D_FindIWAD(TArray<FString> &wadfiles, const char *iwad, const c
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
-void D_CheckNetGame ();
+bool D_CheckNetGame ();
 void D_ProcessEvents ();
 void G_BuildTiccmd (ticcmd_t* cmd);
 void D_DoAdvanceDemo ();
@@ -2402,7 +2402,7 @@ void I_Quit()
 //
 //==========================================================================
 
-static void D_DoomMain_Internal (void)
+static int D_DoomMain_Internal (void)
 {
 	int p;
 	const char *v;
@@ -2744,7 +2744,10 @@ static void D_DoomMain_Internal (void)
 		{
 			if (!batchrun) Printf ("D_CheckNetGame: Checking network game status.\n");
 			StartScreen->LoadingStatus ("Checking network game status.", 0x3f);
-			D_CheckNetGame ();
+			if (!D_CheckNetGame ())
+			{
+				return 0;
+			}
 		}
 
 		// [SP] Force vanilla transparency auto-detection to re-detect our game lumps now
@@ -2784,7 +2787,7 @@ static void D_DoomMain_Internal (void)
 
 			if (Args->CheckParm("-norun") || batchrun)
 			{
-				return;
+				return 1337; // special exit
 			}
 
 			V_Init2();
@@ -2884,8 +2887,7 @@ int D_DoomMain()
 	int ret = 0;
 	try
 	{
-		D_DoomMain_Internal();
-		ret = 1337;
+		ret = D_DoomMain_Internal();
 	}
 	catch (std::exception &error)
 	{
