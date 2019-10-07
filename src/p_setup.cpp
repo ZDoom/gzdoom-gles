@@ -118,7 +118,6 @@
 #include "types.h"
 #include "i_time.h"
 #include "scripting/vm/vm.h"
-#include "atterm.h"
 #include "s_music.h"
 
 #include "fragglescript/t_fs.h"
@@ -146,8 +145,6 @@ CVAR (Bool, genblockmap, false, CVAR_SERVERINFO|CVAR_GLOBALCONFIG);
 CVAR (Bool, gennodes, false, CVAR_SERVERINFO|CVAR_GLOBALCONFIG);
 CVAR (Bool, genglnodes, false, CVAR_SERVERINFO);
 CVAR (Bool, showloadtimes, false, 0);
-
-static void P_Shutdown ();
 
 inline bool P_LoadBuildMap(uint8_t *mapdata, size_t len, FMapThing **things, int *numthings)
 {
@@ -3874,15 +3871,13 @@ void P_SetupLevel(const char *lumpname, int position, bool newGame)
 //
 void P_Init ()
 {
-	atterm(P_Shutdown);
-
 	P_InitEffects ();		// [RH]
 	P_InitTerrainTypes ();
 	P_InitKeyMessages ();
 	R_InitSprites ();
 }
 
-static void P_Shutdown ()
+void P_Shutdown ()
 {	
 	DThinker::DestroyThinkersInList(STAT_STATIC);	
 	P_FreeLevelData ();

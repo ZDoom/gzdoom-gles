@@ -48,7 +48,6 @@
 #include "vm.h"
 #include "dobject.h"
 #include "menu/menu.h"
-#include "atterm.h"
 
 
 
@@ -644,9 +643,6 @@ static void ReadReverbDef (int lump)
 void S_ParseReverbDef ()
 {
 	int lump, lastlump = 0;
-
-	atterm(S_UnloadReverbDef);
-	S_UnloadReverbDef ();
 
 	while ((lump = Wads.FindLump ("REVERBS", &lastlump)) != -1)
 	{

@@ -82,7 +82,6 @@
 #include "d_player.h"
 #include "g_levellocals.h"
 #include "vm.h"
-#include "atterm.h"
 #include "s_music.h"
 
 // MACROS ------------------------------------------------------------------
@@ -306,8 +305,6 @@ void S_AddLocalSndInfo(int lump);
 void S_Init ()
 {
 	int curvelump;
-
-	atterm(S_Shutdown);
 
 	// Heretic and Hexen have sound curve lookup tables. Doom does not.
 	I_InitSound();

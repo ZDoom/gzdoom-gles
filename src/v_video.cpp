@@ -86,7 +86,6 @@
 #include "r_videoscale.h"
 #include "i_time.h"
 #include "version.h"
-#include "atterm.h"
 
 EXTERN_CVAR(Bool, r_blendmethod)
 
@@ -1501,8 +1500,6 @@ void V_Init (bool restart)
 	const char *i;
 	int width, height, bits;
 
-	atterm(V_Shutdown);
-
 	// [RH] Initialize palette management
 	InitPalette ();
 
@@ -1581,17 +1578,6 @@ void V_Init2()
 	M_InitVideoModesMenu();
 	V_SetBorderNeedRefresh();
 	setsizeneeded = true;
-}
-
-void V_Shutdown()
-{
-	if (screen)
-	{
-		DFrameBuffer *s = screen;
-		screen = NULL;
-		delete s;
-	}
-	V_ClearFonts();
 }
 
 CUSTOM_CVAR (Int, vid_aspect, 0, CVAR_GLOBALCONFIG|CVAR_ARCHIVE)

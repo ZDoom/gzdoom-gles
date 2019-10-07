@@ -47,7 +47,6 @@
 #include "m_argv.h"
 #include "version.h"
 #include "swrenderer/r_swrenderer.h"
-#include "atterm.h"
 
 EXTERN_CVAR (Bool, ticker)
 EXTERN_CVAR (Bool, fullscreen)
@@ -190,9 +189,7 @@ void I_InitGraphics ()
 
 	if (Video == NULL)
 		I_FatalError ("Failed to initialize display");
-	
-	atterm(I_ShutdownGraphics);
-	
+
 	Video->SetWindowedScale (vid_winscale);
 }
 

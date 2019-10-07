@@ -58,12 +58,8 @@
 #include "r_utility.h"
 #include "doomstat.h"
 #include "vm.h"
-#include "atterm.h"
 
 // MACROS ------------------------------------------------------------------
-
-// The maximum number of functions that can be registered with atterm.
-#define MAX_TERMS	64
 
 // TYPES -------------------------------------------------------------------
 
@@ -152,7 +148,6 @@ void I_DetectOS()
 }
 
 void I_StartupJoysticks();
-void I_ShutdownJoysticks();
 
 int main (int argc, char **argv)
 {

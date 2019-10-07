@@ -309,7 +309,7 @@ void I_StartupJoysticks()
 	if(SDL_InitSubSystem(SDL_INIT_JOYSTICK) >= 0)
 		JoystickManager = new SDLInputJoystickManager();
 }
-void I_ShutdownJoysticks()
+void I_ShutdownInput()
 {
 	if(JoystickManager)
 	{

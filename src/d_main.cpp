@@ -103,8 +103,8 @@
 #include "vm.h"
 #include "types.h"
 #include "r_data/r_vanillatrans.h"
-#include "atterm.h"
 #include "s_music.h"
+#include "swrenderer/r_swcolormaps.h"
 
 EXTERN_CVAR(Bool, hud_althud)
 EXTERN_CVAR(Bool, cl_customizeinvulmap)
@@ -127,6 +127,12 @@ extern void G_NewInit ();
 extern void SetupPlayerClasses ();
 void gl_PatchMenu();	// remove modern OpenGL options on old hardware.
 void DeinitMenus();
+void CloseNetwork();
+void P_Shutdown();
+void M_SaveDefaultsFinal();
+void R_Shutdown();
+void I_ShutdownInput();
+
 const FIWADInfo *D_FindIWAD(TArray<FString> &wadfiles, const char *iwad, const char *basewad);
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
@@ -140,6 +146,7 @@ void D_LoadWadSettings ();
 void ParseGLDefs();
 void DrawFullscreenSubtitle(const char *text);
 void D_Cleanup();
+void FreeSBarInfoScript();
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
@@ -2036,23 +2043,6 @@ static void SetMapxxFlag()
 
 //==========================================================================
 //
-// FinalGC
-//
-// If this doesn't free everything, the debug CRT will let us know.
-//
-//==========================================================================
-
-static void FinalGC()
-{
-	delete Args;
-	Args = nullptr;
-	GC::FinalGC = true;
-	GC::FullGC();
-	GC::DelSoftRootHead();	// the soft root head will not be collected by a GC so we have to do it explicitly
-}
-
-//==========================================================================
-//
 // Initialize
 //
 //==========================================================================
@@ -2078,8 +2068,6 @@ static void D_DoomInit()
 
 	// Check response files before coalescing file parameters.
 	M_FindResponseFile ();
-
-	atterm(FinalGC);
 
 	// Combine different file parameters with their pre-switch bits.
 	Args->CollectFiles("-deh", ".deh");
@@ -2382,22 +2370,6 @@ static void NewFailure ()
 
 //==========================================================================
 //
-// I_Quit
-//
-//==========================================================================
-
-void I_Quit()
-{
-	if (demorecording)
-	{
-		G_CheckDemoStatus();
-	}
-	
-	C_DeinitConsole();
-}
-
-//==========================================================================
-//
 // D_DoomMain
 //
 //==========================================================================
@@ -2417,7 +2389,6 @@ static int D_DoomMain_Internal (void)
 	
 	C_InitConsole(80*8, 25*8, false);
 	I_DetectOS();
-	atterm(I_Quit);
 
 	// +logfile gets checked too late to catch the full startup log in the logfile so do some extra check for it here.
 	FString logfile = Args->TakeValue("+logfile");
@@ -2849,8 +2820,6 @@ static int D_DoomMain_Internal (void)
 					{
 						G_BeginRecording(NULL);
 					}
-
-					atterm(D_QuitNetGame);		// killough
 				}
 			}
 		}
@@ -2902,6 +2871,20 @@ int D_DoomMain()
 	// Unless something really bad happened, the game should only exit through this single point in the code.
 	// No more 'exit', please.
 	// Todo: Move all engine cleanup here instead of using exit handlers and replace the scattered 'exit' calls with a special exception.
+	D_Cleanup();
+	CloseNetwork();
+	GC::FinalGC = true;
+	GC::FullGC();
+	GC::DelSoftRootHead();	// the soft root head will not be collected by a GC so we have to do it explicitly
+	C_DeinitConsole();
+	R_DeinitColormaps();
+	R_Shutdown();
+	I_ShutdownGraphics();
+	I_ShutdownInput();
+	M_SaveDefaultsFinal();
+	DeleteStartupScreen();
+	delete Args;
+	Args = nullptr;
 	return ret;
 }
 
@@ -2913,20 +2896,28 @@ int D_DoomMain()
 
 void D_Cleanup()
 {
+	if (demorecording)
+	{
+		G_CheckDemoStatus();
+	}
+
 	// Music and sound should be stopped first
 	S_StopMusic(true);
 	S_StopAllChannels ();
+	S_ClearSoundData();
+	S_UnloadReverbDef();
+	G_ClearMapinfo();
 
 	M_ClearMenus();					// close menu if open
 	F_EndFinale();					// If an intermission is active, end it now
 	AM_ClearColorsets();
-
+	DeinitSWColorMaps();
+	FreeSBarInfoScript();
+	
 	// clean up game state
 	ST_Clear();
 	D_ErrorCleanup ();
-	DThinker::DestroyThinkersInList(STAT_STATIC);
-	E_Shutdown(false);
-	P_FreeLevelData();
+	P_Shutdown();
 
 	M_SaveDefaults(NULL);			// save config before the restart
 
@@ -3050,6 +3041,24 @@ void FStartupScreen::LoadingStatus(const char *message, int colors)
 void FStartupScreen::AppendStatusLine(const char *status)
 {
 }
+
+//===========================================================================
+//
+// DeleteStartupScreen
+//
+// Makes sure the startup screen has been deleted before quitting.
+//
+//===========================================================================
+
+void DeleteStartupScreen()
+{
+	if (StartScreen != nullptr)
+	{
+		delete StartScreen;
+		StartScreen = nullptr;
+	}
+}
+
 
 
 void FStartupScreen::Progress(void) {}

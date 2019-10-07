@@ -33,7 +33,6 @@
 
 #include "i_common.h"
 #include "s_sound.h"
-#include "atterm.h"
 
 #include <sys/sysctl.h>
 #include <unistd.h>
@@ -131,13 +130,14 @@ int OriginalMainTry(int argc, char** argv)
 {
 	Args = new FArgs(argc, argv);
 
-	atexit(call_terms);
-
 	NSString* exePath = [[NSBundle mainBundle] executablePath];
 	progdir = [[exePath stringByDeletingLastPathComponent] UTF8String];
 	progdir += "/";
 
-	return D_DoomMain();
+	auto ret =  D_DoomMain();
+	ShutdownJoysticks();
+	FConsoleWindow::DeleteInstance();
+	return ret;
 }
 
 namespace
@@ -253,7 +253,6 @@ extern bool AppActive;
 								 forMode:NSDefaultRunLoopMode];
 
 	FConsoleWindow::CreateInstance();
-	atterm(FConsoleWindow::DeleteInstance);
 
 	const size_t argc = s_argv.Size();
 	TArray<char*> argv(argc + 1, true);

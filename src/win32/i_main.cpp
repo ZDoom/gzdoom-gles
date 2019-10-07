@@ -84,7 +84,6 @@
 #include "s_sound.h"
 #include "vm.h"
 #include "gstrings.h"
-#include "atterm.h"
 #include "s_music.h"
 
 #include "stats.h"
@@ -103,9 +102,6 @@
 #define X64 ""
 #endif
 
-// The maximum number of functions that can be registered with atterm.
-#define MAX_TERMS	64
-
 // TYPES -------------------------------------------------------------------
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
@@ -114,6 +110,7 @@ LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 void CreateCrashLog (char *custominfo, DWORD customsize, HWND richedit);
 void DisplayCrashLog ();
 void I_FlushBufferedConsoleStuff();
+void DestroyCustomCursor();
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
@@ -172,7 +169,7 @@ static HMODULE hwtsapi32;		// handle to wtsapi32.dll
 //
 // UnCOM
 //
-// Called by atterm if CoInitialize() succeeded.
+// Called by atexit if CoInitialize() succeeded.
 //
 //==========================================================================
 
@@ -185,7 +182,7 @@ static void UnCOM (void)
 //
 // UnWTS
 //
-// Called by atterm if RegisterSessionNotification() succeeded.
+// Called by atexit if RegisterSessionNotification() succeeded.
 //
 //==========================================================================
 
@@ -640,11 +637,7 @@ void RestoreConView()
 	ShowWindow (GameTitleWindow, SW_SHOW);
 	I_ShutdownInput ();		// Make sure the mouse pointer is available.
 	// Make sure the progress bar isn't visible.
-	if (StartScreen != NULL)
-	{
-		delete StartScreen;
-		StartScreen = NULL;
-	}
+	DeleteStartupScreen();
 }
 
 //==========================================================================
@@ -870,8 +863,6 @@ int DoMain (HINSTANCE hInstance)
 	timeBeginPeriod (TimerPeriod);
 	atexit(UnTbp);
 	
-	atexit (call_terms);
-	
 	// Figure out what directory the program resides in.
 	WCHAR progbuff[1024];
 	if (GetModuleFileNameW(nullptr, progbuff, sizeof progbuff) == 0)
@@ -983,10 +974,9 @@ int DoMain (HINSTANCE hInstance)
 	atexit (UnCOM);
 	
 	int ret = D_DoomMain ();
+	DestroyCustomCursor();
 	if (ret == 1337) // special exit code for 'norun'.
 	{
-		// The only way D_DoomMain can exit regularly is by executing a -norun startup, which was previously handled via exception.
-		I_ShutdownGraphics();
 		if (!batchrun)
 		{
 			if (FancyStdOut && !AttachedStdOut)
