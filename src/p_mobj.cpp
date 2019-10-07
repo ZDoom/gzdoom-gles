@@ -4562,7 +4562,7 @@ AActor *AActor::StaticSpawn (PClassActor *type, const DVector3 &pos, replace_t a
 		actor->CallBeginPlay ();
 		if (actor->ObjectFlags & OF_EuthanizeMe)
 		{
-			return actor;
+			return NULL;
 		}
 	}
 	if (level.flags & LEVEL_NOALLIES && !actor->player)
