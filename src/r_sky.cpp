@@ -53,6 +53,8 @@ bool		skystretch;
 fixed_t		sky1cyl,		sky2cyl;
 double		sky1pos,		sky2pos;
 
+EXTERN_CVAR(Bool, cl_oldfreelooklimit)
+
 CUSTOM_CVAR(Int, testskyoffset, 0, 0)
 {
 	R_InitSkyMap();
@@ -67,6 +69,7 @@ CUSTOM_CVAR (Int, r_skymode, 2, CVAR_ARCHIVE)
 
 
 int			freelookviewheight;
+int 		skyoffset;
 
 //==========================================================================
 //
@@ -117,17 +120,17 @@ void R_InitSkyMap ()
 	//        h >  200: Unstretched, but the baseline is shifted down so that the top
 	//                  of the texture is at the top of the screen when looking fully up.
 	skyheight = skytex1->GetScaledHeight();
-	skystretch = false;
+	skystretch = (r_skymode == 1
+				  && skyheight >= 128 && skyheight < 310
+				  && level.IsFreelookAllowed()
+				  && !(level.flags & LEVEL_FORCETILEDSKY)) ? 1 : 0;
+	skyoffset = cl_oldfreelooklimit? 0 : skyheight >= 200? 110 : 138;
 	skytexturemid = 0;
 	if (skyheight >= 128 && skyheight < 200)
 	{
-		skystretch = (r_skymode == 1
-					  && skyheight >= 128
-					  && level.IsFreelookAllowed()
-					  && !(level.flags & LEVEL_FORCETILEDSKY)) ? 1 : 0;
 		skytexturemid = -28;
 	}
-	else if (skyheight > 200)
+	else if (skyheight >= 200)
 	{
 		skytexturemid = (200 - skyheight) * skytex1->Scale.Y +((r_skymode == 2 && !(level.flags & LEVEL_FORCETILEDSKY)) ? skytex1->SkyOffset + testskyoffset : 0);
 	}
@@ -143,9 +146,9 @@ void R_InitSkyMap ()
 
 	if (skystretch)
 	{
-		skyscale *= (double)SKYSTRETCH_HEIGHT / skyheight;
-		skyiscale *= skyheight / (float)SKYSTRETCH_HEIGHT;
-		skytexturemid *= skyheight / (double)SKYSTRETCH_HEIGHT;
+		skyscale *= (double)(SKYSTRETCH_HEIGHT + skyoffset) / skyheight;
+		skyiscale *= skyheight / (float)(SKYSTRETCH_HEIGHT + skyoffset);
+		skytexturemid *= skyheight / (double)(SKYSTRETCH_HEIGHT + skyoffset);
 	}
 
 	// The standard Doom sky texture is 256 pixels wide, repeated 4 times over 360 degrees,
