@@ -135,7 +135,6 @@ int OriginalMainTry(int argc, char** argv)
 	progdir += "/";
 
 	auto ret =  D_DoomMain();
-	ShutdownJoysticks();
 	FConsoleWindow::DeleteInstance();
 	return ret;
 }

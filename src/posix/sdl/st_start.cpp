@@ -43,6 +43,7 @@
 #include "doomdef.h"
 #include "i_system.h"
 #include "c_cvars.h"
+#include "doomerrors.h"
 
 // MACROS ------------------------------------------------------------------
 
