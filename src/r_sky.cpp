@@ -69,7 +69,7 @@ CUSTOM_CVAR (Int, r_skymode, 2, CVAR_ARCHIVE)
 
 
 int			freelookviewheight;
-int 		skyoffset;
+int 		sskyoffset;
 
 //==========================================================================
 //
@@ -124,7 +124,7 @@ void R_InitSkyMap ()
 				  && skyheight >= 128 && skyheight < 310
 				  && level.IsFreelookAllowed()
 				  && !(level.flags & LEVEL_FORCETILEDSKY)) ? 1 : 0;
-	skyoffset = cl_oldfreelooklimit? 0 : skyheight >= 200? 110 : 138;
+	sskyoffset = cl_oldfreelooklimit? 0 : skyheight >= 200? 110 : 138;
 	skytexturemid = 0;
 	if (skyheight >= 128 && skyheight < 200)
 	{
@@ -146,9 +146,9 @@ void R_InitSkyMap ()
 
 	if (skystretch)
 	{
-		skyscale *= (double)(SKYSTRETCH_HEIGHT + skyoffset) / skyheight;
-		skyiscale *= skyheight / (float)(SKYSTRETCH_HEIGHT + skyoffset);
-		skytexturemid *= skyheight / (double)(SKYSTRETCH_HEIGHT + skyoffset);
+		skyscale *= (double)(SKYSTRETCH_HEIGHT + sskyoffset) / skyheight;
+		skyiscale *= skyheight / (float)(SKYSTRETCH_HEIGHT + sskyoffset);
+		skytexturemid *= skyheight / (double)(SKYSTRETCH_HEIGHT + sskyoffset);
 	}
 
 	// The standard Doom sky texture is 256 pixels wide, repeated 4 times over 360 degrees,

@@ -54,7 +54,7 @@
 #include "swrenderer/r_renderthread.h"
 #include "g_levellocals.h"
 
-extern int skyoffset;
+extern int sskyoffset;
 
 CVAR(Bool, r_linearsky, false, CVAR_ARCHIVE | CVAR_GLOBALCONFIG);
 EXTERN_CVAR(Int, r_skymode)
@@ -154,7 +154,7 @@ namespace swrenderer
 				frontcyl = MAX(frontskytex->GetWidth(), frontxscale);
 				if (skystretch)
 				{
-					skymid = skymid * frontskytex->GetScaledHeightDouble() / (SKYSTRETCH_HEIGHT + skyoffset);
+					skymid = skymid * frontskytex->GetScaledHeightDouble() / (SKYSTRETCH_HEIGHT + sskyoffset);
 				}
 			}
 		}
