@@ -60,7 +60,6 @@ public:
 	SoundStreamInfo GetFormat() override;
 
 protected:
-	std::mutex CritSec;
 	Music_Emu *Emu;
 	gme_info_t *TrackInfo;
 	int SampleRate;
@@ -250,7 +249,6 @@ bool GMESong::StartTrack(int track, bool getcritsec)
 
 	if (getcritsec)
 	{
-		std::lock_guard<std::mutex> lock(CritSec);
 		err = gme_start_track(Emu, track);
 	}
 	else
@@ -356,7 +354,6 @@ bool GMESong::GetData(void *buffer, size_t len)
 {
 	gme_err_t err;
 
-	std::lock_guard<std::mutex> lock(CritSec);
 	if (gme_track_ended(Emu))
 	{
 		if (m_Looping)
