@@ -5711,6 +5711,8 @@ void P_SpawnBlood (const DVector3 &pos1, DAngle dir, int damage, AActor *origina
 	if (bloodcls != NULL)
 	{
 		th = Spawn(bloodcls, pos, NO_REPLACE); // GetBloodType already performed the replacement
+
+		if (th == nullptr) return;
 		th->Vel.Z = 2;
 		th->Angles.Yaw = dir;
 		// [NG] Applying PUFFGETSOWNER to the blood will make it target the owner
@@ -5818,6 +5820,8 @@ void P_BloodSplatter (const DVector3 &pos, AActor *originator, DAngle hitangle)
 		AActor *mo;
 
 		mo = Spawn(bloodcls, pos, NO_REPLACE); // GetBloodType already performed the replacement
+
+		if (mo == nullptr) return;
 		mo->target = originator;
 		mo->Vel.X = pr_splatter.Random2 () / 64.;
 		mo->Vel.Y = pr_splatter.Random2() / 64.;
@@ -5862,6 +5866,8 @@ void P_BloodSplatter2 (const DVector3 &pos, AActor *originator, DAngle hitangle)
 
 
 		mo = Spawn (bloodcls, pos + add, NO_REPLACE); // GetBloodType already performed the replacement
+
+		if (mo == nullptr) return;
 		mo->target = originator;
 
 		// colorize the blood!
@@ -5916,6 +5922,8 @@ void P_RipperBlood (AActor *mo, AActor *bleeder)
 	{
 		AActor *th;
 		th = Spawn (bloodcls, pos, NO_REPLACE); // GetBloodType already performed the replacement
+
+		if (th == nullptr) return;
 		// [NG] Applying PUFFGETSOWNER to the blood will make it target the owner
 		if (th->flags5 & MF5_PUFFGETSOWNER) th->target = bleeder;
 		if (gameinfo.gametype == GAME_Heretic)
@@ -6624,7 +6632,7 @@ AActor *P_SpawnSubMissile(AActor *source, PClassActor *type, AActor *target)
 {
 	AActor *other = Spawn(type, source->Pos(), ALLOW_REPLACE);
 
-	if (source == nullptr || type == nullptr)
+	if (other == nullptr || source == nullptr || type == nullptr)
 	{
 		return nullptr;
 	}
