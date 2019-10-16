@@ -1065,6 +1065,14 @@ void G_DoLoadLevel (int position, bool autosave, bool newGame)
 		P_StartLightning ();
 	}
 
+	TThinkerIterator<AActor> it;
+	AActor* ac;
+	// Initial setup of the dynamic lights.
+	while ((ac = it.Next()))
+	{
+		ac->SetDynamicLights();
+	}
+
 	gameaction = ga_nothing; 
 
 	// clear cmd building stuff
