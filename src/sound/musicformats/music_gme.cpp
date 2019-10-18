@@ -156,6 +156,11 @@ MusInfo *GME_OpenSong(FileReader &reader, const char *fmt)
 	}
 	gme_set_stereo_depth(emu, clamp(*gme_stereodepth, 0.f, 1.f));
 	gme_set_fade(emu, -1); // Enable infinite loop
+
+#if GME_VERSION >= 0x602
+	gme_set_autoload_playback_limit(emu, 0);
+#endif // GME_VERSION >= 0x602
+
 	return new GMESong(emu, sample_rate);
 }
 
