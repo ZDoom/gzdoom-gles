@@ -1416,6 +1416,14 @@ class LevelCompatibility native play
 				OffsetSectorPlane(990,	Sector.ceiling, val);
 				OffsetSectorPlane(245,	Sector.ceiling, val);
 				OffsetSectorPlane(3044,	Sector.ceiling, val);
+				break;
+			}
+
+			case '66B931B03618EDE5C022A1EC87189158': // Restoring Deimos MAP03
+			{
+				// Missing teleport destination on easy skill
+				SetThingSkills(62, 31);
+				break;
 			}
 		}
 	}
