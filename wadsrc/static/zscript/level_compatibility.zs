@@ -1425,6 +1425,13 @@ class LevelCompatibility native play
 				SetThingSkills(62, 31);
 				break;
 			}
+
+			case '17314071AB76F4789763428FA2E8DA4C': // Skulldash Expanded Edition MAP04
+			{
+				// Missing teleport destination on easy skill
+				SetThingSkills(164, 31);
+				break;
+			}
 		}
 	}
 
