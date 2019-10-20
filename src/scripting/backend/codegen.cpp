@@ -11276,6 +11276,7 @@ FxLocalVariableDeclaration::FxLocalVariableDeclaration(PType *type, FName name, 
 	Name = name;
 	RegCount = type == TypeVector2 ? 2 : type == TypeVector3 ? 3 : 1;
 	Init = initval;
+	clearExpr = nullptr;
 }
 
 FxLocalVariableDeclaration::~FxLocalVariableDeclaration()
@@ -11286,6 +11287,15 @@ FxLocalVariableDeclaration::~FxLocalVariableDeclaration()
 FxExpression *FxLocalVariableDeclaration::Resolve(FCompileContext &ctx)
 {
 	CHECKRESOLVED();
+
+	if (IsDynamicArray())
+	{
+		auto stackVar = new FxStackVariable(ValueType, StackOffset, ScriptPosition);
+		FArgumentList argsList;
+		clearExpr = new FxMemberFunctionCall(stackVar, "Clear", argsList, ScriptPosition);
+		SAFE_RESOLVE(clearExpr, ctx);
+	}
+
 	if (ctx.Block == nullptr)
 	{
 		ScriptPosition.Message(MSG_ERROR, "Variable declaration outside compound statement");
@@ -11480,6 +11490,10 @@ ExpEmit FxLocalVariableDeclaration::Emit(VMFunctionBuilder *build)
 			}
 			if (pstr->mDestructor != nullptr) build->ConstructedStructs.Push(this);
 		}
+		else if (ValueType->isDynArray())
+		{
+			ClearDynamicArray(build);
+		}
 	}
 	return ExpEmit();
 }
@@ -11511,6 +11525,11 @@ void FxLocalVariableDeclaration::Release(VMFunctionBuilder *build)
 	// For that all local stack variables need to live for the entire execution of a function.
 }
 
+void FxLocalVariableDeclaration::ClearDynamicArray(VMFunctionBuilder *build)
+{
+	assert(clearExpr != nullptr);
+	clearExpr->Emit(build);
+}
 
 FxStaticArray::FxStaticArray(PType *type, FName name, FArgumentList &args, const FScriptPosition &pos)
 	: FxLocalVariableDeclaration(NewArray(type, args.Size()), name, nullptr, VARF_Static|VARF_ReadOnly, pos)
@@ -11595,7 +11614,6 @@ FxLocalArrayDeclaration::FxLocalArrayDeclaration(PType *type, FName name, FArgum
 {
 	ExprType = EFX_LocalArrayDeclaration;
 	values = std::move(args);
-	clearExpr = nullptr;
 }
 
 FxExpression *FxLocalArrayDeclaration::Resolve(FCompileContext &ctx)
@@ -11610,16 +11628,6 @@ FxExpression *FxLocalArrayDeclaration::Resolve(FCompileContext &ctx)
 	auto stackVar = new FxStackVariable(ValueType, StackOffset, ScriptPosition);
 	auto elementType = (static_cast<PArray *> (ValueType))->ElementType;
 	auto elementCount = (static_cast<PArray *> (ValueType))->ElementCount;
-
-	// We HAVE to clear dynamic arrays before initializing them
-	if (IsDynamicArray())
-	{
-		FArgumentList argsList;
-		argsList.Clear();
-
-		clearExpr = new FxMemberFunctionCall(stackVar, "Clear", argsList, (const FScriptPosition) ScriptPosition);
-		SAFE_RESOLVE(clearExpr, ctx);
-	}
 
 	if (values.Size() > elementCount)
 	{
@@ -11677,9 +11685,11 @@ ExpEmit FxLocalArrayDeclaration::Emit(VMFunctionBuilder *build)
 {
 	assert(!(VarFlags & VARF_Out));	// 'out' variables should never be initialized, they can only exist as function parameters.
 
-	if (IsDynamicArray() && clearExpr != nullptr)
+	const bool isDynamicArray = IsDynamicArray();
+
+	if (isDynamicArray)
 	{
-		clearExpr->Emit(build);
+		ClearDynamicArray(build);
 	}
 
 	auto elementSizeConst = build->GetConstantInt(static_cast<PArray *>(ValueType)->ElementSize);
@@ -11690,7 +11700,7 @@ ExpEmit FxLocalArrayDeclaration::Emit(VMFunctionBuilder *build)
 	{
 		ExpEmit emitval = v->Emit(build);
 
-		if (IsDynamicArray())
+		if (isDynamicArray)
 		{
 			continue;
 		}
