@@ -1032,6 +1032,7 @@ void D_ErrorCleanup ()
 	}
 	if (gamestate == GS_INTERMISSION) gamestate = GS_DEMOSCREEN;
 	insave = false;
+	ClearGlobalVMStack();
 }
 
 //==========================================================================
