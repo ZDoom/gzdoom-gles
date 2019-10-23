@@ -1398,9 +1398,12 @@ CCMD(randi)
 	if (CheckCheatmode ())
 		return;
 
-	Net_WriteByte (DEM_GIVECHEAT);
-	Net_WriteString ("health");
-	Net_WriteLong(0);
+	if (players[consoleplayer].health < 100)
+	{
+		Net_WriteByte (DEM_GIVECHEAT);
+		Net_WriteString ("health");
+		Net_WriteLong(0);
+	}
 	Net_WriteByte (DEM_GIVECHEAT);
 	Net_WriteString ("greenarmor");
 	Net_WriteLong(0);
