@@ -30,7 +30,6 @@
 #include "doomdef.h"
 
 class FTexture;
-struct FLevelLocals;
 
 //
 // INTERMISSION
@@ -55,7 +54,6 @@ struct wbstartstruct_t
 	FString		current;	// [RH] Name of map just finished
 	FString		next;		// next level, [RH] actual map name
 	FString		nextname;	// printable name for next level.
-	FString		thisname;	// printable name for next level.
 	FString		nextauthor;	// printable name for next level.
 	FString		thisauthor;	// printable name for next level.
 
@@ -78,11 +76,12 @@ struct wbstartstruct_t
 	int			pnum;
 
 	wbplayerstruct_t	plyr[MAXPLAYERS];
-	
 };
 
 // Intermission stats.
 // Parameters for world map / intermission.
+extern wbstartstruct_t wminfo;
+
 
 // Called by main loop, animate the intermission.
 void WI_Ticker ();

@@ -89,7 +89,6 @@
 #include "dobjgc.h"
 #include "i_music.h"
 #include "a_dynlight.h"
-#include "stringtable.h"
 
 #include "gi.h"
 
@@ -738,7 +737,6 @@ DEFINE_ACTION_FUNCTION_NATIVE(FLevelLocals, SecretExitLevel, G_SecretExitLevel)
 //
 //
 //==========================================================================
-static wbstartstruct_t wminfo;
 
 void G_DoCompleted (void)
 {
@@ -769,11 +767,8 @@ void G_DoCompleted (void)
 	if (automapactive)
 		AM_Stop ();
 
-
-	uint32_t langtable[2] = {};
 	wminfo.finished_ep = level.cluster - 1;
 	wminfo.LName0 = TexMan.CheckForTexture(level.info->PName, ETextureType::MiscPatch);
-	wminfo.thisname = level.info->LookupLevelName(&langtable[0]);	// re-get the name so we have more info about its origin.
 	if (!(level.info->flags3 & LEVEL3_HIDEAUTHORNAME)) wminfo.thisauthor = level.info->AuthorName;
 	wminfo.current = level.MapName;
 
@@ -783,7 +778,6 @@ void G_DoCompleted (void)
 	{
 		wminfo.next = level.MapName;
 		wminfo.LName1 = wminfo.LName0;
-		wminfo.nextname = wminfo.thisname;
 		wminfo.nextauthor = wminfo.thisauthor;
 	}
 	else
@@ -793,37 +787,13 @@ void G_DoCompleted (void)
 		{
 			wminfo.next = nextlevel;
 			wminfo.LName1.SetInvalid();
-			wminfo.nextname = "";
 			wminfo.nextauthor = "";
 		}
 		else
 		{
 			wminfo.next = nextinfo->MapName;
 			wminfo.LName1 = TexMan.CheckForTexture(nextinfo->PName, ETextureType::MiscPatch);
-			wminfo.nextname = nextinfo->LookupLevelName(&langtable[1]);
 			if (!(nextinfo->flags3 & LEVEL3_HIDEAUTHORNAME)) wminfo.nextauthor = nextinfo->AuthorName;
-		}
-	}
-
-	// Ignore the (C)WILVxx lumps from the original Doom IWADs so that the name can be localized properly, if the retrieved text does not come from the default table.
-	// This is only active for those IWADS where the style of these graphics matches the provided BIGFONT for the respective game.
-	if (gameinfo.flags & GI_IGNORETITLEPATCHES)
-	{
-		FTextureID *texids[] = { &wminfo.LName0, &wminfo.LName1 };
-		for (int i = 0; i < 2; i++)
-		{
-			if (texids[i]->isValid() && langtable[i] != FStringTable::default_table)
-			{
-				FTexture *tex = TexMan[*texids[i]];
-				if (tex != nullptr)
-				{
-					int filenum = Wads.GetLumpFile(tex->GetSourceLump());
-					if (filenum >= 0 && filenum <= Wads.GetIwadNum())
-					{
-						texids[i]->SetInvalid();
-					}
-				}
-			}
 		}
 	}
 
@@ -1301,7 +1271,7 @@ DEFINE_ACTION_FUNCTION(FLevelLocals, WorldDone)
 void G_DoWorldDone (void) 
 {		 
 	gamestate = GS_LEVEL;
-	if (nextlevel.IsEmpty())
+	if (wminfo.next[0] == 0)
 	{
 		// Don't crash if no next map is given. Just repeat the current one.
 		Printf ("No next map specified.\n");

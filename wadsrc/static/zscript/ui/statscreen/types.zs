@@ -23,7 +23,6 @@ struct WBStartStruct native version("2.4")
 	native String		current;	// [RH] Name of map just finished
 	native String		next;		// next level, [RH] actual map name
 	native String		nextname;	// next level, printable name
-	native String		thisname;	// this level, printable name
 	native String		nextauthor;	// next level, printable name
 	native String		thisauthor;	// this level, printable name
 

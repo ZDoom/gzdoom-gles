@@ -777,7 +777,8 @@ class StatusScreen abstract play version("2.5")
 		Sucks = TexMan.CheckForTexture("WISUCKS", TexMan.Type_MiscPatch);		// "sucks"
 		Par = TexMan.CheckForTexture("WIPAR", TexMan.Type_MiscPatch);			// "par"
 
-		lnametexts[0] = wbstartstruct.thisname;		
+		// Use the local level structure which can be overridden by hubs
+		lnametexts[0] = level.LevelName;		
 		lnametexts[1] = wbstartstruct.nextname;
 		authortexts[0] = wbstartstruct.thisauthor;
 		authortexts[1] = wbstartstruct.nextauthor;

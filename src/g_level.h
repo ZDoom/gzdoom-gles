@@ -408,7 +408,7 @@ struct level_info_t
 	}
 	void Reset();
 	bool isValid();
-	FString LookupLevelName (uint32_t *langtable = nullptr);
+	FString LookupLevelName ();
 	void ClearDefered()
 	{
 		deferred.Clear();

@@ -297,14 +297,14 @@ void level_info_t::Reset()
 //
 //==========================================================================
 
-FString level_info_t::LookupLevelName(uint32_t *langtable)
+FString level_info_t::LookupLevelName()
 {
-	// All IWAD names that may be substituted by a graphics patch are declared as language strings.
-	if (langtable) *langtable = 0;
 	if (flags & LEVEL_LOOKUPLEVELNAME)
 	{
 		const char *thename;
-		const char *lookedup = GStrings.GetString(LevelName, langtable);
+		const char *lookedup;
+
+		lookedup = GStrings[LevelName];
 		if (lookedup == NULL)
 		{
 			thename = LevelName;
