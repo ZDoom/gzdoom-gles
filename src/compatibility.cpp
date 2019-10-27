@@ -492,9 +492,9 @@ DEFINE_ACTION_FUNCTION(DLevelPostProcessor, GetThingEdNum)
 	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
 	PARAM_UINT(thing);
 
-	const int result = thing < MapThingsConverted.Size()
+	const int ednum = thing < MapThingsConverted.Size()
 		? MapThingsConverted[thing].EdNum : 0;
-	ACTION_RETURN_INT(result);
+	ACTION_RETURN_INT(ednum);
 }
 
 DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingEdNum)
@@ -512,61 +512,15 @@ DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingEdNum)
 	return 0;
 }
 
-DEFINE_ACTION_FUNCTION(DLevelPostProcessor, GetThingAngle)
-{
-	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
-	PARAM_UINT(thing);
-
-	const int result = thing < MapThingsConverted.Size()
-		? MapThingsConverted[thing].angle : 0;
-	ACTION_RETURN_INT(result);
-}
-
-DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingAngle)
-{
-	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
-	PARAM_UINT(thing);
-	PARAM_UINT(angle);
-
-	if (thing < MapThingsConverted.Size())
-	{
-		MapThingsConverted[thing].angle = angle;
-	}
-	return 0;
-}
-
-DEFINE_ACTION_FUNCTION(DLevelPostProcessor, GetThingSkills)
-{
-	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
-	PARAM_UINT(thing);
-
-	const int result = thing < MapThingsConverted.Size()
-		? MapThingsConverted[thing].SkillFilter : 0;
-	ACTION_RETURN_INT(result);
-}
-
-DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingSkills)
-{
-	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
-	PARAM_UINT(thing);
-	PARAM_UINT(skillmask);
-
-	if (thing < MapThingsConverted.Size())
-	{
-		MapThingsConverted[thing].SkillFilter = skillmask;
-	}
-	return 0;
-}
-
 DEFINE_ACTION_FUNCTION(DLevelPostProcessor, GetThingPos)
 {
 	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
 	PARAM_UINT(thing);
 
-	const DVector3 result = thing < MapThingsConverted.Size()
+	const DVector3 pos = thing < MapThingsConverted.Size()
 		? MapThingsConverted[thing].pos
 		: DVector3(0, 0, 0);
-	ACTION_RETURN_VEC3(result);
+	ACTION_RETURN_VEC3(pos);
 }
 
 DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingXY)
@@ -598,14 +552,60 @@ DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingZ)
 	return 0;
 }
 
+DEFINE_ACTION_FUNCTION(DLevelPostProcessor, GetThingAngle)
+{
+	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
+	PARAM_UINT(thing);
+
+	const int angle = thing < MapThingsConverted.Size()
+		? MapThingsConverted[thing].angle : 0;
+	ACTION_RETURN_INT(angle);
+}
+
+DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingAngle)
+{
+	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
+	PARAM_UINT(thing);
+	PARAM_INT(angle);
+
+	if (thing < MapThingsConverted.Size())
+	{
+		MapThingsConverted[thing].angle = angle;
+	}
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DLevelPostProcessor, GetThingSkills)
+{
+	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
+	PARAM_UINT(thing);
+
+	const int skills = thing < MapThingsConverted.Size()
+		? MapThingsConverted[thing].SkillFilter : 0;
+	ACTION_RETURN_INT(skills);
+}
+
+DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingSkills)
+{
+	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
+	PARAM_UINT(thing);
+	PARAM_UINT(skillmask);
+
+	if (thing < MapThingsConverted.Size())
+	{
+		MapThingsConverted[thing].SkillFilter = skillmask;
+	}
+	return 0;
+}
+
 DEFINE_ACTION_FUNCTION(DLevelPostProcessor, GetThingFlags)
 {
 	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
 	PARAM_UINT(thing);
 
-	const unsigned result = thing < MapThingsConverted.Size()
+	const unsigned flags = thing < MapThingsConverted.Size()
 		? MapThingsConverted[thing].flags : 0;
-	ACTION_RETURN_INT(result);
+	ACTION_RETURN_INT(flags);
 }
 
 DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingFlags)
@@ -626,9 +626,9 @@ DEFINE_ACTION_FUNCTION(DLevelPostProcessor, GetThingSpecial)
 	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
 	PARAM_UINT(thing);
 
-	const int result = thing < MapThingsConverted.Size()
+	const int special = thing < MapThingsConverted.Size()
 		? MapThingsConverted[thing].special : 0;
-	ACTION_RETURN_INT(result);
+	ACTION_RETURN_INT(special);
 }
 
 DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingSpecial)
@@ -650,9 +650,9 @@ DEFINE_ACTION_FUNCTION(DLevelPostProcessor, GetThingArgument)
 	PARAM_UINT(thing);
 	PARAM_UINT(index);
 
-	const int result = index < 5 && thing < MapThingsConverted.Size()
+	const int argument = index < 5 && thing < MapThingsConverted.Size()
 		? MapThingsConverted[thing].args[index] : 0;
-	ACTION_RETURN_INT(result);
+	ACTION_RETURN_INT(argument);
 }
 
 DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetThingArgument)
