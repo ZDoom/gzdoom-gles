@@ -48,9 +48,9 @@ const char *GetVersionString();
 #define RC_PRODUCTVERSION 3,83,1
 #define RC_PRODUCTVERSION2 VERSIONSTR
 // These are for content versioning.
-#define VER_MAJOR 3
-#define VER_MINOR 9
-#define VER_REVISION 0
+#define VER_MAJOR 4
+#define VER_MINOR 2
+#define VER_REVISION 3
 
 // Version identifier for network games.
 // Bump it every time you do a release unless you're certain you
