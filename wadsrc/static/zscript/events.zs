@@ -113,10 +113,9 @@ struct UiEvent native ui version("2.4")
         Key_Del         = 26,
         Key_Escape      = 27,        // ASCII
         Key_Free1       = 28,
-        Key_Free2       = 29,
+        Key_SysRq       = 29,        // PrtSc
         Key_Back        = 30,        // browser back key
-        Key_CEscape     = 31,        // color escape
-        Key_SysRq       = 32         // PrtSc
+        Key_CEscape     = 31         // color escape
     }
     
     // 
