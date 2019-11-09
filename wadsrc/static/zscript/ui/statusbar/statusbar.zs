@@ -322,6 +322,7 @@ class BaseStatusBar native ui
 
 	virtual void Init() 
 	{
+		SetSize(0, 320, 200);
 		mSmallFont = HUDFont.Create("SmallFont");
 	}
 
