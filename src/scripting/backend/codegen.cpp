@@ -92,7 +92,7 @@ static const FLOP FxFlops[] =
 	{ NAME_Round,	FLOP_ROUND,		[](double v) { return round(v);  } },
 };
 
-static bool AreCompatiblePointerTypes(PType* dest, PType* source, bool forcompare = false);
+bool AreCompatiblePointerTypes(PType* dest, PType* source, bool forcompare = false);
 
 //==========================================================================
 //
@@ -288,7 +288,7 @@ static PFunction *FindBuiltinFunction(FName funcname)
 //
 //==========================================================================
 
-static bool AreCompatiblePointerTypes(PType *dest, PType *source, bool forcompare)
+bool AreCompatiblePointerTypes(PType *dest, PType *source, bool forcompare)
 {
 	if (dest->isPointer() && source->isPointer())
 	{
