@@ -780,8 +780,8 @@ class StatusScreen abstract play version("2.5")
 		// Use the local level structure which can be overridden by hubs
 		lnametexts[0] = level.LevelName;		
 		lnametexts[1] = wbstartstruct.nextname;
-		authortexts[0] = wbstartstruct.thisauthor;
-		authortexts[1] = wbstartstruct.nextauthor;
+		authortexts[0] = StringTable.Localize(wbstartstruct.thisauthor);
+		authortexts[1] = StringTable.Localize(wbstartstruct.nextauthor);
 
 		bg = InterBackground.Create(wbs);
 		noautostartmap = bg.LoadBackground(false);
