@@ -730,20 +730,23 @@ DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetVertex)
 	return 0;
 }
 
-DEFINE_ACTION_FUNCTION(DLevelPostProcessor, FlipLine)
+DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetLineVertexes)
 {
 	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
 	PARAM_UINT(lineidx);
+	PARAM_UINT(vertexidx1);
+	PARAM_UINT(vertexidx2);
 
-	if (lineidx < level.lines.Size())
+	if (lineidx < level.lines.Size() &&
+		vertexidx1 < level.vertexes.Size() &&
+		vertexidx2 < level.vertexes.Size())
 	{
 		line_t *line = &level.lines[lineidx];
-		vertex_t *v1 = line->v1;
-		vertex_t *v2 = line->v2;
+		vertex_t *vertex1 = &level.vertexes[vertexidx1];
+		vertex_t *vertex2 = &level.vertexes[vertexidx2];
 
-		line->v1 = v2;
-		line->v2 = v1;
-
+		line->v1 = vertex1;
+		line->v2 = vertex2;
 	}
 	ForceNodeBuild = true;
 	return 0;
