@@ -2001,6 +2001,7 @@ MISCMNU_CACHETIME				= "Time threshold for node caching";
 MISCMNU_CLEARNODECACHE			= "Clear node cache";
 MISCMNU_INTERSCROLL				= "Allow skipping of intermission scrollers";
 MISCMNU_QUICKEXIT				= "Allow quick exit";
+MISCMNU_NOCHEATS				= "Disable classic keyboard cheats";
 // Automap Options
 AUTOMAPMNU_TITLE				= "AUTOMAP OPTIONS";
 AUTOMAPMNU_COLORSET				= "Map color set";
