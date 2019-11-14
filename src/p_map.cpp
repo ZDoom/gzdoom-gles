@@ -5100,12 +5100,6 @@ static ETraceStatus ProcessRailHit(FTraceResults &res, void *userdata)
 		return TRACE_Stop;
 	}
 
-	// Invulnerable things completely block the shot
-	if (data->StopAtInvul && res.Actor->flags2 & MF2_INVULNERABLE)
-	{
-		return TRACE_Stop;
-	}
-
 	// Skip actors if the puff has:
 	// 1. THRUACTORS (This one did NOT include a check for spectral)
 	// 2. MTHRUSPECIES on puff and the shooter has same species as the hit actor
@@ -5118,6 +5112,12 @@ static ETraceStatus ProcessRailHit(FTraceResults &res, void *userdata)
 		(data->ThruGhosts && res.Actor->flags3 & MF3_GHOST))
 	{
 		return TRACE_Skip;
+	}
+
+	// Invulnerable things completely block the shot
+	if (data->StopAtInvul && res.Actor->flags2 & MF2_INVULNERABLE)
+	{
+		return TRACE_Stop;
 	}
 
 	// Save this thing for damaging later, and continue the trace
