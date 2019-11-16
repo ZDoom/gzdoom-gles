@@ -81,6 +81,7 @@ EXTERN_CVAR (Bool, r_debug_disable_vis_filter)
 extern TArray<spritedef_t> sprites;
 extern TArray<spriteframe_t> SpriteFrames;
 extern uint32_t r_renderercaps;
+extern int modellightindex;
 
 enum HWRenderStyle
 {
@@ -474,7 +475,7 @@ void GLSprite::Draw(int pass)
 		}
 		else
 		{
-			gl_RenderModel(this, dynlightindex);
+			gl_RenderModel(this);
 		}
 	}
 
