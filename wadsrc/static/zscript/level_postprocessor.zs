@@ -46,6 +46,7 @@ class LevelPostProcessor native play
 
 	protected native void SetVertex(uint vertex, double x, double y);
 	protected native void SetLineVertexes(uint Line, uint v1, uint v2);
+	protected native void FlipLineSideRefs(uint Line);
 	protected native void SetLineSectorRef(uint line, uint side, uint sector);
 	protected native Actor GetDefaultActor(Name actorclass);
 

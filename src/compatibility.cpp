@@ -752,6 +752,31 @@ DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetLineVertexes)
 	return 0;
 }
 
+DEFINE_ACTION_FUNCTION(DLevelPostProcessor, FlipLineSideRefs)
+{
+	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
+	PARAM_UINT(lineidx);
+
+	if (lineidx < level.lines.Size())
+	{
+		line_t *line = &level.lines[lineidx];
+		side_t *side1 = line->sidedef[1];
+		side_t *side2 = line->sidedef[0];
+
+		if (!!side1 && !!side2) // don't flip single-sided lines
+		{
+			sector_t *frontsector = line->sidedef[1]->sector;
+			sector_t *backsector = line->sidedef[0]->sector;
+			line->sidedef[0] = side1;
+			line->sidedef[1] = side2;
+			line->frontsector = frontsector;
+			line->backsector = backsector;
+		}
+	}
+	ForceNodeBuild = true;
+	return 0;
+}
+
 DEFINE_ACTION_FUNCTION(DLevelPostProcessor, SetLineSectorRef)
 {
 	PARAM_SELF_PROLOGUE(DLevelPostProcessor);
