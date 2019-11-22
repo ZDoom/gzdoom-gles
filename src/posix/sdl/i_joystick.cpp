@@ -40,7 +40,7 @@
 // Very small deadzone so that floating point magic doesn't happen
 #define MIN_DEADZONE 0.000001f
 
-CUSTOM_CVAR(Bool, joy_background, false, CVAR_GLOBALCONFIG|CVAR_ARCHIVE|CVAR_NOINITCALL)
+CUSTOM_CVAR(Bool, joy_background, true, CVAR_GLOBALCONFIG|CVAR_ARCHIVE|CVAR_NOINITCALL)
 {
 	Printf("This won't take effect until " GAMENAME " is restarted.\n");
 }
