@@ -216,6 +216,7 @@ skill extreme_lzd
 	PicName = "M_EXTR"
 	Name = "$SKILL_EXTREME"
 	MustConfirm
+	NoMenu
 }
 
 skill nightmare
