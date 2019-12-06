@@ -1914,6 +1914,9 @@ DSPLYMNU_MOVEBOB 				= "View bob amount while moving";
 DSPLYMNU_STILLBOB 				= "View bob amount while not moving";
 DSPLYMNU_BOBSPEED				= "Weapon bob speed";
 DSPLYMNU_GPUSWITCH				= "Notebook Switchable GPU";
+DSPLYMNU_CUSTOMINVERTMAP		= "Custom Inverse Map";
+DSPLYMNU_CUSTOMINVERTC1			= "Custom Inverse Color Dark";
+DSPLYMNU_CUSTOMINVERTC2			= "Custom Inverse Color Light";
 
 // HUD Options
 HUDMNU_TITLE					= "HUD Options";
