@@ -489,6 +489,8 @@ OptionMenu "CustomizeControls" protected
 	Submenu    "$CNTRLMNU_OTHER"       , "OtherControlsMenu"
 	Submenu    "$CNTRLMNU_POPUPS"      , "StrifeControlsMenu"
 	Submenu    "$MAPCNTRLMNU_CONTROLS" , "MapControlsMenu"
+	StaticText " "
+	SafeCommand "$OPTMNU_DEFAULTS",	"resetb2defaults"
 }
 
 OptionMenu "ActionControlsMenu" protected
