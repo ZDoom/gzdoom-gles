@@ -40,9 +40,7 @@
 #endif
 #include <fcntl.h>
 
-#include "i_system.h"
-#include "i_sound.h"
-#include "s_sound.h"
+#include "s_soundinternal.h"
 #include "m_swap.h"
 #include "superfasthash.h"
 

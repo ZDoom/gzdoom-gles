@@ -1135,6 +1135,11 @@ FString BuildString (int argc, FString *argv)
 //
 //===========================================================================
 
+void FConsoleCommand::PrintCommand()
+{
+	Printf("%s\n", m_Name);
+}
+
 FString SubstituteAliasParams (FString &command, FCommandLine &args)
 {
 	// Do substitution by replacing %x with the argument x.
