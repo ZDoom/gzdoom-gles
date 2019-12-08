@@ -925,6 +925,7 @@ set (PCH_SOURCES
 	sound/s_advsound.cpp
 	sound/s_environment.cpp
 	sound/s_sndseq.cpp
+	sound/s_doomsound.cpp
 	sound/s_sound.cpp
 	sound/s_music.cpp
 	s_playlist.cpp
