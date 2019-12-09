@@ -2908,7 +2908,6 @@ void D_Cleanup()
 
 	// Music and sound should be stopped first
 	S_StopMusic(true);
-	S_StopAllChannels ();
 	S_ClearSoundData();
 	S_UnloadReverbDef();
 	G_ClearMapinfo();
