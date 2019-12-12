@@ -292,8 +292,7 @@ void FGLRenderer::SetOutputViewport(GL_IRECT *bounds)
 		scaleX = MIN(clientWidth / (float)screenWidth, clientHeight / (float)screenHeight);
 		scaleY = scaleX;
 	}
-	int factor = screenWidth == 160 && screenHeight == 200? 2 : 1;
-	mOutputLetterbox.width = (int)round(screenWidth * scaleX * factor);
+	mOutputLetterbox.width = (int)round(screenWidth * scaleX);
 	mOutputLetterbox.height = (int)round(screenHeight * scaleY);
 	mOutputLetterbox.left = (clientWidth - mOutputLetterbox.width) / 2;
 	mOutputLetterbox.top = (clientHeight - mOutputLetterbox.height) / 2;

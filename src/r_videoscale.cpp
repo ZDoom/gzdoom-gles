@@ -77,7 +77,7 @@ namespace
 		{ true,			false,		[](uint32_t Width)->uint32_t { return 640; },		            	[](uint32_t Height)->uint32_t { return 400; },				        true,   	false   },	// 3  - 640x400
 		{ true,			true,		[](uint32_t Width)->uint32_t { return 1280; },		            	[](uint32_t Height)->uint32_t { return 800; },	        			true,   	false   },	// 4  - 1280x800		
 		{ true,			true,		[](uint32_t Width)->uint32_t { return vid_scale_customwidth; },	[](uint32_t Height)->uint32_t { return vid_scale_customheight; },	true,   	true    },	// 5  - Custom
-		{ true,			false,		[](uint32_t Width)->uint32_t { return 160; },		            	[](uint32_t Height)->uint32_t { return 200; },			        	true,   	false   },	// 6  - 160x200
+		{ true,			false,		[](uint32_t Width)->uint32_t { return 356; },		            	[](uint32_t Height)->uint32_t { return 200; },			        	false,   	false   },	// 6  - 356x200
 	};
 	bool isOutOfBounds(int x)
 	{
@@ -128,8 +128,6 @@ int ViewportScaledWidth(int width, int height)
 	}
 	if (isOutOfBounds(vid_scalemode))
 		vid_scalemode = 0;
-	if (vid_scalemode == 6)
-		vid_scalefactor = 1.0;
 	if (vid_cropaspect && height > 0)
 		width = ((float)width/height > ActiveRatio(width, height)) ? (int)(height * ActiveRatio(width, height)) : width;
 	return (int)MAX((int32_t)160, (int32_t)(vid_scalefactor * vScaleTable[vid_scalemode].GetScaledWidth(width)));
@@ -144,8 +142,6 @@ int ViewportScaledHeight(int width, int height)
 	}
 	if (isOutOfBounds(vid_scalemode))
 		vid_scalemode = 0;
-	if (vid_scalemode == 6)
-		vid_scalefactor = 1.0;
 	if (vid_cropaspect && height > 0)
 		height = ((float)width/height < ActiveRatio(width, height)) ? (int)(width / ActiveRatio(width, height)) : height;
 	return (int)MAX((int32_t)100, (int32_t)(vid_scalefactor * vScaleTable[vid_scalemode].GetScaledHeight(height)));
