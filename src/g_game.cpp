@@ -398,7 +398,7 @@ CCMD (weapnext)
 	}
 	if (SendItemUse != players[consoleplayer].ReadyWeapon)
 	{
-		S_Sound(CHAN_AUTO, "misc/weaponchange", 1.0, ATTN_NONE);
+		S_Sound(CHAN_AUTO, 0, "misc/weaponchange", 1.0, ATTN_NONE);
 	}
 }
 
@@ -424,7 +424,7 @@ CCMD (weapprev)
 	}
 	if (SendItemUse != players[consoleplayer].ReadyWeapon)
 	{
-		S_Sound(CHAN_AUTO, "misc/weaponchange", 1.0, ATTN_NONE);
+		S_Sound(CHAN_AUTO, 0, "misc/weaponchange", 1.0, ATTN_NONE);
 	}
 }
 
