@@ -342,7 +342,7 @@ static bool VerifyActorSound(AActor* ent, FSoundID& sound_id, int& channel, ECha
 
 	if ((flags & CHANF_MAYBE_LOCAL) && (i_compatflags & COMPATF_SILENTPICKUP))
 	{
-		if (soundEngine->isListener(ent))
+		if (!soundEngine->isListener(ent))
 		{
 			return false;
 		}
