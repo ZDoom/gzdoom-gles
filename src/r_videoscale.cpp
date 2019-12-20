@@ -68,6 +68,33 @@ namespace
 		bool isScaled43;
 		bool isCustom;
 	};
+
+	float v_MinimumToFill()
+	{
+		// sx = screen x dimension, sy = same for y
+		float sx = (float)screen->GetWidth(), sy = (float)screen->GetHeight();
+		static float lastsx = 0., lastsy = 0., result = 0.;
+		if (lastsx != sx || lastsy != sy)
+		{
+			if (sx <= 0. || sy <= 0.)
+				return 1.; // prevent x/0 error
+			// set absolute minimum scale to fill the entire screen but get as close to 640x400 as possible
+			float ssx = 640. / sx, ssy = 400. / sy;
+			result = (ssx < ssy) ? ssy : ssx;
+			lastsx = sx;
+			lastsy = sy;
+		}
+		return result;
+	}
+	inline uint32_t v_mfillX()
+	{
+		return screen ? (uint32_t)((float)screen->GetWidth() * v_MinimumToFill()) : 640;
+	}
+	inline uint32_t v_mfillY()
+	{
+		return screen ? (uint32_t)((float)screen->GetHeight() * v_MinimumToFill()) : 400;
+	}
+
 	v_ScaleTable vScaleTable[NUMSCALEMODES] =
 	{
 		//	isValid,	isLinear,	GetScaledWidth(),									            	GetScaledHeight(),										        	isScaled43, isCustom
@@ -75,9 +102,9 @@ namespace
 		{ true,			true,		[](uint32_t Width)->uint32_t { return Width; },			        [](uint32_t Height)->uint32_t { return Height; },	        		false,  	false   },	// 1  - Native (Linear)
 		{ true,			false,		[](uint32_t Width)->uint32_t { return 320; },		            	[](uint32_t Height)->uint32_t { return 200; },			        	true,   	false   },	// 2  - 320x200
 		{ true,			false,		[](uint32_t Width)->uint32_t { return 640; },		            	[](uint32_t Height)->uint32_t { return 400; },				        true,   	false   },	// 3  - 640x400
-		{ true,			true,		[](uint32_t Width)->uint32_t { return 1280; },		            	[](uint32_t Height)->uint32_t { return 800; },	        			true,   	false   },	// 4  - 1280x800		
+		{ true,			true,		[](uint32_t Width)->uint32_t { return 1280; },		            	[](uint32_t Height)->uint32_t { return 800; },	        			true,   	false   },	// 4  - 1280x800
 		{ true,			true,		[](uint32_t Width)->uint32_t { return vid_scale_customwidth; },	[](uint32_t Height)->uint32_t { return vid_scale_customheight; },	true,   	true    },	// 5  - Custom
-		{ true,			false,		[](uint32_t Width)->uint32_t { return 356; },		            	[](uint32_t Height)->uint32_t { return 200; },			        	false,   	false   },	// 6  - 356x200
+		{ true,			true,		[](uint32_t Width)->uint32_t { return v_mfillX(); },				[](uint32_t Height)->uint32_t { return v_mfillY(); },				false,		false   },	// 6  - Minimum Scale to Fill Entire Screen
 	};
 	bool isOutOfBounds(int x)
 	{
