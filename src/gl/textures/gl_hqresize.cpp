@@ -414,8 +414,9 @@ unsigned char *gl_CreateUpsampledTextureBuffer ( const FTexture *inputTexture, u
 	outWidth = inWidth;
 	outHeight = inHeight;
 
-	// [BB] Don't resample if the width or height of the input texture is bigger than gl_texture_hqresize_maxinputsize.
-	if ( ( inWidth > gl_texture_hqresize_maxinputsize ) || ( inHeight > gl_texture_hqresize_maxinputsize ) )
+	// [BB] Don't resample if width * height of the input texture is bigger than gl_texture_hqresize_maxinputsize squared.
+	const int maxInputSize = gl_texture_hqresize_maxinputsize;
+	if (inWidth * inHeight > maxInputSize * maxInputSize)
 		return inputBuffer;
 
 	// [BB] Don't try to upsample textures based off FCanvasTexture.
