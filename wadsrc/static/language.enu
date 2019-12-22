@@ -2516,6 +2516,7 @@ OPTVAL_VTAZDOOM				= "Auto (ZDoom Preferred)";
 OPTVAL_VTAVANILLA			= "Auto (Vanilla Preferred)";
 OPTVAL_SCALENEAREST			= "Scaled (Nearest)";
 OPTVAL_SCALELINEAR			= "Scaled (Linear)";
+OPTVAL_LOWEST				= "Lowest Possible Scale";
 OPTVAL_LETTERBOX			= "Letterbox";
 OPTVAL_SMALL				= "Small";
 OPTVAL_LARGE				= "Large";
