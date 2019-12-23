@@ -85,6 +85,7 @@ public:
 	int StringLen;
 	int TokenType;
 	int Number;
+	int64_t BigNumber;
 	double Float;
 	int Line;
 	bool End;
