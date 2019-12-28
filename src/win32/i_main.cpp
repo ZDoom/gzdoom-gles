@@ -899,7 +899,7 @@ int DoMain (HINSTANCE hInstance)
 	// element. DEVMODE is not one of those structures.
 	memset (&displaysettings, 0, sizeof(displaysettings));
 	displaysettings.dmSize = sizeof(displaysettings);
-	EnumDisplaySettings (NULL, ENUM_CURRENT_SETTINGS, &displaysettings);
+	EnumDisplaySettingsA (NULL, ENUM_CURRENT_SETTINGS, &displaysettings);
 	x = (displaysettings.dmPelsWidth - width) / 2;
 	y = (displaysettings.dmPelsHeight - height) / 2;
 	
