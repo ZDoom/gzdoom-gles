@@ -47,6 +47,7 @@
 #include "s_sound.h"
 #include "st_console.h"
 #include "version.h"
+#include "doomerrors.h"
 #include "s_music.h"
 
 
