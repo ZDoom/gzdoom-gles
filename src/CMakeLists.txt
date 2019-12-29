@@ -1137,6 +1137,7 @@ add_executable( zdoom WIN32 MACOSX_BUNDLE
 	x86.cpp
 	strnatcmp.c
 	zstring.cpp
+	dictionary.cpp
 	math/asin.c
 	math/atan.c
 	math/const.c
