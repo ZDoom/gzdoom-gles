@@ -37,10 +37,6 @@
 
 #include "hardware.h"
 #include "win32iface.h"
-#include "i_video.h"
-#include "i_system.h"
-#include "c_console.h"
-#include "c_cvars.h"
 #include "c_dispatch.h"
 #include "v_text.h"
 #include "doomstat.h"
@@ -193,7 +189,7 @@ void I_InitGraphics ()
 	Video->SetWindowedScale (vid_winscale);
 }
 
-static void I_DeleteRenderer()
+void I_DeleteRenderer()
 {
 	if (Renderer != NULL) delete Renderer;
 }
@@ -216,7 +212,6 @@ void I_CreateRenderer()
 	{
 		if (currentrenderer==1) Renderer = gl_CreateInterface();
 		else Renderer = new FSoftwareRenderer;
-		atterm(I_DeleteRenderer);
 	}
 }
 

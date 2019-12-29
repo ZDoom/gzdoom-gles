@@ -1203,7 +1203,7 @@ void I_InitGraphics()
 }
 
 
-static void I_DeleteRenderer()
+void I_DeleteRenderer()
 {
 	delete Renderer;
 	Renderer = NULL;
@@ -1220,7 +1220,6 @@ void I_CreateRenderer()
 		Renderer = 1 == currentrenderer
 			? gl_CreateInterface()
 			: new FSoftwareRenderer;
-		atterm(I_DeleteRenderer);
 	}
 }
 

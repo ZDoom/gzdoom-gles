@@ -132,6 +132,8 @@ void P_Shutdown();
 void M_SaveDefaultsFinal();
 void R_Shutdown();
 void I_ShutdownInput();
+void StopFPSLimit();
+void I_DeleteRenderer();
 
 const FIWADInfo *D_FindIWAD(TArray<FString> &wadfiles, const char *iwad, const char *basewad);
 
@@ -2879,6 +2881,7 @@ int D_DoomMain()
 	C_DeinitConsole();
 	R_DeinitColormaps();
 	R_Shutdown();
+	I_DeleteRenderer();
 	I_ShutdownGraphics();
 	I_ShutdownInput();
 	M_SaveDefaultsFinal();
@@ -2913,7 +2916,8 @@ void D_Cleanup()
 	AM_ClearColorsets();
 	DeinitSWColorMaps();
 	FreeSBarInfoScript();
-	
+	StopFPSLimit();
+
 	// clean up game state
 	ST_Clear();
 	D_ErrorCleanup ();
