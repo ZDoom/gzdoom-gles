@@ -2129,6 +2129,11 @@ FString DictionaryToString(const Dictionary &dict)
 
 Dictionary *DictionaryFromString(const FString &string)
 {
+	if (string.IsEmpty())
+	{
+		return nullptr;
+	}
+
 	Dictionary *const dict = new Dictionary;
 
 	rapidjson::Document doc;
@@ -2158,7 +2163,7 @@ template<> FSerializer &Serialize(FSerializer &arc, const char *key, Dictionary 
 {
 	if (arc.isWriting())
 	{
-		FString contents { DictionaryToString(*dict) };
+		FString contents { dict ? DictionaryToString(*dict) : "" };
 		return arc(key, contents);
 	}
 	else
