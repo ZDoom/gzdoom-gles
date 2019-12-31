@@ -55,6 +55,7 @@
 #include "vm.h"
 #include "v_text.h"
 
+#include "w_wad.h"
 #include "version.h"
 
 struct FLatchedValue
@@ -1963,6 +1964,10 @@ void C_GrabCVarDefaults ()
 
 	while ((lump = Wads.FindLump("DEFCVARS", &lastlump)) != -1)
 	{
+		// don't parse from wads
+		if (lastlump > Wads.GetLastLump(Wads.GetIwadNum()))
+			I_FatalError("Cannot load DEFCVARS from a wadfile!\n");
+
 		FScanner sc(lump);
 
 		sc.MustGetString();
