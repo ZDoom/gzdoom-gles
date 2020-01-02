@@ -140,7 +140,7 @@ int ZMusic_EnumerateMidiDevices()
 #endif
 }
 
-
+#if 0
 const std::vector<MidiOutDevice> &ZMusic_GetMidiDevices()
 {
 #if defined HAVE_SYSTEM_MIDI && defined __linux__
@@ -151,6 +151,7 @@ const std::vector<MidiOutDevice> &ZMusic_GetMidiDevices()
 	return empty;
 #endif // HAVE_SYSTEM_MIDI && __linux__
 }
+#endif
 
 
 template<class valtype>
