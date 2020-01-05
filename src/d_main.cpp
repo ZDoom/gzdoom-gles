@@ -1482,6 +1482,10 @@ void ParseCVarInfo()
 				{
 					cvarflags |= CVAR_LATCH;
 				}
+				else if (stricmp(sc.String, "nosave") == 0)
+				{
+					cvarflags |= CVAR_NOSAVE;
+				}
 				else
 				{
 					sc.ScriptError("Unknown cvar attribute '%s'", sc.String);
