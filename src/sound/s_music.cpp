@@ -59,6 +59,7 @@
 #include <io.h>
 #include "musicformats/win32/i_cd.h"
 #endif
+#include <memory>
 
 #include "i_system.h"
 #include "i_sound.h"
