@@ -276,11 +276,9 @@ void ZCCCompiler::ProcessMixin(ZCC_MixinDef *cnode, PSymbolTreeNode *treenode)
 {
 	ZCC_MixinWork *cls = new ZCC_MixinWork(cnode, treenode);
 
-	Mixins.Push(cls);
-
 	auto node = cnode->Body;
 
-	// Need to check if the class actually has a body.
+	// Need to check if the mixin actually has a body.
 	if (node != nullptr) do
 	{
 		if (cnode->MixinType == ZCC_Mixin_Class)
@@ -296,9 +294,12 @@ void ZCCCompiler::ProcessMixin(ZCC_MixinDef *cnode, PSymbolTreeNode *treenode)
 			case AST_EnumTerminator:
 			case AST_States:
 			case AST_FuncDeclarator:
-			case AST_Default:
 			case AST_StaticArrayStatement:
 				break;
+
+			case AST_Default:
+				Error(node, "Default blocks currently disabled in mixins");
+				return;
 
 			default:
 				assert(0 && "Unhandled AST node type");
@@ -308,6 +309,8 @@ void ZCCCompiler::ProcessMixin(ZCC_MixinDef *cnode, PSymbolTreeNode *treenode)
 
 		node = node->SiblingNext;
 	} while (node != cnode->Body);
+
+	Mixins.Push(cls);
 }
 
 //==========================================================================
