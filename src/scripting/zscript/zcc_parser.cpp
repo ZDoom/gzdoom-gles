@@ -409,10 +409,6 @@ static void DoParse(int lumpnum)
 				Printf(TEXTCOLOR_RED "Warning: ZScript version mismatch. %d.%d.%d required but only %d.%d.%d supported.\n",
 				state.ParseVersion.major, state.ParseVersion.minor, state.ParseVersion.revision, VER_MAJOR, VER_MINOR, VER_REVISION);
 			}
-			else if (state.ParseVersion > MakeVersion(3, 9, 0))
-			{
-				Printf(TEXTCOLOR_RED "Warning: ZScript version %d.%d.%d only partially supported.\n", VER_MAJOR, VER_MINOR, VER_REVISION);
-			}
 		}
 		else
 		{
