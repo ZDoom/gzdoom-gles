@@ -6,6 +6,10 @@ require_strnicmp()
 
 if( ZD_CMAKE_COMPILER_IS_GNUC_COMPATIBLE )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
+	if( WIN32 )
+		set( CMAKE_CXX_FLAGS "-D_UNICODE -DUNICODE ${CMAKE_CXX_FLAGS}" )
+		set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -municode" )
+	endif()
 endif()
 
 include( CheckFunctionExists )
@@ -108,6 +112,10 @@ add_library( zmusic STATIC
 	${PLAT_SOURCES}
 	)
 target_link_libraries( zmusic adl dumb gme oplsynth opn timidity timidityplus wildmidi "${CMAKE_DL_LIBS}" )
+
+if( MINGW )
+	target_link_libraries( zmusic winmm )
+endif()
 
 if( NOT DYN_SNDFILE AND SNDFILE_FOUND )
 	include_directories( "${SNDFILE_INCLUDE_DIRS}" )
