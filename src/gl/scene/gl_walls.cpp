@@ -1624,7 +1624,7 @@ void GLWall::Process(seg_t *seg, sector_t * frontsector, sector_t * backsector, 
 			if (frontsector->GetTexture(sector_t::floor) != skyflatnum || backsector->GetTexture(sector_t::floor) != skyflatnum)
 			{
 				// the back sector's floor obstructs part of this wall
-				if (!seg->linedef->flags & ML_DRAWFULLHEIGHT)
+				if ((seg->linedef->flags & ML_DRAWFULLHEIGHT) == 0)
 				{
 					if (ffh1 > bch1 && ffh2 > bch2)
 					{
@@ -1708,7 +1708,7 @@ void GLWall::Process(seg_t *seg, sector_t * frontsector, sector_t * backsector, 
 
 		/* bottom texture */
 		// the back sector's ceiling obstructs part of this wall (specially important for sky sectors)
-		if (!seg->linedef->flags & ML_DRAWFULLHEIGHT)
+		if ((seg->linedef->flags & ML_DRAWFULLHEIGHT) == 0)
 		{
 			if (fch1 < bfh1 && fch2 < bfh2)
 			{
