@@ -46,6 +46,7 @@
 #include "d_player.h"
 
 #include "d_netinf.h"
+#include "serializer.h"
 
 #include "i_system.h"
 #include "v_palette.h"
@@ -1467,6 +1468,47 @@ FString C_GetMassCVarString (uint32_t filter, bool compact)
 		}
 	}
 	return dump;
+}
+
+void C_SerializeCVars(FSerializer &arc, const char *label, uint32_t filter)
+{
+	FBaseCVar* cvar;
+	FString dump;
+
+	if (arc.BeginObject(label))
+	{
+		if (arc.isWriting())
+		{
+			for (cvar = CVars; cvar != NULL; cvar = cvar->m_Next)
+			{
+				if ((cvar->Flags & filter) && !(cvar->Flags & (CVAR_NOSAVE | CVAR_IGNORE | CVAR_NOSAVEGAME)))
+				{
+					UCVarValue val = cvar->GetGenericRep(CVAR_String);
+					char* c = const_cast<char*>(val.String);
+					arc(cvar->GetName(), c);
+				}
+			}
+		}
+		else
+		{
+			for (cvar = CVars; cvar != NULL; cvar = cvar->m_Next)
+			{
+				if ((cvar->Flags & filter) && !(cvar->Flags & (CVAR_NOSAVE | CVAR_IGNORE | CVAR_NOSAVEGAME)))
+				{
+					UCVarValue val;
+					char *c = nullptr;
+					arc(cvar->GetName(), c);
+					if (c != nullptr)
+					{
+						val.String = c;
+						cvar->SetGenericRep(val, CVAR_String);
+						delete[] c;
+					}
+				}
+			}
+		}
+		arc.EndObject();
+	}
 }
 
 void C_ReadCVars (uint8_t **demo_p)
