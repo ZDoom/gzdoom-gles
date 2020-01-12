@@ -195,8 +195,8 @@ bool DirEntryExists(const char *pathname, bool *isdir)
 #else
 	// Windows must use the wide version of stat to preserve non-standard paths.
 	auto wstr = WideString(pathname);
-	struct _stat64 info;
-	bool res = _wstat64(wstr.c_str(), &info) == 0;
+	struct _stat64i32 info;
+	bool res = _wstat64i32(wstr.c_str(), &info) == 0;
 #endif
 	if (isdir) *isdir = !!(info.st_mode & S_IFDIR);
 	return res;
@@ -221,8 +221,8 @@ bool GetFileInfo(const char* pathname, size_t *size, time_t *time)
 #else
 	// Windows must use the wide version of stat to preserve non-standard paths.
 	auto wstr = WideString(pathname);
-	struct _stat64 info;
-	bool res = _wstat64(wstr.c_str(), &info) == 0;
+	struct _stat64i32 info;
+	bool res = _wstat64i32(wstr.c_str(), &info) == 0;
 #endif
 	if (!res || (info.st_mode & S_IFDIR)) return false;
 	if (size) *size = info.st_size;
