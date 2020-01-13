@@ -202,9 +202,9 @@ struct InputEvent native play version("2.4")
         Key_Mouse8 = 0x107,
 
         Key_FirstJoyButton = 0x108,
-		Key_FirstJoy2Button = 0x128,
-		Key_FirstJoy3Button = 0x148,
-		Key_FirstJoy4Button = 0x168,
+        Key_FirstJoy2Button = 0x128,
+        Key_FirstJoy3Button = 0x148,
+        Key_FirstJoy4Button = 0x168,
         Key_Joy1 = (Key_FirstJoyButton+0),
         Key_Joy2 = (Key_FirstJoyButton+1),
         Key_Joy3 = (Key_FirstJoyButton+2),
@@ -272,7 +272,7 @@ struct InputEvent native play version("2.4")
         Key_Pad_X = 0x1C2,
         Key_Pad_Y = 0x1C3,
 
-        Num_Keys = 0x224
+        Num_Keys = 0x26C
     }
     
     //

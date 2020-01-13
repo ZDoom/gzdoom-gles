@@ -185,7 +185,31 @@ const char *KeyNames[NUM_KEYS] =
 	"Axis41Plus","Axis41Minus","Axis42Plus","Axis42Minus",	// joystick axes as buttons
 	"Axis43Plus","Axis43Minus","Axis44Plus","Axis44Minus",
 	"Axis45Plus","Axis45Minus","Axis46Plus","Axis46Minus",
-	"Axis47Plus","Axis47Minus","Axis48Plus","Axis48Minus"
+	"Axis47Plus","Axis47Minus","Axis48Plus","Axis48Minus",
+
+	"LStick2Right","LStick2Left","LStick2Down","LStick2Up",			// Gamepad axis-based buttons
+	"RStick2Right","RStick2Left","RStick2Down","RStick2Up",
+
+	"DPad2Up","DPad2Down","DPad2Left","DPad2Right",	// Gamepad buttons
+	"Pad2_Start","Pad2_Back","LThumb2","RThumb2",
+	"LShoulder2","RShoulder2","LTrigger2","RTrigger2",
+	"Pad2_A", "Pad2_B", "Pad2_X", "Pad2_Y",
+
+	"LStick3Right","LStick3Left","LStick3Down","LStick3Up",			// Gamepad axis-based buttons
+	"RStick3Right","RStick3Left","RStick3Down","RStick3Up",
+
+	"DPad3Up","DPad3Down","DPad3Left","DPad3Right",	// Gamepad buttons
+	"Pad3_Start","Pad3_Back","LThumb3","RThumb3",
+	"LShoulder3","RShoulder3","LTrigger3","RTrigger3",
+	"Pad3_A", "Pad3_B", "Pad3_X", "Pad3_Y",
+
+	"LStick4Right","LStick4Left","LStick4Down","LStick4Up",			// Gamepad axis-based buttons
+	"RStick4Right","RStick4Left","RStick4Down","RStick4Up",
+
+	"DPad4Up","DPad4Down","DPad4Left","DPad4Right",	// Gamepad buttons
+	"Pad4_Start","Pad4_Back","LThumb4","RThumb4",
+	"LShoulder4","RShoulder4","LTrigger4","RTrigger4",
+	"Pad4_A", "Pad4_B", "Pad4_X", "Pad4_Y"
 };
 
 FKeyBindings Bindings;
