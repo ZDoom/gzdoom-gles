@@ -1010,7 +1010,8 @@ void D_Display ()
 void D_ErrorCleanup ()
 {
 	savegamerestore = false;
-	screen->Unlock ();
+	if (screen)
+		screen->Unlock ();
 	bglobal.RemoveAllBots (true);
 	D_QuitNetGame ();
 	if (demorecording || demoplayback)

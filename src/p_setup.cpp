@@ -3151,7 +3151,8 @@ void P_FreeLevelData ()
 	AActor::ClearTIDHashes();
 
 	interpolator.ClearInterpolations();	// [RH] Nothing to interpolate on a fresh level.
-	Renderer->CleanLevelData();
+	if (Renderer)
+		Renderer->CleanLevelData();
 	FPolyObj::ClearAllSubsectorLinks(); // can't be done as part of the polyobj deletion process.
 	SN_StopAllSequences ();
 	DThinker::DestroyAllThinkers ();
