@@ -199,14 +199,7 @@ void FBaseCVar::SetGenericRep (UCVarValue value, ECVarType type)
 			Flags &= ~CVAR_UNSAFECONTEXT;
 			return;
 		}
-		if (Flags & CVAR_NOSAVEGAME)
-		{
-			ForceSet (value, type);
-		}
-		else
-		{
-			D_SendServerInfoChange (this, value, type);
-		}
+		D_SendServerInfoChange (this, value, type);
 	}
 	else
 	{
@@ -1467,7 +1460,7 @@ FString C_GetMassCVarString (uint32_t filter, bool compact)
 	{
 		for (cvar = CVars; cvar != NULL; cvar = cvar->m_Next)
 		{
-			if ((cvar->Flags & filter) && !(cvar->Flags & (CVAR_NOSAVE|CVAR_IGNORE|CVAR_NOSAVEGAME)))
+			if ((cvar->Flags & filter) && !(cvar->Flags & (CVAR_NOSAVE|CVAR_IGNORE)))
 			{
 				UCVarValue val = cvar->GetGenericRep(CVAR_String);
 				dump << '\\' << cvar->GetName() << '\\' << val.String;
@@ -1488,7 +1481,7 @@ void C_SerializeCVars(FSerializer &arc, const char *label, uint32_t filter)
 		{
 			for (cvar = CVars; cvar != NULL; cvar = cvar->m_Next)
 			{
-				if ((cvar->Flags & filter) && !(cvar->Flags & (CVAR_NOSAVE | CVAR_IGNORE | CVAR_NOSAVEGAME)))
+				if ((cvar->Flags & filter) && !(cvar->Flags & (CVAR_NOSAVE | CVAR_IGNORE | CVAR_CONFIG_ONLY)))
 				{
 					UCVarValue val = cvar->GetGenericRep(CVAR_String);
 					char* c = const_cast<char*>(val.String);
@@ -1500,7 +1493,7 @@ void C_SerializeCVars(FSerializer &arc, const char *label, uint32_t filter)
 		{
 			for (cvar = CVars; cvar != NULL; cvar = cvar->m_Next)
 			{
-				if ((cvar->Flags & filter) && !(cvar->Flags & (CVAR_NOSAVE | CVAR_IGNORE | CVAR_NOSAVEGAME)))
+				if ((cvar->Flags & filter) && !(cvar->Flags & (CVAR_NOSAVE | CVAR_IGNORE | CVAR_CONFIG_ONLY)))
 				{
 					UCVarValue val;
 					char *c = nullptr;
@@ -1808,7 +1801,7 @@ void C_ArchiveCVars (FConfigFile *f, uint32_t filter)
 	while (cvar)
 	{
 		if ((cvar->Flags &
-			(CVAR_GLOBALCONFIG|CVAR_ARCHIVE|CVAR_MOD|CVAR_AUTO|CVAR_USERINFO|CVAR_SERVERINFO|CVAR_NOSAVE))
+			(CVAR_GLOBALCONFIG|CVAR_ARCHIVE|CVAR_MOD|CVAR_AUTO|CVAR_USERINFO|CVAR_SERVERINFO|CVAR_NOSAVE|CVAR_CONFIG_ONLY))
 			== filter)
 		{
 			cvarlist.Push(cvar);
