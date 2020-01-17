@@ -552,6 +552,12 @@ void FGameConfigFile::DoGameSetup (const char *gamename)
 		ReadCVars (0);
 	}
 
+	strncpy (subsection, "ConfigOnlyVariables", sublen);
+	if (SetSection (section))
+	{
+		ReadCVars (0);
+	}
+
 	strncpy (subsection, "ConsoleVariables", sublen);
 	if (SetSection (section))
 	{
@@ -644,6 +650,11 @@ void FGameConfigFile::DoModSetup(const char *gamename)
 	{
 		ReadCVars (CVAR_MOD|CVAR_SERVERINFO|CVAR_IGNORE);
 	}
+	mysnprintf(section, countof(section), "%s.ConfigOnlyVariables.Mod", gamename);
+	if (SetSection (section))
+	{
+		ReadCVars (CVAR_MOD|CVAR_CONFIG_ONLY|CVAR_IGNORE);
+	}
 	// Signal that these sections should be rewritten when saving the config.
 	bModSetup = true;
 }
@@ -732,7 +743,15 @@ void FGameConfigFile::ArchiveGameData (const char *gamename)
 	strncpy (subsection, "ConfigOnlyVariables", sublen);
 	SetSection (section, true);
 	ClearCurrentSection ();
-	C_ArchiveCVars (this, CVAR_ARCHIVE|CVAR_AUTO|CVAR_MOD|CVAR_CONFIG_ONLY);
+	C_ArchiveCVars (this, CVAR_ARCHIVE|CVAR_AUTO|CVAR_CONFIG_ONLY);
+
+	if (bModSetup)
+	{
+		strncpy (subsection, "ConfigOnlyVariables.Mod", sublen);
+		SetSection (section, true);
+		ClearCurrentSection ();
+		C_ArchiveCVars (this, CVAR_ARCHIVE|CVAR_AUTO|CVAR_MOD|CVAR_CONFIG_ONLY);
+	}
 
 	strncpy (subsection, "UnknownConsoleVariables", sublen);
 	SetSection (section, true);
