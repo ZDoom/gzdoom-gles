@@ -485,7 +485,8 @@ set( PLAT_WIN32_SOURCES
 	win32/win32gliface.cpp
 	win32/win32video.cpp )
 set( PLAT_POSIX_SOURCES
-	posix/i_steam.cpp )
+	posix/i_steam.cpp
+	posix/i_system_posix.cpp )
 set( PLAT_SDL_SOURCES
 	posix/sdl/crashcatcher.c
 	posix/sdl/hardware.cpp
