@@ -514,6 +514,19 @@ IWad
 
 IWad
 {
+	Name = "DOOM 2: L'Enfer sur Terre"
+	Autoname = "doom.id.doom2.commercial.french"
+	Game = "Doom"
+	Config = "Doom"
+	IWADName = "doom2f.wad", 1
+	Mapinfo = "mapinfo/doom2.txt"
+	Compatibility = "Shorttex"
+	MustContain = "MAP01", "WIOBJ"
+	BannerColors = "ff ff ff", "a8 00 00"
+}
+
+IWad
+{
 	Name = "DOOM 2: Hell on Earth"
 	Autoname = "doom.id.doom2.commercial"
 	Game = "Doom"
@@ -545,6 +558,7 @@ Names
 {	
 	"doom_complete.pk3"
 	"doom2.wad"
+	"doom2f.wad"
 	"plutonia.wad"
 	"tnt.wad"
 	"doomu.wad"
@@ -596,6 +610,7 @@ Order	// Order in the IWAD selection box
 {
 	"DOOM: Complete: WadSmoosh"
 	"DOOM 2: Hell on Earth"
+	"DOOM 2: L'Enfer sur Terre"
 	"DOOM 2: No Rest for the Living"
 	"Final Doom: Plutonia Experiment"
 	"Final Doom: TNT - Evilution"
