@@ -2134,7 +2134,7 @@ Dictionary *DictionaryFromString(const FString &string)
 		return nullptr;
 	}
 
-	Dictionary *const dict = new Dictionary;
+	Dictionary *const dict = Create<Dictionary>();
 
 	if (string.IsEmpty())
 	{

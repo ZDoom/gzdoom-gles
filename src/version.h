@@ -79,11 +79,11 @@ const char *GetVersionString();
 #define SAVEGAME_EXT "zds"
 
 // MINSAVEVER is the minimum level snapshot version that can be loaded.
-#define MINSAVEVER	4555
+#define MINSAVEVER 4557
 
 // Use 4500 as the base git save version, since it's higher than the
 // SVN revision ever got.
-#define SAVEVER 4556
+#define SAVEVER 4557
 
 // This is so that derivates can use the same savegame versions without worrying about engine compatibility
 #define GAMESIG "LZDOOM"
