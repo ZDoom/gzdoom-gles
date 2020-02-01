@@ -172,9 +172,7 @@ void SoundEngine::CacheSound (sfxinfo_t *sfx)
 		}
 		else
 		{
-			// Since we do not know in what format the sound will be used, we have to cache both.
-			FSoundLoadBuffer SoundBuffer;
-			LoadSound(sfx, &SoundBuffer);
+			LoadSound(sfx);
 			sfx->bUsed = true;
 		}
 	}
@@ -384,7 +382,6 @@ FSoundChan *SoundEngine::StartSound(int type, const void *source,
 	FSoundChan *chan;
 	FVector3 pos, vel;
 	FRolloffInfo *rolloff;
-	FSoundLoadBuffer SoundBuffer;
 
 	if (sound_id <= 0 || volume <= 0 || nosfx || nosound )
 		return NULL;
@@ -482,7 +479,7 @@ FSoundChan *SoundEngine::StartSound(int type, const void *source,
 	}
 
 	// Make sure the sound is loaded.
-	sfx = LoadSound(sfx, &SoundBuffer);
+	sfx = LoadSound(sfx);
 
 	// The empty sound never plays.
 	if (sfx->lumpnum == sfx_empty)
@@ -639,13 +636,12 @@ void SoundEngine::RestartChannel(FSoundChan *chan)
 
 	FSoundChan *ochan;
 	sfxinfo_t *sfx = &S_sfx[chan->SoundID];
-	FSoundLoadBuffer SoundBuffer;
 
 	// If this is a singular sound, don't play it if it's already playing.
 	if (sfx->bSingular && CheckSingular(chan->SoundID))
 		return;
 
-	sfx = LoadSound(sfx, &SoundBuffer);
+	sfx = LoadSound(sfx);
 
 	// The empty sound never plays.
 	if (sfx->lumpnum == sfx_empty)
@@ -703,7 +699,7 @@ void SoundEngine::RestartChannel(FSoundChan *chan)
 //
 //==========================================================================
 
-sfxinfo_t *SoundEngine::LoadSound(sfxinfo_t *sfx, FSoundLoadBuffer *pBuffer)
+sfxinfo_t *SoundEngine::LoadSound(sfxinfo_t *sfx)
 {
 	if (GSnd->IsNull()) return sfx;
 
@@ -761,7 +757,7 @@ sfxinfo_t *SoundEngine::LoadSound(sfxinfo_t *sfx, FSoundLoadBuffer *pBuffer)
 			// If that fails, let the sound system try and figure it out.
 			else
 			{
-				sfx->data = GSnd->LoadSound(sfxdata.Data(), size, pBuffer);
+				sfx->data = GSnd->LoadSound(sfxdata.Data(), size);
 			}
 		}
 
@@ -1602,7 +1598,7 @@ unsigned int SoundEngine::GetMSLength(FSoundID sound)
 		}
 	}
 
-	sfx = LoadSound(sfx, nullptr);
+	sfx = LoadSound(sfx);
 	if (sfx != NULL) return GSnd->GetMSLength(sfx->data);
 	else return 0;
 }
