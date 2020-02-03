@@ -496,6 +496,7 @@ IWad
 	Compatibility = "Shorttex"
 	MustContain = "MAP01", "DMENUPIC"
 	BannerColors = "00 7c 00", "a8 a8 a8"
+	Load = "nerveunity.wad"
 }
 
 IWad
@@ -509,7 +510,7 @@ IWad
 	Compatibility = "Shorttex"
 	MustContain = "MAP01", "MAP33", "CWILV32"
 	BannerColors = "18 18 18", "a8 a8 a8"
-	Load = "NERVE.WAD"
+	Load = "nerve.wad"
 }
 
 IWad
