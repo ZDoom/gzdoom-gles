@@ -79,7 +79,7 @@ const char *GetVersionString();
 #define SAVEGAME_EXT "zds"
 
 // MINSAVEVER is the minimum level snapshot version that can be loaded.
-#define MINSAVEVER 4557
+#define MINSAVEVER 4555
 
 // Use 4500 as the base git save version, since it's higher than the
 // SVN revision ever got.
