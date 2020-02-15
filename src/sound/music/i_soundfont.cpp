@@ -44,6 +44,7 @@
 #include "filereadermusicinterface.h"
 #include "zmusic/zmusic.h"
 #include "resourcefiles/resourcefile.h"
+#include "version.h"
 
 //==========================================================================
 //
@@ -426,7 +427,7 @@ void FSoundFontManager::CollectSoundfonts()
 
 	if (soundfonts.Size() == 0)
 	{
-		ProcessOneFile(NicePath("$PROGDIR/soundfonts/gzdoom.sf2"));
+		ProcessOneFile(NicePath("$PROGDIR/soundfonts/" GAMENAMELOWERCASE ".sf2"));
 	}
 }
 
