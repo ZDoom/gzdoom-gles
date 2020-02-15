@@ -952,7 +952,7 @@ void GLSprite::Process(AActor* thing, sector_t * sector, int thruportal)
 		gltexture = NULL;
 	}
 
-	depth = FloatToFixed((x - r_viewpoint.Pos.X) * r_viewpoint.TanCos + (y - r_viewpoint.Pos.Y) * r_viewpoint.TanSin);
+	depth = (float)((x - r_viewpoint.Pos.X) * r_viewpoint.TanCos + (y - r_viewpoint.Pos.Y) * r_viewpoint.TanSin);
 
 	// light calculation
 
