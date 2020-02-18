@@ -244,8 +244,10 @@ private:
     void RemoveStream(OpenALSoundStream *stream);
 
 	void LoadReverb(const ReverbContainer *env);
+	void FreeSource(ALuint source);
 	void PurgeStoppedSources();
 	static FSoundChan *FindLowestChannel();
+	void ForceStopChannel(FISoundChannel *chan);
 
     std::thread StreamThread;
     std::mutex StreamLock;
@@ -265,6 +267,10 @@ private:
 	TArray<ALuint> PausableSfx;
 	TArray<ALuint> ReverbSfx;
 	TArray<ALuint> SfxGroup;
+
+	int UpdateTimeMS;
+	using SourceTimeMap = std::unordered_map<ALuint,int64_t>;
+	SourceTimeMap FadingSources;
 
 	const ReverbContainer *PrevEnvironment;
 
