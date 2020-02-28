@@ -746,6 +746,36 @@ CCMD (rebind)
 //
 //=============================================================================
 
+void C_BindLump(int lump)
+{
+	FScanner sc(lump);
+
+	while (sc.GetString())
+	{
+		FKeyBindings *dest = &Bindings;
+		int key;
+
+		// bind destination is optional and is the same as the console command
+		if (sc.Compare("bind"))
+		{
+			sc.MustGetString();
+		}
+		else if (sc.Compare("doublebind"))
+		{
+			dest = &DoubleBindings;
+			sc.MustGetString();
+		}
+		else if (sc.Compare("mapbind"))
+		{
+			dest = &AutomapBindings;
+			sc.MustGetString();
+		}
+		key = GetConfigKeyFromName(sc.String);
+		sc.MustGetString();
+		dest->SetBind(key, sc.String);
+	}
+}
+
 void C_BindDefaults ()
 {
 	int lump, lastlump = 0;
@@ -753,6 +783,9 @@ void C_BindDefaults ()
 
 	switch (k_modern)
 	{
+	case 0:
+		defbinds = "DEFBIND0";
+		break;
 	case 1:
 		defbinds = "DEFBIND1";
 		break;
@@ -762,40 +795,14 @@ void C_BindDefaults ()
 	case 3:
 		defbinds = "DEFBIND3";
 		break;
-	default:
-		defbinds = "DEFBINDS";
-		break;
 	}
 
+	while ((lump = Wads.FindLump("DEFBINDS", &lastlump)) != -1)
+		C_BindLump(lump);
+	lump = 0;
+	lastlump = 0;
 	while ((lump = Wads.FindLump(defbinds, &lastlump)) != -1)
-	{
-		FScanner sc(lump);
-
-		while (sc.GetString())
-		{
-			FKeyBindings *dest = &Bindings;
-			int key;
-
-			// bind destination is optional and is the same as the console command
-			if (sc.Compare("bind"))
-			{
-				sc.MustGetString();
-			}
-			else if (sc.Compare("doublebind"))
-			{
-				dest = &DoubleBindings;
-				sc.MustGetString();
-			}
-			else if (sc.Compare("mapbind"))
-			{
-				dest = &AutomapBindings;
-				sc.MustGetString();
-			}
-			key = GetConfigKeyFromName(sc.String);
-			sc.MustGetString();
-			dest->SetBind(key, sc.String);
-		}
-	}
+		C_BindLump(lump);
 }
 
 CCMD(binddefaults)
