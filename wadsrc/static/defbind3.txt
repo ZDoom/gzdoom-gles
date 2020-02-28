@@ -18,20 +18,17 @@ mwheelright invnext
 enter invuse
 - sizedown
 = sizeup
-ctrl +attack
-alt +strafe
 shift +speed
 space +use
-rightarrow +right
-leftarrow +left
-uparrow +forward
-downarrow +back
-, +moveleft
-. +moveright
+I +forward
+K +back
+J +moveleft
+L +moveright
+O +jump
+M crouch
 mouse1 +attack
-mouse2 +strafe
-mouse3 +forward
-mouse4 +speed
+mouse2 +altattack
+mouse3 +speed
 capslock "toggle cl_run"
 f1 menu_help
 f2 menu_save
@@ -63,10 +60,6 @@ del +lookdown
 end centerview
 
 // Generic joystick buttons
-joy1 +attack
-joy2 +strafe
-joy3 +speed
-joy4 +use
 
 // Xbox 360 / PS2 controllers
 pad_a +use

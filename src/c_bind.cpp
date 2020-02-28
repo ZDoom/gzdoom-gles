@@ -54,6 +54,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+CVAR (Int, k_modern, 1, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
+
 const char *KeyNames[NUM_KEYS] =
 {
 	// This array is dependant on the particular keyboard input
@@ -747,8 +749,25 @@ CCMD (rebind)
 void C_BindDefaults ()
 {
 	int lump, lastlump = 0;
+	FString defbinds;
 
-	while ((lump = Wads.FindLump("DEFBINDS", &lastlump)) != -1)
+	switch (k_modern)
+	{
+	case 1:
+		defbinds = "DEFBIND1";
+		break;
+	case 2:
+		defbinds = "DEFBIND2";
+		break;
+	case 3:
+		defbinds = "DEFBIND3";
+		break;
+	default:
+		defbinds = "DEFBINDS";
+		break;
+	}
+
+	while ((lump = Wads.FindLump(defbinds, &lastlump)) != -1)
 	{
 		FScanner sc(lump);
 
