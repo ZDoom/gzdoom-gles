@@ -3411,7 +3411,6 @@ void ZCCCompiler::CompileStates()
 					if (!statedef.SetWait())
 					{
 						Error(st, "%s before first state", st->NodeType == AST_StateFail ? "Fail" : "Wait");
-						continue;
 					}
 					break;
 
@@ -3419,7 +3418,6 @@ void ZCCCompiler::CompileStates()
 					if (!statedef.SetLoop())
 					{
 						Error(st, "LOOP before first state");
-						continue;
 					}
 					break;
 
