@@ -560,7 +560,9 @@ void OpenGLFrameBuffer::ScaleCoordsFromWindow(int16_t &x, int16_t &y)
 	int letterboxWidth = GLRenderer->mOutputLetterbox.width;
 	int letterboxHeight = GLRenderer->mOutputLetterbox.height;
 
+#if !defined(_WIN32) && !defined(__APPLE__)
 	SDLGLFB::ScaleCoordsFromWindow(x,y);
+#endif
 	// Subtract the LB video mode letterboxing
 	if (IsFullscreen())
 		y -= (GetTrueHeight() - VideoHeight) / 2;
