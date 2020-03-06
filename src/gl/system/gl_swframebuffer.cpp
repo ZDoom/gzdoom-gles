@@ -3818,6 +3818,7 @@ void OpenGLSWFrameBuffer::ScaleCoordsFromWindow(int16_t &x, int16_t &y)
 	int letterboxX, letterboxY, letterboxWidth, letterboxHeight;
 	GetLetterboxFrame(letterboxX, letterboxY, letterboxWidth, letterboxHeight);
 
+	SDLGLFB::ScaleCoordsFromWindow(x,y);
 	// Subtract the LB video mode letterboxing
 	if (IsFullscreen())
 		y -= (GetTrueHeight() - VideoHeight) / 2;
