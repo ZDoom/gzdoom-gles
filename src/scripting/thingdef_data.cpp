@@ -51,7 +51,7 @@
 #include "d_event.h"
 #include "g_levellocals.h"
 #include "p_checkposition.h"
-#include "r_sky.h"
+#include "p_linetracedata.h"
 #include "v_font.h"
 #include "v_video.h"
 #include "c_bind.h"
@@ -911,6 +911,9 @@ void InitThingdef()
 	frp->Size = sizeof(FRailParams);
 	frp->Align = alignof(FRailParams);
 
+	auto fltd = NewStruct("FLineTraceData", nullptr);
+	fltd->Size = sizeof(FLineTraceData);
+	fltd->Align = alignof(FLineTraceData);
 
 	FieldTable.Clear();
 	if (FieldTable.Size() == 0)
