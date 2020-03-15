@@ -410,7 +410,7 @@ bool DCanvas::SetTextureParms(DrawParms *parms, FTexture *img, double xx, double
 			double srcwidth = img->GetScaledWidthDouble();
 			double srcheight = img->GetScaledHeightDouble();
 			int autoaspect = parms->fsscalemode;
-			aspect = autoaspect == 0 || (srcwidth == 320 && srcheight == 200) || (srcwidth == 640 && srcheight == 200)? 1.333 : srcwidth / srcheight;
+			aspect = autoaspect == 0 || (srcwidth == 320 && srcheight == 200) || (srcwidth == 640 && srcheight == 400)? 1.333 : srcwidth / srcheight;
 			parms->x = parms->y = 0;
 			parms->keepratio = true;
 			auto screenratio = ActiveRatio(GetWidth(), GetHeight());
