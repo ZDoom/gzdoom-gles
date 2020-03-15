@@ -30,6 +30,7 @@ public:
 	double GetRealZ (const side_t *wall) const;
 	void SetShade (uint32_t rgb);
 	void SetShade (int r, int g, int b);
+	void SetTranslation(uint32_t trans);
 	void Spread (const FDecalTemplate *tpl, side_t *wall, double x, double y, double z, F3DFloor * ffloor);
 	void GetXY (side_t *side, double &x, double &y) const;
 
@@ -63,8 +64,8 @@ public:
 	DImpactDecal(double z);
 	DImpactDecal (side_t *wall, const FDecalTemplate *templ);
 
-	static DImpactDecal *StaticCreate(const char *name, const DVector3 &pos, side_t *wall, F3DFloor * ffloor, PalEntry color = 0);
-	static DImpactDecal *StaticCreate(const FDecalTemplate *tpl, const DVector3 &pos, side_t *wall, F3DFloor * ffloor, PalEntry color = 0);
+	static DImpactDecal *StaticCreate(const char *name, const DVector3 &pos, side_t *wall, F3DFloor * ffloor, PalEntry color = 0, uint32_t bloodTranslation = 0);
+	static DImpactDecal *StaticCreate(const FDecalTemplate *tpl, const DVector3 &pos, side_t *wall, F3DFloor * ffloor, PalEntry color = 0, uint32_t bloodTranslation = 0);
 
 	void BeginPlay ();
 	void OnDestroy() override;
