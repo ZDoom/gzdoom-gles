@@ -256,7 +256,6 @@ void DIntermissionScreen::Drawer ()
 		if (CheckOverlay(i))
 			screen->DrawTexture (TexMan[mOverlays[i].mPic], mOverlays[i].x, mOverlays[i].y, DTA_320x200, true, TAG_DONE);
 	}
-	if (!mFlatfill) screen->FillBorder (NULL);
 	if (mSubtitle)
 	{
 		const char *sub = mSubtitle.GetChars();
@@ -774,7 +773,6 @@ void DIntermissionScreenScroller::Drawer ()
 			DTA_Masked, false,
 			TAG_DONE);
 
-		screen->FillBorder (NULL);
 		mBackground = mSecondPic;
 	}
 	else 
@@ -940,6 +938,7 @@ void DIntermissionController::Drawer ()
 {
 	if (mScreen != NULL)
 	{
+		screen->FillBorder(nullptr);
 		mScreen->Drawer();
 	}
 }
