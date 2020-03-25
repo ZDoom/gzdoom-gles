@@ -1139,6 +1139,7 @@ FFont::FFont (const char *name, const char *nametemplate, const char *filetempla
 	ActiveColors = 0;
 	SpaceWidth = 0;
 	FontHeight = 0;
+	int FixedWidth = 0; // hack
 
 	maxyoffs = 0;
 
@@ -1196,6 +1197,14 @@ FFont::FFont (const char *name, const char *nametemplate, const char *filetempla
 					}
 					else if (sc.Compare("FontHeight"))
 					{
+						sc.MustGetValue(false);
+						FontHeight = sc.Number;
+					}
+					else if (sc.Compare("CellSize")) // hack
+					{
+						sc.MustGetValue(false);
+						FixedWidth = sc.Number;
+						sc.MustGetToken(',');
 						sc.MustGetValue(false);
 						FontHeight = sc.Number;
 					}
