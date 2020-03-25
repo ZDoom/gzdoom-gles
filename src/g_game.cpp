@@ -350,6 +350,7 @@ CCMD (slot)
 		}
 
 		// [Nash] Option to display the name of the weapon being switched to.
+		if (players[consoleplayer].playerstate != PST_LIVE) return;
 		if (SendItemUse != players[consoleplayer].ReadyWeapon && (displaynametags & 2) && StatusBar && SmallFont && SendItemUse)
 		{
 			StatusBar->AttachMessage(Create<DHUDMessageFadeOut>(nullptr, SendItemUse->GetTag(),
@@ -398,6 +399,7 @@ CCMD (weapnext)
 	}
 
 	// [BC] Option to display the name of the weapon being cycled to.
+	if (players[consoleplayer].playerstate != PST_LIVE) return;
 	if ((displaynametags & 2) && StatusBar && SmallFont && SendItemUse)
 	{
 		StatusBar->AttachMessage(Create<DHUDMessageFadeOut>(SmallFont, SendItemUse->GetTag(),
@@ -424,6 +426,7 @@ CCMD (weapprev)
 	}
 
 	// [BC] Option to display the name of the weapon being cycled to.
+	if (players[consoleplayer].playerstate != PST_LIVE) return;
 	if ((displaynametags & 2) && StatusBar && SmallFont && SendItemUse)
 	{
 		StatusBar->AttachMessage(Create<DHUDMessageFadeOut>(SmallFont, SendItemUse->GetTag(),
