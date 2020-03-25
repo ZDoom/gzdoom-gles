@@ -628,6 +628,7 @@ int AspectBaseHeight(float aspect);
 double AspectPspriteOffset(float aspect);
 int AspectMultiplier(float aspect);
 bool AspectTallerThanWide(float aspect);
+void ScaleWithAspect(int &w, int &h, int Width, int Height);
 
 int GetUIScale(int altval);
 
