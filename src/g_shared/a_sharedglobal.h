@@ -11,7 +11,7 @@ struct F3DFloor;
 class DBaseDecal;
 
 class DBaseDecal *ShootDecal(const FDecalTemplate *tpl, AActor *basisactor, sector_t *sec, double x, double y, double z, DAngle angle, double tracedist, bool permanent);
-void SprayDecal(AActor *shooter, const char *name,double distance = 172., double DirX = 0., double DirY = 0., double DirZ = 0.);
+void SprayDecal(AActor *shooter, const char *name,double distance = 172., DVector3 Dir = (0, 0, 0) );
 
 class DBaseDecal : public DThinker
 {
