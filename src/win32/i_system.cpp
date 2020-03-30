@@ -245,18 +245,9 @@ void I_DetectOS(void)
 			}
 			else if (info.dwMinorVersion == 3)
 			{
-				osname = (info.wProductType == VER_NT_WORKSTATION) ? "8.1" : "Server 2012 R2";
+				osname = (info.wProductType == VER_NT_WORKSTATION) ? "10 or 8.1" : "Server 2016 or 2012 R2";
 				sys_ostype = 2; // supported OS
 			}
-			else if (info.dwMinorVersion == 4)
-			{
-				osname = (info.wProductType == VER_NT_WORKSTATION) ? "10 (beta)" : "Server 10 (beta)";
-			}
-		}
-		else if (info.dwMajorVersion == 10)
-		{
-			osname = (info.wProductType == VER_NT_WORKSTATION) ? "10 (or higher)" : "Server 10 (or higher)";
-			sys_ostype = 3; // modern OS
 		}
 		break;
 
@@ -265,10 +256,11 @@ void I_DetectOS(void)
 		break;
 	}
 
-	if (!batchrun) Printf ("OS: Windows %s (NT %lu.%lu) Build %lu\n    %s\n",
+	if (!batchrun && info.dwMinorVersion != 3) Printf ("OS: Windows %s (NT %lu.%lu) Build %lu\n    %s\n",
 			osname,
 			info.dwMajorVersion, info.dwMinorVersion,
 			info.dwBuildNumber, info.szCSDVersion);
+	else if (!batchrun) Printf ("OS: Windows %s\n", osname);
 }
 
 //==========================================================================
