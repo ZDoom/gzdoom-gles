@@ -246,7 +246,7 @@ void I_DetectOS(void)
 			else if (info.dwMinorVersion == 3)
 			{
 				osname = (info.wProductType == VER_NT_WORKSTATION) ? "10 or 8.1" : "Server 2016 or 2012 R2";
-				sys_ostype = 2; // supported OS
+				sys_ostype = 3; // modern OS
 			}
 		}
 		break;
