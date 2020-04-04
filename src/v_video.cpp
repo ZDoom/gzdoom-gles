@@ -96,6 +96,8 @@ FRenderer *Renderer;
 EXTERN_CVAR (Bool, swtruecolor)
 EXTERN_CVAR (Bool, fullscreen)
 
+CVAR(Int, vid_rendermode, 4, 0)	// for some stupid mods which threw caution out of the window...
+
 #if defined(_DEBUG) && defined(_M_IX86) && !defined(__MINGW32__)
 #define DBGBREAK	{ __asm int 3 }
 #else
