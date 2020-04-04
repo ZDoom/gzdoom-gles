@@ -869,7 +869,8 @@ bool Win32GLVideo::SetupPixelFormat(int multisample)
 		if (pfd.dwFlags & PFD_GENERIC_FORMAT)
 		{
 			vid_renderer = 0;
-			I_Error("R_OPENGL: OpenGL driver not accelerated! Falling back to software renderer.\n");
+			I_Error("R_OPENGL: OpenGL driver not accelerated! Falling back to software renderer.\n"
+				"For Intel cards run " GAMENAME " in Windows 8 compatibility mode or use the wtfi tool.\n");
 			return false;
 		}
 	}
