@@ -2452,6 +2452,7 @@ OPTVAL_DOOMSTRICT			= "Doom (strict)";
 OPTVAL_BOOM					= "Boom";
 OPTVAL_BOOMSTRICT			= "Boom (strict)";
 OPTVAL_MBF					= "MBF";
+OPTVAL_MBFSTRICT			= "MBF (strict)";
 OPTVAL_ZDOOM2063			= "ZDoom 2.0.63";
 OPTVAL_4000HZ				= "4000 Hz";
 OPTVAL_8000HZ				= "8000 Hz";
