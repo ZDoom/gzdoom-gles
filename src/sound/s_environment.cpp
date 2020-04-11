@@ -36,7 +36,6 @@
 #include "s_soundinternal.h"
 #include "sc_man.h"
 #include "templates.h"
-#include "m_misc.h"
 
 
 FReverbField ReverbFields[] =

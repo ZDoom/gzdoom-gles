@@ -44,6 +44,7 @@
 #include "s_soundinternal.h"
 #include "m_swap.h"
 #include "superfasthash.h"
+#include "s_music.h"
 #include "m_random.h"
 
 
@@ -1734,3 +1735,11 @@ void SoundEngine::AddRandomSound(int Owner, TArray<uint32_t> list)
 	S_sfx[Owner].bRandomHeader = true;
 	S_sfx[Owner].NearLimit = -1;
 }
+
+void S_SoundReset()
+{
+	S_StopMusic(true);
+	soundEngine->Reset();
+	S_RestartMusic();
+}
+
