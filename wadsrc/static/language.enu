@@ -116,6 +116,7 @@ PD_REDSO = "You need a red skull to activate this object";
 PD_YELLOWSO = "You need a yellow skull to activate this object";
 NEWSAVE = "<New Save Game>";
 GGSAVED = "game saved.";
+GGLOADED = "game loaded.";
 HUSTR_MSGU = "[Message unsent]";
 PICKUP_PISTOL_DROPPED = "Picked up a pistol.";
 BETA_BONUS1 = "You pick up a demonic dagger.";

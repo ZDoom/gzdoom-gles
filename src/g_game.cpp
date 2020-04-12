@@ -2024,6 +2024,9 @@ void G_DoLoadGame ()
 
 	BackupSaveName = savename;
 
+	if (longsavemessages) Printf("%s (%s)\n", GStrings("GGLOADED"), savename.GetChars());
+	else Printf("%s\n", GStrings("GGLOADED"));
+
 	// At this point, the GC threshold is likely a lot higher than the
 	// amount of memory in use, so bring it down now by starting a
 	// collection.
