@@ -417,6 +417,7 @@ struct GameInfoStruct native
 
 class Object native
 {
+	const TICRATE = 35;
 	native bool bDestroyed;
 
 	// These must be defined in some class, so that the compiler can find them. Object is just fine, as long as they are private to external code.
@@ -497,7 +498,6 @@ class Thinker : Object native play
 		MAX_STATNUM = 127
 	}
 
-	const TICRATE = 35;
 	
 	virtual native void Tick();
 	virtual native void PostBeginPlay();
