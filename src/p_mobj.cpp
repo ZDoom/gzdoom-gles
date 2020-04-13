@@ -4565,7 +4565,7 @@ AActor *AActor::StaticSpawn (PClassActor *type, const DVector3 &pos, replace_t a
 			return NULL;
 		}
 	}
-	if (level.flags & LEVEL_NOALLIES && !actor->player)
+	if (level.flags & LEVEL_NOALLIES && !actor->IsKindOf(NAME_PlayerPawn))
 	{
 		actor->flags &= ~MF_FRIENDLY;
 	}
