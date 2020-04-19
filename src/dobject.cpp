@@ -495,8 +495,12 @@ void DObject::StaticPointerSubstitution (AActor *old, AActor *notOld)
 	size_t changed = 0;
 	int i;
 
-	// This is only allowed to replace players. For everything else the results are undefined.
-	if (!old->IsKindOf(NAME_PlayerPawn) || (notOld != nullptr && !notOld->IsKindOf(NAME_PlayerPawn))) return;
+	// This is only allowed to replace players or swap out morphed monsters
+	if (!old->IsKindOf(NAME_PlayerPawn) || (notOld != nullptr && !notOld->IsKindOf(NAME_PlayerPawn)))
+	{
+		if (notOld == nullptr) return;
+		if (!old->IsKindOf(NAME_MorphedMonster) && !notOld->IsKindOf(NAME_MorphedMonster)) return;
+	}
 
 	// Go through all objects.
 	i = 0;DObject *last=0;
