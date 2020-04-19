@@ -1280,7 +1280,7 @@ void GLSprite::ProcessParticle (particle_t *particle, sector_t *sector)//, int s
 	z1=z-scalefac;
 	z2=z+scalefac;
 
-	depth = FloatToFixed((x - r_viewpoint.Pos.X) * r_viewpoint.TanCos + (y - r_viewpoint.Pos.Y) * r_viewpoint.TanSin);
+	depth = (float)((x - r_viewpoint.Pos.X) * r_viewpoint.TanCos + (y - r_viewpoint.Pos.Y) * r_viewpoint.TanSin);
 
 	actor=NULL;
 	this->particle=particle;
