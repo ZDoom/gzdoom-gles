@@ -1609,6 +1609,22 @@ DEFINE_ACTION_FUNCTION_NATIVE(AActor, Substitute, DObject::StaticPointerSubstitu
 	return 0;
 }
 
+DEFINE_ACTION_FUNCTION_NATIVE(_PlayerPawn, Substitute, DObject::StaticPointerSubstitution)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_OBJECT(replace, AActor);
+	DObject::StaticPointerSubstitution(self, replace);
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION_NATIVE(_MorphedMonster, Substitute, DObject::StaticPointerSubstitution)
+{
+	PARAM_SELF_PROLOGUE(AActor);
+	PARAM_OBJECT(replace, AActor);
+	DObject::StaticPointerSubstitution(self, replace);
+	return 0;
+}
+
 DEFINE_ACTION_FUNCTION_NATIVE(AActor, GetSpawnableType, P_GetSpawnableType)
 {
 	PARAM_PROLOGUE;
