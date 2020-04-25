@@ -4672,6 +4672,19 @@ void AActor::HandleSpawnFlags ()
 			level.total_secrets++;
 		}
 	}
+	if (SpawnFlags & MTF_NOCOUNT)
+	{
+		if (flags & MF_COUNTKILL)
+		{
+			flags &= ~MF_COUNTKILL;
+			level.total_monsters--;
+		}
+		if (flags & MF_COUNTITEM)
+		{
+			flags &= ~MF_COUNTITEM;
+			level.total_items--;
+		}
+	}
 }
 
 DEFINE_ACTION_FUNCTION(AActor, HandleSpawnFlags)
