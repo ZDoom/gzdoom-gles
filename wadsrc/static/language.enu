@@ -2216,6 +2216,7 @@ CMPTMNU_PUSHWINDOW			= "Non-blocking lines can be pushed";
 CMPTMNU_CHECKSWITCHRANGE	= "Enable buggy CheckSwitchRange behavior";
 CMPTMNU_EXPLODE1			= "No vertical thrust from explosions";
 CMPTMNU_EXPLODE2			= "Use original Doom explosion behavior";
+CMPTMNU_RAILINGHACK			= "Enable buggy Strife railing";
 
 // Sound Options
 SNDMNU_TITLE			= "SOUND OPTIONS";
