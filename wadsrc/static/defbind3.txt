@@ -1,10 +1,10 @@
 /* Default keybindings for all games */
 
-i +forward
-k +back
-j +moveleft
-l +moveright
-o +jump
-m crouch
+o +forward
+l +back
+k +moveleft
+#39 +moveright ;
+i +jump
+, crouch
 mouse2 +altattack
 mouse3 +speed

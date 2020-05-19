@@ -2880,7 +2880,7 @@ OPTVAL_REVERSEFIRST			= "Reverse";
 OPTVAL_CLASSICZ				= "Classic ZDoom";
 OPTVAL_MODERN				= "Modern (WASD)";
 OPTVAL_MODERN2				= "Modern (ESDF)";
-OPTVAL_MODERN3				= "Modern (IJKL)";
+OPTVAL_MODERN3				= "Modern (OKL;)";
 
 // QZDoom exclusive:
 
