@@ -3727,10 +3727,33 @@ void V_InitFonts()
 	{
 		BigFont = SmallFont;
 	}
+
+	// ugly hack for fake fonts
+	if (!(NewSmallFont = V_GetFont("NewSmallFont", "SMALLFNT")))
+	{
+		if (Wads.CheckNumForName ("FONTA_S") >= 0)
+		{
+			NewSmallFont = new FFont("NewSmallFont", "FONTA%02u", "defsmallfont", HU_FONTSTART, HU_FONTSIZE, 1, -1);
+			SmallFont->SetCursor('[');
+		}
+		else if (Wads.CheckNumForName ("STCFN033", ns_graphics) >= 0)
+		{
+			NewSmallFont = new FFont("NewSmallFont", "STCFN%.3d", "defsmallfont", HU_FONTSTART, HU_FONTSIZE, HU_FONTSTART, -1);
+		}
+	}
+
+	if (!(NewConsoleFont = V_GetFont("NewConsoleFont", "CONFONT")))
+	{
+		NewConsoleFont = ConFont;
+	}
+
+	if (NewSmallFont == nullptr)
+	{
+		NewSmallFont = SmallFont;
+	}
+
 	// hack hack
-	NewConsoleFont = ConFont;
 	CurrentConsoleFont = ConFont;
-	NewSmallFont = SmallFont;
 	AlternativeSmallFont = SmallFont;
 	OriginalSmallFont = SmallFont;
 	OriginalBigFont = BigFont;
