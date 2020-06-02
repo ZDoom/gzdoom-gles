@@ -651,7 +651,7 @@ DEFINE_ACTION_FUNCTION(FLevelLocals, GiveSecret)
 void P_PlayerOnSpecialFlat (player_t *player, int floorType)
 {
 	if (Terrains[floorType].DamageAmount &&
-		!(level.time & Terrains[floorType].DamageTimeMask))
+		!(level.time % (Terrains[floorType].DamageTimeMask+1)))
 	{
 		AActor *ironfeet = NULL;
 
