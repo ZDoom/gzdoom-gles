@@ -239,6 +239,7 @@ DSPLYMNU_DIMCOLOR		= "Cor da redução do menu";
 DSPLYMNU_MOVEBOB 		= "Flutuação lateral ao se mover (bob)";
 DSPLYMNU_STILLBOB 		= "Flutuação lateral ao parar";
 DSPLYMNU_BOBSPEED		= "Velocidade de flutuação das armas";
+DSPLYMNU_BOBFIRE		= "Movimento da arma durante o ataque";
 DSPLYMNU_GPUSWITCH		= "Computador com GPU variável";
 DSPLYMNU_CUSTOMINVERTMAP	= "Inverter mapa";
 DSPLYMNU_CUSTOMINVERTC1		= "Cor escura do mapa invertido";
