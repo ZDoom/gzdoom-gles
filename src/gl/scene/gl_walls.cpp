@@ -1194,6 +1194,7 @@ void GLWall::BuildFFBlock(seg_t * seg, F3DFloor * rover,
 	lightlevel = savelight;
 	Colormap = savecolor;
 	flags &= ~GLT_CLAMPY;
+	RenderStyle = STYLE_Normal;
 }
 
 
