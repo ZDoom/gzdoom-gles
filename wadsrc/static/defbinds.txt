@@ -15,7 +15,6 @@
 ] invnext
 mwheelleft invprev
 mwheelright invnext
-enter invuse
 - sizedown
 = sizeup
 shift +speed

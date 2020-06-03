@@ -6,5 +6,9 @@ k +moveleft
 #39 +moveright ;
 i +jump
 , crouch
+uparrow +forward
+downarrow +back
+leftarrow +moveleft
+rightarrow +moveright
 mouse2 +altattack
-mouse3 +speed
+mouse3 invuse
