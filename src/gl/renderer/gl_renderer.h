@@ -61,6 +61,11 @@ inline float RAD2DEG(float deg)
 	return deg * float(180. / M_PI);
 }
 
+inline double RAD2DEG(double deg)
+{
+	return deg * (180. / M_PI);
+}
+
 enum SectorRenderFlags
 {
 	// This is used to avoid creating too many drawinfos
