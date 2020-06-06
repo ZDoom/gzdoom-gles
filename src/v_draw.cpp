@@ -356,6 +356,54 @@ DEFINE_ACTION_FUNCTION(_Screen, GetViewWindow)
 	return MIN(numret, 4);
 }
 
+void DCanvas::CalcFullscreenScale(double srcwidth, double srcheight, int autoaspect, DoubleRect &rect) const
+{
+	double aspect;
+
+	if (srcheight == 200) aspect = srcwidth / 240.;
+	else if (srcheight == 400) aspect = srcwidth / 480;
+	else aspect = srcwidth / srcheight;
+	rect.left = rect.top = 0;
+	auto screenratio = ActiveRatio(GetWidth(), GetHeight());
+	if (autoaspect == 3)
+	{
+		if (screenratio >= aspect || aspect < 1.4) autoaspect = 1; // screen is wider than the image -> pillarbox it. 4:3 images must also be pillarboxed if the screen is taller than the image
+		else if (screenratio > 1.32) autoaspect = 2;				// on anything 4:3 and wider crop the sides of the image.
+		else
+		{
+			// special case: Crop image to 4:3 and then letterbox this. This avoids too much cropping on narrow windows.
+			double width4_3 = srcheight * (4. / 3.);
+			rect.width = (double)GetWidth() * srcwidth / width4_3;
+			rect.height = GetHeight() * screenratio * (3. / 4.);	// use 4:3 for the image
+			rect.top = (GetHeight() - rect.height) / 2;
+			rect.left = -(srcwidth - width4_3) / 2;
+			return;
+		}
+	}
+
+	if ((screenratio > aspect) ^ (autoaspect == 2))
+	{
+		// pillarboxed or vertically cropped (i.e. scale to height)
+		rect.height = GetHeight();
+		rect.width = GetWidth() * aspect / screenratio;
+		rect.left = (GetWidth() - rect.width) / 2;
+	}
+	else
+	{
+		// letterboxed or horizontally cropped (i.e. scale to width)
+		rect.width = GetWidth();
+		rect.height = GetHeight() * screenratio / aspect;
+		rect.top = (GetHeight() - rect.height) / 2;
+	}
+}
+
+
+//==========================================================================
+//
+// Draw parameter parsing
+//
+//==========================================================================
+
 bool DCanvas::SetTextureParms(DrawParms *parms, FTexture *img, double xx, double yy) const
 {
 	if (img != NULL)
@@ -403,49 +451,30 @@ bool DCanvas::SetTextureParms(DrawParms *parms, FTexture *img, double xx, double
 			parms->destheight = parms->texheight * CleanYfac_1;
 			break;
 
+		case DTA_Base:
+			if (parms->fsscalemode != -1)
+			{
+				// First calculate the destination rect for an image of the given size and then reposition this object in it.
+				DoubleRect rect;
+				CalcFullscreenScale(parms->virtWidth, parms->virtHeight, parms->fsscalemode, rect);
+				parms->x = rect.left + parms->x * rect.width / parms->virtWidth;
+				parms->y = rect.top + parms->y * rect.height / parms->virtHeight;
+				parms->destwidth = parms->destwidth * rect.width / parms->virtWidth;
+				parms->destheight = parms->destheight * rect.height / parms->virtHeight;
+				return false;
+			}
+			break;
+
 		case DTA_Fullscreen:
 		case DTA_FullscreenEx:
 		{
-			double aspect;
-			double srcwidth = img->GetScaledWidthDouble();
-			double srcheight = img->GetScaledHeightDouble();
-			int autoaspect = parms->fsscalemode;
-			if (srcheight == 200) aspect = srcwidth / 240.;
-			else if (srcheight == 400) aspect = srcwidth / 480;
-			else aspect = srcwidth / srcheight;
-			parms->x = parms->y = 0;
+			DoubleRect rect;
+			CalcFullscreenScale(img->GetScaledWidthDouble(), img->GetScaledHeightDouble(), parms->fsscalemode, rect);
 			parms->keepratio = true;
-			auto screenratio = ActiveRatio(GetWidth(), GetHeight());
-			if (autoaspect == 3)
-			{
-				if (screenratio >= aspect || aspect < 1.4) autoaspect = 1; // screen is wider than the image -> pillarbox it. 4:3 images must also be pillarboxed if the screen is taller than the image
-				else if (screenratio > 1.32) autoaspect = 2;				// on anything 4:3 and wider crop the sides of the image.
-				else
-				{
-					// special case: Crop image to 4:3 and then letterbox this. This avoids too much cropping on narrow windows.
-					double width4_3 = srcheight * (4. / 3.);
-					parms->destwidth = (double)GetWidth() * srcwidth / width4_3;
-					parms->destheight = GetHeight() * screenratio * (3. / 4.);	// use 4:3 for the image
-					parms->y = (GetHeight() - parms->destheight) / 2;
-					parms->x = -(srcwidth - width4_3) / 2;
-					return false; // Do not call VirtualToRealCoords for this!
-				}
-			}
-
-			if ((screenratio > aspect) ^ (autoaspect == 2))
-			{
-				// pillarboxed or vertically cropped (i.e. scale to height)
-				parms->destheight = GetHeight();
-				parms->destwidth =GetWidth() * aspect / screenratio;
-				parms->x = (GetWidth() - parms->destwidth) / 2;
-			}
-			else
-			{
-				// letterboxed or horizontally cropped (i.e. scale to width)
-				parms->destwidth = GetWidth();
-				parms->destheight = GetHeight() * screenratio / aspect;
-				parms->y = (GetHeight() - parms->destheight) / 2;
-			}
+			parms->x = rect.left;
+			parms->y = rect.top;
+			parms->destwidth = rect.width;
+			parms->destheight = rect.height;
 			return false; // Do not call VirtualToRealCoords for this!
 		}
 
@@ -611,6 +640,7 @@ bool DCanvas::ParseDrawTextureTags(FTexture *img, double x, double y, uint32_t t
 	parms->virtBottom = false;
 	parms->monospace = EMonospacing::MOff;
 	parms->spacing = 0;
+	parms->fsscalemode = -1;
 
 	// Parse the tag list for attributes. (For floating point attributes,
 	// consider that the C ABI dictates that all floats be promoted to
@@ -729,6 +759,14 @@ bool DCanvas::ParseDrawTextureTags(FTexture *img, double x, double y, uint32_t t
 		case DTA_VirtualHeightF:
 			parms->cleanmode = DTA_Base;
 			parms->virtHeight = ListGetDouble(tags);
+			break;
+			
+		case DTA_FullscreenScale:
+			intval = ListGetInt(tags);
+			if (intval >= 0 && intval <= 3)
+			{
+				parms->fsscalemode = (uint8_t)intval;
+			}
 			break;
 
 		case DTA_Fullscreen:
