@@ -175,6 +175,11 @@ enum DrawTextureTags
 	DTA_CellY,			// vertical size of character cell
 
 	DTA_Color,
+	DTA_FlipY,			// bool: flip image vertically
+	DTA_SrcX,			// specify a source rectangle (this supersedes the poorly implemented DTA_WindowLeft/Right
+	DTA_SrcY,
+	DTA_SrcWidth,
+	DTA_SrcHeight,
 	DTA_LegacyRenderStyle,	// takes an old-style STYLE_* constant instead of an FRenderStyle
 	DTA_Spacing,			// Strings only: Additional spacing between characters
 	DTA_Monospace,			// Strings only: Use a fixed distance between characters.
