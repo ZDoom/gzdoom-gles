@@ -246,6 +246,7 @@ protected:
 	TArray<uint8_t> S_SoundCurve;
 	TMap<int, int> ResIdMap;
 	TArray<FRandomSoundList> S_rnd;
+	bool blockNewSounds = false;
 
 private:
 	void LinkChannel(FSoundChan* chan, FSoundChan** head);
@@ -272,6 +273,11 @@ protected:
 public:
 	virtual ~SoundEngine() = default;
 	void EvictAllChannels();
+
+	void BlockNewSounds(bool on)
+	{
+		blockNewSounds = on;
+	}
 
 	void StopChannel(FSoundChan* chan);
 	sfxinfo_t* LoadSound(sfxinfo_t* sfx);
