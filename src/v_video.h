@@ -130,6 +130,7 @@ enum
 	DTA_BilinearFilter,	// bool: apply bilinear filtering to the image
 	DTA_SpecialColormap,// pointer to FSpecialColormapParameters (likely to be forever hardware-only)
 	DTA_ColormapStyle,	// pointer to FColormapStyle (hardware-only)
+	DTA_Desaturate,		// explicit desaturation factor (hack, does not do anything)
 	DTA_Fullscreen,		// Draw image fullscreen (same as DTA_VirtualWidth/Height with graphics size.)
 
 	// floating point duplicates of some of the above:
@@ -216,6 +217,7 @@ struct DrawParms
 	FRenderStyle style;
 	struct FSpecialColormap *specialcolormap;
 	struct FColormapStyle *colormapstyle;
+	int desaturate;
 	int scalex, scaley;
 	int cellx, celly;
 	int monospace;
