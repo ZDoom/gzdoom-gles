@@ -314,18 +314,6 @@ skill nightmare
 	Name = "$MNU_BLACKPLAGUE"
 }
 
-skill extreme_lzd
-{
-	AmmoFactor = 0.5
-	DamageFactor = 1.5
-	MonsterHealth = 0.5
-	HealthFactor = 0.6
-	DisableCheats
-	SpawnFilter = Hard
-	Name = "$MNU_EXTREME"
-	NoMenu
-}
-
 clearepisodes
 episode e1m1
 {
