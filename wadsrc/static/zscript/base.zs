@@ -156,6 +156,7 @@ enum DrawTextureTags
 	DTA_ColorOverlay,	// DWORD: ARGB to overlay on top of image; limited to black for software
 	DTA_Internal1,
 	DTA_Internal2,
+	DTA_Internal3,
 	DTA_Desaturate,		// explicit desaturation factor (hack, does not do anything)
 	DTA_Fullscreen,		// Draw image fullscreen (same as DTA_VirtualWidth/Height with graphics size.)
 
