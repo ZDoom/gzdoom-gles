@@ -457,6 +457,9 @@ void P_PlayerInSpecialSector (player_t *player, sector_t * sector)
 	// Has hit ground.
 	AActor *ironfeet;
 
+	if (sector->damageinterval == 0)
+		sector->damageinterval = 32;
+
 	// [RH] Apply any customizable damage
 	if (sector->damageamount > 0)
 	{
