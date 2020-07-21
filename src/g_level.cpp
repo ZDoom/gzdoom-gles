@@ -118,6 +118,8 @@ EXTERN_CVAR (String, playerclass)
 #define RCLS_ID			MAKE_ID('r','c','L','s')
 #define PCLS_ID			MAKE_ID('p','c','L','s')
 
+CVAR(Int, sv_alwaystally, 0, CVAR_ARCHIVE | CVAR_SERVERINFO)
+
 void G_VerifySkill();
 
 
@@ -545,6 +547,26 @@ static bool		unloading;
 
 EXTERN_CVAR(Bool, sv_singleplayerrespawn)
 
+bool ShouldDoIntermission(cluster_info_t* nextcluster, cluster_info_t* thiscluster)
+{
+	// this is here to remove some code duplication
+
+	if ((sv_alwaystally == 2) || (deathmatch))
+		return true;
+
+	if ((sv_alwaystally == 0) && (level.flags & LEVEL_NOINTERMISSION))
+		return false;
+
+	bool withinSameCluster = (nextcluster == thiscluster);
+	bool clusterIsHub = (thiscluster->flags & CLUSTER_HUB);
+	bool hubNoIntermission = !(thiscluster->flags & CLUSTER_ALLOWINTERMISSION);
+
+	if (withinSameCluster && clusterIsHub && hubNoIntermission)
+		return false;
+
+	return true;
+}
+
 void G_ChangeLevel(const char *levelname, int position, int flags, int nextSkill)
 {
 	level_info_t *nextinfo = NULL;
@@ -641,7 +663,7 @@ void G_ChangeLevel(const char *levelname, int position, int flags, int nextSkill
 
 	if (thiscluster && (thiscluster->flags & CLUSTER_HUB))
 	{
-		if ((level.flags & LEVEL_NOINTERMISSION) || ((nextcluster == thiscluster) && !(thiscluster->flags & CLUSTER_ALLOWINTERMISSION)))
+		if (!ShouldDoIntermission(nextcluster, thiscluster))
 			NoWipe = 35;
 		D_DrawIcon = "TELEICON";
 	}
@@ -892,9 +914,7 @@ void G_DoCompleted (void)
 
 	finishstate = mode;
 
-	if (!deathmatch &&
-		((level.flags & LEVEL_NOINTERMISSION) ||
-		((nextcluster == thiscluster) && (thiscluster->flags & CLUSTER_HUB) && !(thiscluster->flags & CLUSTER_ALLOWINTERMISSION))))
+	if (!ShouldDoIntermission(nextcluster, thiscluster))
 	{
 		G_WorldDone ();
 		return;

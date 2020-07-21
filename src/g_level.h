@@ -529,6 +529,7 @@ void G_WriteSnapshots (TArray<FString> &, TArray<FCompressedBuffer> &);
 void G_WriteVisited(FSerializer &arc);
 void G_ReadVisited(FSerializer &arc);
 void G_ClearHubInfo();
+bool ShouldDoIntermission(cluster_info_t* nextcluster, cluster_info_t* thiscluster);
 
 enum ESkillProperty
 {
