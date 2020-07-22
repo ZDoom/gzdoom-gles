@@ -2007,6 +2007,7 @@ MISCMNU_CLEARNODECACHE			= "Clear node cache";
 MISCMNU_INTERSCROLL				= "Allow skipping of intermission scrollers";
 MISCMNU_QUICKEXIT				= "Allow quick exit";
 MISCMNU_NOCHEATS				= "Disable classic keyboard cheats";
+MISCMNU_ALWAYSTALLY				= "Show Tally Screen On Level Exit";
 // Automap Options
 AUTOMAPMNU_TITLE				= "AUTOMAP OPTIONS";
 AUTOMAPMNU_COLORSET				= "Map color set";
@@ -2527,6 +2528,9 @@ OPTVAL_LARGE				= "Large";
 OPTVAL_CONSOLE				= "Console";
 OPTVAL_YES_STANDARD			= "Standard";
 OPTVAL_YES_ENHANCED			= "Enhanced";
+OPTVAL_MODDEFINED			= "Mod Defined";
+OPTVAL_NOTHUBS				= "Always, except within hubs";
+OPTVAL_WITHHUBS				= "Always, even within hubs";
 
 // Colors
 C_BRICK					= "\cabrick";
