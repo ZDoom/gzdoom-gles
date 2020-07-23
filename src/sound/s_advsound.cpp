@@ -131,6 +131,7 @@ enum SICommands
 	SI_MusicAlias,
 	SI_EDFOverride,
 	SI_Attenuation,
+	SI_PitchSet,
 };
 
 // Blood was a cool game. If Monolith ever releases the source for it,
@@ -226,6 +227,7 @@ static const char *SICommandStrings[] =
 	"$musicalias",
 	"$edfoverride",
 	"$attenuation",
+	"$pitchset",
 	NULL
 };
 
@@ -1073,6 +1075,17 @@ static void S_AddSNDINFO (int lump)
 				sfx = soundEngine->FindSoundTentative (sc.String);
 				sc.MustGetNumber ();
 				S_sfx[sfx].PitchMask = (1 << clamp (sc.Number, 0, 7)) - 1;
+				}
+				break;
+
+			case SI_PitchSet: {
+				// $pitchset <logical name> <pitch amount as float>
+				int sfx;
+
+				sc.MustGetString();
+				sfx = soundEngine->FindSoundTentative(sc.String);
+				sc.MustGetFloat();
+				S_sfx[sfx].DefPitch = (float)sc.Float;
 				}
 				break;
 
