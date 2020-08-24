@@ -123,7 +123,7 @@ CVAR(Int, sv_alwaystally, 0, CVAR_ARCHIVE | CVAR_SERVERINFO)
 void G_VerifySkill();
 
 
-static FRandom pr_classchoice ("RandomPlayerClassChoice");
+static FRandom pr_classchoice ("RandomPlayerClassChoice", false);
 
 extern level_info_t TheDefaultLevelInfo;
 extern bool timingdemo;

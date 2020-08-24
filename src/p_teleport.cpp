@@ -48,7 +48,7 @@
 
 #define FUDGEFACTOR		10
 
-static FRandom pr_teleport ("Teleport");
+static FRandom pr_teleport ("Teleport", false);
 
 CVAR (Bool, telezoom, true, CVAR_ARCHIVE|CVAR_GLOBALCONFIG);
 

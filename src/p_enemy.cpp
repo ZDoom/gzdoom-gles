@@ -62,24 +62,24 @@
 
 #include "gi.h"
 
-static FRandom pr_checkmissilerange ("CheckMissileRange");
-static FRandom pr_opendoor ("OpenDoor");
+static FRandom pr_checkmissilerange ("CheckMissileRange", false);
+static FRandom pr_opendoor ("OpenDoor", false);
 static FRandom pr_trywalk ("TryWalk");
-static FRandom pr_newchasedir ("NewChaseDir");
-static FRandom pr_lookformonsters ("LookForMonsters");
-static FRandom pr_lookforplayers ("LookForPlayers");
-static FRandom pr_scaredycat ("Anubis");
-	   FRandom pr_chase ("Chase");
-static FRandom pr_facetarget ("FaceTarget");
-static FRandom pr_railface ("RailFace");
-static FRandom pr_look2 ("LookyLooky");
-static FRandom pr_look3 ("IGotHooky");
-static FRandom pr_slook ("SlooK");
-static FRandom pr_dropoff ("Dropoff");
-static FRandom pr_defect ("Defect");
+static FRandom pr_newchasedir ("NewChaseDir", false);
+static FRandom pr_lookformonsters ("LookForMonsters", false);
+static FRandom pr_lookforplayers ("LookForPlayers", false);
+static FRandom pr_scaredycat ("Anubis", false);
+	   FRandom pr_chase ("Chase", false);
+static FRandom pr_facetarget ("FaceTarget", false);
+static FRandom pr_railface ("RailFace", false);
+static FRandom pr_look2 ("LookyLooky", false);
+static FRandom pr_look3 ("IGotHooky", false);
+static FRandom pr_slook ("SlooK", false);
+static FRandom pr_dropoff ("Dropoff", false);
+static FRandom pr_defect ("Defect", false);
 
-static FRandom pr_skiptarget("SkipTarget");
-static FRandom pr_enemystrafe("EnemyStrafe");
+static FRandom pr_skiptarget("SkipTarget", false);
+static FRandom pr_enemystrafe("EnemyStrafe", false);
 
 // movement interpolation is fine for objects that are moved by their own
 // velocity. But for monsters it is problematic.
