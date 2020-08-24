@@ -273,26 +273,6 @@ FRandom::~FRandom ()
 	}
 }
 
-// [BB] Moved implementation here.
-int FRandom::operator()()
-{
-	// [BB] Use Doom's original random numbers if the user wants it.
-	if ( compatflags2 & COMPATF2_OLD_RANDOM_GENERATOR )
-		return P_Random();
-
-	return GenRand32() & 255;
-}
-
-// [BB] Moved implementation here.
-int FRandom::Random2()
-{
-	// [BB] Use Doom's original random numbers if the user wants it.
-	if ( compatflags2 & COMPATF2_OLD_RANDOM_GENERATOR )
-		return ( P_Random() - P_Random() );
-
-	return Random2(255);
-}
-
 //==========================================================================
 //
 // FRandom :: StaticClearRandom

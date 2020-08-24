@@ -49,8 +49,10 @@ public:
 	~FRandom ();
 
 	// Returns a random number in the range [0,255]
-	// [BB] Moved the implementation to m_random.cpp.
-	int operator()();
+	int operator()()
+	{
+		return GenRand32() & 255;
+	}
 
 	// Returns a random number in the range [0,mod)
 	int operator() (int mod)
@@ -61,8 +63,10 @@ public:
 	}
 
 	// Returns rand# - rand#
-	// [BB] Moved the implementation to m_random.cpp.
-	int Random2();
+	int Random2()
+	{
+		return Random2(255);
+	}
 
 // Returns (rand# & mask) - (rand# & mask)
 	int Random2(int mask)
@@ -223,5 +227,7 @@ extern FRandom M_Random;
 // Returns a number from 0 to 255, from a lookup table.
 int P_Random (void);
 void M_ClearRandom (void);
+
+extern int prndindex;
 
 #endif
