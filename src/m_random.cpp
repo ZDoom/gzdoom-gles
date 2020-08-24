@@ -171,7 +171,7 @@ static TDeletingArray<FRandom *> NewRNGs;
 // CODE --------------------------------------------------------------------
 
 // Which one is deterministic?
-int P_Random (void)
+unsigned int P_Random (void)
 {
 	prndindex = (prndindex+1)&0xff;
 	return rndtable[prndindex];
@@ -191,7 +191,7 @@ void M_ClearRandom (void)
 //==========================================================================
 
 FRandom::FRandom ()
-: NameCRC (0)
+: NameCRC (0), useOldRNG (false)
 {
 #ifndef NDEBUG
 	Name = NULL;
@@ -210,9 +210,10 @@ FRandom::FRandom ()
 //
 //==========================================================================
 
-FRandom::FRandom (const char *name)
+FRandom::FRandom (const char *name, bool useold)
 {
 	NameCRC = CalcCRC32 ((const uint8_t *)name, (unsigned int)strlen (name));
+	useOldRNG = useold;
 #ifndef NDEBUG
 	initialized = false;
 	Name = name;
@@ -275,6 +276,21 @@ FRandom::~FRandom ()
 
 //==========================================================================
 //
+// FRandom::GetRandom()
+//
+// Returns either an old PRNG value or an SFMT value
+//
+//==========================================================================
+
+unsigned int FRandom::GetRandom()
+{
+	if (useOldRNG && (compatflags2 & COMPATF2_OLD_RANDOM_GENERATOR))
+		return P_Random();
+	else return GenRand32();
+}
+
+//==========================================================================
+//
 // FRandom :: StaticClearRandom
 //
 // Initialize every RNGs. RNGs are seeded based on the global seed and their
@@ -325,7 +341,8 @@ uint32_t FRandom::StaticSumSeeds ()
 		pr_spawnmobj.sfmt.u[0] + pr_spawnmobj.idx +
 		pr_acs.sfmt.u[0] + pr_acs.idx +
 		pr_chase.sfmt.u[0] + pr_chase.idx +
-		pr_damagemobj.sfmt.u[0] + pr_damagemobj.idx;
+		pr_damagemobj.sfmt.u[0] + pr_damagemobj.idx +
+		prndindex;
 }
 
 //==========================================================================
