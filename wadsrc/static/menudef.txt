@@ -1675,6 +1675,7 @@ OptionMenu "CompatActorMenu" protected
 	Option "$CMPTMNU_INVISIBILITY",					"compat_INVISIBILITY", "YesNo"
 	Option "$CMPTMNU_MINOTAUR",						"compat_MINOTAUR", "YesNo"
 	Option "$CMPTMNU_NOTOSSDROPS",					"compat_NOTOSSDROPS", "YesNo"
+	Option "$CMPTMNU_OLDRANDOM",					"compat_oldrandom", "YesNo"
 	Class "CompatibilityMenu"
 }
 

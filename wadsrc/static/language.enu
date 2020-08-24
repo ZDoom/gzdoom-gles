@@ -2219,6 +2219,7 @@ CMPTMNU_CHECKSWITCHRANGE	= "Enable buggy CheckSwitchRange behavior";
 CMPTMNU_EXPLODE1			= "No vertical thrust from explosions";
 CMPTMNU_EXPLODE2			= "Use original Doom explosion behavior";
 CMPTMNU_RAILINGHACK			= "Enable buggy Strife railing";
+CMPTMNU_OLDRANDOM				= "Use original Doom pseudo-RNG";
 
 // Sound Options
 SNDMNU_TITLE			= "SOUND OPTIONS";
