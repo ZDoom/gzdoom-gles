@@ -5047,6 +5047,15 @@ void PlayerSpawnPickClass (int playernum)
 	}
 }
 
+int PlayerNum(player_t *player)
+{
+	for (int i = 0; i < MAXPLAYERS; i++)
+	{
+		if (player == &players[i]) return i;
+	}
+	return -1;
+}
+
 AActor *P_SpawnPlayer (FPlayerStart *mthing, int playernum, int flags)
 {
 	player_t *p;
@@ -5264,6 +5273,7 @@ AActor *P_SpawnPlayer (FPlayerStart *mthing, int playernum, int flags)
 		if (state == PST_ENTER || (state == PST_LIVE && !savegamerestore))
 		{
 			FBehavior::StaticStartTypedScripts (SCRIPT_Enter, p->mo, true);
+			E_PlayerSpawned(PlayerNum(p));
 		}
 		else if (state == PST_REBORN)
 		{

@@ -449,6 +449,12 @@ void E_PlayerEntered(int num, bool fromhub)
 		handler->PlayerEntered(num, fromhub);
 }
 
+void E_PlayerSpawned(int num)
+{
+	for (DStaticEventHandler* handler = E_FirstEventHandler; handler; handler = handler->next)
+		handler->PlayerSpawned(num);
+}
+
 void E_PlayerRespawned(int num)
 {
 	for (DStaticEventHandler* handler = E_FirstEventHandler; handler; handler = handler->next)
@@ -1019,6 +1025,18 @@ void DStaticEventHandler::PlayerEntered(int num, bool fromhub)
 		// don't create excessive DObjects if not going to be processed anyway
 		if (isEmpty(func)) return;
 		FPlayerEvent e = { num, fromhub };
+		VMValue params[2] = { (DStaticEventHandler*)this, &e };
+		VMCall(func, params, 2, nullptr, 0);
+	}
+}
+
+void DStaticEventHandler::PlayerSpawned(int num)
+{
+	IFVIRTUAL(DStaticEventHandler, PlayerSpawned)
+	{
+		// don't create excessive DObjects if not going to be processed anyway
+		if (isEmpty(func)) return;
+		FPlayerEvent e = { num, false };
 		VMValue params[2] = { (DStaticEventHandler*)this, &e };
 		VMCall(func, params, 2, nullptr, 0);
 	}
