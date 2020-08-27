@@ -231,6 +231,12 @@ enum WARPF
 	WARPF_COPYPITCH			= 0x8000,
 };
 
+enum SPF
+{
+	SPF_FORCECLAMP = 1,	// players always clamp
+	SPF_INTERPOLATE = 2,
+};
+
 enum PCM
 {
 	PCM_DROPOFF =		1,
