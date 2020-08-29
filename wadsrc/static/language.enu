@@ -2161,6 +2161,7 @@ GMPLYMNU_KEEPFRAGS			= "Keep frags gained";
 GMPLYMNU_NOTEAMSWITCH		= "No team switching";
 GMPLYMNU_COOPERATIVE		= "Cooperative Settings";
 GMPLYMNU_MULTIPLAYERWEAPONS	= "Spawn multi. weapons";
+GMPLYMNU_MULTIPLAYERTHINGS	= "Spawn multi. things";
 GMPLYMNU_LOSEINVENTORY		= "Lose entire inventory";
 GMPLYMNU_KEEPKEYS			= "Keep keys";
 GMPLYMNU_KEEPWEAPONS		= "Keep weapons";

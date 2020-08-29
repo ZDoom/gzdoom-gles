@@ -1619,6 +1619,7 @@ OptionMenu CoopOptions protected
 {
 	Title 	"$GMPLYMNU_COOPERATIVE"
 
+	Option "$GMPLYMNU_MULTIPLAYERTHINGS",	 	"sv_nothingspawn", "NoYes"
 	Option "$GMPLYMNU_MULTIPLAYERWEAPONS",	 	"sv_noweaponspawn", "NoYes"
 	Option "$GMPLYMNU_LOSEINVENTORY",			"sv_cooploseinventory", "YesNo"
 	Option "$GMPLYMNU_KEEPKEYS",				"sv_cooplosekeys", "NoYes"
