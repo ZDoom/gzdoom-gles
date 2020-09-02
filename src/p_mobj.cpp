@@ -134,7 +134,7 @@ EXTERN_CVAR (Int,  cl_rockettrails)
 static FRandom pr_explodemissile ("ExplodeMissile", false);
 FRandom pr_bounce ("Bounce", false);
 static FRandom pr_reflect ("Reflect", false);
-static FRandom pr_nightmarerespawn ("NightmareRespawn", false);
+static FRandom pr_nightmarerespawn ("NightmareRespawn");
 static FRandom pr_botspawnmobj ("BotSpawnActor", false);
 static FRandom pr_spawnmapthing ("SpawnMapThing", false);
 static FRandom pr_spawnpuff ("SpawnPuff");
