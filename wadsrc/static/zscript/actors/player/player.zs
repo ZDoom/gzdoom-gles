@@ -2446,6 +2446,18 @@ class PlayerPawn : Actor
 		return wasdrowning;
 	}
 
+	//===========================================================================
+	//
+	// PlayerPawn :: Travelled
+	//
+	// Called when the player moves to another map, in case it needs to do
+	// special reinitialization. This is called after all carried items have
+	// executed their respective Travelled() virtuals too.
+	//
+	//===========================================================================
+
+	virtual void Travelled() {}
+
 	//----------------------------------------------------------------------------
 	//
 	// 
