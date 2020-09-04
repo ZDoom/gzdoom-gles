@@ -336,6 +336,7 @@ IWad
 		          "DPHOOF","BFGGA0","HEADA1","CYBRA1","SPIDA1D1", "E4M2",
 		          "DMENUPIC"
 	BannerColors = "00 7c 00", "a8 a8 a8"
+	AlwaysCenterStatusbar = 1
 }
 
 IWad
@@ -418,6 +419,7 @@ IWad
 	Compatibility = "Shorttex", "Stairs"
 	MustContain = "MAP01", "REDTNT2", "DMAPINFO"
 	BannerColors = "00 7c 00", "a8 a8 a8"
+	AlwaysCenterStatusbar = 1
 }
 
 IWad
@@ -444,6 +446,7 @@ IWad
 	Compatibility = "Shorttex"
 	MustContain = "MAP01", "CAMO1", "DMAPINFO"
 	BannerColors = "00 7c 00", "a8 a8 a8"
+	AlwaysCenterStatusbar = 1
 }
 
 IWad
@@ -500,6 +503,7 @@ IWad
 	MustContain = "MAP01", "DMENUPIC"
 	BannerColors = "00 7c 00", "a8 a8 a8"
 	Load = "nerveunity.wad"
+	AlwaysCenterStatusbar = 1
 }
 
 IWad
