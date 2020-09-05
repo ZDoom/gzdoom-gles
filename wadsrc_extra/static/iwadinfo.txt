@@ -350,6 +350,7 @@ IWad
 	Compatibility = "Shorttex"
 	MustContain = "SMOOSHED", "ANIMDEFS", "LANGUAGE", "MAPINFO", "ENDOOM", "M_DOOM", "TITLEPIC", "TEXTURES"
 	BannerColors = "a8 00 00", "a8 a8 a8"
+	AlwaysCenterStatusbar = 1
 }
 
 IWad
