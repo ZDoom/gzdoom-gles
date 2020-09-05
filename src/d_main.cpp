@@ -2402,6 +2402,29 @@ static void NewFailure ()
     I_FatalError ("Failed to allocate memory from system heap");
 }
 
+static void FixUnityStatusBar()
+{
+	if (gameinfo.flags & GI_ALWAYSCENTERSBAR)
+	{
+		FTexture* sbartex = TexMan.FindTexture("stbar", ETextureType::MiscPatch);
+
+		// texture not found, we're not here to operate on a non-existent texture so just exit
+		if (!sbartex)
+			return;
+
+		// where is this texture located? if it's not in an iwad, then exit
+		int lumpnum = sbartex->GetSourceLump();
+		if (lumpnum >= 0 && lumpnum < Wads.GetNumLumps())
+		{
+			int wadno = Wads.GetLumpFile(lumpnum);
+			if (wadno != Wads.GetIwadNum())
+				return;
+		}
+
+		fixunitystatusbar = true;
+	}
+}
+
 //==========================================================================
 //
 // D_DoomMain
@@ -2641,8 +2664,7 @@ static int D_DoomMain_Internal (void)
 		TexMan.Init();
 		C_InitConback();
 
-		if (gameinfo.flags & GI_ALWAYSCENTERSBAR)
-			fixunitystatusbar = true;
+		FixUnityStatusBar();
 
 		StartScreen->Progress();
 		V_InitFonts();
