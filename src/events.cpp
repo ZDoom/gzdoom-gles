@@ -381,6 +381,15 @@ void E_WorldThingDied(AActor* actor, AActor* inflictor)
 		handler->WorldThingDied(actor, inflictor);
 }
 
+void E_WorldThingGround(AActor* actor)
+{
+	// don't call anything if actor was destroyed on PostBeginPlay/BeginPlay/whatever.
+	if (actor->ObjectFlags & OF_EuthanizeMe)
+		return;
+	for (DStaticEventHandler* handler = E_FirstEventHandler; handler; handler = handler->next)
+		handler->WorldThingGround(actor);
+}
+
 void E_WorldThingRevived(AActor* actor)
 {
 	// don't call anything if actor was destroyed on PostBeginPlay/BeginPlay/whatever.
@@ -819,6 +828,20 @@ void DStaticEventHandler::WorldThingDied(AActor* actor, AActor* inflictor)
 		VMCall(func, params, 2, nullptr, 0);
 	}
 }
+
+void DStaticEventHandler::WorldThingGround(AActor* actor)
+{
+	IFVIRTUAL(DStaticEventHandler, WorldThingGround)
+	{
+		// don't create excessive DObjects if not going to be processed anyway
+		if (isEmpty(func)) return;
+		FWorldEvent e = E_SetupWorldEvent();
+		e.Thing = actor;
+		VMValue params[2] = { (DStaticEventHandler*)this, &e };
+		VMCall(func, params, 2, nullptr, 0);
+	}
+}
+
 
 void DStaticEventHandler::WorldThingRevived(AActor* actor)
 {
