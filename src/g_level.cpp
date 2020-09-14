@@ -619,7 +619,8 @@ void G_ChangeLevel(const char *levelname, int position, int flags, int nextSkill
 		nextlevel = levelname;
 	}
 
-	NextSkill = (unsigned)nextSkill < AllSkills.Size() ? nextSkill : -1;
+	if (nextSkill != -1)
+		NextSkill = (unsigned)nextSkill < AllSkills.Size() ? nextSkill : -1;
 
 	if (flags & CHANGELEVEL_NOINTERMISSION)
 	{
