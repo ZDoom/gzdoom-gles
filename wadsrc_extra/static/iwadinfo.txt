@@ -474,7 +474,7 @@ IWad
 	Autoname = "doom.id.doom1.sigil"
 	Game = "Doom"
 	Config = "Doom"
-	IWADName = "sigil.wad"
+	IWADName = "sigil_v1_21.wad"
 	Mapinfo = "mapinfo/ultdoom.txt"
 	Compatibility = "Shorttex"
 }
@@ -612,7 +612,7 @@ Names
 	"square1.pk3"
 	"delaweare.wad"
 	"rotwb.wad"
-	"sigil.wad"
+	"sigil_v1_21.wad"
 	"nerve.wad"
 }
 
