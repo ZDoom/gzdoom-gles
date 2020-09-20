@@ -698,6 +698,17 @@ void G_ChangeLevel(const char *levelname, int position, int flags, int nextSkill
 	}
 }
 
+DEFINE_ACTION_FUNCTION_NATIVE(FLevelLocals, ChangeLevel, G_ChangeLevel)
+{
+	PARAM_SELF_STRUCT_PROLOGUE(FLevelLocals);
+	PARAM_STRING(levelname);
+	PARAM_INT(position);
+	PARAM_INT(inflags);
+	PARAM_INT(nextSkill);
+	G_ChangeLevel(levelname, position, inflags, nextSkill);
+	return 0;
+}
+
 //==========================================================================
 //
 //
