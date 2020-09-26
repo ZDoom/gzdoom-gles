@@ -179,6 +179,7 @@ public:
 	}
 
 	int mErrors = 0;
+	int mObjectErrors = 0;
 };
 
 FSerializer &Serialize(FSerializer &arc, const char *key, bool &value, bool *defval);
