@@ -801,9 +801,6 @@ void G_DoCompleted (void)
 	if (automapactive)
 		AM_Stop ();
 
-	S_StopAllChannels();
-	SN_StopAllSequences();
-
 	wminfo.finished_ep = level.cluster - 1;
 	wminfo.LName0 = TexMan.CheckForTexture(level.info->PName, ETextureType::MiscPatch);
 	if (!(level.info->flags3 & LEVEL3_HIDEAUTHORNAME)) wminfo.thisauthor = level.info->AuthorName;
@@ -926,6 +923,9 @@ void G_DoCompleted (void)
 	}
 
 	finishstate = mode;
+
+	S_StopAllChannels();
+	SN_StopAllSequences();
 
 	if (!ShouldDoIntermission(nextcluster, thiscluster))
 	{
