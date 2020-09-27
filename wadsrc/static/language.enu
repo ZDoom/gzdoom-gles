@@ -1845,7 +1845,8 @@ MOUSEMNU_MOUSELOOKSPEED		= "Mouselook speed";
 MOUSEMNU_FORWBACKSPEED		= "Forward/Backward speed";
 MOUSEMNU_STRAFESPEED		= "Strafing speed";
 MOUSEMNU_ALWAYSMOUSELOOK	= "Always Mouselook";
-MOUSEMNU_INVERTMOUSE		= "Invert Mouse";
+MOUSEMNU_INVERTMOUSE		= "Invert Mouse Y";
+MOUSEMNU_INVERTMOUSEX		= "Invert Mouse X";
 MOUSEMNU_LOOKSPRING			= "Lookspring";
 MOUSEMNU_LOOKSTRAFE			= "Lookstrafe";
 
