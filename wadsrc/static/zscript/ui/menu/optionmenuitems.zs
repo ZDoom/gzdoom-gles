@@ -836,7 +836,7 @@ class OptionMenuItemSlider : OptionMenuSliderBase
 {
 	CVar mCVar;
 	
-	OptionMenuItemSlider Init(String label, Name command, double min, double max, double step, int showval = 1)
+	OptionMenuItemSlider Init(String label, Name command, double min, double max, double step, int showval = 1, CVar graycheck = NULL)
 	{
 		Super.Init(label, min, max, step, showval, command);
 		mCVar =CVar.FindCVar(command);
