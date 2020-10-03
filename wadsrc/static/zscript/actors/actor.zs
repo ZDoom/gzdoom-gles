@@ -73,6 +73,7 @@ class Actor : Thinker native
 	const DEFAULT_HEALTH = 1000;
 	const ONFLOORZ = -2147483648.0;
 	const ONCEILINGZ = 2147483647.0;
+	const STEEPSLOPE = (46342./65536.);	// [RH] Minimum floorplane.c value for walking
 	const FLOATRANDZ = ONCEILINGZ-1;
 	const TELEFRAG_DAMAGE = 1000000;
 	const MinVel = 1./65536;
@@ -216,6 +217,7 @@ class Actor : Thinker native
 	native sound CrushPainSound;
 	native double MaxDropoffHeight;
 	native double MaxStepHeight;
+	native double MaxSlopeSteepness;
 	native int16 PainChance;
 	native name PainType;
 	native name DeathType;
@@ -312,6 +314,7 @@ class Actor : Thinker native
 	property MinMissileChance: MinMissileChance;
 	property MaxStepHeight: MaxStepHeight;
 	property MaxDropoffHeight: MaxDropoffHeight;
+	property MaxSlopeSteepness: MaxSlopeSteepness;
 	property PoisonDamageType: PoisonDamageType;
 	property RadiusDamageFactor: RadiusDamageFactor;
 	property SelfDamageFactor: SelfDamageFactor;
@@ -370,6 +373,7 @@ class Actor : Thinker native
 		MeleeRange 64 - 20;
 		MaxDropoffHeight 24;
 		MaxStepHeight 24;
+		MaxSlopeSteepness STEEPSLOPE;
 		BounceFactor 0.7;
 		WallBounceFactor 0.75;
 		BounceCount -1;

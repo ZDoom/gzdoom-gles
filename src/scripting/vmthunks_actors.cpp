@@ -1909,6 +1909,7 @@ DEFINE_FIELD(AActor, WallBounceSound)
 DEFINE_FIELD(AActor, CrushPainSound)
 DEFINE_FIELD(AActor, MaxDropOffHeight)
 DEFINE_FIELD(AActor, MaxStepHeight)
+DEFINE_FIELD(AActor, MaxSlopeSteepness)
 DEFINE_FIELD(AActor, PainChance)
 DEFINE_FIELD(AActor, PainType)
 DEFINE_FIELD(AActor, DeathType)
@@ -1995,5 +1996,3 @@ DEFINE_FIELD_X(FLineTraceData, FLineTraceData, LineSide);
 DEFINE_FIELD_X(FLineTraceData, FLineTraceData, LinePart);
 DEFINE_FIELD_X(FLineTraceData, FLineTraceData, SectorPlane);
 DEFINE_FIELD_X(FLineTraceData, FLineTraceData, HitType);
-
-
