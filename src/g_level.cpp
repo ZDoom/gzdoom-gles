@@ -2224,8 +2224,14 @@ CCMD(listmaps)
 
 		if (map != NULL)
 		{
-			Printf("%s: '%s' (%s)\n", info->MapName.GetChars(), info->LookupLevelName().GetChars(),
-				Wads.GetWadName(Wads.GetLumpFile(map->lumpnum)));
+			if (argv.argc() == 1 
+			    || CheckWildcards(argv[1], info->MapName.GetChars()) 
+			    || CheckWildcards(argv[1], info->LookupLevelName().GetChars())
+			    || CheckWildcards(argv[1], Wads.GetWadName(Wads.GetLumpFile(map->lumpnum))))
+			{
+				Printf("%s: '%s' (%s)\n", info->MapName.GetChars(), info->LookupLevelName().GetChars(),
+					Wads.GetWadName(Wads.GetLumpFile(map->lumpnum)));
+			}
 			delete map;
 		}
 	}
