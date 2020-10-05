@@ -343,6 +343,7 @@ void G_NewInit ()
 	}
 
 	G_ClearSnapshots ();
+	netgame = false;
 	multiplayer = multiplayernext;
 	multiplayernext = false;
 	if (demoplayback)
