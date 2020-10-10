@@ -504,7 +504,8 @@ class Thinker : Object native play
 		MAX_STATNUM = 127
 	}
 
-	
+	native LevelLocals Level; // hack hack
+
 	virtual native void Tick();
 	virtual native void PostBeginPlay();
 	native void ChangeStatNum(int stat);
