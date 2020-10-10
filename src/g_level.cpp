@@ -143,6 +143,7 @@ extern bool sendpause, sendsave, sendturn180, SendLand;
 void *statcopy;					// for statistics driver
 
 FLevelLocals level;			// info about current level
+FLevelLocals *currentVMLevel = &level;	// level which currently ticks. Used as global input to the VM and some functions called by it.
 
 
 //==========================================================================
