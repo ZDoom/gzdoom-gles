@@ -725,7 +725,7 @@ const char *G_GetSecretExitMap()
 
 	if (level.NextSecretMap.Len() > 0)
 	{
-		if (P_CheckMapData(level.NextSecretMap))
+		if (level.NextSecretMap.Compare("enDSeQ", 6) == 0 || P_CheckMapData(level.NextSecretMap))
 		{
 			nextmap = level.NextSecretMap;
 		}
