@@ -1679,11 +1679,11 @@ DEFINE_ACTION_FUNCTION_NATIVE(_Sector, RemoveForceField, RemoveForceField)
 	 ACTION_RETURN_POINTER(self->V2());
  }
 
- static void SetSideSpecialColor(side_t *self, int tier, int position, int color)
+ static void SetSideSpecialColor(side_t *self, int tier, int position, int color, int useown)
  {
 	 if (tier >= 0 && tier < 3 && position >= 0 && position < 2)
 	 {
-		 self->SetSpecialColor(tier, position, color);
+		 self->SetSpecialColor(tier, position, color, useown);
 	 }
  }
 
@@ -1693,7 +1693,8 @@ DEFINE_ACTION_FUNCTION_NATIVE(_Sector, RemoveForceField, RemoveForceField)
 	 PARAM_INT(tier);
 	 PARAM_INT(position);
 	 PARAM_COLOR(color);
-	 SetSideSpecialColor(self, tier, position, color);
+	 PARAM_BOOL(useown)
+	 SetSideSpecialColor(self, tier, position, color, useown);
 	 return 0;
  }
 
