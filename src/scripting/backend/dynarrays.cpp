@@ -89,14 +89,16 @@ template<class T> void ArrayDelete(T *self, int index, int count)
 	self->Delete(index, count);
 }
 
+template<class T, class U, int fill = 1> void ArrayInsertFS(T *self, int index, U val)
+{
+	self->Insert(index, static_cast<typename T::value_type>(val));
+}
+
 template<class T, class U, int fill = 1> void ArrayInsert(T *self, int index, U val)
 {
 	int oldSize = self->Size();
 	self->Insert(index, static_cast<typename T::value_type>(val));
-	if constexpr (fill) 
-	{
-		for (unsigned i = oldSize; i < self->Size() - 1; i++) (*self)[i] = 0;
-	}
+	for (unsigned i = oldSize; i < self->Size() - 1; i++) (*self)[i] = 0;
 }
 
 template<class T> void ArrayShrinkToFit(T *self)
@@ -1002,7 +1004,7 @@ DEFINE_ACTION_FUNCTION_NATIVE(FDynArray_String, Delete, ArrayDelete<FDynArray_St
 	return 0;
 }
 
-DEFINE_ACTION_FUNCTION_NATIVE(FDynArray_String, Insert, ArrayInsert<FDynArray_String COMMA const FString & COMMA 0>)
+DEFINE_ACTION_FUNCTION_NATIVE(FDynArray_String, Insert, ArrayInsertFS<FDynArray_String COMMA const FString & COMMA 0>)
 {
 	PARAM_SELF_STRUCT_PROLOGUE(FDynArray_String);
 	PARAM_INT(index);
