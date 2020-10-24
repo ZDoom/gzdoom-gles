@@ -3153,14 +3153,13 @@ void A_BossDeath(AActor *self)
 		if (type == NAME_Fatso || samereplacement)
 		{
 			EV_DoFloor (DFloor::floorLowerToLowest, NULL, 666, 1., 0, -1, 0, false);
-			return;
 		}
 		
 		if (type == NAME_Arachnotron || samereplacement)
 		{
 			EV_DoFloor (DFloor::floorRaiseByTexture, NULL, 667, 1., 0, -1, 0, false);
-			return;
 		}
+		return;
 	}
 	else
 	{
