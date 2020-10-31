@@ -83,6 +83,7 @@ struct FStartupInfo
 	int Type;
 	int LoadLights = -1;
 	int LoadBrightmaps = -1;
+	int LoadWidescreen = -1;
 	enum
 	{
 		DefaultStartup,
