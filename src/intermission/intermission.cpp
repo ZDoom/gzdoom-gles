@@ -730,55 +730,98 @@ void DIntermissionScreenScroller::Drawer ()
 {
 	FTexture *tex = TexMan[mFirstPic];
 	FTexture *tex2 = TexMan[mSecondPic];
-	if (mTicker >= mScrollDelay && mTicker < mScrollDelay + mScrollTime && tex != NULL && tex2 != NULL)
+	//if (mTicker >= mScrollDelay && mTicker < mScrollDelay + mScrollTime && tex != nullptr && tex2 != nullptr)
 	{
+		int fwidth2 = (int)tex2->GetScaledWidth();
+		int fheight2 = (int)tex2->GetScaledHeight();
 
 		int fwidth = tex->GetScaledWidth();
 		int fheight = tex->GetScaledHeight();
 
 		double xpos1 = 0, ypos1 = 0, xpos2 = 0, ypos2 = 0;
 
-		switch (mScrollDir)
+		if (mScrollDir == SCROLL_Left || mScrollDir == SCROLL_Right)
 		{
-		case SCROLL_Up:
-			ypos1 = double(mTicker - mScrollDelay) * fheight / mScrollTime;
-			ypos2 = ypos1 - fheight;
-			break;
+			// guesstimate the intended aspect ratio.
+			int aheight = fheight == 200 ? 240 : fheight == 400 ? 480 : fheight;
+			int awidth = aheight * 4 / 3;
+			int atotalwidth = fwidth + fwidth2;
+			int sidespace = (atotalwidth - 2*awidth);
+			// Now set a clipping rectangle for the intended viewport
+			double displayratio = atotalwidth / double(aheight) - 4./3.;
+			double displaywidth = aheight * displayratio;
+			DoubleRect drect;
+			screen->CalcFullscreenScale(displaywidth, aheight, gameinfo.fullscreenautoaspect, drect);
+			screen->SetClipRect(int(drect.left), int(drect.top), int(drect.width), int(drect.height));
 
-		case SCROLL_Down:
-			ypos1 = -double(mTicker - mScrollDelay) * fheight / mScrollTime;
-			ypos2 = ypos1 + fheight;
-			break;
+			int ticker = clamp(mTicker - mScrollDelay, 0, mScrollTime);
 
-		case SCROLL_Left:
-		default:
-			xpos1 = double(mTicker - mScrollDelay) * fwidth / mScrollTime;
-			xpos2 = xpos1 - fwidth;
-			break;
+			switch (mScrollDir)
+			{
+			case SCROLL_Left:
+			default:
+				xpos2 = -awidth + double(ticker) * awidth / mScrollTime;
+				xpos1 = xpos2 + fwidth2;
+				break;
 
-		case SCROLL_Right:
-			xpos1 = -double(mTicker - mScrollDelay) * fwidth / mScrollTime;
-			xpos2 = xpos1 + fwidth;
-			break;
+			case SCROLL_Right:
+				xpos1 = -double(ticker) * awidth / mScrollTime;
+				xpos2 = xpos1 + fwidth;
+				break;
+			}
+			double scale = drect.height / aheight;
+			xpos1 *= scale;
+			xpos2 *= scale;
+
+			screen->DrawTexture(tex, xpos1 + drect.left, drect.top,
+				DTA_DestWidthF, fwidth * scale,
+				DTA_DestHeightF, aheight * scale,
+				DTA_Masked, false,
+				TAG_DONE);
+			screen->DrawTexture(tex2, xpos2 + drect.left, drect.top,
+				DTA_DestWidthF, fwidth2 * scale,
+				DTA_DestHeightF, aheight * scale,
+				DTA_Masked, false,
+				TAG_DONE);
+
+
+			screen->ClearClipRect();
 		}
+		else
+		{
+			switch (mScrollDir)
+			{
+			case SCROLL_Up:
+			default:
+				ypos1 = double(mTicker - mScrollDelay) * fheight / mScrollTime;
+				ypos2 = ypos1 - fheight;
+				break;
 
-		screen->DrawTexture (tex, xpos1, ypos1,
-			DTA_VirtualWidth, fwidth,
-			DTA_VirtualHeight, fheight,
-			DTA_Masked, false,
-			TAG_DONE);
-		screen->DrawTexture (tex2, xpos2, ypos2,
-			DTA_VirtualWidth, fwidth,
-			DTA_VirtualHeight, fheight,
-			DTA_Masked, false,
-			TAG_DONE);
+			case SCROLL_Down:
+				ypos1 = -double(mTicker - mScrollDelay) * fheight / mScrollTime;
+				ypos2 = ypos1 + fheight;
+				break;
+			}
 
+			screen->DrawTexture(tex, xpos1, ypos1,
+				DTA_VirtualWidth, fwidth,
+				DTA_VirtualHeight, fheight,
+				DTA_Masked, false,
+				TAG_DONE);
+			screen->DrawTexture(tex2, xpos2, ypos2,
+				DTA_VirtualWidth, fwidth,
+				DTA_VirtualHeight, fheight,
+				DTA_Masked, false,
+				TAG_DONE);
+		}
 		mBackground = mSecondPic;
 	}
+	/*
 	else 
 	{
 		Super::Drawer();
 	}
+	*/
 }
 
 
