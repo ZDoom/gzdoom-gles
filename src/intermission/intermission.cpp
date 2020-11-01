@@ -53,6 +53,8 @@
 #include "templates.h"
 #include "s_music.h"
 
+#define ScaleToFit43 3
+
 FIntermissionDescriptorList IntermissionDescriptors;
 
 IMPLEMENT_CLASS(DIntermissionScreen, false, false)
@@ -751,7 +753,7 @@ void DIntermissionScreenScroller::Drawer ()
 		// Now set a clipping rectangle for the intended viewport
 		double displayratio = atotalwidth / double(aheight) - 4./3.;
 		double displaywidth = aheight * displayratio;
-		screen->CalcFullscreenScale(displaywidth, aheight, gameinfo.fullscreenautoaspect, drect);
+		screen->CalcFullscreenScale(displaywidth, aheight, ScaleToFit43, drect);
 		screen->SetClipRect(int(drect.left), int(drect.top), int(drect.width), int(drect.height));
 
 		int ticker = clamp(mTicker - mScrollDelay, 0, mScrollTime);
@@ -790,7 +792,7 @@ void DIntermissionScreenScroller::Drawer ()
 	else
 	{
 		// guesstimate the intended aspect ratio.
-		screen->CalcFullscreenScale(fwidth, aheight, gameinfo.fullscreenautoaspect, drect);
+		screen->CalcFullscreenScale(fwidth, aheight, ScaleToFit43, drect);
 		screen->SetClipRect(int(drect.left), int(drect.top), int(drect.width), int(drect.height));
 
 		int ticker = clamp(mTicker - mScrollDelay, 0, mScrollTime);
