@@ -49,6 +49,7 @@ class PlayerPawn : Actor
 	double		ViewBob;				// [SP] ViewBob Multiplier
 	double		FullHeight;
 	double		curBob;
+	double		prevBob;
 
 	meta Name HealingRadiusType;
 	meta Name InvulMode;
@@ -2368,7 +2369,7 @@ class PlayerPawn : Actor
 				double bobVal = player.bob;
 				if (i == 0)
 				{
-					bobVal = player.prevBob;
+					bobVal = prevBob;
 				}
 				//[SP] Added in decorate player.viewbob checks
 				double bobx = (bobVal * BobIntensity * Rangex * ViewBob);
@@ -2644,7 +2645,6 @@ struct PlayerInfo native play	// self is what internally is known as player_t
 	native double viewz;
 	native double viewheight;
 	native double deltaviewheight;
-	native float prevbob;
 	native double bob;
 	native vector2 vel;
 	native bool centering;
