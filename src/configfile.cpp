@@ -41,6 +41,9 @@
 #include "files.h"
 #include "m_random.h"
 
+#include "filesystem.h"
+#include "doomerrors.h"
+
 #define READBUFFERSIZE	256
 
 static FRandom pr_endtag;
@@ -605,10 +608,13 @@ void FConfigFile::LoadConfigFile ()
 	FileReader file;
 	bool succ;
 
-	FileExisted = false;
+	if (!FileExists(PathName))
+		FileExisted = false;
+
 	if (!file.OpenFile (PathName))
 	{
-		return;
+		if (!FileExisted) return;
+		else I_Error ("Could not Open Config file.\n");
 	}
 
 	succ = ReadConfig (&file);
