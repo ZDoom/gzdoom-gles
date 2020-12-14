@@ -699,7 +699,7 @@ void G_ChangeLevel(const char *levelname, int position, int flags, int nextSkill
 	}
 }
 
-DEFINE_ACTION_FUNCTION_NATIVE(FLevelLocals, ChangeLevel, G_ChangeLevel)
+DEFINE_ACTION_FUNCTION(FLevelLocals, ChangeLevel)
 {
 	PARAM_PROLOGUE;
 	PARAM_STRING(levelname);
@@ -1310,7 +1310,7 @@ DEFINE_ACTION_FUNCTION(FLevelLocals, WorldDone)
 void G_DoWorldDone (void) 
 {		 
 	gamestate = GS_LEVEL;
-	if (wminfo.next[0] == 0)
+	if (nextlevel.IsEmpty())
 	{
 		// Don't crash if no next map is given. Just repeat the current one.
 		Printf ("No next map specified.\n");
