@@ -6258,12 +6258,13 @@ void P_DoCrunch(AActor *thing, FChangePosition *cpos)
 				PClassActor *bloodcls = thing->GetBloodType();
 				
 				P_TraceBleed (newdam > 0 ? newdam : cpos->crushchange, thing);
-				if (bloodcls != NULL)
+				if (bloodcls != nullptr)
 				{
 					AActor *mo;
 
 					mo = Spawn(bloodcls, thing->PosPlusZ(thing->Height / 2), ALLOW_REPLACE);
 
+					if (mo == nullptr) goto noblood;
 					mo->Vel.X = pr_crunch.Random2() / 16.;
 					mo->Vel.Y = pr_crunch.Random2() / 16.;
 					if (thing->BloodTranslation != 0 && !(mo->flags2 & MF2_DONTTRANSLATE))
@@ -6278,7 +6279,7 @@ void P_DoCrunch(AActor *thing, FChangePosition *cpos)
 
 					if (!(cl_bloodtype <= 1)) mo->renderflags |= RF_INVISIBLE;
 				}
-
+				noblood:
 				DAngle an = (M_Random() - 128) * (360./256);
 				if (cl_bloodtype >= 1)
 				{
