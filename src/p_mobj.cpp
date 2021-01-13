@@ -4503,7 +4503,7 @@ AActor *AActor::StaticSpawn (PClassActor *type, const DVector3 &pos, replace_t a
 
 	FRandom &rng = bglobal.m_Thinking ? pr_botspawnmobj : pr_spawnmobj;
 
-	if (!!(G_SkillProperty(SKILLP_InstantReaction) || !!(dmflags & DF_INSTANT_REACTION))
+	if ((!!G_SkillProperty(SKILLP_InstantReaction) || actor->flags5 & MF5_ALWAYSFAST || !!(dmflags & DF_INSTANT_REACTION))
 		&& actor->flags3 & MF3_ISMONSTER)
 		actor->reactiontime = 0;
 
