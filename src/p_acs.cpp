@@ -5381,7 +5381,7 @@ static int ScriptCall(AActor *activator, unsigned argc, int32_t *args)
 			if (rettype == TypeSInt32 || rettype == TypeBool || rettype == TypeColor || rettype == TypeName || rettype == TypeSound)
 			{
 				VMReturn ret(&retval);
-				VMCall(func, &params[0], params.Size(), &ret, 1);
+				VMCallWithDefaults(func, params, &ret, 1);
 				if (rettype == TypeName)
 				{
 					retval = GlobalACSStrings.AddString(FName(ENamedName(retval)));
