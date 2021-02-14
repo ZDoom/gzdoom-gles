@@ -33,7 +33,8 @@ static const int ELEMENTS_PER_LIGHT = 4;			// each light needs 4 vec4's.
 static const int ELEMENT_SIZE = (4*sizeof(float));
 
 
-FLightBuffer::FLightBuffer()
+FLightBuffer::FLightBuffer(int pipelineNbr):
+	mPipelineNbr(pipelineNbr)
 {
 	int maxNumberOfLights = 80000;
 	
@@ -59,8 +60,11 @@ FLightBuffer::FLightBuffer()
 		mByteSize += screen->maxuniformblock;	// to avoid mapping beyond the end of the buffer.
 	}
 
-	mBuffer = screen->CreateDataBuffer(LIGHTBUF_BINDINGPOINT, mBufferType, false);
-	mBuffer->SetData(mByteSize, nullptr, false);
+	for (int n = 0; n < mPipelineNbr; n++)
+	{
+		mBufferPipeline[n] = screen->CreateDataBuffer(LIGHTBUF_BINDINGPOINT, mBufferType, false);
+		mBufferPipeline[n]->SetData(mByteSize, nullptr, false);
+	}
 
 	Clear();
 }
@@ -73,6 +77,11 @@ FLightBuffer::~FLightBuffer()
 void FLightBuffer::Clear()
 {
 	mIndex = 0;
+
+	mPipelinePos++;
+	mPipelinePos %= mPipelineNbr;
+
+	mBuffer = mBufferPipeline[mPipelinePos];
 }
 
 int FLightBuffer::UploadLights(FDynLightData &data)
