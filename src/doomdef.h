@@ -255,4 +255,6 @@ enum
 
 #define BLINKTHRESHOLD (4*32)
 
+#define MAX_PIPELINE_BUFFERS 8
+
 #endif	// __DOOMDEF_H__

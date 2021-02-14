@@ -2,6 +2,7 @@
 #ifndef _HW__VERTEXBUFFER_H
 #define _HW__VERTEXBUFFER_H
 
+#include "doomdef.h"
 #include "tarray.h"
 #include "hwrenderer/data/buffers.h"
 #include <atomic>
@@ -46,8 +47,14 @@ public:
 	TArray<FFlatVertex> vbo_shadowdata;
 	TArray<uint32_t> ibo_data;
 
-	IVertexBuffer *mVertexBuffer;
+	int mPipelineNbr;
+	int mPipelinePos = 0;
+
+	IVertexBuffer* mVertexBuffer;
+	IVertexBuffer *mVertexBufferPipeline[MAX_PIPELINE_BUFFERS];
 	IIndexBuffer *mIndexBuffer;
+
+	
 
 	unsigned int mIndex;
 	std::atomic<unsigned int> mCurIndex;
@@ -69,7 +76,7 @@ public:
 		NUM_RESERVED = 20
 	};
 
-	FFlatVertexBuffer(int width, int height);
+	FFlatVertexBuffer(int width, int height, int pipelineNbr = 1);
 	~FFlatVertexBuffer();
 
 	void OutputResized(int width, int height);
@@ -96,6 +103,11 @@ public:
 	void Reset()
 	{
 		mCurIndex = mIndex;
+		
+		mPipelinePos++;
+		mPipelinePos %= mPipelineNbr;
+
+		mVertexBuffer = mVertexBufferPipeline[mPipelinePos];
 	}
 
 	void Map()
@@ -108,6 +120,20 @@ public:
 		mVertexBuffer->Unmap();
 	}
 
+	void DropSync()
+	{
+		mVertexBuffer->GPUDropSync();
+	}
+
+	void WaitSync()
+	{
+		mVertexBuffer->GPUWaitSync();
+	}
+
+	int GetPipelinePos() 
+	{ 
+		return mPipelinePos; 
+	}
 };
 
 #endif
