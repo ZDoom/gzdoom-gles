@@ -1,6 +1,7 @@
 #ifndef __GL_LIGHTBUFFER_H
 #define __GL_LIGHTBUFFER_H
 
+#include "doomdef.h"
 #include "tarray.h"
 #include "hw_dynlightdata.h"
 #include "hwrenderer/data/buffers.h"
@@ -12,6 +13,9 @@ class FRenderState;
 class FLightBuffer
 {
 	IDataBuffer *mBuffer;
+	IDataBuffer* mBufferPipeline[MAX_PIPELINE_BUFFERS];
+	int mPipelineNbr;
+	int mPipelinePos = 0;
 
 	bool mBufferType;
     std::atomic<unsigned int> mIndex;
@@ -25,7 +29,7 @@ class FLightBuffer
 
 public:
 
-	FLightBuffer();
+	FLightBuffer(int pipelineNbr = 1);
 	~FLightBuffer();
 	void Clear();
 	int UploadLights(FDynLightData &data);
