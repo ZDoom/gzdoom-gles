@@ -301,6 +301,10 @@ sector_t* RenderView(player_t* player)
 
 	// Reset BEFORE SetVertexBuffer so it sets the correct buffer
 	screen->mVertexData->Reset();
+	
+	// Wait  (if necessary) for the buffer to be free to use
+	screen->mVertexData->WaitSync();
+
 	RenderState->SetVertexBuffer(screen->mVertexData);
 
 	sector_t* retsec;
