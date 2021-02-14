@@ -63,6 +63,7 @@ PROC zd_wglGetProcAddress(LPCSTR name);
 
 EXTERN_CVAR(Int, vid_adapter)
 EXTERN_CVAR(Bool, vid_hdr)
+EXTERN_CVAR(Int, gl_pipeline_depth);
 
 CUSTOM_CVAR(Bool, gl_debug, false, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_NOINITCALL)
 {
@@ -106,6 +107,8 @@ DFrameBuffer *Win32GLVideo::CreateFrameBuffer()
 	SystemGLFrameBuffer *fb;
 
 	fb = new OpenGLRenderer::OpenGLFrameBuffer(m_hMonitor, vid_fullscreen);
+
+	fb->mPipelineNbr = gl_pipeline_depth;
 	return fb;
 }
 

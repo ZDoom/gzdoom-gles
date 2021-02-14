@@ -148,6 +148,7 @@ public:
 	IntRect mOutputLetterbox;
 	float mSceneClearColor[4]{ 0,0,0,255 };
 
+	int mPipelineNbr = 1;						// Number of HW buffers to pipeline
 public:
 	DFrameBuffer (int width=1, int height=1);
 	virtual ~DFrameBuffer();
