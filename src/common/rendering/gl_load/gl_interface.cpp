@@ -161,6 +161,8 @@ void gl_LoadExtensions()
 #endif
 		gl.glslversion = 3.31f;	// Force GLSL down to 3.3.
 	}
+
+#if 0 // Shader storage breaks buffer pipeline. Pipelined buffers are much faster anyway
 	else if (gl_version < 4.5f)
 	{
 		// don't use GL 4.x features when running a GL 3.x context.
@@ -180,6 +182,7 @@ void gl_LoadExtensions()
 		// Assume that everything works without problems on GL 4.5 drivers where these things are core features.
 		gl.flags |= RFL_SHADER_STORAGE_BUFFER | RFL_BUFFER_STORAGE;
 	}
+#endif
 
 	// Mesa implements shader storage only for fragment shaders.
 	// Just disable the feature there. The light buffer may just use a uniform buffer without any adverse effects.

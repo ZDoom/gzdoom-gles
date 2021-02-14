@@ -262,8 +262,6 @@ void OpenGLFrameBuffer::Swap()
 	FPSLimit();
 	SwapBuffers();
 
-	screen->mVertexData->WaitSync();
-
 	//if (!swapbefore) glFinish();
 	Finish.Unclock();
 	camtexcount = 0;
