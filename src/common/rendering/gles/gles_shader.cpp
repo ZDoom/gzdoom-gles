@@ -26,7 +26,7 @@
 **
 */
 
-#include "gl_system.h"
+#include "gles_system.h"
 #include "c_cvars.h"
 #include "v_video.h"
 #include "filesystem.h"
@@ -42,7 +42,6 @@
 #include "printf.h"
 #include "version.h"
 
-#include "gl_interface.h"
 #include "gles_debug.h"
 #include "matrix.h"
 #include "gles_renderer.h"
@@ -376,16 +375,17 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 	else
 	{
 		// This differentiation is for Intel which do not seem to expose the full extension, even if marked as required.
-		if (gl.glslversion < 4.3f)
+		if (gles.glslversion < 4.3f)
 			vp_comb = "#version 400 core\n#extension GL_ARB_shader_storage_buffer_object : require\n#define SHADER_STORAGE_LIGHTS\n";
 		else
 			vp_comb = "#version 430 core\n#define SHADER_STORAGE_LIGHTS\n";
 	}
-
+	/*
 	if (gl.flags & RFL_SHADER_STORAGE_BUFFER)
 	{
 		vp_comb << "#define SUPPORTS_SHADOWMAPS\n";
 	}
+	*/
 
 	FString fp_comb = vp_comb;
 	vp_comb << defines << i_data.GetChars();
@@ -477,7 +477,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 		fp_comb << pp_data.GetString().GetChars() << "\n";
 	}
 
-	if (gl.flags & RFL_NO_CLIP_PLANES)
+	if (gles.flags & RFL_NO_CLIP_PLANES)
 	{
 		// On ATI's GL3 drivers we have to disable gl_ClipDistance because it's hopelessly broken.
 		// This will cause some glitches and regressions but is the only way to avoid total display garbage.

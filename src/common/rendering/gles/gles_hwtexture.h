@@ -14,7 +14,7 @@ class FTexture;
 #define DIRECT_PALETTE -2
 
 #include "tarray.h"
-#include "gl_interface.h"
+#include "gles_system.h"
 #include "hw_ihwtexture.h"
 
 class FCanvasTexture;
@@ -30,7 +30,7 @@ public:
 
 	static int GetTexDimension(int value)
 	{
-		if (value > gl.max_texturesize) return gl.max_texturesize;
+		if (value > gles.max_texturesize) return gles.max_texturesize;
 		return value;
 	}
 

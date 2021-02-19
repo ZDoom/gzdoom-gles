@@ -19,9 +19,8 @@
 **  3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "gl_system.h"
+#include "gles_system.h"
 #include "v_video.h"
-#include "gl_interface.h"
 #include "hw_cvars.h"
 #include "gles_debug.h"
 #include "gles_shaderprogram.h"
@@ -262,8 +261,8 @@ FString FShaderProgram::PatchShader(ShaderType type, const FString &code, const 
 	FString patchedCode;
 
 	// If we have 4.2, always use it because it adds important new syntax.
-	if (maxGlslVersion < 420 && gl.glslversion >= 4.2f) maxGlslVersion = 420;
-	int shaderVersion = std::min((int)round(gl.glslversion * 10) * 10, maxGlslVersion);
+	if (maxGlslVersion < 420 && gles.glslversion >= 4.2f) maxGlslVersion = 420;
+	int shaderVersion = std::min((int)round(gles.glslversion * 10) * 10, maxGlslVersion);
 	patchedCode.AppendFormat("#version %d\n", shaderVersion);
 
 	// TODO: Find some way to add extension requirements to the patching

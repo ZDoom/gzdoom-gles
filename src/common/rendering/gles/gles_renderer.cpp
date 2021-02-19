@@ -32,7 +32,7 @@
 **
 */ 
 
-#include "gl_system.h"
+#include "gles_system.h"
 #include "files.h"
 #include "v_video.h"
 #include "m_png.h"
@@ -40,7 +40,6 @@
 #include "i_time.h"
 #include "cmdlib.h"
 #include "version.h"
-#include "gl_interface.h"
 #include "gles_framebuffer.h"
 #include "hw_cvars.h"
 #include "gles_debug.h"

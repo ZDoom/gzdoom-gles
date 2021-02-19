@@ -786,6 +786,7 @@ set (VULKAN_SOURCES
 )
 
 set (GLES_SOURCES
+	common/rendering/gles/gles_system.cpp
 	common/rendering/gles/gles_renderer.cpp
 	common/rendering/gles/gles_stereo3d.cpp
 	common/rendering/gles/gles_framebuffer.cpp

@@ -2,7 +2,6 @@
 #define __GL_DEBUG_H
 
 #include <string.h>
-#include "gl_interface.h"
 #include "c_cvars.h"
 #include "v_video.h"
 
@@ -20,7 +19,7 @@ public:
 	static void PushGroup(const FString &name);
 	static void PopGroup();
 
-	static bool HasDebugApi() { return (gl.flags & RFL_DEBUG) != 0; }
+	static bool HasDebugApi() { return 0; }
 
 private:
 	void SetupBreakpointMode();
