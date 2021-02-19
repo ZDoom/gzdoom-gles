@@ -2,7 +2,6 @@
 #define __GL_POSTPROCESSSTATE_H
 
 #include <string.h>
-#include "gl_interface.h"
 #include "matrix.h"
 #include "c_cvars.h"
 

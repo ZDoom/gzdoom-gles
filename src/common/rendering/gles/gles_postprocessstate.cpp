@@ -20,8 +20,7 @@
 */
 
 #include "templates.h"
-#include "gl_system.h"
-#include "gl_interface.h"
+#include "gles_system.h"
 #include "gles_postprocessstate.h"
 
 namespace OpenGLESRenderer

@@ -33,13 +33,12 @@
 **
 */ 
 
-#include "gl_system.h"
+#include "gles_system.h"
 #include "v_video.h"
 #include "m_png.h"
 #include "templates.h"
 #include "i_time.h"
 
-#include "gl_interface.h"
 #include "gles_framebuffer.h"
 #include "gles_renderer.h"
 #include "gles_renderbuffers.h"
@@ -123,6 +122,8 @@ void OpenGLFrameBuffer::InitializeState()
 {
 	static bool first=true;
 
+	InitGLES();
+
 	if (first)
 	{
 		if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
@@ -134,11 +135,11 @@ void OpenGLFrameBuffer::InitializeState()
 	gl_LoadExtensions();
 
 	// Move some state to the framebuffer object for easier access.
-	hwcaps = gl.flags;
-	glslversion = gl.glslversion;
-	uniformblockalignment = gl.uniformblockalignment;
-	maxuniformblock = gl.maxuniformblock;
-	vendorstring = gl.vendorstring;
+	hwcaps = gles.flags;
+	glslversion = gles.glslversion;
+	uniformblockalignment = gles.uniformblockalignment;
+	maxuniformblock = gles.maxuniformblock;
+	vendorstring = gles.vendorstring;
 
 	if (first)
 	{
@@ -240,7 +241,7 @@ void OpenGLFrameBuffer::RenderTextureView(FCanvasTexture* tex, std::function<voi
 
 const char* OpenGLFrameBuffer::DeviceName() const 
 {
-	return gl.modelstring;
+	return gles.modelstring;
 }
 
 //==========================================================================

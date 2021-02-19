@@ -20,7 +20,7 @@
 */
 
 #include "templates.h"
-#include "gl_system.h"
+#include "gles_system.h"
 #include "gles_debug.h"
 #include "stats.h"
 #include "printf.h"

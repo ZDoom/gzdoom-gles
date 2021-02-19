@@ -33,7 +33,7 @@
 **/
 
 #include <algorithm>
-#include "gl_load.h"
+#include "gles_system.h"
 #include "gles_buffers.h"
 #include "gles_renderstate.h"
 #include "v_video.h"

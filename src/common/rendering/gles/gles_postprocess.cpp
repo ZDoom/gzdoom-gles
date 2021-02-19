@@ -19,7 +19,7 @@
 **  3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "gl_system.h"
+#include "gles_system.h"
 #include "m_png.h"
 #include "gles_buffers.h"
 #include "gles_framebuffer.h"

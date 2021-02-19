@@ -1,5 +1,5 @@
-#ifndef __GL_FRAMEBUFFER
-#define __GL_FRAMEBUFFER
+#ifndef __GLES_FRAMEBUFFER
+#define __GLES_FRAMEBUFFER
 
 #include "gl_sysfb.h"
 #include "m_png.h"

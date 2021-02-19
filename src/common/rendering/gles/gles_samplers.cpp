@@ -32,10 +32,9 @@
 **---------------------------------------------------------------------------
 **
 */
-#include "gl_system.h"
+#include "gles_system.h"
 #include "c_cvars.h"
 
-#include "gl_interface.h"
 #include "hw_cvars.h"
 #include "gles_debug.h"
 #include "gles_renderer.h"

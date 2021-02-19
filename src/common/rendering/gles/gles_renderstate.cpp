@@ -26,8 +26,7 @@
 */
 
 #include "templates.h"
-#include "gl_system.h"
-#include "gl_interface.h"
+#include "gles_system.h"
 #include "hw_cvars.h"
 #include "flatvertices.h"
 #include "gles_shader.h"
@@ -489,7 +488,7 @@ void FGLRenderState::SetCulling(int mode)
 void FGLRenderState::EnableClipDistance(int num, bool state)
 {
 	// Update the viewpoint-related clip plane setting.
-	if (!(gl.flags & RFL_NO_CLIP_PLANES))
+	if (!(gles.flags & RFL_NO_CLIP_PLANES))
 	{
 		ToggleState(GL_CLIP_DISTANCE0 + num, state);
 	}
