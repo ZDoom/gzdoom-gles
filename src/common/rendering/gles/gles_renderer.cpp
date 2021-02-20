@@ -42,13 +42,12 @@
 #include "version.h"
 #include "gles_framebuffer.h"
 #include "hw_cvars.h"
-#include "gles_debug.h"
 #include "gles_renderer.h"
+#include "gles_hwtexture.h"
 #include "gles_renderstate.h"
 #include "gles_renderbuffers.h"
 #include "gles_shaderprogram.h"
 #include "flatvertices.h"
-#include "gles_samplers.h"
 #include "hw_lightbuffer.h"
 #include "r_videoscale.h"
 #include "model.h"
@@ -89,16 +88,10 @@ void FGLRenderer::Initialize(int width, int height)
 	mPresent3dRowShader = new FPresent3DRowShader();
 	mShadowMapShader = new FShadowMapShader();
 
-	// needed for the core profile, because someone decided it was a good idea to remove the default VAO.
-	glGenVertexArrays(1, &mVAOID);
-	glBindVertexArray(mVAOID);
-	FGLDebug::LabelObject(GL_VERTEX_ARRAY, mVAOID, "FGLRenderer.mVAOID");
-
 	mFBID = 0;
 	mOldFBID = 0;
 
 	mShaderManager = new FShaderManager;
-	mSamplerManager = new FSamplerManager;
 }
 
 FGLRenderer::~FGLRenderer() 
@@ -106,13 +99,8 @@ FGLRenderer::~FGLRenderer()
 	FlushModels();
 	TexMan.FlushAll();
 	if (mShaderManager != nullptr) delete mShaderManager;
-	if (mSamplerManager != nullptr) delete mSamplerManager;
 	if (mFBID != 0) glDeleteFramebuffers(1, &mFBID);
-	if (mVAOID != 0)
-	{
-		glBindVertexArray(0);
-		glDeleteVertexArrays(1, &mVAOID);
-	}
+	
 	if (mBuffers) delete mBuffers;
 	if (mSaveBuffers) delete mSaveBuffers;
 	if (mPresentShader) delete mPresentShader;
@@ -135,8 +123,6 @@ bool FGLRenderer::StartOffscreen()
 		glGenFramebuffers(1, &mFBID);
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &mOldFBID);
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBID);
-	if (firstBind)
-		FGLDebug::LabelObject(GL_FRAMEBUFFER, mFBID, "OffscreenFB");
 	return true;
 }
 

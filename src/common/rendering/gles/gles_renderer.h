@@ -45,12 +45,10 @@ public:
 	int mMirrorCount = 0;
 	int mPlaneMirrorCount = 0;
 	FShaderManager *mShaderManager = nullptr;
-	FSamplerManager *mSamplerManager = nullptr;
-	unsigned int mFBID;
-	unsigned int mVAOID;
+	unsigned int mFBID = 0;
 	unsigned int mStencilValue = 0;
 
-	int mOldFBID;
+	int mOldFBID = 0;
 
 	FGLRenderBuffers *mBuffers = nullptr;
 	FGLRenderBuffers *mScreenBuffers = nullptr;
