@@ -29,6 +29,7 @@
 #include "hw_renderstate.h"
 #include "hw_material.h"
 #include "c_cvars.h"
+#include "hwrenderer/data/hw_viewpointuniforms.h"
 
 namespace OpenGLESRenderer
 {
@@ -70,6 +71,7 @@ class FGLRenderState final : public FRenderState
 	int mCurrentVertexOffsets[2];	// one per binding point
 	IIndexBuffer *mCurrentIndexBuffer;
 
+	HWViewpointUniforms* mHwUniforms = nullptr;
 
 public:
 
@@ -106,6 +108,7 @@ public:
 
 	void EnableDrawBuffers(int count, bool apply = false) override
 	{
+		/*
 		count = std::min(count, 3);
 		if (mNumDrawBuffers != count)
 		{
@@ -114,6 +117,7 @@ public:
 			mNumDrawBuffers = count;
 		}
 		if (apply) Apply();
+		*/
 	}
 
 	void ToggleState(int state, bool on);
@@ -138,7 +142,7 @@ public:
 	void EnableMultisampling(bool on) override;
 	void EnableLineSmooth(bool on) override;
 
-
+	void ApplyViewport(void* data);
 };
 
 extern FGLRenderState gl_RenderState;

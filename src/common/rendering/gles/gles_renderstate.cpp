@@ -117,6 +117,25 @@ bool FGLRenderState::ApplyShader()
 		}
 	}
 
+
+	if (mHwUniforms)
+	{
+		matrixToGL(mHwUniforms->mProjectionMatrix, activeShader->ProjectionMatrix_index);
+		matrixToGL(mHwUniforms->mViewMatrix, activeShader->ViewMatrix_index);
+		matrixToGL(mHwUniforms->mNormalViewMatrix, activeShader->NormalViewMatrix_index);
+
+		activeShader->muCameraPos.Set(&mHwUniforms->mCameraPos.X);
+		activeShader->muClipLine.Set(&mHwUniforms->mClipLine.X);
+
+		activeShader->muGlobVis.Set(mHwUniforms->mGlobVis);
+
+		activeShader->muPalLightLevels.Set(mHwUniforms->mGlobVis);
+		activeShader->muViewHeight.Set(mHwUniforms->mViewHeight);
+		activeShader->muClipHeight.Set(mHwUniforms->mClipHeight);
+		activeShader->muClipHeightDirection.Set(mHwUniforms->mClipHeightDirection);
+		activeShader->muShadowmapFilter.Set(mHwUniforms->mShadowmapFilter);
+	}
+
 	glVertexAttrib4fv(VATTR_COLOR, &mStreamData.uVertexColor.X);
 	glVertexAttrib4fv(VATTR_NORMAL, &mStreamData.uVertexNormal.X);
 
@@ -231,6 +250,7 @@ void FGLRenderState::ApplyState()
 
 	if (mSplitEnabled != stSplitEnabled)
 	{
+		/*
 		if (mSplitEnabled)
 		{
 			glEnable(GL_CLIP_DISTANCE3);
@@ -241,6 +261,7 @@ void FGLRenderState::ApplyState()
 			glDisable(GL_CLIP_DISTANCE3);
 			glDisable(GL_CLIP_DISTANCE4);
 		}
+		*/
 		stSplitEnabled = mSplitEnabled;
 	}
 
@@ -267,7 +288,7 @@ void FGLRenderState::ApplyState()
 
 void FGLRenderState::ApplyBuffers()
 {
-	if (mVertexBuffer != mCurrentVertexBuffer || mVertexOffsets[0] != mCurrentVertexOffsets[0] || mVertexOffsets[1] != mCurrentVertexOffsets[1])
+	//if (mVertexBuffer != mCurrentVertexBuffer || mVertexOffsets[0] != mCurrentVertexOffsets[0] || mVertexOffsets[1] != mCurrentVertexOffsets[1])
 	{
 		assert(mVertexBuffer != nullptr);
 		static_cast<GLVertexBuffer*>(mVertexBuffer)->Bind(mVertexOffsets);
@@ -275,7 +296,7 @@ void FGLRenderState::ApplyBuffers()
 		mCurrentVertexOffsets[0] = mVertexOffsets[0];
 		mCurrentVertexOffsets[1] = mVertexOffsets[1];
 	}
-	if (mIndexBuffer != mCurrentIndexBuffer)
+	//if (mIndexBuffer != mCurrentIndexBuffer)
 	{
 		if (mIndexBuffer) static_cast<GLIndexBuffer*>(mIndexBuffer)->Bind();
 		mCurrentIndexBuffer = mIndexBuffer;
@@ -437,7 +458,7 @@ void FGLRenderState::SetDepthFunc(int func)
 
 void FGLRenderState::SetDepthRange(float min, float max)
 {
-	glDepthRange(min, max);
+	glDepthRangef(min, max);
 }
 
 void FGLRenderState::SetColorMask(bool r, bool g, bool b, bool a)
@@ -487,11 +508,7 @@ void FGLRenderState::SetCulling(int mode)
 
 void FGLRenderState::EnableClipDistance(int num, bool state)
 {
-	// Update the viewpoint-related clip plane setting.
-	if (!(gles.flags & RFL_NO_CLIP_PLANES))
-	{
-		ToggleState(GL_CLIP_DISTANCE0 + num, state);
-	}
+
 }
 
 void FGLRenderState::Clear(int targets)
@@ -501,7 +518,7 @@ void FGLRenderState::Clear(int targets)
 	if (targets & CT_Depth)
 	{
 		gltarget |= GL_DEPTH_BUFFER_BIT;
-		glClearDepth(1);
+		glClearDepthf(1);
 	}
 	if (targets & CT_Stencil)
 	{
@@ -546,12 +563,12 @@ void FGLRenderState::EnableDepthTest(bool on)
 
 void FGLRenderState::EnableMultisampling(bool on)
 {
-	ToggleState(GL_MULTISAMPLE, on);
+
 }
 
 void FGLRenderState::EnableLineSmooth(bool on)
 {
-	ToggleState(GL_LINE_SMOOTH, on);
+
 }
 
 //==========================================================================
@@ -561,19 +578,17 @@ void FGLRenderState::EnableLineSmooth(bool on)
 //==========================================================================
 void FGLRenderState::ClearScreen()
 {
-	bool multi = !!glIsEnabled(GL_MULTISAMPLE);
 
 	screen->mViewpoints->Set2D(*this, SCREENWIDTH, SCREENHEIGHT);
 	SetColor(0, 0, 0);
 	Apply();
 
-	glDisable(GL_MULTISAMPLE);
 	glDisable(GL_DEPTH_TEST);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, FFlatVertexBuffer::FULLSCREEN_INDEX, 4);
 
 	glEnable(GL_DEPTH_TEST);
-	if (multi) glEnable(GL_MULTISAMPLE);
+
 }
 
 
@@ -588,10 +603,16 @@ void FGLRenderState::ClearScreen()
 bool FGLRenderState::SetDepthClamp(bool on)
 {
 	bool res = mLastDepthClamp;
+	/*
 	if (!on) glDisable(GL_DEPTH_CLAMP);
 	else glEnable(GL_DEPTH_CLAMP);
+	*/
 	mLastDepthClamp = on;
 	return res;
 }
+void FGLRenderState::ApplyViewport(void* data)
+{	
+	mHwUniforms = reinterpret_cast<HWViewpointUniforms*>(static_cast<uint8_t*>(data));
 
+}
 }
