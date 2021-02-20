@@ -41,7 +41,6 @@ FGLPostProcessState::FGLPostProcessState()
 	glGetBooleanv(GL_BLEND, &blendEnabled);
 	glGetBooleanv(GL_SCISSOR_TEST, &scissorEnabled);
 	glGetBooleanv(GL_DEPTH_TEST, &depthEnabled);
-	glGetBooleanv(GL_MULTISAMPLE, &multisampleEnabled);
 	glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
 	glGetIntegerv(GL_BLEND_EQUATION_RGB, &blendEquationRgb);
 	glGetIntegerv(GL_BLEND_EQUATION_ALPHA, &blendEquationAlpha);
@@ -50,7 +49,6 @@ FGLPostProcessState::FGLPostProcessState()
 	glGetIntegerv(GL_BLEND_DST_RGB, &blendDestRgb);
 	glGetIntegerv(GL_BLEND_DST_ALPHA, &blendDestAlpha);
 
-	glDisable(GL_MULTISAMPLE);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_SCISSOR_TEST);
 	glDisable(GL_BLEND);
@@ -67,11 +65,6 @@ void FGLPostProcessState::SaveTextureBindings(unsigned int numUnits)
 		glGetIntegerv(GL_TEXTURE_BINDING_2D, &texture);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		textureBinding.Push(texture);
-
-		GLint sampler;
-		glGetIntegerv(GL_SAMPLER_BINDING, &sampler);
-		glBindSampler(i, 0);
-		samplerBinding.Push(sampler);
 	}
 	glActiveTexture(GL_TEXTURE0);
 }
@@ -99,10 +92,6 @@ FGLPostProcessState::~FGLPostProcessState()
 	else
 		glDisable(GL_DEPTH_TEST);
 
-	if (multisampleEnabled)
-		glEnable(GL_MULTISAMPLE);
-	else
-		glDisable(GL_MULTISAMPLE);
 
 	glBlendEquationSeparate(blendEquationRgb, blendEquationAlpha);
 	glBlendFuncSeparate(blendSrcRgb, blendDestRgb, blendSrcAlpha, blendDestAlpha);
@@ -116,10 +105,6 @@ FGLPostProcessState::~FGLPostProcessState()
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	for (unsigned int i = 0; i < samplerBinding.Size(); i++)
-	{
-		glBindSampler(i, samplerBinding[i]);
-	}
 
 	for (unsigned int i = 0; i < textureBinding.Size(); i++)
 	{
