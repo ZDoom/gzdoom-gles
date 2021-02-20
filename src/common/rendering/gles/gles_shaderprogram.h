@@ -32,7 +32,7 @@ public:
 	//explicit operator bool() const { return mProgram != 0; }
 
 	std::unique_ptr<IDataBuffer> Uniforms;
-
+	GLuint mProgram = 0;
 private:
 	FShaderProgram(const FShaderProgram &) = delete;
 	FShaderProgram &operator=(const FShaderProgram &) = delete;
@@ -44,7 +44,7 @@ private:
 	FString GetShaderInfoLog(GLuint handle);
 	FString GetProgramInfoLog(GLuint handle);
 
-	GLuint mProgram = 0;
+
 	GLuint mShaders[NumShaderTypes];
 	FString mShaderSources[NumShaderTypes];
 	FString mShaderNames[NumShaderTypes];

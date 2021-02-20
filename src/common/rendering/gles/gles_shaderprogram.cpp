@@ -22,7 +22,6 @@
 #include "gles_system.h"
 #include "v_video.h"
 #include "hw_cvars.h"
-#include "gles_debug.h"
 #include "gles_shaderprogram.h"
 #include "hw_shaderpatcher.h"
 #include "filesystem.h"
@@ -103,8 +102,7 @@ void FShaderProgram::CompileShader(ShaderType type)
 
 	const auto &handle = mShaders[type];
 
-	FGLDebug::LabelObject(GL_SHADER, handle, mShaderNames[type]);
-
+	
 	const FString &patchedCode = mShaderSources[type];
 	int lengths[1] = { (int)patchedCode.Len() };
 	const char *sources[1] = { patchedCode.GetChars() };
@@ -134,7 +132,6 @@ void FShaderProgram::CompileShader(ShaderType type)
 
 void FShaderProgram::Link(const char *name)
 {
-	FGLDebug::LabelObject(GL_PROGRAM, mProgram, name);
 
 	uint32_t binaryFormat = 0;
 	TArray<uint8_t> binary;
@@ -142,15 +139,6 @@ void FShaderProgram::Link(const char *name)
 		binary = LoadCachedProgramBinary(mShaderSources[Vertex], mShaderSources[Fragment], binaryFormat);
 
 	bool loadedFromBinary = false;
-	if (binary.Size() > 0 && glProgramBinary)
-	{
-		if (mProgram == 0)
-			mProgram = glCreateProgram();
-		glProgramBinary(mProgram, binaryFormat, binary.Data(), binary.Size());
-		GLint status = 0;
-		glGetProgramiv(mProgram, GL_LINK_STATUS, &status);
-		loadedFromBinary = (status == GL_TRUE);
-	}
 
 	if (!loadedFromBinary)
 	{
@@ -164,15 +152,6 @@ void FShaderProgram::Link(const char *name)
 		if (status == GL_FALSE)
 		{
 			I_FatalError("Link Shader '%s':\n%s\n", name, GetProgramInfoLog(mProgram).GetChars());
-		}
-		else if (glProgramBinary && IsShaderCacheActive())
-		{
-			int binaryLength = 0;
-			glGetProgramiv(mProgram, GL_PROGRAM_BINARY_LENGTH, &binaryLength);
-			binary.Resize(binaryLength);
-			glGetProgramBinary(mProgram, binary.Size(), &binaryLength, &binaryFormat, binary.Data());
-			binary.Resize(binaryLength);
-			SaveCachedProgramBinary(mShaderSources[Vertex], mShaderSources[Fragment], binary, binaryFormat);
 		}
 	}
 
@@ -201,12 +180,7 @@ void FShaderProgram::Link(const char *name)
 
 void FShaderProgram::SetUniformBufferLocation(int index, const char *name)
 {
-	if (screen->glslversion < 4.20)
-	{
-		GLuint uniformBlockIndex = glGetUniformBlockIndex(mProgram, name);
-		if (uniformBlockIndex != GL_INVALID_INDEX)
-			glUniformBlockBinding(mProgram, uniformBlockIndex, index);
-	}
+
 }
 
 //==========================================================================
@@ -260,22 +234,14 @@ FString FShaderProgram::PatchShader(ShaderType type, const FString &code, const 
 {
 	FString patchedCode;
 
-	// If we have 4.2, always use it because it adds important new syntax.
-	if (maxGlslVersion < 420 && gles.glslversion >= 4.2f) maxGlslVersion = 420;
-	int shaderVersion = std::min((int)round(gles.glslversion * 10) * 10, maxGlslVersion);
-	patchedCode.AppendFormat("#version %d\n", shaderVersion);
+	patchedCode.AppendFormat("#version %d\n", 100); // Set to GLES2 
 
-	// TODO: Find some way to add extension requirements to the patching
-	//
-	// #extension GL_ARB_uniform_buffer_object : require
-	// #extension GL_ARB_shader_storage_buffer_object : require
+	patchedCode << "precision highp int;\n";
+	patchedCode << "precision highp float;\n";
 
 	if (defines)
 		patchedCode << defines;
 
-	// these settings are actually pointless but there seem to be some old ATI drivers that fail to compile the shader without setting the precision here.
-	patchedCode << "precision highp int;\n";
-	patchedCode << "precision highp float;\n";
 
 	patchedCode << "#line 1\n";
 	patchedCode << RemoveLayoutLocationDecl(code, type == Vertex ? "out" : "in");
@@ -299,8 +265,16 @@ void FPresentShaderBase::Init(const char * vtx_shader_name, const char * program
 	mShader->Compile(FShaderProgram::Vertex, "shaders/pp/screenquad.vp", prolog, 330);
 	mShader->Compile(FShaderProgram::Fragment, vtx_shader_name, prolog, 330);
 	mShader->Link(program_name);
-	mShader->SetUniformBufferLocation(Uniforms.BindingPoint(), "Uniforms");
+	mShader->Bind();
 	Uniforms.Init();
+
+	for (int n = 0; n < Uniforms.mFields.size(); n++)
+	{
+		int index = -1;
+		UniformFieldDesc desc = Uniforms.mFields[n];
+		index = glGetUniformLocation(mShader->mProgram, desc.Name);
+		Uniforms.mFields[n].UniformLocation = index;
+	}
 }
 
 void FPresentShader::Bind()
