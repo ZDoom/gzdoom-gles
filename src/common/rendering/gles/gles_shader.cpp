@@ -42,7 +42,6 @@
 #include "printf.h"
 #include "version.h"
 
-#include "gles_debug.h"
 #include "matrix.h"
 #include "gles_renderer.h"
 #include <map>
@@ -217,21 +216,20 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 		precision highp float;
 
 		// This must match the HWViewpointUniforms struct
-		layout(std140) uniform ViewpointUBO {
-			mat4 ProjectionMatrix;
-			mat4 ViewMatrix;
-			mat4 NormalViewMatrix;
 
-			vec4 uCameraPos;
-			vec4 uClipLine;
+		uniform	mat4 ProjectionMatrix;
+		uniform	mat4 ViewMatrix;
+		uniform	mat4 NormalViewMatrix;
 
-			float uGlobVis;			// uGlobVis = R_GetGlobVis(r_visibility) / 32.0
-			int uPalLightLevels;	
-			int uViewHeight;		// Software fuzz scaling
-			float uClipHeight;
-			float uClipHeightDirection;
-			int uShadowmapFilter;
-		};
+		uniform	vec4 uCameraPos;
+		uniform	vec4 uClipLine;
+
+		uniform	float uGlobVis;			// uGlobVis = R_GetGlobVis(r_visibility) / 32.0
+		uniform	int uPalLightLevels;	
+		uniform	int uViewHeight;		// Software fuzz scaling
+		uniform	float uClipHeight;
+		uniform	float uClipHeightDirection;
+		uniform	int uShadowmapFilter;
 
 		uniform int uTextureMode;
 		uniform vec2 uClipSplit;
@@ -282,17 +280,8 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 		uniform mat4 TextureMatrix;
 
 		// light buffers
-		#ifdef SHADER_STORAGE_LIGHTS
-		layout(std430, binding = 1) buffer LightBufferSSO
-		{
-			vec4 lights[];
-		};
-		#elif defined NUM_UBO_LIGHTS
-		uniform LightBufferUBO
-		{
-			vec4 lights[NUM_UBO_LIGHTS];
-		};
-		#endif
+		uniform vec4 lights[32];
+		
 
 		// textures
 		uniform sampler2D tex;
@@ -370,8 +359,9 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 	unsigned int lightbuffersize = screen->mLights->GetBlockSize();
 	if (!lightbuffertype)
 	{
-		vp_comb.Format("#version 330 core\n#define NUM_UBO_LIGHTS %d\n", lightbuffersize);
+		vp_comb.Format("#version 100\n#define NUM_UBO_LIGHTS %d\n#define NO_CLIPDISTANCE_SUPPORT\n", lightbuffersize);
 	}
+	/*
 	else
 	{
 		// This differentiation is for Intel which do not seem to expose the full extension, even if marked as required.
@@ -380,13 +370,12 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 		else
 			vp_comb = "#version 430 core\n#define SHADER_STORAGE_LIGHTS\n";
 	}
-	/*
+
 	if (gl.flags & RFL_SHADER_STORAGE_BUFFER)
 	{
 		vp_comb << "#define SUPPORTS_SHADOWMAPS\n";
 	}
 	*/
-
 	FString fp_comb = vp_comb;
 	vp_comb << defines << i_data.GetChars();
 	fp_comb << "$placeholder$\n" << defines << i_data.GetChars();
@@ -485,29 +474,18 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 	}
 
 	hShader = glCreateProgram();
-	FGLDebug::LabelObject(GL_PROGRAM, hShader, name);
-
+	
 	uint32_t binaryFormat = 0;
 	TArray<uint8_t> binary;
 	if (IsShaderCacheActive())
 		binary = LoadCachedProgramBinary(vp_comb, fp_comb, binaryFormat);
 
 	bool linked = false;
-	if (binary.Size() > 0 && glProgramBinary)
-	{
-		glProgramBinary(hShader, binaryFormat, binary.Data(), binary.Size());
-		GLint status = 0;
-		glGetProgramiv(hShader, GL_LINK_STATUS, &status);
-		linked = (status == GL_TRUE);
-	}
 
 	if (!linked)
 	{
 		hVertProg = glCreateShader(GL_VERTEX_SHADER);
 		hFragProg = glCreateShader(GL_FRAGMENT_SHADER);
-
-		FGLDebug::LabelObject(GL_SHADER, hVertProg, vert_prog_lump);
-		FGLDebug::LabelObject(GL_SHADER, hFragProg, frag_prog_lump);
 
 		int vp_size = (int)vp_comb.Len();
 		int fp_size = (int)fp_comb.Len();
@@ -523,6 +501,15 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 
 		glAttachShader(hShader, hVertProg);
 		glAttachShader(hShader, hFragProg);
+
+
+		glBindAttribLocation(hShader, VATTR_VERTEX, "aPosition");
+		glBindAttribLocation(hShader, VATTR_TEXCOORD, "aTexCoord");
+		glBindAttribLocation(hShader, VATTR_COLOR, "aColor");
+		glBindAttribLocation(hShader, VATTR_VERTEX2, "aVertex2");
+		glBindAttribLocation(hShader, VATTR_NORMAL, "aNormal");
+		glBindAttribLocation(hShader, VATTR_NORMAL2, "aNormal2");
+
 
 		glLinkProgram(hShader);
 
@@ -545,19 +532,11 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 		GLint status = 0;
 		glGetProgramiv(hShader, GL_LINK_STATUS, &status);
 		linked = (status == GL_TRUE);
+
 		if (!linked)
 		{
 			// only print message if there's an error.
 			I_Error("Init Shader '%s':\n%s\n", name, error.GetChars());
-		}
-		else if (glProgramBinary && IsShaderCacheActive())
-		{
-			int binaryLength = 0;
-			glGetProgramiv(hShader, GL_PROGRAM_BINARY_LENGTH, &binaryLength);
-			binary.Resize(binaryLength);
-			glGetProgramBinary(hShader, binary.Size(), &binaryLength, &binaryFormat, binary.Data());
-			binary.Resize(binaryLength);
-			SaveCachedProgramBinary(vp_comb, fp_comb, binary, binaryFormat);
 		}
 	}
 	else
@@ -565,6 +544,25 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 		hVertProg = 0;
 		hFragProg = 0;
 	}
+
+	
+
+
+	ProjectionMatrix_index = glGetUniformLocation(hShader, "ProjectionMatrix");
+	ViewMatrix_index = glGetUniformLocation(hShader, "ViewMatrix");
+	NormalViewMatrix_index = glGetUniformLocation(hShader, "NormalViewMatrix");
+
+	muCameraPos.Init(hShader, "uCameraPos");
+	muClipLine.Init(hShader, "uClipLine");
+
+	muGlobVis.Init(hShader, "uGlobVis");
+	muPalLightLevels.Init(hShader, "uPalLightLevels");
+	muViewHeight.Init(hShader, "uViewHeight");
+	muClipHeight.Init(hShader, "uClipHeight");
+	muClipHeightDirection.Init(hShader, "uClipHeightDirection");
+	muShadowmapFilter.Init(hShader, "uShadowmapFilter");
+
+	////
 
 	muDesaturation.Init(hShader, "uDesaturationFactor");
 	muFogEnabled.Init(hShader, "uFogEnabled");
@@ -602,13 +600,6 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 	texturematrix_index = glGetUniformLocation(hShader, "TextureMatrix");
 	normalmodelmatrix_index = glGetUniformLocation(hShader, "NormalModelMatrix");
 
-	if (!lightbuffertype)
-	{
-		int tempindex = glGetUniformBlockIndex(hShader, "LightBufferUBO");
-		if (tempindex != -1) glUniformBlockBinding(hShader, tempindex, LIGHTBUF_BINDINGPOINT);
-	}
-	int tempindex = glGetUniformBlockIndex(hShader, "ViewpointUBO");
-	if (tempindex != -1) glUniformBlockBinding(hShader, tempindex, VIEWPOINT_BINDINGPOINT);
 
 	glUseProgram(hShader);
 
@@ -668,7 +659,6 @@ FShader *FShaderCollection::Compile (const char *ShaderName, const char *ShaderP
 	defines += shaderdefines;
 	// this can't be in the shader code due to ATI strangeness.
 	if (!usediscard) defines += "#define NO_ALPHATEST\n";
-	if (passType == GBUFFER_PASS) defines += "#define GBUFFER_PASS\n";
 
 	FShader *shader = NULL;
 	try
