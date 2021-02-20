@@ -83,21 +83,6 @@ public:
 
 class FShaderProgram;
 
-class GLPPRenderState : public PPRenderState
-{
-public:
-	GLPPRenderState(FGLRenderBuffers *buffers) : buffers(buffers) { }
-
-	void PushGroup(const FString &name) override;
-	void PopGroup() override;
-	void Draw() override;
-
-private:
-	PPGLTextureBackend *GetGLTexture(PPTexture *texture);
-	FShaderProgram *GetGLShader(PPShader *shader);
-
-	FGLRenderBuffers *buffers;
-};
 
 class FGLRenderBuffers
 {
