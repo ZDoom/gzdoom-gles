@@ -60,6 +60,7 @@ public:
 	std::atomic<unsigned int> mCurIndex;
 	unsigned int mNumReserved;
 
+	unsigned int mMapStart;
 
 	static const unsigned int BUFFER_SIZE = 2000000;
 	static const unsigned int BUFFER_SIZE_TO_USE = BUFFER_SIZE-500;
@@ -112,12 +113,14 @@ public:
 
 	void Map()
 	{
+		mMapStart = mCurIndex;
 		mVertexBuffer->Map();
 	}
 
 	void Unmap()
 	{
 		mVertexBuffer->Unmap();
+		mVertexBuffer->Upload(mMapStart * sizeof(FFlatVertex), (mCurIndex - mMapStart) * sizeof(FFlatVertex));
 	}
 
 	void DropSync()
