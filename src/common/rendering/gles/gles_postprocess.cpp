@@ -23,7 +23,6 @@
 #include "m_png.h"
 #include "gles_buffers.h"
 #include "gles_framebuffer.h"
-#include "gles_debug.h"
 #include "gles_renderbuffers.h"
 #include "gles_renderer.h"
 #include "gles_postprocessstate.h"
@@ -54,15 +53,8 @@ void FGLRenderer::RenderScreenQuad()
 
 void FGLRenderer::PostProcessScene(int fixedcm, float flash, const std::function<void()> &afterBloomDrawEndScene2D)
 {
-	int sceneWidth = mBuffers->GetSceneWidth();
-	int sceneHeight = mBuffers->GetSceneHeight();
-
-	GLPPRenderState renderstate(mBuffers);
-
-	hw_postprocess.Pass1(&renderstate, fixedcm, sceneWidth, sceneHeight);
 	mBuffers->BindCurrentFB();
 	if (afterBloomDrawEndScene2D) afterBloomDrawEndScene2D();
-	hw_postprocess.Pass2(&renderstate, fixedcm, flash, sceneWidth, sceneHeight);
 }
 
 //-----------------------------------------------------------------------------
@@ -73,32 +65,17 @@ void FGLRenderer::PostProcessScene(int fixedcm, float flash, const std::function
 
 void FGLRenderer::AmbientOccludeScene(float m5)
 {
-	int sceneWidth = mBuffers->GetSceneWidth();
-	int sceneHeight = mBuffers->GetSceneHeight();
 
-	GLPPRenderState renderstate(mBuffers);
-	hw_postprocess.ssao.Render(&renderstate, m5, sceneWidth, sceneHeight);
 }
 
 void FGLRenderer::BlurScene(float gameinfobluramount)
 {
-	int sceneWidth = mBuffers->GetSceneWidth();
-	int sceneHeight = mBuffers->GetSceneHeight();
 
-	GLPPRenderState renderstate(mBuffers);
-
-	auto vrmode = VRMode::GetVRMode(true);
-	int eyeCount = vrmode->mEyeCount;
-	for (int i = 0; i < eyeCount; ++i)
-	{
-		hw_postprocess.bloom.RenderBlur(&renderstate, sceneWidth, sceneHeight, gameinfobluramount);
-		if (eyeCount - i > 1) mBuffers->NextEye(eyeCount);
-	}
 }
 
 void FGLRenderer::ClearTonemapPalette()
 {
-	hw_postprocess.tonemap.ClearTonemapPalette();
+
 }
 
 //-----------------------------------------------------------------------------
@@ -127,11 +104,6 @@ void FGLRenderer::Flush()
 		twod->Clear();
 
 		FGLPostProcessState savedState;
-		FGLDebug::PushGroup("PresentEyes");
-		// Note: This here is the ONLY place in the entire engine where the OpenGL dependent parts of the Stereo3D code need to be dealt with.
-		// There's absolutely no need to create a overly complex class hierarchy for just this.
-		PresentStereo();
-		FGLDebug::PopGroup();
 	}
 }
 
@@ -146,10 +118,6 @@ void FGLRenderer::CopyToBackbuffer(const IntRect *bounds, bool applyGamma)
 	screen->Draw2D();	// draw all pending 2D stuff before copying the buffer
 	twod->Clear();
 
-	GLPPRenderState renderstate(mBuffers);
-	hw_postprocess.customShaders.Run(&renderstate, "screen");
-
-	FGLDebug::PushGroup("CopyToBackbuffer");
 	FGLPostProcessState savedState;
 	savedState.SaveTextureBindings(2);
 	mBuffers->BindOutputFB();
@@ -167,7 +135,6 @@ void FGLRenderer::CopyToBackbuffer(const IntRect *bounds, bool applyGamma)
 
 	mBuffers->BindCurrentTexture(0);
 	DrawPresentTexture(box, applyGamma);
-	FGLDebug::PopGroup();
 }
 
 void FGLRenderer::DrawPresentTexture(const IntRect &box, bool applyGamma)
@@ -219,7 +186,26 @@ void FGLRenderer::DrawPresentTexture(const IntRect &box, bool applyGamma)
 	mPresentShader->Uniforms->Scale = { screen->mScreenViewport.width / (float)mBuffers->GetWidth(), screen->mScreenViewport.height / (float)mBuffers->GetHeight() };
 	mPresentShader->Uniforms->Offset = { 0.0f, 0.0f };
 	mPresentShader->Uniforms.SetData();
-	static_cast<GLDataBuffer*>(mPresentShader->Uniforms.GetBuffer())->BindBase();
+
+	
+	for (int n = 0; n < mPresentShader->Uniforms.mFields.size(); n++)
+	{
+		int index = -1;
+		UniformFieldDesc desc = mPresentShader->Uniforms.mFields[n];
+		switch (desc.Type)
+		{
+		case UniformType::Int:
+			glUniform1i(desc.UniformLocation, *((GLint*)(((char*)(&mPresentShader->Uniforms)) + desc.Offset)));
+			break;
+		case UniformType::Float:
+			glUniform1f(desc.UniformLocation, *((GLfloat*)(((char*)(&mPresentShader->Uniforms)) + desc.Offset)));
+			break;
+		case UniformType::Vec2:
+			glUniform2fv(desc.UniformLocation,1, ((GLfloat*)(((char*)(&mPresentShader->Uniforms)) + desc.Offset)));
+			break;
+		}
+	}
+	
 	RenderScreenQuad();
 }
 

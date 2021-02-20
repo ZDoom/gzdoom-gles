@@ -42,14 +42,12 @@
 #include "gles_framebuffer.h"
 #include "gles_renderer.h"
 #include "gles_renderbuffers.h"
-#include "gles_samplers.h"
 #include "hw_clock.h"
 #include "hw_vrmodes.h"
 #include "hw_skydome.h"
 #include "hw_viewpointbuffer.h"
 #include "hw_lightbuffer.h"
 #include "gles_shaderprogram.h"
-#include "gles_debug.h"
 #include "r_videoscale.h"
 #include "gles_buffers.h"
 #include "gles_postprocessstate.h"
@@ -65,8 +63,6 @@ EXTERN_CVAR(Bool, r_drawvoxels)
 EXTERN_CVAR(Int, gl_tonemap)
 EXTERN_CVAR(Bool, cl_capfps)
 
-void gl_LoadExtensions();
-void gl_PrintStartupLog();
 void Draw2D(F2DDrawer *drawer, FRenderState &state);
 
 extern bool vid_hdr_active;
@@ -124,16 +120,6 @@ void OpenGLFrameBuffer::InitializeState()
 
 	InitGLES();
 
-	if (first)
-	{
-		if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
-		{
-			I_FatalError("Failed to load OpenGL functions.");
-		}
-	}
-
-	gl_LoadExtensions();
-
 	// Move some state to the framebuffer object for easier access.
 	hwcaps = gles.flags;
 	glslversion = gles.glslversion;
@@ -141,26 +127,26 @@ void OpenGLFrameBuffer::InitializeState()
 	maxuniformblock = gles.maxuniformblock;
 	vendorstring = gles.vendorstring;
 
-	if (first)
-	{
-		first=false;
-		gl_PrintStartupLog();
-	}
+	Printf("GL_VENDOR: %s\n", glGetString(GL_VENDOR));
+	Printf("GL_RENDERER: %s\n", glGetString(GL_RENDERER));
+	Printf("GL_VERSION: %s\n", glGetString(GL_VERSION));
+	Printf("GL_SHADING_LANGUAGE_VERSION: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	Printf(PRINT_LOG, "GL_EXTENSIONS:");
 
 	glDepthFunc(GL_LESS);
 
 	glEnable(GL_DITHER);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_POLYGON_OFFSET_FILL);
-	glEnable(GL_POLYGON_OFFSET_LINE);
+	
 	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_CLAMP);
+
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LINE_SMOOTH);
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClearDepth(1.0f);
+	glClearDepthf(1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	SetViewportRects(nullptr);
@@ -172,9 +158,6 @@ void OpenGLFrameBuffer::InitializeState()
 	GLRenderer = new FGLRenderer(this);
 	GLRenderer->Initialize(GetWidth(), GetHeight());
 	static_cast<GLDataBuffer*>(mLights->GetBuffer())->BindBase();
-
-	mDebug = std::make_shared<FGLDebug>();
-	mDebug->Update();
 }
 
 //==========================================================================
@@ -256,18 +239,15 @@ void OpenGLFrameBuffer::Swap()
 	
 	Finish.Reset();
 	Finish.Clock();
-	//if (swapbefore) glFinish();
-	screen->mVertexData->DropSync();
+
 
 	FPSLimit();
 	SwapBuffers();
 
-	//if (!swapbefore) glFinish();
 	Finish.Unclock();
 	camtexcount = 0;
 	FHardwareTexture::UnbindAll();
 	gl_RenderState.ClearLastMaterial();
-	mDebug->Update();
 }
 
 //==========================================================================
@@ -278,17 +258,7 @@ void OpenGLFrameBuffer::Swap()
 
 void OpenGLFrameBuffer::SetVSync(bool vsync)
 {
-	// Switch to the default frame buffer because some drivers associate the vsync state with the bound FB object.
-	GLint oldDrawFramebufferBinding = 0, oldReadFramebufferBinding = 0;
-	glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &oldDrawFramebufferBinding);
-	glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &oldReadFramebufferBinding);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
 	Super::SetVSync(vsync);
-
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, oldDrawFramebufferBinding);
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, oldReadFramebufferBinding);
 }
 
 //===========================================================================
@@ -298,7 +268,7 @@ void OpenGLFrameBuffer::SetVSync(bool vsync)
 
 void OpenGLFrameBuffer::SetTextureFilterMode()
 {
-	if (GLRenderer != nullptr && GLRenderer->mSamplerManager != nullptr) GLRenderer->mSamplerManager->SetTextureFilterMode();
+	//if (GLRenderer != nullptr && GLRenderer->mSamplerManager != nullptr) GLRenderer->mSamplerManager->SetTextureFilterMode();
 }
 
 IHardwareTexture *OpenGLFrameBuffer::CreateHardwareTexture(int numchannels) 
@@ -369,15 +339,6 @@ FRenderState* OpenGLFrameBuffer::RenderState()
 	return &gl_RenderState;
 }
 
-void OpenGLFrameBuffer::AmbientOccludeScene(float m5)
-{
-	gl_RenderState.EnableDrawBuffers(1);
-	GLRenderer->AmbientOccludeScene(m5);
-	glViewport(screen->mSceneViewport.left, mSceneViewport.top, mSceneViewport.width, mSceneViewport.height);
-	GLRenderer->mBuffers->BindSceneFB(true);
-	gl_RenderState.EnableDrawBuffers(gl_RenderState.GetPassDrawBufferCount());
-	gl_RenderState.Apply();
-}
 
 void OpenGLFrameBuffer::FirstEye()
 {
@@ -394,37 +355,7 @@ void OpenGLFrameBuffer::SetSceneRenderTarget(bool useSSAO)
 	GLRenderer->mBuffers->BindSceneFB(useSSAO);
 }
 
-void OpenGLFrameBuffer::UpdateShadowMap()
-{
-	if (mShadowMap.PerformUpdate())
-	{
-		FGLDebug::PushGroup("ShadowMap");
 
-		FGLPostProcessState savedState;
-
-		static_cast<GLDataBuffer*>(screen->mShadowMap.mLightList)->BindBase();
-		static_cast<GLDataBuffer*>(screen->mShadowMap.mNodesBuffer)->BindBase();
-		static_cast<GLDataBuffer*>(screen->mShadowMap.mLinesBuffer)->BindBase();
-
-		GLRenderer->mBuffers->BindShadowMapFB();
-
-		GLRenderer->mShadowMapShader->Bind();
-		GLRenderer->mShadowMapShader->Uniforms->ShadowmapQuality = gl_shadowmap_quality;
-		GLRenderer->mShadowMapShader->Uniforms->NodesCount = screen->mShadowMap.NodesCount();
-		GLRenderer->mShadowMapShader->Uniforms.SetData();
-		static_cast<GLDataBuffer*>(GLRenderer->mShadowMapShader->Uniforms.GetBuffer())->BindBase();
-
-		glViewport(0, 0, gl_shadowmap_quality, 1024);
-		GLRenderer->RenderScreenQuad();
-
-		const auto& viewport = screen->mScreenViewport;
-		glViewport(viewport.left, viewport.top, viewport.width, viewport.height);
-
-		GLRenderer->mBuffers->BindShadowMapTexture(16);
-		FGLDebug::PopGroup();
-		screen->mShadowMap.FinishUpdate();
-	}
-}
 
 void OpenGLFrameBuffer::WaitForCommands(bool finish)
 {
