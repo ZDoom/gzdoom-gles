@@ -39,10 +39,8 @@
 #include "hw_material.h"
 
 #include "hw_cvars.h"
-#include "gles_debug.h"
 #include "gles_renderer.h"
 #include "gles_renderstate.h"
-#include "gles_samplers.h"
 #include "gles_hwtexture.h"
 
 namespace OpenGLESRenderer
@@ -79,7 +77,7 @@ unsigned int FHardwareTexture::lastbound[FHardwareTexture::MAX_TEXTURES];
 unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int h, int texunit, bool mipmap, const char *name)
 {
 	int rh,rw;
-	int texformat = GL_RGBA8;// TexFormat[gl_texture_format];
+	int texformat = GL_RGBA;// TexFormat[gl_texture_format];
 	bool deletebuffer=false;
 
 	/*
@@ -100,16 +98,11 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 	if (texunit >= 0) lastbound[texunit] = glTexID;
 	glBindTexture(GL_TEXTURE_2D, glTexID);
 
-	FGLDebug::LabelObject(GL_TEXTURE, glTexID, name);
 
 	rw = GetTexDimension(w);
 	rh = GetTexDimension(h);
-	if (glBufferID > 0)
-	{
-		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-		buffer = nullptr;
-	}
-	else if (!buffer)
+
+	if (!buffer)
 	{
 		// The texture must at least be initialized if no data is present.
 		mipmapped = false;
@@ -134,37 +127,22 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 	// store the physical size.
 
 	int sourcetype;
-	if (glTextureBytes > 0)
-	{
-		if (glTextureBytes < 4) glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		static const int ITypes[] = { GL_R8, GL_RG8, GL_RGB8, GL_RGBA8 };
-		static const int STypes[] = { GL_RED, GL_RG, GL_BGR, GL_BGRA };
 
-		texformat = ITypes[glTextureBytes - 1];
-		sourcetype = STypes[glTextureBytes - 1];
-	}
-	else
-	{
-		sourcetype = GL_BGRA;
-	}
-	
-	if (!firstCall && glBufferID > 0)
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, rw, rh, sourcetype, GL_UNSIGNED_BYTE, buffer);
-	else
-		glTexImage2D(GL_TEXTURE_2D, 0, texformat, rw, rh, 0, sourcetype, GL_UNSIGNED_BYTE, buffer);
+	sourcetype = texformat = GL_RGBA;
+
+
+	glTexImage2D(GL_TEXTURE_2D, 0, texformat, rw, rh, 0, sourcetype, GL_UNSIGNED_BYTE, buffer);
 
 	if (deletebuffer && buffer) free(buffer);
-	else if (glBufferID)
-	{
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-	}
+	
 
 	if (mipmap && TexFilter[gl_texture_filter].mipmapping)
 	{
 		glGenerateMipmap(GL_TEXTURE_2D);
 		mipmapped = true;
 	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	if (texunit > 0) glActiveTexture(GL_TEXTURE0);
 	else if (texunit == -1) glBindTexture(GL_TEXTURE_2D, textureBinding);
@@ -172,33 +150,6 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 }
 
 
-//===========================================================================
-// 
-//
-//
-//===========================================================================
-void FHardwareTexture::AllocateBuffer(int w, int h, int texelsize)
-{
-	int rw = GetTexDimension(w);
-	int rh = GetTexDimension(h);
-	if (texelsize < 1 || texelsize > 4) texelsize = 4;
-	glTextureBytes = texelsize;
-	bufferpitch = w;
-	if (rw == w || rh == h)
-	{
-		glGenBuffers(1, &glBufferID);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, glBufferID);
-		glBufferData(GL_PIXEL_UNPACK_BUFFER, w*h*texelsize, nullptr, GL_STREAM_DRAW);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-	}
-}
-
-
-uint8_t *FHardwareTexture::MapBuffer()
-{
-	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, glBufferID);
-	return (uint8_t*)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
-}
 
 //===========================================================================
 // 
@@ -208,7 +159,6 @@ uint8_t *FHardwareTexture::MapBuffer()
 FHardwareTexture::~FHardwareTexture() 
 { 
 	if (glTexID != 0) glDeleteTextures(1, &glTexID);
-	if (glBufferID != 0) glDeleteBuffers(1, &glBufferID);
 }
 
 
@@ -268,7 +218,7 @@ int FHardwareTexture::GetDepthBuffer(int width, int height)
 	{
 		glGenRenderbuffers(1, &glDepthID);
 		glBindRenderbuffer(GL_RENDERBUFFER, glDepthID);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, 
 			GetTexDimension(width), GetTexDimension(height));
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
@@ -337,7 +287,7 @@ bool FHardwareTexture::BindOrCreate(FTexture *tex, int texunit, int clampmode, i
 		}
 	}
 	if (forcenofilter && clampmode <= CLAMP_XY) clampmode += CLAMP_NOFILTER - CLAMP_NONE;
-	GLRenderer->mSamplerManager->Bind(texunit, clampmode, 255);
+	//GLRenderer->mSamplerManager->Bind(texunit, clampmode, 255);
 	return true;
 }
 
