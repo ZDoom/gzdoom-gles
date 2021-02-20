@@ -54,6 +54,9 @@ public:
 	virtual void *Lock(unsigned int size) = 0;
 	virtual void Unlock() = 0;
 	virtual void Resize(size_t newsize) = 0;
+
+	virtual void Upload(size_t start, size_t size) {} // For unmappable buffers
+
 	virtual void Map() {}		// Only needed by old OpenGL but this needs to be in the interface.
 	virtual void Unmap() {}
 	void *Memory() { return map; }
