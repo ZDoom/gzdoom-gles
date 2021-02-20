@@ -15,11 +15,13 @@ class GLBuffer : virtual public IBuffer
 {
 protected:
 	const int mUseType;
-	unsigned int mBufferId;
+	unsigned int mBufferId = 0;
 	int mAllocationSize = 0;
 	bool mPersistent = false;
 	bool nomap = true;
-	GLsync mGLSync = 0;
+
+	bool isData = false;
+	char *memory = nullptr;
 
 	GLBuffer(int usetype);
 	~GLBuffer();
@@ -30,11 +32,9 @@ protected:
 	void Resize(size_t newsize) override;
 	void *Lock(unsigned int size) override;
 	void Unlock() override;
-
-	void GPUDropSync();
-	void GPUWaitSync();
 public:
 	void Bind();
+	void Upload(size_t start, size_t end);
 };
 
 
@@ -62,6 +62,7 @@ public:
 class GLIndexBuffer : public IIndexBuffer, public GLBuffer
 {
 public:
+
 	GLIndexBuffer();
 };
 
