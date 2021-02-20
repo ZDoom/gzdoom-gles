@@ -235,6 +235,22 @@ class FShader
 	unsigned int hFragProg;
 	FName mName;
 
+	/////
+	int ProjectionMatrix_index;
+	int ViewMatrix_index;
+	int NormalViewMatrix_index;
+
+	FUniform4f muCameraPos;
+	FUniform4f muClipLine;
+
+	FBufferedUniform1f muGlobVis;
+	FBufferedUniform1i muPalLightLevels;
+	FBufferedUniform1i muViewHeight;
+	FBufferedUniform1f muClipHeight;
+	FBufferedUniform1f muClipHeightDirection;
+	FBufferedUniform1i muShadowmapFilter;
+	/////
+
 	FBufferedUniform1f muDesaturation;
 	FBufferedUniform1i muFogEnabled;
 	FBufferedUniform1i muTextureMode;
