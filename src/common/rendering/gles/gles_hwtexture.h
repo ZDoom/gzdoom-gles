@@ -42,7 +42,6 @@ private:
 
 	unsigned int glTexID = 0;
 	unsigned int glDepthID = 0;	// only used by camera textures
-	unsigned int glBufferID = 0;
 	int glTextureBytes;
 	bool mipmapped = false;
 
@@ -65,8 +64,8 @@ public:
 	unsigned int Bind(int texunit, bool needmipmap);
 	bool BindOrCreate(FTexture* tex, int texunit, int clampmode, int translation, int flags);
 
-	void AllocateBuffer(int w, int h, int texelsize);
-	uint8_t* MapBuffer();
+	void AllocateBuffer(int w, int h, int texelsize) {} // Not used
+	uint8_t* MapBuffer() { return 0; }					// Not used
 
 	unsigned int CreateTexture(unsigned char* buffer, int w, int h, int texunit, bool mipmap, const char* name);
 	unsigned int GetTextureHandle()
