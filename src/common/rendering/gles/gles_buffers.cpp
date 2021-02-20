@@ -56,7 +56,15 @@ static inline void InvalidateBufferState()
 GLBuffer::GLBuffer(int usetype)
 	: mUseType(usetype)
 {
-	glGenBuffers(1, &mBufferId);
+	if ((usetype == GL_ARRAY_BUFFER) || (usetype == GL_ELEMENT_ARRAY_BUFFER))
+	{
+		glGenBuffers(1, &mBufferId);
+		isData = false;
+	}
+	else
+	{
+		isData = true;
+	}
 }
 
 GLBuffer::~GLBuffer()
@@ -64,40 +72,38 @@ GLBuffer::~GLBuffer()
 	if (mBufferId != 0)
 	{
 		glBindBuffer(mUseType, mBufferId);
-		glUnmapBuffer(mUseType);
-		glBindBuffer(mUseType, 0);
 		glDeleteBuffers(1, &mBufferId);
 	}
 }
 
 void GLBuffer::Bind()
 {
-	glBindBuffer(mUseType, mBufferId);
+	if (!isData)
+	{
+		glBindBuffer(mUseType, mBufferId);
+	}
 }
 
 
-void GLBuffer::SetData(size_t size, const void *data, bool staticdata)
+void GLBuffer::SetData(size_t size, const void* data, bool staticdata)
 {
-	Bind();
-	if (data != nullptr)
+
+	if (memory)
+		delete[] memory;
+
+	memory = (char*)(new uint64_t[size/8 + 16]);
+
+	if (data)
+		memcpy(memory, data, size);
+
+	map = memory;
+
+	if (!isData)
 	{
-		glBufferData(mUseType, size, data, staticdata? GL_STATIC_DRAW : GL_STREAM_DRAW);
+		Bind();
+		glBufferData(mUseType, size, memory, staticdata ? GL_STATIC_DRAW : GL_STREAM_DRAW);
 	}
-	else
-	{
-		mPersistent = screen->BuffersArePersistent() && !staticdata;
-		if (mPersistent)
-		{
-			glBufferStorage(mUseType, size, nullptr, GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
-			map = glMapBufferRange(mUseType, 0, size, GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
-		}
-		else
-		{
-			glBufferData(mUseType, size, nullptr, staticdata ? GL_STATIC_DRAW : GL_STREAM_DRAW);
-			map = nullptr;
-		}
-		if (!staticdata) nomap = false;
-	}
+
 	buffersize = size;
 	InvalidateBufferState();
 }
@@ -105,44 +111,54 @@ void GLBuffer::SetData(size_t size, const void *data, bool staticdata)
 void GLBuffer::SetSubData(size_t offset, size_t size, const void *data)
 {
 	Bind();
-	glBufferSubData(mUseType, offset, size, data);
+	
+	memcpy(memory + offset, data, size);
+	
+	if (!isData)
+	{
+		glBufferSubData(mUseType, offset, size, data);
+	}
+}
+
+void GLBuffer::Upload(size_t start, size_t size)
+{
+	Bind();
+	glBufferSubData(mUseType, start, size, memory + start);
 }
 
 void GLBuffer::Map()
 {
-	assert(nomap == false);	// do not allow mapping of static buffers. Vulkan cannot do that so it should be blocked in OpenGL, too.
-	if (!mPersistent && !nomap)
-	{
-		Bind();
-		map = (FFlatVertex*)glMapBufferRange(mUseType, 0, buffersize, GL_MAP_WRITE_BIT|GL_MAP_UNSYNCHRONIZED_BIT);
-		InvalidateBufferState();
-	}
+	map = memory;
+	InvalidateBufferState();
 }
 
 void GLBuffer::Unmap()
 {
-	assert(nomap == false);
-	if (!mPersistent && map != nullptr)
-	{
-		Bind();
-		glUnmapBuffer(mUseType);
-		InvalidateBufferState();
-		map = nullptr;
-	}
+
 }
 
 void *GLBuffer::Lock(unsigned int size)
 {
 	// This initializes this buffer as a static object with no data.
 	SetData(size, nullptr, true);
-	return glMapBufferRange(mUseType, 0, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+
+	return map;
+	/*
+	else
+	{
+		return glMapBufferRange(mUseType, 0, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+	}
+	*/
 }
 
 void GLBuffer::Unlock()
 {
-	Bind();
-	glUnmapBuffer(mUseType);
-	InvalidateBufferState();
+	if (!isData)
+	{
+		Bind();
+		glBufferData(mUseType, buffersize, map, GL_DYNAMIC_DRAW);
+		InvalidateBufferState();
+	}
 }
 
 void GLBuffer::Resize(size_t newsize)
@@ -150,6 +166,7 @@ void GLBuffer::Resize(size_t newsize)
 	assert(!nomap);	// only mappable buffers can be resized. 
 	if (newsize > buffersize && !nomap)
 	{
+		/*
 		// reallocate the buffer with twice the size
 		unsigned int oldbuffer = mBufferId;
 
@@ -167,32 +184,10 @@ void GLBuffer::Resize(size_t newsize)
 		glDeleteBuffers(1, &oldbuffer);
 		buffersize = newsize;
 		InvalidateBufferState();
+		*/
 	}
 }
 
-void GLBuffer::GPUDropSync()
-{
-	if (mGLSync != NULL)
-	{
-		glDeleteSync(mGLSync);
-	}
-
-	mGLSync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-}
-
-void GLBuffer::GPUWaitSync()
-{
-	GLenum status = glClientWaitSync(mGLSync, GL_SYNC_FLUSH_COMMANDS_BIT, 1000 * 1000 * 50); // Wait for a max of 50ms...
-	
-	if (status != GL_ALREADY_SIGNALED && status != GL_CONDITION_SATISFIED)
-	{
-		//Printf("Error on glClientWaitSync: %d\n", status);
-	}
-	
-	glDeleteSync(mGLSync);
-
-	mGLSync = NULL;
-}
 
 //===========================================================================
 //
@@ -202,7 +197,7 @@ void GLBuffer::GPUWaitSync()
 
 void GLVertexBuffer::SetFormat(int numBindingPoints, int numAttributes, size_t stride, const FVertexBufferAttribute *attrs)
 {
-	static int VFmtToGLFmt[] = { GL_FLOAT, GL_FLOAT, GL_FLOAT, GL_FLOAT, GL_UNSIGNED_BYTE, GL_INT_2_10_10_10_REV };
+	static int VFmtToGLFmt[] = { GL_FLOAT, GL_FLOAT, GL_FLOAT, GL_FLOAT, GL_UNSIGNED_BYTE, GL_INT };
 	static uint8_t VFmtToSize[] = {4, 3, 2, 1, 4, 4};
 	
 	mStride = stride;
@@ -245,17 +240,24 @@ void GLVertexBuffer::Bind(int *offsets)
 
 void GLDataBuffer::BindRange(FRenderState *state, size_t start, size_t length)
 {
-	glBindBufferRange(mUseType, mBindingPoint, mBufferId, start, length);
+	if (mBindingPoint == 3)// VIEWPOINT_BINDINGPOINT
+	{
+		static_cast<FGLRenderState*>(state)->ApplyViewport(memory + start);
+	}
+	else
+	{
+		//glBindBufferRange(mUseType, mBindingPoint, mBufferId, start, length);
+	} 
 }
 
 void GLDataBuffer::BindBase()
 {
-	glBindBufferBase(mUseType, mBindingPoint, mBufferId);
+	//glBindBufferBase(mUseType, mBindingPoint, mBufferId);
 }
 
 
 GLVertexBuffer::GLVertexBuffer() : GLBuffer(GL_ARRAY_BUFFER) {}
 GLIndexBuffer::GLIndexBuffer() : GLBuffer(GL_ELEMENT_ARRAY_BUFFER) {}
-GLDataBuffer::GLDataBuffer(int bindingpoint, bool is_ssbo) : GLBuffer(is_ssbo ? GL_SHADER_STORAGE_BUFFER : GL_UNIFORM_BUFFER), mBindingPoint(bindingpoint) {}
+GLDataBuffer::GLDataBuffer(int bindingpoint, bool is_ssbo) : GLBuffer(0), mBindingPoint(bindingpoint) {}
 
 }
