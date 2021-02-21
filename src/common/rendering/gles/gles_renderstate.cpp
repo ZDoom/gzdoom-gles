@@ -518,7 +518,10 @@ void FGLRenderState::Clear(int targets)
 	if (targets & CT_Depth)
 	{
 		gltarget |= GL_DEPTH_BUFFER_BIT;
-		glClearDepthf(1);
+		if (glClearDepthf)
+			glClearDepthf(1);
+		else
+			glClearDepth(1);
 	}
 	if (targets & CT_Stencil)
 	{

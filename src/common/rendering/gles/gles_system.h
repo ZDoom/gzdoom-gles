@@ -23,8 +23,14 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-//GL headers
-#include "gl_load/gl_load.h"
+#define USE_GLES2 0
+
+#if (USE_GLES2)
+	#include "glad/glad.h"
+#else
+	#include "gl_load/gl_load.h"
+	#define GL_DEPTH24_STENCIL8_OES GL_DEPTH24_STENCIL8
+#endif
 
 #if defined(__APPLE__)
 	#include <OpenGL/OpenGL.h>
