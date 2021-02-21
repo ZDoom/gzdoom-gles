@@ -205,8 +205,19 @@ void SaveCachedProgramBinary(const FString &vertex, const FString &fragment, con
 	SaveShaders();
 }
 
-bool FShader::Load(const char * name, const char * vert_prog_lump, const char * frag_prog_lump, const char * proc_prog_lump, const char * light_fragprog, const char * defines)
+bool FShader::Load(const char * name, const char * vert_prog_lump_, const char * frag_prog_lump_, const char * proc_prog_lump_, const char * light_fragprog_, const char * defines)
 {
+
+	FString vert_prog_lump = vert_prog_lump_;
+	FString frag_prog_lump = frag_prog_lump_;
+	FString	proc_prog_lump = proc_prog_lump_;
+	FString light_fragprog = light_fragprog_;
+
+	vert_prog_lump.Substitute("shaders/", "shaders_gles/");
+	frag_prog_lump.Substitute("shaders/", "shaders_gles/");
+	proc_prog_lump.Substitute("shaders/", "shaders_gles/");
+	light_fragprog.Substitute("shaders/", "shaders_gles/");
+
 	static char buffer[10000];
 	FString error;
 
@@ -387,7 +398,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 	fp_comb << RemoveLayoutLocationDecl(fp_data.GetString(), "in").GetChars() << "\n";
 	FString placeholder = "\n";
 
-	if (proc_prog_lump != NULL)
+	if (proc_prog_lump.Len())
 	{
 		fp_comb << "#line 1\n";
 
@@ -458,7 +469,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump, const char * 
 	}
 	fp_comb.Substitute("$placeholder$", placeholder);
 
-	if (light_fragprog)
+	if (light_fragprog.Len())
 	{
 		int pp_lump = fileSystem.CheckNumForFullName(light_fragprog, 0);
 		if (pp_lump == -1) I_Error("Unable to load '%s'", light_fragprog);
@@ -664,7 +675,7 @@ FShader *FShaderCollection::Compile (const char *ShaderName, const char *ShaderP
 	try
 	{
 		shader = new FShader(ShaderName);
-		if (!shader->Load(ShaderName, "shaders/glsl/main.vp", "shaders/glsl/main.fp", ShaderPath, LightModePath, defines.GetChars()))
+		if (!shader->Load(ShaderName, "shaders_gles/glsl/main.vp", "shaders_gles/glsl/main.fp", ShaderPath, LightModePath, defines.GetChars()))
 		{
 			I_FatalError("Unable to load shader %s\n", ShaderName);
 		}

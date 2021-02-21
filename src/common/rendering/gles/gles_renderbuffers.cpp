@@ -424,15 +424,7 @@ namespace OpenGLESRenderer
 		
 		if (multisample)
 		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, colorbuffer0.handle, 0);
-			/*
-			if (colorbuffer1.handle != 0)
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, colorbuffer1.handle, 0);
-			if (colorbuffer2.handle != 0)
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D_MULTISAMPLE, colorbuffer2.handle, 0);
-				*/
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
+			
 		}
 		else
 		{
@@ -502,7 +494,10 @@ namespace OpenGLESRenderer
 		glGetFloatv(GL_DEPTH_CLEAR_VALUE, &depthValue);
 		glDisable(GL_SCISSOR_TEST);
 		glClearColor(0.0, 0.0, 0.0, 0.0);
-		glClearDepthf(0.0);
+		if (glClearDepthf)
+			glClearDepthf(0.0f);
+		else
+			glClearDepth(0.0f);
 		glClearStencil(0);
 		GLenum flags = GL_COLOR_BUFFER_BIT;
 		if (stencil)
@@ -511,7 +506,10 @@ namespace OpenGLESRenderer
 			flags |= GL_DEPTH_BUFFER_BIT;
 		glClear(flags);
 		glClearStencil(stencilValue);
-		glClearDepthf(depthValue);
+		if (glClearDepthf)
+			glClearDepthf(depthValue);
+		else
+			glClearDepth(depthValue);
 		if (scissorEnabled)
 			glEnable(GL_SCISSOR_TEST);
 	}
@@ -693,10 +691,8 @@ namespace OpenGLESRenderer
 	void FGLRenderBuffers::BindSceneColorTexture(int index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
-		if (mSamples > 1)
-			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mSceneMultisampleTex.handle);
-		else
-			glBindTexture(GL_TEXTURE_2D, mPipelineTexture[0].handle);
+
+		glBindTexture(GL_TEXTURE_2D, mPipelineTexture[0].handle);
 	}
 
 	//==========================================================================
@@ -708,10 +704,8 @@ namespace OpenGLESRenderer
 	void FGLRenderBuffers::BindSceneFogTexture(int index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
-		if (mSamples > 1)
-			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mSceneFogTex.handle);
-		else
-			glBindTexture(GL_TEXTURE_2D, mSceneFogTex.handle);
+
+		glBindTexture(GL_TEXTURE_2D, mSceneFogTex.handle);
 	}
 
 	//==========================================================================
@@ -723,10 +717,8 @@ namespace OpenGLESRenderer
 	void FGLRenderBuffers::BindSceneNormalTexture(int index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
-		if (mSamples > 1)
-			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mSceneNormalTex.handle);
-		else
-			glBindTexture(GL_TEXTURE_2D, mSceneNormalTex.handle);
+
+		glBindTexture(GL_TEXTURE_2D, mSceneNormalTex.handle);
 	}
 
 	//==========================================================================
@@ -738,10 +730,8 @@ namespace OpenGLESRenderer
 	void FGLRenderBuffers::BindSceneDepthTexture(int index)
 	{
 		glActiveTexture(GL_TEXTURE0 + index);
-		if (mSamples > 1)
-			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mSceneDepthStencilTex.handle);
-		else
-			glBindTexture(GL_TEXTURE_2D, mSceneDepthStencilTex.handle);
+
+		glBindTexture(GL_TEXTURE_2D, mSceneDepthStencilTex.handle);
 	}
 
 	//==========================================================================
