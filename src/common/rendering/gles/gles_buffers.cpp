@@ -87,7 +87,6 @@ void GLBuffer::Bind()
 
 void GLBuffer::SetData(size_t size, const void* data, bool staticdata)
 {
-
 	if (memory)
 		delete[] memory;
 
@@ -156,7 +155,7 @@ void GLBuffer::Unlock()
 	if (!isData)
 	{
 		Bind();
-		glBufferData(mUseType, buffersize, map, GL_DYNAMIC_DRAW);
+		glBufferData(mUseType, buffersize, map, GL_STATIC_DRAW);
 		InvalidateBufferState();
 	}
 }
@@ -197,7 +196,7 @@ void GLBuffer::Resize(size_t newsize)
 
 void GLVertexBuffer::SetFormat(int numBindingPoints, int numAttributes, size_t stride, const FVertexBufferAttribute *attrs)
 {
-	static int VFmtToGLFmt[] = { GL_FLOAT, GL_FLOAT, GL_FLOAT, GL_FLOAT, GL_UNSIGNED_BYTE, GL_INT };
+	static int VFmtToGLFmt[] = { GL_FLOAT, GL_FLOAT, GL_FLOAT, GL_FLOAT, GL_UNSIGNED_BYTE, GL_FLOAT }; // TODO Fix last entry GL_INT_2_10_10_10_REV, normals for models will be broken
 	static uint8_t VFmtToSize[] = {4, 3, 2, 1, 4, 4};
 	
 	mStride = stride;
