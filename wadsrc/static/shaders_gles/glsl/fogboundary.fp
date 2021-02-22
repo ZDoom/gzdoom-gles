@@ -1,9 +1,4 @@
-layout(location=2) in vec4 pixelpos;
-layout(location=0) out vec4 FragColor;
-#ifdef GBUFFER_PASS
-layout(location=1) out vec4 FragFog;
-layout(location=2) out vec4 FragNormal;
-#endif                      
+varying vec4 pixelpos;
 
 //===========================================================================
 //
@@ -11,7 +6,7 @@ layout(location=2) out vec4 FragNormal;
 //
 //===========================================================================
 
-void main()
+void main() 
 {
 	float fogdist;
 	float fogfactor;
@@ -28,10 +23,7 @@ void main()
 		fogdist = max(16.0, distance(pixelpos.xyz, uCameraPos.xyz));
 	}
 	fogfactor = exp2 (uFogDensity * fogdist);
-	FragColor = vec4(uFogColor.rgb, 1.0 - fogfactor);
-#ifdef GBUFFER_PASS
-	FragFog = vec4(0.0, 0.0, 0.0, 1.0);
-	FragNormal = vec4(0.5, 0.5, 0.5, 1.0);
-#endif
+	
+	gl_FragColor = vec4(uFogColor.rgb, 1.0 - fogfactor);
 }
 

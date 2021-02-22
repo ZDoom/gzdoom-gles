@@ -205,8 +205,26 @@ void SaveCachedProgramBinary(const FString &vertex, const FString &fragment, con
 	SaveShaders();
 }
 
+bool FShader::Configure(const char* name, const char* vert_prog_lump, const char* fragprog, const char* fragprog2, const char* light_fragprog, const char* defines)
+{
+	mVertProg = vert_prog_lump;
+	mFragProg = fragprog;
+	mFragProg2 = fragprog2;
+	mLightProg = light_fragprog;
+	mDefinesBase = defines;
+
+	return true;
+}
+
+void FShader::LoadVariant()
+{
+	//mDefinesBase
+	Load(mName.GetChars(), mVertProg, mFragProg, mFragProg2, mLightProg, mDefinesBase);
+}
+
 bool FShader::Load(const char * name, const char * vert_prog_lump_, const char * frag_prog_lump_, const char * proc_prog_lump_, const char * light_fragprog_, const char * defines)
 {
+	ShaderVariantData* shaderData = new ShaderVariantData();
 
 	FString vert_prog_lump = vert_prog_lump_;
 	FString frag_prog_lump = frag_prog_lump_;
@@ -216,8 +234,8 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	frag_prog_lump.Substitute("shaders/", "shaders_gles/");
 	proc_prog_lump.Substitute("shaders/", "shaders_gles/");
 	
-	FString light_fragprog;
-	if(light_fragprog_)
+	FString light_fragprog = light_fragprog_;
+	if(light_fragprog.Len())
 		light_fragprog = "shaders_gles/glsl/material_normal.fp"; // NOTE: Always use normal material for now, ignore others
 
 
@@ -337,20 +355,6 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 
 	)";
 	
-
-#ifdef __APPLE__
-	// The noise functions are completely broken in macOS OpenGL drivers
-	// Garbage values are returned, and their infrequent usage causes extreme slowdown
-	// Also, these functions must return zeroes since GLSL 4.4
-	i_data += "#define noise1(unused) 0.0\n";
-	i_data += "#define noise2(unused) vec2(0)\n";
-	i_data += "#define noise3(unused) vec3(0)\n";
-	i_data += "#define noise4(unused) vec4(0)\n";
-#endif // __APPLE__
-
-#ifdef NPOT_EMULATION
-	i_data += "#define NPOT_EMULATION\nuniform vec2 uNpotEmulation;\n";
-#endif
 
 	int vp_lump = fileSystem.CheckNumForFullName(vert_prog_lump, 0);
 	if (vp_lump == -1) I_Error("Unable to load '%s'", vert_prog_lump);
@@ -487,7 +491,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		vp_comb.Substitute("gl_ClipDistance", "//");
 	}
 
-	hShader = glCreateProgram();
+	shaderData->hShader = glCreateProgram();
 	
 	uint32_t binaryFormat = 0;
 	TArray<uint8_t> binary;
@@ -498,8 +502,8 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 
 	if (!linked)
 	{
-		hVertProg = glCreateShader(GL_VERTEX_SHADER);
-		hFragProg = glCreateShader(GL_FRAGMENT_SHADER);
+		shaderData->hVertProg = glCreateShader(GL_VERTEX_SHADER);
+		shaderData->hFragProg = glCreateShader(GL_FRAGMENT_SHADER);
 
 		int vp_size = (int)vp_comb.Len();
 		int fp_size = (int)fp_comb.Len();
@@ -507,44 +511,44 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		const char *vp_ptr = vp_comb.GetChars();
 		const char *fp_ptr = fp_comb.GetChars();
 
-		glShaderSource(hVertProg, 1, &vp_ptr, &vp_size);
-		glShaderSource(hFragProg, 1, &fp_ptr, &fp_size);
+		glShaderSource(shaderData->hVertProg, 1, &vp_ptr, &vp_size);
+		glShaderSource(shaderData->hFragProg, 1, &fp_ptr, &fp_size);
 
-		glCompileShader(hVertProg);
-		glCompileShader(hFragProg);
+		glCompileShader(shaderData->hVertProg);
+		glCompileShader(shaderData->hFragProg);
 
-		glAttachShader(hShader, hVertProg);
-		glAttachShader(hShader, hFragProg);
-
-
-		glBindAttribLocation(hShader, VATTR_VERTEX, "aPosition");
-		glBindAttribLocation(hShader, VATTR_TEXCOORD, "aTexCoord");
-		glBindAttribLocation(hShader, VATTR_COLOR, "aColor");
-		glBindAttribLocation(hShader, VATTR_VERTEX2, "aVertex2");
-		glBindAttribLocation(hShader, VATTR_NORMAL, "aNormal");
-		glBindAttribLocation(hShader, VATTR_NORMAL2, "aNormal2");
+		glAttachShader(shaderData->hShader, shaderData->hVertProg);
+		glAttachShader(shaderData->hShader, shaderData->hFragProg);
 
 
-		glLinkProgram(hShader);
+		glBindAttribLocation(shaderData->hShader, VATTR_VERTEX, "aPosition");
+		glBindAttribLocation(shaderData->hShader, VATTR_TEXCOORD, "aTexCoord");
+		glBindAttribLocation(shaderData->hShader, VATTR_COLOR, "aColor");
+		glBindAttribLocation(shaderData->hShader, VATTR_VERTEX2, "aVertex2");
+		glBindAttribLocation(shaderData->hShader, VATTR_NORMAL, "aNormal");
+		glBindAttribLocation(shaderData->hShader, VATTR_NORMAL2, "aNormal2");
 
-		glGetShaderInfoLog(hVertProg, 10000, NULL, buffer);
+
+		glLinkProgram(shaderData->hShader);
+
+		glGetShaderInfoLog(shaderData->hVertProg, 10000, NULL, buffer);
 		if (*buffer)
 		{
 			error << "Vertex shader:\n" << buffer << "\n";
 		}
-		glGetShaderInfoLog(hFragProg, 10000, NULL, buffer);
+		glGetShaderInfoLog(shaderData->hFragProg, 10000, NULL, buffer);
 		if (*buffer)
 		{
 			error << "Fragment shader:\n" << buffer << "\n";
 		}
 
-		glGetProgramInfoLog(hShader, 10000, NULL, buffer);
+		glGetProgramInfoLog(shaderData->hShader, 10000, NULL, buffer);
 		if (*buffer)
 		{
 			error << "Linking:\n" << buffer << "\n";
 		}
 		GLint status = 0;
-		glGetProgramiv(hShader, GL_LINK_STATUS, &status);
+		glGetProgramiv(shaderData->hShader, GL_LINK_STATUS, &status);
 		linked = (status == GL_TRUE);
 
 		if (!linked)
@@ -555,81 +559,79 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	}
 	else
 	{
-		hVertProg = 0;
-		hFragProg = 0;
+		shaderData->hVertProg = 0;
+		shaderData->hFragProg = 0;
 	}
 
 	
+	shaderData->ProjectionMatrix_index = glGetUniformLocation(shaderData->hShader, "ProjectionMatrix");
+	shaderData->ViewMatrix_index = glGetUniformLocation(shaderData->hShader, "ViewMatrix");
+	shaderData->NormalViewMatrix_index = glGetUniformLocation(shaderData->hShader, "NormalViewMatrix");
 
+	shaderData->muCameraPos.Init(shaderData->hShader, "uCameraPos");
+	shaderData->muClipLine.Init(shaderData->hShader, "uClipLine");
 
-	ProjectionMatrix_index = glGetUniformLocation(hShader, "ProjectionMatrix");
-	ViewMatrix_index = glGetUniformLocation(hShader, "ViewMatrix");
-	NormalViewMatrix_index = glGetUniformLocation(hShader, "NormalViewMatrix");
-
-	muCameraPos.Init(hShader, "uCameraPos");
-	muClipLine.Init(hShader, "uClipLine");
-
-	muGlobVis.Init(hShader, "uGlobVis");
-	muPalLightLevels.Init(hShader, "uPalLightLevels");
-	muViewHeight.Init(hShader, "uViewHeight");
-	muClipHeight.Init(hShader, "uClipHeight");
-	muClipHeightDirection.Init(hShader, "uClipHeightDirection");
-	muShadowmapFilter.Init(hShader, "uShadowmapFilter");
+	shaderData->muGlobVis.Init(shaderData->hShader, "uGlobVis");
+	shaderData->muPalLightLevels.Init(shaderData->hShader, "uPalLightLevels");
+	shaderData->muViewHeight.Init(shaderData->hShader, "uViewHeight");
+	shaderData->muClipHeight.Init(shaderData->hShader, "uClipHeight");
+	shaderData->muClipHeightDirection.Init(shaderData->hShader, "uClipHeightDirection");
+	shaderData->muShadowmapFilter.Init(shaderData->hShader, "uShadowmapFilter");
 
 	////
 
-	muDesaturation.Init(hShader, "uDesaturationFactor");
-	muFogEnabled.Init(hShader, "uFogEnabled");
-	muTextureMode.Init(hShader, "uTextureMode");
-	muLightParms.Init(hShader, "uLightAttr");
-	muClipSplit.Init(hShader, "uClipSplit");
-	muLightIndex.Init(hShader, "uLightIndex");
-	muFogColor.Init(hShader, "uFogColor");
-	muDynLightColor.Init(hShader, "uDynLightColor");
-	muObjectColor.Init(hShader, "uObjectColor");
-	muObjectColor2.Init(hShader, "uObjectColor2");
-	muGlowBottomColor.Init(hShader, "uGlowBottomColor");
-	muGlowTopColor.Init(hShader, "uGlowTopColor");
-	muGlowBottomPlane.Init(hShader, "uGlowBottomPlane");
-	muGlowTopPlane.Init(hShader, "uGlowTopPlane");
-	muGradientBottomPlane.Init(hShader, "uGradientBottomPlane");
-	muGradientTopPlane.Init(hShader, "uGradientTopPlane");
-	muSplitBottomPlane.Init(hShader, "uSplitBottomPlane");
-	muSplitTopPlane.Init(hShader, "uSplitTopPlane");
-	muDetailParms.Init(hShader, "uDetailParms");
-#ifdef NPOT_EMULATION
-	muNpotEmulation.Init(hShader, "uNpotEmulation");
-#endif
-	muInterpolationFactor.Init(hShader, "uInterpolationFactor");
-	muAlphaThreshold.Init(hShader, "uAlphaThreshold");
-	muSpecularMaterial.Init(hShader, "uSpecularMaterial");
-	muAddColor.Init(hShader, "uAddColor");
-	muTextureAddColor.Init(hShader, "uTextureAddColor");
-	muTextureModulateColor.Init(hShader, "uTextureModulateColor");
-	muTextureBlendColor.Init(hShader, "uTextureBlendColor");
-	muTimer.Init(hShader, "timer");
+	shaderData->muDesaturation.Init(shaderData->hShader, "uDesaturationFactor");
+	shaderData->muFogEnabled.Init(shaderData->hShader, "uFogEnabled");
+	shaderData->muTextureMode.Init(shaderData->hShader, "uTextureMode");
+	shaderData->muLightParms.Init(shaderData->hShader, "uLightAttr");
+	shaderData->muClipSplit.Init(shaderData->hShader, "uClipSplit");
+	shaderData->muLightIndex.Init(shaderData->hShader, "uLightIndex");
+	shaderData->muFogColor.Init(shaderData->hShader, "uFogColor");
+	shaderData->muDynLightColor.Init(shaderData->hShader, "uDynLightColor");
+	shaderData->muObjectColor.Init(shaderData->hShader, "uObjectColor");
+	shaderData->muObjectColor2.Init(shaderData->hShader, "uObjectColor2");
+	shaderData->muGlowBottomColor.Init(shaderData->hShader, "uGlowBottomColor");
+	shaderData->muGlowTopColor.Init(shaderData->hShader, "uGlowTopColor");
+	shaderData->muGlowBottomPlane.Init(shaderData->hShader, "uGlowBottomPlane");
+	shaderData->muGlowTopPlane.Init(shaderData->hShader, "uGlowTopPlane");
+	shaderData->muGradientBottomPlane.Init(shaderData->hShader, "uGradientBottomPlane");
+	shaderData->muGradientTopPlane.Init(shaderData->hShader, "uGradientTopPlane");
+	shaderData->muSplitBottomPlane.Init(shaderData->hShader, "uSplitBottomPlane");
+	shaderData->muSplitTopPlane.Init(shaderData->hShader, "uSplitTopPlane");
+	shaderData->muDetailParms.Init(shaderData->hShader, "uDetailParms");
+	shaderData->muInterpolationFactor.Init(shaderData->hShader, "uInterpolationFactor");
+	shaderData->muAlphaThreshold.Init(shaderData->hShader, "uAlphaThreshold");
+	shaderData->muSpecularMaterial.Init(shaderData->hShader, "uSpecularMaterial");
+	shaderData->muAddColor.Init(shaderData->hShader, "uAddColor");
+	shaderData->muTextureAddColor.Init(shaderData->hShader, "uTextureAddColor");
+	shaderData->muTextureModulateColor.Init(shaderData->hShader, "uTextureModulateColor");
+	shaderData->muTextureBlendColor.Init(shaderData->hShader, "uTextureBlendColor");
+	shaderData->muTimer.Init(shaderData->hShader, "timer");
 
-	lights_index = glGetUniformLocation(hShader, "lights");
-	modelmatrix_index = glGetUniformLocation(hShader, "ModelMatrix");
-	texturematrix_index = glGetUniformLocation(hShader, "TextureMatrix");
-	normalmodelmatrix_index = glGetUniformLocation(hShader, "NormalModelMatrix");
+	shaderData->lights_index = glGetUniformLocation(shaderData->hShader, "lights");
+	shaderData->modelmatrix_index = glGetUniformLocation(shaderData->hShader, "ModelMatrix");
+	shaderData->texturematrix_index = glGetUniformLocation(shaderData->hShader, "TextureMatrix");
+	shaderData->normalmodelmatrix_index = glGetUniformLocation(shaderData->hShader, "NormalModelMatrix");
 
 
-	glUseProgram(hShader);
+	glUseProgram(shaderData->hShader);
 
 	// set up other texture units (if needed by the shader)
 	for (int i = 2; i<16; i++)
 	{
 		char stringbuf[20];
 		mysnprintf(stringbuf, 20, "texture%d", i);
-		int tempindex = glGetUniformLocation(hShader, stringbuf);
+		int tempindex = glGetUniformLocation(shaderData->hShader, stringbuf);
 		if (tempindex > 0) glUniform1i(tempindex, i - 1);
 	}
 
-	int shadowmapindex = glGetUniformLocation(hShader, "ShadowMap");
+	int shadowmapindex = glGetUniformLocation(shaderData->hShader, "ShadowMap");
 	if (shadowmapindex > 0) glUniform1i(shadowmapindex, 16);
 
 	glUseProgram(0);
+
+	cur = shaderData;
+
 	return linked;
 }
 
@@ -641,11 +643,13 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 
 FShader::~FShader()
 {
+	/*
 	glDeleteProgram(hShader);
 	if (hVertProg != 0)
 		glDeleteShader(hVertProg);
 	if (hFragProg != 0)
 		glDeleteShader(hFragProg);
+	*/
 }
 
 
@@ -655,9 +659,24 @@ FShader::~FShader()
 //
 //==========================================================================
 
-bool FShader::Bind()
+bool FShader::Bind(int textureMode, int texFlags, int blendFlags)
 {
-	GLRenderer->mShaderManager->SetActiveShader(this);
+	uint32_t tag = CreateShaderTag(textureMode, texFlags, blendFlags);
+
+	cur = variants[tag];
+
+	if (!cur)
+	{
+		FString variantConfig = "\n";
+		variantConfig.AppendFormat("#define DEF_TEXTURE_MODE %d\n", textureMode);
+		variantConfig.AppendFormat("#define DEF_BLEND_FLAGS %d\n", blendFlags);
+		
+		Load(mName.GetChars(), mVertProg, mFragProg, mFragProg2, mLightProg, mDefinesBase + variantConfig);
+
+		variants[tag] = cur;
+	}
+
+	GLRenderer->mShaderManager->SetActiveShader(this->cur);
 	return true;
 }
 
@@ -678,7 +697,7 @@ FShader *FShaderCollection::Compile (const char *ShaderName, const char *ShaderP
 	try
 	{
 		shader = new FShader(ShaderName);
-		if (!shader->Load(ShaderName, "shaders_gles/glsl/main.vp", "shaders_gles/glsl/main.fp", ShaderPath, LightModePath, defines.GetChars()))
+		if (!shader->Configure(ShaderName, "shaders_gles/glsl/main.vp", "shaders_gles/glsl/main.fp", ShaderPath, LightModePath, defines.GetChars()))
 		{
 			I_FatalError("Unable to load shader %s\n", ShaderName);
 		}
@@ -713,9 +732,9 @@ FShaderManager::~FShaderManager()
 		delete collection;
 }
 
-void FShaderManager::SetActiveShader(FShader *sh)
+void FShaderManager::SetActiveShader(FShader::ShaderVariantData *sh)
 {
-	if (mActiveShader != sh)
+	//if (mActiveShader != sh)
 	{
 		glUseProgram(sh!= NULL? sh->GetHandle() : 0);
 		mActiveShader = sh;
@@ -797,7 +816,7 @@ void FShaderCollection::CompileShaders(EPassType passType)
 	for(int i=0;i<MAX_EFFECTS;i++)
 	{
 		FShader *eff = new FShader(effectshaders[i].ShaderName);
-		if (!eff->Load(effectshaders[i].ShaderName, effectshaders[i].vp, effectshaders[i].fp1,
+		if (!eff->Configure(effectshaders[i].ShaderName, effectshaders[i].vp, effectshaders[i].fp1,
 						effectshaders[i].fp2, effectshaders[i].fp3, effectshaders[i].defines))
 		{
 			delete eff;
@@ -862,7 +881,7 @@ FShader *FShaderCollection::BindEffect(int effect)
 {
 	if (effect >= 0 && effect < MAX_EFFECTS && mEffectShaders[effect] != NULL)
 	{
-		mEffectShaders[effect]->Bind();
+		mEffectShaders[effect]->Bind(0,0,0);
 		return mEffectShaders[effect];
 	}
 	return NULL;

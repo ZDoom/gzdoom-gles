@@ -433,6 +433,7 @@ set( PLAT_WIN32_SOURCES
 	common/platform/win32/base_sysfb.cpp
 	common/platform/win32/win32basevideo.cpp
 	common/platform/win32/win32glvideo.cpp
+	common/platform/win32/win32glesvideo.cpp
 	common/platform/win32/win32polyvideo.cpp)
 
 if (HAVE_VULKAN)
@@ -788,18 +789,16 @@ set (VULKAN_SOURCES
 set (GLES_SOURCES
 	common/rendering/gles/gles_system.cpp
 	common/rendering/gles/gles_renderer.cpp
-	common/rendering/gles/gles_stereo3d.cpp
 	common/rendering/gles/gles_framebuffer.cpp
 	common/rendering/gles/gles_renderstate.cpp
 	common/rendering/gles/gles_renderbuffers.cpp
 	common/rendering/gles/gles_postprocess.cpp
 	common/rendering/gles/gles_postprocessstate.cpp
-	common/rendering/gles/gles_debug.cpp
 	common/rendering/gles/gles_buffers.cpp
 	common/rendering/gles/gles_hwtexture.cpp
-	common/rendering/gles/gles_samplers.cpp
 	common/rendering/gles/gles_shader.cpp
 	common/rendering/gles/gles_shaderprogram.cpp
+	common/rendering/gles/glad/src/glad.c
 )
 
 set (FASTMATH_SOURCES ${FASTMATH_SOURCES} ${GLES_SOURCES})
@@ -1277,6 +1276,8 @@ include_directories( .
 	common/rendering/gl_load
 	common/rendering/gl
 	common/rendering/gles
+	common/rendering/gles/glad/include
+	common/rendering/gles/Mali_OpenGL_ES_Emulator/include
 	common/rendering/vulkan/thirdparty
 	common/rendering/polyrenderer/backend
 	common/rendering/polyrenderer/drawers
