@@ -49,6 +49,7 @@
 #include "m_argv.h"
 #include "engineerrors.h"
 #include "win32glvideo.h"
+#include "win32glesvideo.h"
 
 extern HWND			Window;
 
@@ -71,7 +72,8 @@ PFNWGLSWAPINTERVALEXTPROC myWglSwapIntervalExtProc;
 
 SystemGLFrameBuffer::SystemGLFrameBuffer(void *hMonitor, bool fullscreen) : SystemBaseFrameBuffer(hMonitor, fullscreen)
 {
-	if (!static_cast<Win32GLVideo *>(Video)->InitHardware(Window, 0))
+	//if (!static_cast<Win32GLESVideo *>(Video)->InitHardware(Window, 0))
+	if (!static_cast<Win32GLVideo*>(Video)->InitHardware(Window, 0))
 	{
 		I_FatalError("Unable to initialize OpenGL");
 		return;
@@ -121,8 +123,5 @@ void SystemGLFrameBuffer::SetVSync (bool vsync)
 	if (myWglSwapIntervalExtProc != NULL) myWglSwapIntervalExtProc(vsync ? (gl_control_tear? SwapInterval : 1) : 0);
 }
 
-void SystemGLFrameBuffer::SwapBuffers()
-{
-	::SwapBuffers(static_cast<Win32GLVideo *>(Video)->m_hDC);
-}
+
 

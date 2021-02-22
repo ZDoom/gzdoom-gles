@@ -23,6 +23,8 @@
 #ifndef __GL_SHADERS_H__
 #define __GL_SHADERS_H__
 
+#include <map>
+
 #include "gles_renderstate.h"
 #include "name.h"
 
@@ -229,85 +231,114 @@ class FShader
 {
 	friend class FShaderCollection;
 	friend class FGLRenderState;
-
-	unsigned int hShader;
-	unsigned int hVertProg;
-	unsigned int hFragProg;
+	
 	FName mName;
 
+	FString mVertProg;
+	FString mFragProg;
+	FString mFragProg2;
+	FString mLightProg;
+	FString mDefinesBase;
+
 	/////
-	int ProjectionMatrix_index;
-	int ViewMatrix_index;
-	int NormalViewMatrix_index;
+public: class ShaderVariantData
+	{
+	public:
 
-	FUniform4f muCameraPos;
-	FUniform4f muClipLine;
+		unsigned int hShader = 0;
+		unsigned int hVertProg = 0;
+		unsigned int hFragProg = 0;
 
-	FBufferedUniform1f muGlobVis;
-	FBufferedUniform1i muPalLightLevels;
-	FBufferedUniform1i muViewHeight;
-	FBufferedUniform1f muClipHeight;
-	FBufferedUniform1f muClipHeightDirection;
-	FBufferedUniform1i muShadowmapFilter;
-	/////
+		int ProjectionMatrix_index = 0;
+		int ViewMatrix_index = 0;
+		int NormalViewMatrix_index = 0;
 
-	FBufferedUniform1f muDesaturation;
-	FBufferedUniform1i muFogEnabled;
-	FBufferedUniform1i muTextureMode;
-	FBufferedUniform4f muLightParms;
-	FBufferedUniform2f muClipSplit;
-	FBufferedUniform1i muLightIndex;
-	FBufferedUniformPE muFogColor;
-	FBufferedUniform4f muDynLightColor;
-	FBufferedUniformPE muObjectColor;
-	FBufferedUniformPE muObjectColor2;
-	FBufferedUniformPE muAddColor;
-	FBufferedUniformPE muTextureBlendColor;
-	FBufferedUniformPE muTextureModulateColor;
-	FBufferedUniformPE muTextureAddColor;
-	FUniform4f muGlowBottomColor;
-	FUniform4f muGlowTopColor;
-	FUniform4f muGlowBottomPlane;
-	FUniform4f muGlowTopPlane;
-	FUniform4f muGradientBottomPlane;
-	FUniform4f muGradientTopPlane;
-	FUniform4f muSplitBottomPlane;
-	FUniform4f muSplitTopPlane;
-	FUniform4f muDetailParms;
-	FBufferedUniform1f muInterpolationFactor;
-	FBufferedUniform1f muAlphaThreshold;
-	FBufferedUniform2f muSpecularMaterial;
-	FBufferedUniform1f muTimer;
-#ifdef NPOT_EMULATION
-	FBufferedUniform2f muNpotEmulation;
-#endif
+		FUniform4f muCameraPos;
+		FUniform4f muClipLine;
 
-	int lights_index;
-	int modelmatrix_index;
-	int normalmodelmatrix_index;
-	int texturematrix_index;
+		FBufferedUniform1f muGlobVis;
+		FBufferedUniform1i muPalLightLevels;
+		FBufferedUniform1i muViewHeight;
+		FBufferedUniform1f muClipHeight;
+		FBufferedUniform1f muClipHeightDirection;
+		FBufferedUniform1i muShadowmapFilter;
+		/////
 
-	int currentglowstate = 0;
-	int currentgradientstate = 0;
-	int currentsplitstate = 0;
-	int currentcliplinestate = 0;
-	int currentfixedcolormap = 0;
-	bool currentTextureMatrixState = true;// by setting the matrix state to 'true' it is guaranteed to be set the first time the render state gets applied.
-	bool currentModelMatrixState = true;
+		FBufferedUniform1f muDesaturation;
+		FBufferedUniform1i muFogEnabled;
+		FBufferedUniform1i muTextureMode;
+		FBufferedUniform4f muLightParms;
+		FBufferedUniform2f muClipSplit;
+		FBufferedUniform1i muLightIndex;
+		FBufferedUniformPE muFogColor;
+		FBufferedUniform4f muDynLightColor;
+		FBufferedUniformPE muObjectColor;
+		FBufferedUniformPE muObjectColor2;
+		FBufferedUniformPE muAddColor;
+		FBufferedUniformPE muTextureBlendColor;
+		FBufferedUniformPE muTextureModulateColor;
+		FBufferedUniformPE muTextureAddColor;
+		FUniform4f muGlowBottomColor;
+		FUniform4f muGlowTopColor;
+		FUniform4f muGlowBottomPlane;
+		FUniform4f muGlowTopPlane;
+		FUniform4f muGradientBottomPlane;
+		FUniform4f muGradientTopPlane;
+		FUniform4f muSplitBottomPlane;
+		FUniform4f muSplitTopPlane;
+		FUniform4f muDetailParms;
+		FBufferedUniform1f muInterpolationFactor;
+		FBufferedUniform1f muAlphaThreshold;
+		FBufferedUniform2f muSpecularMaterial;
+		FBufferedUniform1f muTimer;
+
+
+		int lights_index = 0;
+		int modelmatrix_index = 0;
+		int normalmodelmatrix_index = 0;
+		int texturematrix_index = 0;
+
+		int currentglowstate = 0;
+		int currentgradientstate = 0;
+		int currentsplitstate = 0;
+		int currentcliplinestate = 0;
+		int currentfixedcolormap = 0;
+		bool currentTextureMatrixState = true;// by setting the matrix state to 'true' it is guaranteed to be set the first time the render state gets applied.
+		bool currentModelMatrixState = true;
+
+		unsigned int GetHandle() const { return hShader; }
+	};
+
+	std::map<uint32_t, ShaderVariantData*> variants;
+
+	ShaderVariantData* cur = 0;
 
 public:
 	FShader(const char *name)
 		: mName(name)
 	{
-		hShader = hVertProg = hFragProg = 0;
+		
 	}
 
 	~FShader();
 
 	bool Load(const char * name, const char * vert_prog_lump, const char * fragprog, const char * fragprog2, const char * light_fragprog, const char *defines);
+	bool Configure(const char* name, const char* vert_prog_lump, const char* fragprog, const char* fragprog2, const char* light_fragprog, const char* defines);
 
-	bool Bind();
-	unsigned int GetHandle() const { return hShader; }
+	void LoadVariant();
+
+	uint32_t CreateShaderTag(int textureMode, int texf, int blendFlags)
+	{
+		uint32_t tag = 0;
+		tag |= textureMode & 0x7;
+		tag |= (texf * 3) << 3;
+
+		return tag;
+	}
+
+	bool Bind(int textureMode, int texFlags, int blendFlags);
+
+	
 };
 
 //==========================================================================
@@ -324,10 +355,10 @@ public:
 	FShader *BindEffect(int effect, EPassType passType);
 	FShader *Get(unsigned int eff, bool alphateston, EPassType passType);
 
-	void SetActiveShader(FShader *sh);
+	void SetActiveShader(FShader::ShaderVariantData *sh);
 private:
 
-	FShader *mActiveShader = nullptr;
+	FShader::ShaderVariantData *mActiveShader = nullptr;
 	TArray<FShaderCollection*> mPassShaders;
 
 	friend class FShader;

@@ -89,15 +89,6 @@ void FGLRenderState::Reset()
 bool FGLRenderState::ApplyShader()
 {
 	static const float nulvec[] = { 0.f, 0.f, 0.f, 0.f };
-	if (mSpecialEffect > EFF_NONE)
-	{
-		activeShader = GLRenderer->mShaderManager->BindEffect(mSpecialEffect, mPassType);
-	}
-	else
-	{
-		activeShader = GLRenderer->mShaderManager->Get(mTextureEnabled ? mEffectState : SHADER_NoTexture, mAlphaThreshold >= 0.f, mPassType);
-		activeShader->Bind();
-	}
 
 	int fogset = 0;
 
@@ -117,102 +108,117 @@ bool FGLRenderState::ApplyShader()
 		}
 	}
 
+	if (mSpecialEffect > EFF_NONE)
+	{
+		activeShader = GLRenderer->mShaderManager->BindEffect(mSpecialEffect, mPassType);
+	}
+	else
+	{
+		activeShader = GLRenderer->mShaderManager->Get(mTextureEnabled ? mEffectState : SHADER_NoTexture, mAlphaThreshold >= 0.f, mPassType);
 
+		int textureMode = (mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode);
+		int texFlags = mTextureModeFlags; if (!mBrightmapEnabled) texFlags &= ~(TEXF_Brightmap | TEXF_Glowmap);
+
+		activeShader->Bind(textureMode, texFlags, 0);
+
+	}
+
+	
 	if (mHwUniforms)
 	{
-		matrixToGL(mHwUniforms->mProjectionMatrix, activeShader->ProjectionMatrix_index);
-		matrixToGL(mHwUniforms->mViewMatrix, activeShader->ViewMatrix_index);
-		matrixToGL(mHwUniforms->mNormalViewMatrix, activeShader->NormalViewMatrix_index);
+		matrixToGL(mHwUniforms->mProjectionMatrix, activeShader->cur->ProjectionMatrix_index);
+		matrixToGL(mHwUniforms->mViewMatrix, activeShader->cur->ViewMatrix_index);
+		matrixToGL(mHwUniforms->mNormalViewMatrix, activeShader->cur->NormalViewMatrix_index);
 
-		activeShader->muCameraPos.Set(&mHwUniforms->mCameraPos.X);
-		activeShader->muClipLine.Set(&mHwUniforms->mClipLine.X);
+		activeShader->cur->muCameraPos.Set(&mHwUniforms->mCameraPos.X);
+		activeShader->cur->muClipLine.Set(&mHwUniforms->mClipLine.X);
 
-		activeShader->muGlobVis.Set(mHwUniforms->mGlobVis);
+		activeShader->cur->muGlobVis.Set(mHwUniforms->mGlobVis);
 
-		activeShader->muPalLightLevels.Set(mHwUniforms->mPalLightLevels);
-		activeShader->muViewHeight.Set(mHwUniforms->mViewHeight);
-		activeShader->muClipHeight.Set(mHwUniforms->mClipHeight);
-		activeShader->muClipHeightDirection.Set(mHwUniforms->mClipHeightDirection);
-		activeShader->muShadowmapFilter.Set(mHwUniforms->mShadowmapFilter);
+		activeShader->cur->muPalLightLevels.Set(mHwUniforms->mPalLightLevels);
+		activeShader->cur->muViewHeight.Set(mHwUniforms->mViewHeight);
+		activeShader->cur->muClipHeight.Set(mHwUniforms->mClipHeight);
+		activeShader->cur->muClipHeightDirection.Set(mHwUniforms->mClipHeightDirection);
+		activeShader->cur->muShadowmapFilter.Set(mHwUniforms->mShadowmapFilter);
 	}
 
 	glVertexAttrib4fv(VATTR_COLOR, &mStreamData.uVertexColor.X);
 	glVertexAttrib4fv(VATTR_NORMAL, &mStreamData.uVertexNormal.X);
 
-	activeShader->muDesaturation.Set(mStreamData.uDesaturationFactor);
-	activeShader->muFogEnabled.Set(fogset);
+	activeShader->cur->muDesaturation.Set(mStreamData.uDesaturationFactor);
+	activeShader->cur->muFogEnabled.Set(fogset);
 
 	int f = mTextureModeFlags;
 	if (!mBrightmapEnabled) f &= ~(TEXF_Brightmap | TEXF_Glowmap);
-	activeShader->muTextureMode.Set((mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode) | f);
-	activeShader->muLightParms.Set(mLightParms);
-	activeShader->muFogColor.Set(mStreamData.uFogColor);
-	activeShader->muObjectColor.Set(mStreamData.uObjectColor);
-	activeShader->muDynLightColor.Set(&mStreamData.uDynLightColor.X);
-	activeShader->muInterpolationFactor.Set(mStreamData.uInterpolationFactor);
-	activeShader->muTimer.Set((double)(screen->FrameTime - firstFrame) * (double)mShaderTimer / 1000.);
-	activeShader->muAlphaThreshold.Set(mAlphaThreshold);
-	activeShader->muLightIndex.Set(-1);
-	activeShader->muClipSplit.Set(mClipSplit);
-	activeShader->muSpecularMaterial.Set(mGlossiness, mSpecularLevel);
-	activeShader->muAddColor.Set(mStreamData.uAddColor);
-	activeShader->muTextureAddColor.Set(mStreamData.uTextureAddColor);
-	activeShader->muTextureModulateColor.Set(mStreamData.uTextureModulateColor);
-	activeShader->muTextureBlendColor.Set(mStreamData.uTextureBlendColor);
-	activeShader->muDetailParms.Set(&mStreamData.uDetailParms.X);
+	activeShader->cur->muTextureMode.Set((mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode) | f);
+	activeShader->cur->muLightParms.Set(mLightParms);
+	activeShader->cur->muFogColor.Set(mStreamData.uFogColor);
+	activeShader->cur->muObjectColor.Set(mStreamData.uObjectColor);
+	activeShader->cur->muDynLightColor.Set(&mStreamData.uDynLightColor.X);
+	activeShader->cur->muInterpolationFactor.Set(mStreamData.uInterpolationFactor);
+	activeShader->cur->muTimer.Set((double)(screen->FrameTime - firstFrame) * (double)mShaderTimer / 1000.);
+	activeShader->cur->muAlphaThreshold.Set(mAlphaThreshold);
+	activeShader->cur->muLightIndex.Set(-1);
+	activeShader->cur->muClipSplit.Set(mClipSplit);
+	activeShader->cur->muSpecularMaterial.Set(mGlossiness, mSpecularLevel);
+	activeShader->cur->muAddColor.Set(mStreamData.uAddColor);
+	activeShader->cur->muTextureAddColor.Set(mStreamData.uTextureAddColor);
+	activeShader->cur->muTextureModulateColor.Set(mStreamData.uTextureModulateColor);
+	activeShader->cur->muTextureBlendColor.Set(mStreamData.uTextureBlendColor);
+	activeShader->cur->muDetailParms.Set(&mStreamData.uDetailParms.X);
 #ifdef NPOT_EMULATION
 	activeShader->muNpotEmulation.Set(&mStreamData.uNpotEmulation.X);
 #endif
 
-	if (mGlowEnabled || activeShader->currentglowstate)
+	if (mGlowEnabled || activeShader->cur->currentglowstate)
 	{
-		activeShader->muGlowTopColor.Set(&mStreamData.uGlowTopColor.X);
-		activeShader->muGlowBottomColor.Set(&mStreamData.uGlowBottomColor.X);
-		activeShader->muGlowTopPlane.Set(&mStreamData.uGlowTopPlane.X);
-		activeShader->muGlowBottomPlane.Set(&mStreamData.uGlowBottomPlane.X);
-		activeShader->currentglowstate = mGlowEnabled;
+		activeShader->cur->muGlowTopColor.Set(&mStreamData.uGlowTopColor.X);
+		activeShader->cur->muGlowBottomColor.Set(&mStreamData.uGlowBottomColor.X);
+		activeShader->cur->muGlowTopPlane.Set(&mStreamData.uGlowTopPlane.X);
+		activeShader->cur->muGlowBottomPlane.Set(&mStreamData.uGlowBottomPlane.X);
+		activeShader->cur->currentglowstate = mGlowEnabled;
 	}
 
-	if (mGradientEnabled || activeShader->currentgradientstate)
+	if (mGradientEnabled || activeShader->cur->currentgradientstate)
 	{
-		activeShader->muObjectColor2.Set(mStreamData.uObjectColor2);
-		activeShader->muGradientTopPlane.Set(&mStreamData.uGradientTopPlane.X);
-		activeShader->muGradientBottomPlane.Set(&mStreamData.uGradientBottomPlane.X);
-		activeShader->currentgradientstate = mGradientEnabled;
+		activeShader->cur->muObjectColor2.Set(mStreamData.uObjectColor2);
+		activeShader->cur->muGradientTopPlane.Set(&mStreamData.uGradientTopPlane.X);
+		activeShader->cur->muGradientBottomPlane.Set(&mStreamData.uGradientBottomPlane.X);
+		activeShader->cur->currentgradientstate = mGradientEnabled;
 	}
 
-	if (mSplitEnabled || activeShader->currentsplitstate)
+	if (mSplitEnabled || activeShader->cur->currentsplitstate)
 	{
-		activeShader->muSplitTopPlane.Set(&mStreamData.uSplitTopPlane.X);
-		activeShader->muSplitBottomPlane.Set(&mStreamData.uSplitBottomPlane.X);
-		activeShader->currentsplitstate = mSplitEnabled;
+		activeShader->cur->muSplitTopPlane.Set(&mStreamData.uSplitTopPlane.X);
+		activeShader->cur->muSplitBottomPlane.Set(&mStreamData.uSplitBottomPlane.X);
+		activeShader->cur->currentsplitstate = mSplitEnabled;
 	}
 
 
 	if (mTextureMatrixEnabled)
 	{
-		matrixToGL(mTextureMatrix, activeShader->texturematrix_index);
-		activeShader->currentTextureMatrixState = true;
+		matrixToGL(mTextureMatrix, activeShader->cur->texturematrix_index);
+		activeShader->cur->currentTextureMatrixState = true;
 	}
-	else if (activeShader->currentTextureMatrixState)
+	else if (activeShader->cur->currentTextureMatrixState)
 	{
-		activeShader->currentTextureMatrixState = false;
-		matrixToGL(identityMatrix, activeShader->texturematrix_index);
+		activeShader->cur->currentTextureMatrixState = false;
+		matrixToGL(identityMatrix, activeShader->cur->texturematrix_index);
 	}
 
 	if (mModelMatrixEnabled)
 	{
-		matrixToGL(mModelMatrix, activeShader->modelmatrix_index);
+		matrixToGL(mModelMatrix, activeShader->cur->modelmatrix_index);
 		VSMatrix norm;
 		norm.computeNormalMatrix(mModelMatrix);
-		matrixToGL(norm, activeShader->normalmodelmatrix_index);
-		activeShader->currentModelMatrixState = true;
+		matrixToGL(norm, activeShader->cur->normalmodelmatrix_index);
+		activeShader->cur->currentModelMatrixState = true;
 	}
-	else if (activeShader->currentModelMatrixState)
+	else if (activeShader->cur->currentModelMatrixState)
 	{
-		activeShader->currentModelMatrixState = false;
-		matrixToGL(identityMatrix, activeShader->modelmatrix_index);
-		matrixToGL(identityMatrix, activeShader->normalmodelmatrix_index);
+		activeShader->cur->currentModelMatrixState = false;
+		matrixToGL(identityMatrix, activeShader->cur->modelmatrix_index);
+		matrixToGL(identityMatrix, activeShader->cur->normalmodelmatrix_index);
 	}
 
 	int index = mLightIndex;
@@ -229,7 +235,7 @@ bool FGLRenderState::ApplyShader()
 		}
 	}
 
-	activeShader->muLightIndex.Set(index);
+	activeShader->cur->muLightIndex.Set(index);
 	return true;
 }
 

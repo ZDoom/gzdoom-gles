@@ -108,8 +108,10 @@ DFrameBuffer *Win32GLVideo::CreateFrameBuffer()
 	SystemGLFrameBuffer *fb;
 
 	fb = new OpenGLESRenderer::OpenGLFrameBuffer(m_hMonitor, vid_fullscreen);
+//	fb = new OpenGLRenderer::OpenGLFrameBuffer(m_hMonitor, vid_fullscreen);
 
 	fb->mPipelineNbr = gl_pipeline_depth;
+	//fb->mPipelineNbr = 1;
 	return fb;
 }
 
