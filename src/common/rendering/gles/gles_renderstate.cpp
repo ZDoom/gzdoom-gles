@@ -129,7 +129,7 @@ bool FGLRenderState::ApplyShader()
 
 		activeShader->muGlobVis.Set(mHwUniforms->mGlobVis);
 
-		activeShader->muPalLightLevels.Set(mHwUniforms->mGlobVis);
+		activeShader->muPalLightLevels.Set(mHwUniforms->mPalLightLevels);
 		activeShader->muViewHeight.Set(mHwUniforms->mViewHeight);
 		activeShader->muClipHeight.Set(mHwUniforms->mClipHeight);
 		activeShader->muClipHeightDirection.Set(mHwUniforms->mClipHeightDirection);

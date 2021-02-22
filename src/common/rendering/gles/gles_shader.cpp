@@ -211,12 +211,15 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	FString vert_prog_lump = vert_prog_lump_;
 	FString frag_prog_lump = frag_prog_lump_;
 	FString	proc_prog_lump = proc_prog_lump_;
-	FString light_fragprog = light_fragprog_;
 
 	vert_prog_lump.Substitute("shaders/", "shaders_gles/");
 	frag_prog_lump.Substitute("shaders/", "shaders_gles/");
 	proc_prog_lump.Substitute("shaders/", "shaders_gles/");
-	light_fragprog.Substitute("shaders/", "shaders_gles/");
+	
+	FString light_fragprog;
+	if(light_fragprog_)
+		light_fragprog = "shaders_gles/glsl/material_normal.fp"; // NOTE: Always use normal material for now, ignore others
+
 
 	static char buffer[10000];
 	FString error;
@@ -414,15 +417,15 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 
 				if (pp_data.GetString().IndexOf("GetTexCoord") >= 0)
 				{
-					int pl_lump = fileSystem.CheckNumForFullName("shaders/glsl/func_defaultmat2.fp", 0);
-					if (pl_lump == -1) I_Error("Unable to load '%s'", "shaders/glsl/func_defaultmat2.fp");
+					int pl_lump = fileSystem.CheckNumForFullName("shaders_gles/glsl/func_defaultmat2.fp", 0);
+					if (pl_lump == -1) I_Error("Unable to load '%s'", "shaders_gles/glsl/func_defaultmat2.fp");
 					FileData pl_data = fileSystem.ReadFile(pl_lump);
 					fp_comb << "\n" << pl_data.GetString().GetChars();
 				}
 				else
 				{
-					int pl_lump = fileSystem.CheckNumForFullName("shaders/glsl/func_defaultmat.fp", 0);
-					if (pl_lump == -1) I_Error("Unable to load '%s'", "shaders/glsl/func_defaultmat.fp");
+					int pl_lump = fileSystem.CheckNumForFullName("shaders_gles/glsl/func_defaultmat.fp", 0);
+					if (pl_lump == -1) I_Error("Unable to load '%s'", "shaders_gles/glsl/func_defaultmat.fp");
 					FileData pl_data = fileSystem.ReadFile(pl_lump);
 					fp_comb << "\n" << pl_data.GetString().GetChars();
 
@@ -448,8 +451,8 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 
 			if (pp_data.GetString().IndexOf("ProcessLight") < 0)
 			{
-				int pl_lump = fileSystem.CheckNumForFullName("shaders/glsl/func_defaultlight.fp", 0);
-				if (pl_lump == -1) I_Error("Unable to load '%s'", "shaders/glsl/func_defaultlight.fp");
+				int pl_lump = fileSystem.CheckNumForFullName("shaders_gles/glsl/func_defaultlight.fp", 0);
+				if (pl_lump == -1) I_Error("Unable to load '%s'", "shaders_gles/glsl/func_defaultlight.fp");
 				FileData pl_data = fileSystem.ReadFile(pl_lump);
 				fp_comb << "\n" << pl_data.GetString().GetChars();
 			}

@@ -23,7 +23,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define USE_GLES2 0
+#define USE_GLES2 1
 
 #if (USE_GLES2)
 	#include "glad/glad.h"
