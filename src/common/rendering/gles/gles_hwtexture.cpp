@@ -129,7 +129,7 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 	int sourcetype;
 #define GL_BGRA                           0x80E1
 	//sourcetype = GL_BGRA;
-#if USE_GLES
+#if USE_GLES2
 	sourcetype = GL_BGRA;
 	texformat = GL_BGRA;
 #else
@@ -139,7 +139,6 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 	glTexImage2D(GL_TEXTURE_2D, 0, texformat, rw, rh, 0, sourcetype, GL_UNSIGNED_BYTE, buffer);
 
 	if (deletebuffer && buffer) free(buffer);
-	
 
 	if (mipmap && TexFilter[gl_texture_filter].mipmapping)
 	{
