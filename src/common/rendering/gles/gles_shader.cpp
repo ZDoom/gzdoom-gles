@@ -357,11 +357,11 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	
 
 	int vp_lump = fileSystem.CheckNumForFullName(vert_prog_lump, 0);
-	if (vp_lump == -1) I_Error("Unable to load '%s'", vert_prog_lump);
+	if (vp_lump == -1) I_Error("Unable to load '%s'", vert_prog_lump.GetChars());
 	FileData vp_data = fileSystem.ReadFile(vp_lump);
 
 	int fp_lump = fileSystem.CheckNumForFullName(frag_prog_lump, 0);
-	if (fp_lump == -1) I_Error("Unable to load '%s'", frag_prog_lump);
+	if (fp_lump == -1) I_Error("Unable to load '%s'", frag_prog_lump.GetChars());
 	FileData fp_data = fileSystem.ReadFile(fp_lump);
 
 
@@ -412,7 +412,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		if (*proc_prog_lump != '#')
 		{
 			int pp_lump = fileSystem.CheckNumForFullName(proc_prog_lump);
-			if (pp_lump == -1) I_Error("Unable to load '%s'", proc_prog_lump);
+			if (pp_lump == -1) I_Error("Unable to load '%s'", proc_prog_lump.GetChars());
 			FileData pp_data = fileSystem.ReadFile(pp_lump);
 
 			if (pp_data.GetString().IndexOf("ProcessMaterial") < 0 && pp_data.GetString().IndexOf("SetupMaterial") < 0)
@@ -471,7 +471,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		else
 		{
 			// Proc_prog_lump is not a lump name but the source itself (from generated shaders)
-			fp_comb << proc_prog_lump + 1;
+			fp_comb << proc_prog_lump.GetChars() + 1;
 		}
 	}
 	fp_comb.Substitute("$placeholder$", placeholder);
@@ -479,7 +479,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	if (light_fragprog.Len())
 	{
 		int pp_lump = fileSystem.CheckNumForFullName(light_fragprog, 0);
-		if (pp_lump == -1) I_Error("Unable to load '%s'", light_fragprog);
+		if (pp_lump == -1) I_Error("Unable to load '%s'", light_fragprog.GetChars());
 		FileData pp_data = fileSystem.ReadFile(pp_lump);
 		fp_comb << pp_data.GetString().GetChars() << "\n";
 	}
