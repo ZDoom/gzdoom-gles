@@ -2,8 +2,42 @@
 
 #include "gles_system.h"
 
-#include <windows.h>
+#ifdef __ANDROID__
+#include <dlfcn.h>
 
+static void* LinuxProcAddress(const char* name)
+{
+	static void *glesLib = NULL;
+
+	if(!glesLib)
+	{
+		int flags = RTLD_LOCAL | RTLD_NOW;
+
+		glesLib = dlopen("libGLESv2_CM.so", flags);
+		if(!glesLib)
+		{
+			glesLib = dlopen("libGLESv2.so", flags);
+		}
+	}
+
+	void * ret = NULL;
+	ret =  dlsym(glesLib, name);
+
+	if(!ret)
+	{
+		//LOGI("Failed to load: %s", name);
+	}
+	else
+	{
+		//LOGI("Loaded %s func OK", name);
+	}
+
+	return ret;
+}
+
+#else
+
+#include <windows.h>
 
 static HMODULE opengl32dll;
 static PROC(WINAPI* getprocaddress)(LPCSTR name);
@@ -26,45 +60,26 @@ static void* WinGetProcAddressGLES(const char* name)
 	}
 }
 
-static int TestPointer(const PROC pTest)
-{
-	ptrdiff_t iTest;
-	if (!pTest) return 0;
-	iTest = (ptrdiff_t)pTest;
-
-	if (iTest == 1 || iTest == 2 || iTest == 3 || iTest == -1) return 0;
-
-	return 1;
-}
-
-
-extern "C" PROC zd_wglGetProcAddress(LPCSTR name);
-
-static void* WinGetProcAddress(const char* name)
-{
-	HMODULE glMod = NULL;
-	PROC pFunc = zd_wglGetProcAddress((LPCSTR)name);
-	if (TestPointer(pFunc))
-	{
-		return pFunc;
-	}
-	glMod = GetModuleHandleA("OpenGL32.dll");
-	return GetProcAddress(glMod, (LPCSTR)name);
-}
+#endif
 
 namespace OpenGLESRenderer
 {
-
 	RenderContextGLES gles;
-
 
 	void InitGLES()
 	{
 #if USE_GLES2
+#ifdef __ANDROID__
+		if (!gladLoadGLES2Loader(&LinuxProcAddress))
+		{
+			exit(-1);
+		}
+#else
 		if (!gladLoadGLES2Loader(&WinGetProcAddressGLES))
 		{
 			exit(-1);
 		}
+#endif
 #else
 		static bool first = true;
 
