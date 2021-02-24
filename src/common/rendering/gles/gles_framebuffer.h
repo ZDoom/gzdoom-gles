@@ -31,7 +31,6 @@ public:
 	void NextEye(int eyecount) override;
 	void SetSceneRenderTarget(bool useSSAO) override;
 	void WaitForCommands(bool finish) override;
-	void SetSaveBuffers(bool yes) override;
 	void CopyScreenToBuffer(int width, int height, uint8_t* buffer) override;
 	bool FlipSavePic() const override { return true; }
 

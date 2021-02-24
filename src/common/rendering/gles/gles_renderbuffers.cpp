@@ -57,52 +57,17 @@ namespace OpenGLESRenderer
 	FGLRenderBuffers::~FGLRenderBuffers()
 	{
 		ClearScene();
-		ClearPipeline();
-		ClearEyeBuffers();
-		ClearShadowMap();
+		
 		DeleteTexture(mDitherTexture);
 	}
 
 	void FGLRenderBuffers::ClearScene()
 	{
 		DeleteFrameBuffer(mSceneFB);
-		DeleteFrameBuffer(mSceneDataFB);
-		if (mSceneUsesTextures)
-		{
-			DeleteTexture(mSceneMultisampleTex);
-			DeleteTexture(mSceneFogTex);
-			DeleteTexture(mSceneNormalTex);
-			DeleteTexture(mSceneDepthStencilTex);
-		}
-		else
-		{
-			DeleteRenderBuffer(mSceneMultisampleBuf);
-			DeleteRenderBuffer(mSceneFogBuf);
-			DeleteRenderBuffer(mSceneNormalBuf);
-			DeleteRenderBuffer(mSceneDepthStencilBuf);
-		}
+		DeleteRenderBuffer(mSceneDepthStencilBuf);
 	}
 
-	void FGLRenderBuffers::ClearPipeline()
-	{
-		for (int i = 0; i < NumPipelineTextures; i++)
-		{
-			DeleteFrameBuffer(mPipelineFB[i]);
-			DeleteTexture(mPipelineTexture[i]);
-		}
-	}
 
-	void FGLRenderBuffers::ClearEyeBuffers()
-	{
-		for (auto handle : mEyeFBs)
-			DeleteFrameBuffer(handle);
-
-		for (auto handle : mEyeTextures)
-			DeleteTexture(handle);
-
-		mEyeTextures.Clear();
-		mEyeFBs.Clear();
-	}
 
 	void FGLRenderBuffers::DeleteTexture(PPGLTexture& tex)
 	{
@@ -167,8 +132,6 @@ namespace OpenGLESRenderer
 		if (FailedCreate)
 		{
 			ClearScene();
-			ClearPipeline();
-			ClearEyeBuffers();
 			mWidth = 0;
 			mHeight = 0;
 			mSamples = 0;
@@ -187,45 +150,8 @@ namespace OpenGLESRenderer
 	void FGLRenderBuffers::CreateScene(int width, int height, int samples, bool needsSceneTextures)
 	{
 		ClearScene();
-
-		if (samples > 1)
-		{
-			/*
-			if (needsSceneTextures)
-			{
-				mSceneMultisampleTex = Create2DMultisampleTexture("SceneMultisample", GL_RGBA, width, height, samples, false);
-				mSceneDepthStencilTex = Create2DMultisampleTexture("SceneDepthStencil", GL_DEPTH24_STENCIL8_OES, width, height, samples, false);
-				mSceneFogTex = Create2DMultisampleTexture("SceneFog", GL_RGBA, width, height, samples, false);
-				mSceneNormalTex = Create2DMultisampleTexture("SceneNormal", GL_RGB10_A2, width, height, samples, false);
-				mSceneFB = CreateFrameBuffer("SceneFB", mSceneMultisampleTex, {}, {}, mSceneDepthStencilTex, true);
-				mSceneDataFB = CreateFrameBuffer("SceneGBufferFB", mSceneMultisampleTex, mSceneFogTex, mSceneNormalTex, mSceneDepthStencilTex, true);
-			}
-			else
-			{
-				mSceneMultisampleBuf = CreateRenderBuffer("SceneMultisample", GL_RGBA16F, width, height, samples);
-				mSceneDepthStencilBuf = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8, width, height, samples);
-				mSceneFB = CreateFrameBuffer("SceneFB", mSceneMultisampleBuf, mSceneDepthStencilBuf);
-				mSceneDataFB = CreateFrameBuffer("SceneGBufferFB", mSceneMultisampleBuf, mSceneDepthStencilBuf);
-			}
-			*/
-		}
-		else
-		{
-			if (needsSceneTextures)
-			{
-				mSceneDepthStencilTex = Create2DTexture("SceneDepthStencil", GL_DEPTH24_STENCIL8_OES, width, height);
-				mSceneFogTex = Create2DTexture("SceneFog", GL_RGBA, width, height);
-				mSceneNormalTex = Create2DTexture("SceneNormal", GL_RGBA, width, height);
-				mSceneFB = CreateFrameBuffer("SceneFB", mPipelineTexture[0], {}, {}, mSceneDepthStencilTex, false);
-				mSceneDataFB = CreateFrameBuffer("SceneGBufferFB", mPipelineTexture[0], mSceneFogTex, mSceneNormalTex, mSceneDepthStencilTex, false);
-			}
-			else
-			{
-				mSceneDepthStencilBuf = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8_OES, width, height);
-				mSceneFB = CreateFrameBuffer("SceneFB", mPipelineTexture[0], mSceneDepthStencilBuf);
-				mSceneDataFB = CreateFrameBuffer("SceneGBufferFB", mPipelineTexture[0], mSceneDepthStencilBuf);
-			}
-		}
+		mSceneDepthStencilBuf = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8_OES, width, height);
+		mSceneFB = CreateFrameBuffer("SceneFB", mSceneTex, mSceneDepthStencilBuf);
 	}
 
 	//==========================================================================
@@ -236,44 +162,10 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::CreatePipeline(int width, int height)
 	{
-		ClearPipeline();
-		ClearEyeBuffers();
-
-		for (int i = 0; i < NumPipelineTextures; i++)
-		{
-			mPipelineTexture[i] = Create2DTexture("PipelineTexture", GL_RGBA, width, height);
-			mPipelineFB[i] = CreateFrameBuffer("PipelineFB", mPipelineTexture[i]);
-		}
+		mSceneTex = Create2DTexture("PipelineTexture", GL_RGBA, width, height);
 	}
 
-	//==========================================================================
-	//
-	// Creates eye buffers if needed
-	//
-	//==========================================================================
-
-	void FGLRenderBuffers::CreateEyeBuffers(int eye)
-	{
-		if (mEyeFBs.Size() > unsigned(eye))
-			return;
-
-		GLint activeTex, textureBinding, frameBufferBinding;
-		glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTex);
-		glActiveTexture(GL_TEXTURE0);
-		glGetIntegerv(GL_TEXTURE_BINDING_2D, &textureBinding);
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &frameBufferBinding);
-
-		while (mEyeFBs.Size() <= unsigned(eye))
-		{
-			PPGLTexture texture = Create2DTexture("EyeTexture", GL_RGBA, mWidth, mHeight);
-			mEyeTextures.Push(texture);
-			mEyeFBs.Push(CreateFrameBuffer("EyeFB", texture));
-		}
-
-		glBindTexture(GL_TEXTURE_2D, textureBinding);
-		glActiveTexture(activeTex);
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferBinding);
-	}
+	
 
 	//==========================================================================
 	//
@@ -359,15 +251,7 @@ namespace OpenGLESRenderer
 	{
 		if (samples <= 1)
 			return CreateRenderBuffer(name, format, width, height);
-		/*
-		PPGLRenderBuffer buf;
-		glGenRenderbuffers(1, &buf.handle);
-		glBindRenderbuffer(GL_RENDERBUFFER, buf.handle);
-		FGLDebug::LabelObject(GL_RENDERBUFFER, buf.handle, name);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, format, width, height);
-
-		return buf;
-		*/
+	
 	}
 
 	//==========================================================================
@@ -514,86 +398,6 @@ namespace OpenGLESRenderer
 			glEnable(GL_SCISSOR_TEST);
 	}
 
-	//==========================================================================
-	//
-	// Resolves the multisample frame buffer by copying it to the first pipeline texture
-	//
-	//==========================================================================
-
-	void FGLRenderBuffers::BlitSceneToTexture()
-	{
-		mCurrentPipelineTexture = 0;
-
-		if (mSamples <= 1)
-			return;
-		/*
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, mSceneFB.handle);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mPipelineFB[mCurrentPipelineTexture].handle);
-		glBlitFramebuffer(0, 0, mWidth, mHeight, 0, 0, mWidth, mHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-		if ((gl.flags & RFL_INVALIDATE_BUFFER) != 0)
-		{
-			GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_DEPTH_STENCIL_ATTACHMENT };
-			glInvalidateFramebuffer(GL_READ_FRAMEBUFFER, 2, attachments);
-		}
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		*/
-	}
-
-	//==========================================================================
-	//
-	// Eye textures and their frame buffers
-	//
-	//==========================================================================
-
-	void FGLRenderBuffers::BlitToEyeTexture(int eye, bool allowInvalidate)
-	{
-		/*
-		CreateEyeBuffers(eye);
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, mPipelineFB[mCurrentPipelineTexture].handle);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mEyeFBs[eye].handle);
-		glBlitFramebuffer(0, 0, mWidth, mHeight, 0, 0, mWidth, mHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-		if ((gl.flags & RFL_INVALIDATE_BUFFER) != 0 && allowInvalidate)
-		{
-			GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_DEPTH_STENCIL_ATTACHMENT };
-			glInvalidateFramebuffer(GL_READ_FRAMEBUFFER, 2, attachments);
-		}
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		*/
-	}
-
-	void FGLRenderBuffers::BlitFromEyeTexture(int eye)
-	{
-		/*
-		if (mEyeFBs.Size() <= unsigned(eye)) return;
-
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mPipelineFB[mCurrentPipelineTexture].handle);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, mEyeFBs[eye].handle);
-		glBlitFramebuffer(0, 0, mWidth, mHeight, 0, 0, mWidth, mHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-		if ((gl.flags & RFL_INVALIDATE_BUFFER) != 0)
-		{
-			GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_DEPTH_STENCIL_ATTACHMENT };
-			glInvalidateFramebuffer(GL_READ_FRAMEBUFFER, 2, attachments);
-		}
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		*/
-	}
-
-	void FGLRenderBuffers::BindEyeTexture(int eye, int texunit)
-	{
-		CreateEyeBuffers(eye);
-		glActiveTexture(GL_TEXTURE0 + texunit);
-		glBindTexture(GL_TEXTURE_2D, mEyeTextures[eye].handle);
-	}
 
 	void FGLRenderBuffers::BindDitherTexture(int texunit)
 	{
@@ -617,60 +421,7 @@ namespace OpenGLESRenderer
 		mDitherTexture.Bind(1, GL_NEAREST, GL_REPEAT);
 	}
 
-	//==========================================================================
-	//
-	// Shadow map texture and frame buffers
-	//
-	//==========================================================================
-
-	void FGLRenderBuffers::BindShadowMapFB()
-	{
-		CreateShadowMap();
-		glBindFramebuffer(GL_FRAMEBUFFER, mShadowMapFB.handle);
-	}
-
-	void FGLRenderBuffers::BindShadowMapTexture(int texunit)
-	{
-		CreateShadowMap();
-		glActiveTexture(GL_TEXTURE0 + texunit);
-		glBindTexture(GL_TEXTURE_2D, mShadowMapTexture.handle);
-	}
-
-	void FGLRenderBuffers::ClearShadowMap()
-	{
-		DeleteFrameBuffer(mShadowMapFB);
-		DeleteTexture(mShadowMapTexture);
-		mCurrentShadowMapSize = 0;
-	}
-
-	void FGLRenderBuffers::CreateShadowMap()
-	{
-		if (mShadowMapTexture.handle != 0 && gl_shadowmap_quality == mCurrentShadowMapSize)
-			return;
-
-		ClearShadowMap();
-
-		GLint activeTex, textureBinding, frameBufferBinding;
-		glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTex);
-		glActiveTexture(GL_TEXTURE0);
-		glGetIntegerv(GL_TEXTURE_BINDING_2D, &textureBinding);
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &frameBufferBinding);
-
-		//mShadowMapTexture = Create2DTexture("ShadowMap", GL_RGBA, gl_shadomap_quality, 1024);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		mShadowMapFB = CreateFrameBuffer("ShadowMapFB", mShadowMapTexture);
-
-		glBindTexture(GL_TEXTURE_2D, textureBinding);
-		glActiveTexture(activeTex);
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferBinding);
-
-		mCurrentShadowMapSize = gl_shadowmap_quality;
-	}
-
+	
 	//==========================================================================
 	//
 	// Makes the scene frame buffer active (multisample, depth, stecil, etc.)
@@ -679,60 +430,10 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::BindSceneFB(bool sceneData)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, sceneData ? mSceneDataFB.handle : mSceneFB.handle);
+		glBindFramebuffer(GL_FRAMEBUFFER, mSceneFB.handle);
 	}
 
-	//==========================================================================
-	//
-	// Binds the scene color texture to the specified texture unit
-	//
-	//==========================================================================
 
-	void FGLRenderBuffers::BindSceneColorTexture(int index)
-	{
-		glActiveTexture(GL_TEXTURE0 + index);
-
-		glBindTexture(GL_TEXTURE_2D, mPipelineTexture[0].handle);
-	}
-
-	//==========================================================================
-	//
-	// Binds the scene fog data texture to the specified texture unit
-	//
-	//==========================================================================
-
-	void FGLRenderBuffers::BindSceneFogTexture(int index)
-	{
-		glActiveTexture(GL_TEXTURE0 + index);
-
-		glBindTexture(GL_TEXTURE_2D, mSceneFogTex.handle);
-	}
-
-	//==========================================================================
-	//
-	// Binds the scene normal data texture to the specified texture unit
-	//
-	//==========================================================================
-
-	void FGLRenderBuffers::BindSceneNormalTexture(int index)
-	{
-		glActiveTexture(GL_TEXTURE0 + index);
-
-		glBindTexture(GL_TEXTURE_2D, mSceneNormalTex.handle);
-	}
-
-	//==========================================================================
-	//
-	// Binds the depth texture to the specified texture unit
-	//
-	//==========================================================================
-
-	void FGLRenderBuffers::BindSceneDepthTexture(int index)
-	{
-		glActiveTexture(GL_TEXTURE0 + index);
-
-		glBindTexture(GL_TEXTURE_2D, mSceneDepthStencilTex.handle);
-	}
 
 	//==========================================================================
 	//
@@ -742,7 +443,7 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::BindCurrentTexture(int index, int filter, int wrap)
 	{
-		mPipelineTexture[mCurrentPipelineTexture].Bind(index, filter, wrap);
+		mSceneTex.Bind(index, filter, wrap);
 	}
 
 	//==========================================================================
@@ -753,7 +454,7 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::BindCurrentFB()
 	{
-		mPipelineFB[mCurrentPipelineTexture].Bind();
+		mSceneFB.Bind();
 	}
 
 	//==========================================================================
@@ -764,8 +465,7 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::BindNextFB()
 	{
-		int out = (mCurrentPipelineTexture + 1) % NumPipelineTextures;
-		mPipelineFB[out].Bind();
+		
 	}
 
 	//==========================================================================
@@ -800,16 +500,5 @@ namespace OpenGLESRenderer
 
 
 
-	// Store the current stereo 3D eye buffer, and Load the next one
-
-	int FGLRenderBuffers::NextEye(int eyeCount)
-	{
-		int nextEye = (mCurrentEye + 1) % eyeCount;
-		if (nextEye == mCurrentEye) return mCurrentEye;
-		BlitToEyeTexture(mCurrentEye);
-		mCurrentEye = nextEye;
-		BlitFromEyeTexture(mCurrentEye);
-		return mCurrentEye;
-	}
 
 }  // namespace OpenGLRenderer

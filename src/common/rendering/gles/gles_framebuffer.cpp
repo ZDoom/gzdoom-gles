@@ -345,12 +345,12 @@ FRenderState* OpenGLFrameBuffer::RenderState()
 
 void OpenGLFrameBuffer::FirstEye()
 {
-	GLRenderer->mBuffers->CurrentEye() = 0;  // always begin at zero, in case eye count changed
+	//GLRenderer->mBuffers->CurrentEye() = 0;  // always begin at zero, in case eye count changed
 }
 
 void OpenGLFrameBuffer::NextEye(int eyecount)
 {
-	GLRenderer->mBuffers->NextEye(eyecount);
+	//GLRenderer->mBuffers->NextEye(eyecount);
 }
 
 void OpenGLFrameBuffer::SetSceneRenderTarget(bool useSSAO)
@@ -365,12 +365,6 @@ void OpenGLFrameBuffer::WaitForCommands(bool finish)
 	glFinish();
 }
 
-void OpenGLFrameBuffer::SetSaveBuffers(bool yes)
-{
-	if (!GLRenderer) return;
-	if (yes) GLRenderer->mBuffers = GLRenderer->mSaveBuffers;
-	else GLRenderer->mBuffers = GLRenderer->mScreenBuffers;
-}
 
 //===========================================================================
 //
@@ -454,7 +448,7 @@ void OpenGLFrameBuffer::Draw2D()
 
 void OpenGLFrameBuffer::PostProcessScene(bool swscene, int fixedcm, float flash, const std::function<void()> &afterBloomDrawEndScene2D)
 {
-	if (!swscene) GLRenderer->mBuffers->BlitSceneToTexture(); // Copy the resulting scene to the current post process texture
+	//if (!swscene) GLRenderer->mBuffers->BlitSceneToTexture(); // Copy the resulting scene to the current post process texture
 	GLRenderer->PostProcessScene(fixedcm, flash, afterBloomDrawEndScene2D);
 }
 

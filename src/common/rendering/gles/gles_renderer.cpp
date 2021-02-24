@@ -80,14 +80,9 @@ FGLRenderer::FGLRenderer(OpenGLFrameBuffer *fb)
 void FGLRenderer::Initialize(int width, int height)
 {
 	mScreenBuffers = new FGLRenderBuffers();
-	mSaveBuffers = new FGLRenderBuffers();
 	mBuffers = mScreenBuffers;
 	mPresentShader = new FPresentShader();
-	mPresent3dCheckerShader = new FPresent3DCheckerShader();
-	mPresent3dColumnShader = new FPresent3DColumnShader();
-	mPresent3dRowShader = new FPresent3DRowShader();
-	mShadowMapShader = new FShadowMapShader();
-
+	
 	mFBID = 0;
 	mOldFBID = 0;
 
@@ -102,12 +97,7 @@ FGLRenderer::~FGLRenderer()
 	if (mFBID != 0) glDeleteFramebuffers(1, &mFBID);
 	
 	if (mBuffers) delete mBuffers;
-	if (mSaveBuffers) delete mSaveBuffers;
 	if (mPresentShader) delete mPresentShader;
-	if (mPresent3dCheckerShader) delete mPresent3dCheckerShader;
-	if (mPresent3dColumnShader) delete mPresent3dColumnShader;
-	if (mPresent3dRowShader) delete mPresent3dRowShader;
-	if (mShadowMapShader) delete mShadowMapShader;
 }
 
 //===========================================================================
@@ -162,7 +152,6 @@ void FGLRenderer::BindToFrameBuffer(FTexture *tex)
 void FGLRenderer::BeginFrame()
 {
 	mScreenBuffers->Setup(screen->mScreenViewport.width, screen->mScreenViewport.height, screen->mSceneViewport.width, screen->mSceneViewport.height);
-	mSaveBuffers->Setup(SAVEPICWIDTH, SAVEPICHEIGHT, SAVEPICWIDTH, SAVEPICHEIGHT);
 }
 
 }
