@@ -114,17 +114,15 @@ public:
 private:
 	void ClearScene();
 	
-	void CreateScene(int width, int height, int samples, bool needsSceneTextures);
+	void CreateScene(int width, int height);
 	void CreatePipeline(int width, int height);
 
 	PPGLTexture Create2DTexture(const char *name, GLuint format, int width, int height, const void *data = nullptr);
-	PPGLTexture Create2DMultisampleTexture(const char *name, GLuint format, int width, int height, int samples, bool fixedSampleLocations);
 	PPGLRenderBuffer CreateRenderBuffer(const char *name, GLuint format, int width, int height);
-	PPGLRenderBuffer CreateRenderBuffer(const char *name, GLuint format, int width, int height, int samples);
 	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLTexture colorbuffer);
 	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLTexture colorbuffer, PPGLRenderBuffer depthstencil);
 	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLRenderBuffer colorbuffer, PPGLRenderBuffer depthstencil);
-	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLTexture colorbuffer0, PPGLTexture colorbuffer1, PPGLTexture colorbuffer2, PPGLTexture depthstencil, bool multisample);
+	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLTexture colorbuffer0, PPGLTexture colorbuffer1, PPGLTexture colorbuffer2, PPGLTexture depthstencil);
 	bool CheckFrameBufferCompleteness();
 	void ClearFrameBuffer(bool stencil, bool depth);
 	void DeleteTexture(PPGLTexture &handle);
@@ -133,13 +131,9 @@ private:
 
 	int mWidth = 0;
 	int mHeight = 0;
-	int mSamples = 0;
-	int mMaxSamples = 0;
 	int mSceneWidth = 0;
 	int mSceneHeight = 0;
 
-	static const int NumPipelineTextures = 2;
-	int mCurrentPipelineTexture = 0;
 
 	// Buffers for the scene
 	PPGLTexture mSceneDepthStencilTex;
@@ -148,7 +142,6 @@ private:
 	PPGLFrameBuffer mSceneFB;
 	bool mSceneUsesTextures = false;
 
-	
 	PPGLTexture mDitherTexture;
 
 	static bool FailedCreate;

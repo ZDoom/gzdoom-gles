@@ -316,10 +316,6 @@ IDataBuffer *OpenGLFrameBuffer::CreateDataBuffer(int bindingpoint, bool ssbo, bo
 	return new GLDataBuffer(bindingpoint, ssbo);
 }
 
-void OpenGLFrameBuffer::BlurScene(float amount)
-{
-	GLRenderer->BlurScene(amount);
-}
 
 void OpenGLFrameBuffer::SetViewportRects(IntRect *bounds)
 {
@@ -331,11 +327,6 @@ void OpenGLFrameBuffer::SetViewportRects(IntRect *bounds)
 	}
 }
 
-void OpenGLFrameBuffer::UpdatePalette()
-{
-	if (GLRenderer)
-		GLRenderer->ClearTonemapPalette();
-}
 
 FRenderState* OpenGLFrameBuffer::RenderState()
 {

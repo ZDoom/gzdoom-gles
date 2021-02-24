@@ -35,14 +35,13 @@ public:
 	bool FlipSavePic() const override { return true; }
 
 	FRenderState* RenderState() override;
-	void UpdatePalette() override;
+
 	const char* DeviceName() const override;
 	void SetTextureFilterMode() override;
 	IHardwareTexture *CreateHardwareTexture(int numchannels) override;
 	void PrecacheMaterial(FMaterial *mat, int translation) override;
 	void BeginFrame() override;
 	void SetViewportRects(IntRect *bounds) override;
-	void BlurScene(float amount) override;
 	IVertexBuffer *CreateVertexBuffer() override;
 	IIndexBuffer *CreateIndexBuffer() override;
 	IDataBuffer *CreateDataBuffer(int bindingpoint, bool ssbo, bool needsresize) override;

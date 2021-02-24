@@ -57,26 +57,7 @@ void FGLRenderer::PostProcessScene(int fixedcm, float flash, const std::function
 	if (afterBloomDrawEndScene2D) afterBloomDrawEndScene2D();
 }
 
-//-----------------------------------------------------------------------------
-//
-// Adds ambient occlusion to the scene
-//
-//-----------------------------------------------------------------------------
 
-void FGLRenderer::AmbientOccludeScene(float m5)
-{
-
-}
-
-void FGLRenderer::BlurScene(float gameinfobluramount)
-{
-
-}
-
-void FGLRenderer::ClearTonemapPalette()
-{
-
-}
 
 //-----------------------------------------------------------------------------
 //
@@ -97,7 +78,6 @@ void FGLRenderer::Flush()
 
 void FGLRenderer::CopyToBackbuffer(const IntRect *bounds, bool applyGamma)
 {
-	//mBuffers->BindOutputFB();
 	screen->Draw2D();	// draw all pending 2D stuff before copying the buffer
 	twod->Clear();
 

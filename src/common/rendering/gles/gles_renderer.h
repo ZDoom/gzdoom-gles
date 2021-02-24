@@ -66,9 +66,7 @@ public:
 	void PresentStereo();
 	void RenderScreenQuad();
 	void PostProcessScene(int fixedcm, float flash, const std::function<void()> &afterBloomDrawEndScene2D);
-	void AmbientOccludeScene(float m5);
-	void ClearTonemapPalette();
-	void BlurScene(float gameinfobluramount);
+	
 	void CopyToBackbuffer(const IntRect *bounds, bool applyGamma);
 	void DrawPresentTexture(const IntRect &box, bool applyGamma);
 	void Flush();

@@ -44,8 +44,7 @@ namespace OpenGLESRenderer
 
 	FGLRenderBuffers::FGLRenderBuffers()
 	{
-		//glGetIntegerv(GL_MAX_SAMPLES, &mMaxSamples);
-		mMaxSamples = 0;
+	
 	}
 
 	//==========================================================================
@@ -66,8 +65,6 @@ namespace OpenGLESRenderer
 		DeleteFrameBuffer(mSceneFB);
 		DeleteRenderBuffer(mSceneDepthStencilBuf);
 	}
-
-
 
 	void FGLRenderBuffers::DeleteTexture(PPGLTexture& tex)
 	{
@@ -102,8 +99,6 @@ namespace OpenGLESRenderer
 		if (width <= 0 || height <= 0)
 			I_FatalError("Requested invalid render buffer sizes: screen = %dx%d", width, height);
 
-		int samples = clamp((int)gl_multisample, 0, mMaxSamples);
-		bool needsSceneTextures = (gl_ssao != 0);
 
 		GLint activeTex;
 		GLint textureBinding;
@@ -114,13 +109,11 @@ namespace OpenGLESRenderer
 		if (width != mWidth || height != mHeight)
 			CreatePipeline(width, height);
 
-		if (width != mWidth || height != mHeight || mSamples != samples || mSceneUsesTextures != needsSceneTextures)
-			CreateScene(width, height, samples, needsSceneTextures);
+		if (width != mWidth || height != mHeight )
+			CreateScene(width, height);
 
 		mWidth = width;
 		mHeight = height;
-		mSamples = samples;
-		mSceneUsesTextures = needsSceneTextures;
 		mSceneWidth = sceneWidth;
 		mSceneHeight = sceneHeight;
 
@@ -134,7 +127,6 @@ namespace OpenGLESRenderer
 			ClearScene();
 			mWidth = 0;
 			mHeight = 0;
-			mSamples = 0;
 			mSceneWidth = 0;
 			mSceneHeight = 0;
 			I_FatalError("Unable to create render buffers.");
@@ -147,7 +139,7 @@ namespace OpenGLESRenderer
 	//
 	//==========================================================================
 
-	void FGLRenderBuffers::CreateScene(int width, int height, int samples, bool needsSceneTextures)
+	void FGLRenderBuffers::CreateScene(int width, int height)
 	{
 		ClearScene();
 		mSceneDepthStencilBuf = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8_OES, width, height);
@@ -215,22 +207,6 @@ namespace OpenGLESRenderer
 		return tex;
 	}
 
-	PPGLTexture FGLRenderBuffers::Create2DMultisampleTexture(const char* name, GLuint format, int width, int height, int samples, bool fixedSampleLocations)
-	{
-
-		PPGLTexture tex;
-		/*
-		tex.Width = width;
-		tex.Height = height;
-		glGenTextures(1, &tex.handle);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, tex.handle);
-		FGLDebug::LabelObject(GL_TEXTURE, tex.handle, name);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, fixedSampleLocations);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-		*/
-		return tex;
-	}
-
 	//==========================================================================
 	//
 	// Creates a render buffer
@@ -245,13 +221,6 @@ namespace OpenGLESRenderer
 	
 		glRenderbufferStorage(GL_RENDERBUFFER, format, width, height);
 		return buf;
-	}
-
-	PPGLRenderBuffer FGLRenderBuffers::CreateRenderBuffer(const char* name, GLuint format, int width, int height, int samples)
-	{
-		if (samples <= 1)
-			return CreateRenderBuffer(name, format, width, height);
-	
 	}
 
 	//==========================================================================
@@ -300,28 +269,16 @@ namespace OpenGLESRenderer
 		return fb;
 	}
 
-	PPGLFrameBuffer FGLRenderBuffers::CreateFrameBuffer(const char* name, PPGLTexture colorbuffer0, PPGLTexture colorbuffer1, PPGLTexture colorbuffer2, PPGLTexture depthstencil, bool multisample)
+	PPGLFrameBuffer FGLRenderBuffers::CreateFrameBuffer(const char* name, PPGLTexture colorbuffer0, PPGLTexture colorbuffer1, PPGLTexture colorbuffer2, PPGLTexture depthstencil)
 	{
 		PPGLFrameBuffer fb;
 		glGenFramebuffers(1, &fb.handle);
 		glBindFramebuffer(GL_FRAMEBUFFER, fb.handle);
-		
-		if (multisample)
-		{
-			
-		}
-		else
-		{
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer0.handle, 0);
-			/*
-			if (colorbuffer1.handle != 0)
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, colorbuffer1.handle, 0);
-			if (colorbuffer2.handle != 0)
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, colorbuffer2.handle, 0);
-				*/
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
-		}
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer0.handle, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
+	
 		if (CheckFrameBufferCompleteness())
 			ClearFrameBuffer(true, true);
 		return fb;
@@ -347,14 +304,9 @@ namespace OpenGLESRenderer
 			switch (result)
 			{
 			default: error.AppendFormat("error code %d", (int)result); break;
-				//case GL_FRAMEBUFFER_UNDEFINED: error << "GL_FRAMEBUFFER_UNDEFINED"; break;
 			case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: error << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT"; break;
 			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: error << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"; break;
-				//case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER: error << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER"; break;
-				//case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER: error << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER"; break;
 			case GL_FRAMEBUFFER_UNSUPPORTED: error << "GL_FRAMEBUFFER_UNSUPPORTED"; break;
-				//case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: error << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE"; break;
-				//case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS: error << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS"; break;
 			}
 			Printf("%s\n", error.GetChars());
 		}
@@ -433,8 +385,6 @@ namespace OpenGLESRenderer
 		glBindFramebuffer(GL_FRAMEBUFFER, mSceneFB.handle);
 	}
 
-
-
 	//==========================================================================
 	//
 	// Binds the current scene/effect/hud texture to the specified texture unit
@@ -455,28 +405,6 @@ namespace OpenGLESRenderer
 	void FGLRenderBuffers::BindCurrentFB()
 	{
 		mSceneFB.Bind();
-	}
-
-	//==========================================================================
-	//
-	// Makes the frame buffer for the next texture active
-	//
-	//==========================================================================
-
-	void FGLRenderBuffers::BindNextFB()
-	{
-		
-	}
-
-	//==========================================================================
-	//
-	// Next pipeline texture now contains the output
-	//
-	//==========================================================================
-
-	void FGLRenderBuffers::NextTexture()
-	{
-		mCurrentPipelineTexture = (mCurrentPipelineTexture + 1) % NumPipelineTextures;
 	}
 
 	//==========================================================================
