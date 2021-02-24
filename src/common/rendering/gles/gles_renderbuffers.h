@@ -93,31 +93,17 @@ public:
 	void Setup(int width, int height, int sceneWidth, int sceneHeight);
 
 	void BindSceneFB(bool sceneData);
-	void BindSceneColorTexture(int index);
-	void BindSceneFogTexture(int index);
-	void BindSceneNormalTexture(int index);
-	void BindSceneDepthTexture(int index);
-	void BlitSceneToTexture();
+
 
 	void BindCurrentTexture(int index, int filter = GL_NEAREST, int wrap = GL_CLAMP_TO_EDGE);
 	void BindCurrentFB();
 	void BindNextFB();
 	void NextTexture();
 
-	PPGLFrameBuffer GetCurrentFB() const { return mPipelineFB[mCurrentPipelineTexture]; }
 
 	void BindOutputFB();
 
-	void BlitToEyeTexture(int eye, bool allowInvalidate=true);
-	void BlitFromEyeTexture(int eye);
-	void BindEyeTexture(int eye, int texunit);
-	int NextEye(int eyeCount);
-	int & CurrentEye() { return mCurrentEye; }
-
 	void BindDitherTexture(int texunit);
-
-	void BindShadowMapFB();
-	void BindShadowMapTexture(int index);
 
 	int GetWidth() const { return mWidth; }
 	int GetHeight() const { return mHeight; }
@@ -127,13 +113,9 @@ public:
 
 private:
 	void ClearScene();
-	void ClearPipeline();
-	void ClearEyeBuffers();
-	void ClearShadowMap();
+	
 	void CreateScene(int width, int height, int samples, bool needsSceneTextures);
 	void CreatePipeline(int width, int height);
-	void CreateEyeBuffers(int eye);
-	void CreateShadowMap();
 
 	PPGLTexture Create2DTexture(const char *name, GLuint format, int width, int height, const void *data = nullptr);
 	PPGLTexture Create2DMultisampleTexture(const char *name, GLuint format, int width, int height, int samples, bool fixedSampleLocations);
@@ -160,32 +142,13 @@ private:
 	int mCurrentPipelineTexture = 0;
 
 	// Buffers for the scene
-	PPGLTexture mSceneMultisampleTex;
 	PPGLTexture mSceneDepthStencilTex;
-	PPGLTexture mSceneFogTex;
-	PPGLTexture mSceneNormalTex;
-	PPGLRenderBuffer mSceneMultisampleBuf;
+	PPGLTexture mSceneTex;
 	PPGLRenderBuffer mSceneDepthStencilBuf;
-	PPGLRenderBuffer mSceneFogBuf;
-	PPGLRenderBuffer mSceneNormalBuf;
 	PPGLFrameBuffer mSceneFB;
-	PPGLFrameBuffer mSceneDataFB;
 	bool mSceneUsesTextures = false;
 
-	// Effect/HUD buffers
-	PPGLTexture mPipelineTexture[NumPipelineTextures];
-	PPGLFrameBuffer mPipelineFB[NumPipelineTextures];
-
-	// Eye buffers
-	TArray<PPGLTexture> mEyeTextures;
-	TArray<PPGLFrameBuffer> mEyeFBs;
-	int mCurrentEye = 0;
-
-	// Shadow map texture
-	PPGLTexture mShadowMapTexture;
-	PPGLFrameBuffer mShadowMapFB;
-	int mCurrentShadowMapSize = 0;
-
+	
 	PPGLTexture mDitherTexture;
 
 	static bool FailedCreate;

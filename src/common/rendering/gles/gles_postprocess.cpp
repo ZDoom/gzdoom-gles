@@ -86,25 +86,7 @@ void FGLRenderer::ClearTonemapPalette()
 
 void FGLRenderer::Flush()
 {
-	auto vrmode = VRMode::GetVRMode(true);
-	if (vrmode->mEyeCount == 1)
-	{
-		CopyToBackbuffer(nullptr, true);
-	}
-	else
-	{
-		// Render 2D to eye textures
-		int eyeCount = vrmode->mEyeCount;
-		for (int eye_ix = 0; eye_ix < eyeCount; ++eye_ix)
-		{
-			screen->Draw2D();
-			if (eyeCount - eye_ix > 1)
-				mBuffers->NextEye(eyeCount);
-		}
-		twod->Clear();
-
-		FGLPostProcessState savedState;
-	}
+	CopyToBackbuffer(nullptr, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -115,6 +97,7 @@ void FGLRenderer::Flush()
 
 void FGLRenderer::CopyToBackbuffer(const IntRect *bounds, bool applyGamma)
 {
+	//mBuffers->BindOutputFB();
 	screen->Draw2D();	// draw all pending 2D stuff before copying the buffer
 	twod->Clear();
 

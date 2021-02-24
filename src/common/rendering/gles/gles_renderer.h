@@ -52,12 +52,7 @@ public:
 
 	FGLRenderBuffers *mBuffers = nullptr;
 	FGLRenderBuffers *mScreenBuffers = nullptr;
-	FGLRenderBuffers *mSaveBuffers = nullptr;
 	FPresentShader *mPresentShader = nullptr;
-	FPresent3DCheckerShader *mPresent3dCheckerShader = nullptr;
-	FPresent3DColumnShader *mPresent3dColumnShader = nullptr;
-	FPresent3DRowShader *mPresent3dRowShader = nullptr;
-	FShadowMapShader *mShadowMapShader = nullptr;
 
 	//FRotator mAngles;
 
