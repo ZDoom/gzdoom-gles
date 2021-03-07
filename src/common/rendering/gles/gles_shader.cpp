@@ -662,9 +662,9 @@ FShader::~FShader()
 //
 //==========================================================================
 
-bool FShader::Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog)
+bool FShader::Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog,bool doDesaturate)
 {
-	uint32_t tag = CreateShaderTag(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog);
+	uint32_t tag = CreateShaderTag(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog, doDesaturate);
 
 
 	cur = variants[tag];
@@ -678,6 +678,10 @@ bool FShader::Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, 
 		variantConfig.AppendFormat("#define DEF_FOG_ENABLED %d\n", fogEnabled);
 		variantConfig.AppendFormat("#define DEF_FOG_RADIAL %d\n", fogEquationRadial);
 		variantConfig.AppendFormat("#define DEF_FOG_COLOURED %d\n", colouredFog);
+		
+		variantConfig.AppendFormat("#define DEF_DO_DESATURATE %d\n", doDesaturate);
+
+		Printf("Shader: %s", variantConfig.GetChars());
 
 		Load(mName.GetChars(), mVertProg, mFragProg, mFragProg2, mLightProg, mDefinesBase + variantConfig);
 
@@ -889,7 +893,7 @@ FShader *FShaderCollection::BindEffect(int effect)
 {
 	if (effect >= 0 && effect < MAX_EFFECTS && mEffectShaders[effect] != NULL)
 	{
-		mEffectShaders[effect]->Bind(0,0,0,0,0,0,0);
+		mEffectShaders[effect]->Bind(0,0,0,0,0,0,0,0);
 		return mEffectShaders[effect];
 	}
 	return NULL;

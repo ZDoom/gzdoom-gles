@@ -121,7 +121,7 @@ bool FGLRenderState::ApplyShader()
 		int texFlags = mTextureModeFlags; if (!mBrightmapEnabled) texFlags &= ~(TEXF_Brightmap | TEXF_Glowmap);
 		texFlags >>= 16; //Move flags to start of word
 
-		int blendFlags = (int)(mStreamData.uTextureAddColor.a + 0.1);
+		int blendFlags = (int)(mStreamData.uTextureAddColor.a + 0.01);
 
 		bool twoDFog = false;
 		bool fogEnabled = false;
@@ -146,8 +146,10 @@ bool FGLRenderState::ApplyShader()
 			}
 		}
 
+		bool doDesaturate = false;
+		doDesaturate = mStreamData.uDesaturationFactor != 0;
 
-		activeShader->Bind(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog);
+		activeShader->Bind(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog, doDesaturate);
 	}
 
 	

@@ -73,7 +73,11 @@ vec4 dodesaturate(vec4 texel, float factor)
 
 vec4 desaturate(vec4 texel)
 {
+#if (DEF_DO_DESATURATE == 1)
 	return dodesaturate(texel, uDesaturationFactor);
+#else
+	return texel;
+#endif
 }
 
 //===========================================================================
@@ -194,7 +198,8 @@ vec4 getTexel(vec2 st)
 #if (DEF_BLEND_FLAGS != 0)	
 
 	// only apply the texture manipulation if it contains something.
-	texel = ApplyTextureManipulation(texel, blendflags);
+	texel = ApplyTextureManipulation(texel, DEF_BLEND_FLAGS);
+
 #endif
 
 	// Apply the Doom64 style material colors on top of everything from the texture modification settings.
