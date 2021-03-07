@@ -673,6 +673,7 @@ bool FShader::Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, 
 	{
 		FString variantConfig = "\n";
 		variantConfig.AppendFormat("#define DEF_TEXTURE_MODE %d\n", textureMode);
+		variantConfig.AppendFormat("#define DEF_TEXTURE_FLAGS %d\n", texFlags);
 		variantConfig.AppendFormat("#define DEF_BLEND_FLAGS %d\n", blendFlags);
 		variantConfig.AppendFormat("#define DEF_FOG_2D %d\n", twoDFog);
 		variantConfig.AppendFormat("#define DEF_FOG_ENABLED %d\n", fogEnabled);

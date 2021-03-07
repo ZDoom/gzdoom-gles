@@ -269,7 +269,26 @@ float spotLightAttenuation(vec4 lightpos, vec3 spotdir, float lightCosInnerAngle
 
 void SetMaterialProps(inout Material material, vec2 texCoord)
 {
-	material.Base = getTexel(texCoord.st); 
+	material.Base = getTexel(texCoord.st);
+
+	#if (DEF_TEXTURE_FLAGS & 0x1)
+		material.Bright = texture(brighttexture, texCoord.st);
+	#endif
+
+	#if (DEF_TEXTURE_FLAGS & 0x2)
+	{
+		vec4 Detail = texture(detailtexture, texCoord.st * uDetailParms.xy) * uDetailParms.z;
+		material.Base *= Detail;
+	}
+	#endif
+
+	
+	#if (DEF_TEXTURE_FLAGS & 0x4)
+	{
+		material.Glow = texture(glowtexture, texCoord.st);
+	}
+	#endif
+
 }
 
 //===========================================================================
