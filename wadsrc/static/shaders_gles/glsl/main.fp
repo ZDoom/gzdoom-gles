@@ -19,12 +19,6 @@ struct Material
 	vec4 Bright;
 	vec4 Glow;
 	vec3 Normal;
-	vec3 Specular;
-	float Glossiness;
-	float SpecularLevel;
-	float Metallic;
-	float Roughness;
-	float AO;
 };
 
 vec4 Process(vec4 color);
@@ -459,12 +453,6 @@ void main()
 	material.Bright = vec4(0.0);
 	material.Glow = vec4(0.0);
 	material.Normal = vec3(0.0);
-	material.Specular = vec3(0.0);
-	material.Glossiness = 0.0;
-	material.SpecularLevel = 0.0;
-	material.Metallic = 0.0;
-	material.Roughness = 0.0;
-	material.AO = 0.0;
 	SetupMaterial(material);
 #else
 	Material material = ProcessMaterial();

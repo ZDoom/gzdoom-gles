@@ -142,12 +142,6 @@ void *GLBuffer::Lock(unsigned int size)
 	SetData(size, nullptr, true);
 
 	return map;
-	/*
-	else
-	{
-		return glMapBufferRange(mUseType, 0, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-	}
-	*/
 }
 
 void GLBuffer::Unlock()
