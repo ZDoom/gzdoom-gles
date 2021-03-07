@@ -737,7 +737,7 @@ FShaderManager::~FShaderManager()
 
 void FShaderManager::SetActiveShader(FShader::ShaderVariantData *sh)
 {
-	if (mActiveShader != sh)
+	//if (mActiveShader != sh)
 	{
 		glUseProgram(sh!= NULL? sh->GetHandle() : 0);
 		mActiveShader = sh;

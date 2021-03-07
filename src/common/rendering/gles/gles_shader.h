@@ -241,7 +241,7 @@ public:
 
 	void Set(const VSMatrix* newvalue)
 	{
-		if (memcmp(newvalue, &mBuffer, sizeof(mBuffer)))
+		//if (memcmp(newvalue, &mBuffer, sizeof(mBuffer))) // Breaks 2D menu for some reason..
 		{
 			mBuffer = *newvalue;
 			glUniformMatrix4fv(mIndex, 1, false, (float*)newvalue);

@@ -207,83 +207,37 @@ vec4 getTexel(vec2 st)
 	return desaturate(texel);
 }
 
-//===========================================================================
-//
-// Vanilla Doom wall colormap equation
-//
-//===========================================================================
-float R_WallColormap(float lightnum, float z, vec3 normal)
-{
-	// R_ScaleFromGlobalAngle calculation
-	float projection = 160.0; // projection depends on SCREENBLOCKS!! 160 is the fullscreen value
-	vec2 line_v1 = pixelpos.xz; // in vanilla this is the first curline vertex
-	vec2 line_normal = normal.xz;
-	float texscale = projection * clamp(dot(normalize(uCameraPos.xz - line_v1), line_normal), 0.0, 1.0) / z;
 
-	float lightz = clamp(16.0 * texscale, 0.0, 47.0);
 
-	// scalelight[lightnum][lightz] lookup
-	float startmap = (15.0 - lightnum) * 4.0;
-	return startmap - lightz * 0.5;
-}
-
-//===========================================================================
-//
-// Vanilla Doom plane colormap equation
-//
-//===========================================================================
-float R_PlaneColormap(float lightnum, float z)
-{
-	float lightz = clamp(z / 16.0, 0.0, 127.0);
-
-	// zlight[lightnum][lightz] lookup
-	float startmap = (15.0 - lightnum) * 4.0;
-	float scale = 160.0 / (lightz + 1.0);
-	return startmap - scale * 0.5;
-}
-
-//===========================================================================
-//
-// zdoom colormap equation
-//
-//===========================================================================
-float R_ZDoomColormap(float light, float z)
-{
-	float L = light * 255.0;
-	float vis = min(uGlobVis / z, 24.0 / 32.0);
-	float shade = 2.0 - (L + 12.0) / 128.0;
-	float lightscale = shade - vis;
-	return lightscale * 31.0;
-}
-
-float R_DoomColormap(float light, float z)
-{
-
-	{
-		return R_ZDoomColormap(light, z);
-	}
-}
 
 //===========================================================================
 //
 // Doom software lighting equation
 //
 //===========================================================================
+
+#define DOOMLIGHTFACTOR 232.0
+
 float R_DoomLightingEquation(float light)
 {
 	// z is the depth in view space, positive going into the screen
-	float z;
+	float z = pixelpos.w;
 
-	{
-		z = pixelpos.w;
-	}
 	
+		/* L in the range 0 to 63 */
+	float L = light * 63.0/31.0;
 
+	float min_L = clamp(36.0/31.0 - L, 0.0, 1.0);
 
-	float colormap = R_DoomColormap(light, z);
+	// Fix objects getting totally black when close.
+	if (z < 0.0001)
+		z = 0.0001;
+
+	float scale = 1.0 / z;
+	float index = (59.0/31.0 - L) - (scale * DOOMLIGHTFACTOR/31.0 - DOOMLIGHTFACTOR/31.0);
 
 	// Result is the normalized colormap index (0 bright .. 1 dark)
-	return clamp(colormap, 0.0, 31.0) / 32.0;
+	return clamp(index, min_L, 1.0) / 32.0;
 }
 
 
@@ -310,17 +264,7 @@ float spotLightAttenuation(vec4 lightpos, vec3 spotdir, float lightCosInnerAngle
 
 void SetMaterialProps(inout Material material, vec2 texCoord)
 {
-#ifdef NPOT_EMULATION
-	if (uNpotEmulation.y != 0.0)
-	{
-		float period = floor(texCoord.t / uNpotEmulation.y);
-		texCoord.s += uNpotEmulation.x * floor(mod(texCoord.t, uNpotEmulation.y));
-		texCoord.t = period + mod(texCoord.t, uNpotEmulation.y);
-	}
-#endif	
-	material.Base = getTexel(texCoord.st); 
-
-
+ material.Base = getTexel(texCoord.st); 
 }
 
 //===========================================================================
@@ -334,7 +278,7 @@ void SetMaterialProps(inout Material material, vec2 texCoord)
 //
 // This is making this a bit more complicated than it needs to
 // because we can't just desaturate the final fragment color.
-//
+// 
 //===========================================================================
 
 vec4 getLightColor(Material material, float fogdist, float fogfactor)
@@ -406,33 +350,6 @@ vec4 getLightColor(Material material, float fogdist, float fogfactor)
 vec4 applyFog(vec4 frag, float fogfactor)
 {
 	return vec4(mix(uFogColor.rgb, frag.rgb, fogfactor), frag.a);
-}
-
-//===========================================================================
-//
-// The color of the fragment if it is fully occluded by ambient lighting
-//
-//===========================================================================
-
-vec3 AmbientOcclusionColor()
-{
-	float fogdist;
-	float fogfactor;
-			
-	//
-	// calculate fog factor
-	//
-	if (uFogEnabled == -1) 
-	{
-		fogdist = max(16.0, pixelpos.w);
-	}
-	else 
-	{
-		fogdist = max(16.0, distance(pixelpos.xyz, uCameraPos.xyz));
-	}
-	fogfactor = exp2 (uFogDensity * fogdist);
-			
-	return mix(uFogColor.rgb, vec3(0.0), fogfactor);
 }
 
 //===========================================================================
