@@ -264,7 +264,7 @@ float spotLightAttenuation(vec4 lightpos, vec3 spotdir, float lightCosInnerAngle
 
 void SetMaterialProps(inout Material material, vec2 texCoord)
 {
- material.Base = getTexel(texCoord.st); 
+	material.Base = getTexel(texCoord.st); 
 }
 
 //===========================================================================
@@ -290,18 +290,23 @@ vec4 getLightColor(Material material, float fogdist, float fogfactor)
 		float newlightlevel = 1.0 - R_DoomLightingEquation(uLightLevel);
 		color.rgb *= newlightlevel;
 	}
-	else if (uFogEnabled > 0)
+	else
 	{
-		// brightening around the player for light mode 2
-		if (fogdist < uLightDist)
+
+		#if (DEF_FOG_ENABLED == 1) && (DEF_FOG_COLOURED == 0)
 		{
-			color.rgb *= uLightFactor - (fogdist / uLightDist) * (uLightFactor - 1.0);
-		}
+			// brightening around the player for light mode 2
+			if (fogdist < uLightDist)
+			{
+				color.rgb *= uLightFactor - (fogdist / uLightDist) * (uLightFactor - 1.0);
+			}
 		
-		//
-		// apply light diminishing through fog equation
-		//
-		color.rgb = mix(vec3(0.0, 0.0, 0.0), color.rgb, fogfactor);
+			//
+			// apply light diminishing through fog equation
+			//
+			color.rgb = mix(vec3(0.0, 0.0, 0.0), color.rgb, fogfactor);
+		}
+		#endif
 	}
 	
 	//
@@ -380,7 +385,7 @@ void main()
 	if (frag.a <= uAlphaThreshold) discard;
 #endif
 
-	if (uFogEnabled != -3)	// check for special 2D 'fog' mode.
+	#if (DEF_FOG_2D == 0)	// check for special 2D 'fog' mode.
 	{
 		float fogdist = 0.0;
 		float fogfactor = 0.0;
@@ -388,50 +393,51 @@ void main()
 		//
 		// calculate fog factor
 		//
-		if (uFogEnabled != 0)
+		#if (DEF_FOG_ENABLED == 1)
 		{
-			if (uFogEnabled == 1 || uFogEnabled == -1) 
-			{
+			#if (DEF_FOG_RADIAL == 0)
 				fogdist = max(16.0, pixelpos.w);
-			}
-			else 
-			{
+			#else
 				fogdist = max(16.0, distance(pixelpos.xyz, uCameraPos.xyz));
-			}
+			#endif
+
 			fogfactor = exp2 (uFogDensity * fogdist);
 		}
+		#endif
 
-	#if (DEF_TEXTURE_MODE != 7)
-
-		frag = getLightColor(material, fogdist, fogfactor);
-
-		//
-		// colored fog
-		//
-		if (uFogEnabled < 0) 
+		#if (DEF_TEXTURE_MODE != 7)
 		{
-			frag = applyFog(frag, fogfactor);
-		}
-	#else
+			frag = getLightColor(material, fogdist, fogfactor);
 
-		frag = vec4(uFogColor.rgb, (1.0 - fogfactor) * frag.a * 0.75 * vColor.a);
-	#endif
-	
-	}
-	else // simple 2D (uses the fog color to add a color overlay)
+			//
+			// colored fog
+			//
+			#if (DEF_FOG_ENABLED == 1) && (DEF_FOG_COLOURED == 1)
+			{
+				frag = applyFog(frag, fogfactor);
+			}
+			#endif
+		}
+		#else
+		{
+			frag = vec4(uFogColor.rgb, (1.0 - fogfactor) * frag.a * 0.75 * vColor.a);
+		}
+		#endif
+	}	
+	#else
 	{
-		
-	#if (DEF_TEXTURE_MODE == 7)
-	
-		float gray = grayscale(frag);
-		vec4 cm = (uObjectColor + gray * (uAddColor - uObjectColor)) * 2;
-		frag = vec4(clamp(cm.rgb, 0.0, 1.0), frag.a);
-		
-	#endif
+		#if (DEF_TEXTURE_MODE == 7)
+		{
+			float gray = grayscale(frag);
+			vec4 cm = (uObjectColor + gray * (uAddColor - uObjectColor)) * 2;
+			frag = vec4(clamp(cm.rgb, 0.0, 1.0), frag.a);
+		}		
+		#endif
 	
 		frag = frag * ProcessLight(material, vColor);
 		frag.rgb = frag.rgb + uFogColor.rgb;
 	}
+	#endif  // (DEF_2D_FOG == 0)
 	
 	gl_FragColor = frag;
 

@@ -298,7 +298,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		#define uFogDensity uLightAttr.b
 		#define uLightFactor uLightAttr.g
 		#define uLightDist uLightAttr.r
-		uniform int uFogEnabled;
+		//uniform int uFogEnabled;
 
 		// dynamic lights
 		uniform int uLightIndex;
@@ -662,9 +662,10 @@ FShader::~FShader()
 //
 //==========================================================================
 
-bool FShader::Bind(int textureMode, int texFlags, int blendFlags)
+bool FShader::Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog)
 {
-	uint32_t tag = CreateShaderTag(textureMode, texFlags, blendFlags);
+	uint32_t tag = CreateShaderTag(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog);
+
 
 	cur = variants[tag];
 
@@ -673,7 +674,11 @@ bool FShader::Bind(int textureMode, int texFlags, int blendFlags)
 		FString variantConfig = "\n";
 		variantConfig.AppendFormat("#define DEF_TEXTURE_MODE %d\n", textureMode);
 		variantConfig.AppendFormat("#define DEF_BLEND_FLAGS %d\n", blendFlags);
-		
+		variantConfig.AppendFormat("#define DEF_FOG_2D %d\n", twoDFog);
+		variantConfig.AppendFormat("#define DEF_FOG_ENABLED %d\n", fogEnabled);
+		variantConfig.AppendFormat("#define DEF_FOG_RADIAL %d\n", fogEquationRadial);
+		variantConfig.AppendFormat("#define DEF_FOG_COLOURED %d\n", colouredFog);
+
 		Load(mName.GetChars(), mVertProg, mFragProg, mFragProg2, mLightProg, mDefinesBase + variantConfig);
 
 		variants[tag] = cur;
@@ -884,7 +889,7 @@ FShader *FShaderCollection::BindEffect(int effect)
 {
 	if (effect >= 0 && effect < MAX_EFFECTS && mEffectShaders[effect] != NULL)
 	{
-		mEffectShaders[effect]->Bind(0,0,0);
+		mEffectShaders[effect]->Bind(0,0,0,0,0,0,0);
 		return mEffectShaders[effect];
 	}
 	return NULL;
