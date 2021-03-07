@@ -272,20 +272,19 @@ void SetMaterialProps(inout Material material, vec2 texCoord)
 	material.Base = getTexel(texCoord.st);
 
 	#if (DEF_TEXTURE_FLAGS & 0x1)
-		material.Bright = texture(brighttexture, texCoord.st);
+		material.Bright = texture2D(brighttexture, texCoord.st);
 	#endif
 
 	#if (DEF_TEXTURE_FLAGS & 0x2)
 	{
-		vec4 Detail = texture(detailtexture, texCoord.st * uDetailParms.xy) * uDetailParms.z;
+		vec4 Detail = texture2D(detailtexture, texCoord.st * uDetailParms.xy) * uDetailParms.z;
 		material.Base *= Detail;
 	}
 	#endif
 
-	
 	#if (DEF_TEXTURE_FLAGS & 0x4)
 	{
-		material.Glow = texture(glowtexture, texCoord.st);
+		material.Glow = texture2D(glowtexture, texCoord.st);
 	}
 	#endif
 
