@@ -117,9 +117,37 @@ bool FGLRenderState::ApplyShader()
 		activeShader = GLRenderer->mShaderManager->Get(mTextureEnabled ? mEffectState : SHADER_NoTexture, mAlphaThreshold >= 0.f, mPassType);
 
 		int textureMode = (mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode);
+		
 		int texFlags = mTextureModeFlags; if (!mBrightmapEnabled) texFlags &= ~(TEXF_Brightmap | TEXF_Glowmap);
+		texFlags >>= 16; //Move flags to start of word
 
-		activeShader->Bind(textureMode, texFlags, 0);
+		int blendFlags = (int)(mStreamData.uTextureAddColor.a + 0.1);
+
+		bool twoDFog = false;
+		bool fogEnabled = false;
+		bool fogEquationRadial = false;
+		bool colouredFog = false;
+
+		if (mFogEnabled)
+		{
+			if (mFogEnabled == 2)
+			{
+				twoDFog = true;
+			}
+			else if(gl_fogmode)
+			{
+				fogEnabled = true;
+
+				if (gl_fogmode == 2)
+					fogEquationRadial = true;
+
+				if ((GetFogColor() & 0xffffff) != 0)
+					colouredFog = true;
+			}
+		}
+
+
+		activeShader->Bind(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog);
 	}
 
 	
@@ -149,7 +177,7 @@ bool FGLRenderState::ApplyShader()
 	glVertexAttrib4fv(VATTR_NORMAL, &mStreamData.uVertexNormal.X);
 
 	activeShader->cur->muDesaturation.Set(mStreamData.uDesaturationFactor);
-	activeShader->cur->muFogEnabled.Set(fogset);
+	//activeShader->cur->muFogEnabled.Set(fogset);
 
 	int f = mTextureModeFlags;
 	if (!mBrightmapEnabled) f &= ~(TEXF_Brightmap | TEXF_Glowmap);
