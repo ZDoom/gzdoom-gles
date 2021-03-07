@@ -127,8 +127,9 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 	// store the physical size.
 
 	int sourcetype;
+
 #define GL_BGRA                           0x80E1
-	//sourcetype = GL_BGRA;
+
 #if USE_GLES2
 	sourcetype = GL_BGRA;
 	texformat = GL_BGRA;

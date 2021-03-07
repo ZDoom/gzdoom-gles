@@ -120,15 +120,18 @@ bool FGLRenderState::ApplyShader()
 		int texFlags = mTextureModeFlags; if (!mBrightmapEnabled) texFlags &= ~(TEXF_Brightmap | TEXF_Glowmap);
 
 		activeShader->Bind(textureMode, texFlags, 0);
-
 	}
 
 	
 	if (mHwUniforms)
 	{
-		matrixToGL(mHwUniforms->mProjectionMatrix, activeShader->cur->ProjectionMatrix_index);
-		matrixToGL(mHwUniforms->mViewMatrix, activeShader->cur->ViewMatrix_index);
-		matrixToGL(mHwUniforms->mNormalViewMatrix, activeShader->cur->NormalViewMatrix_index);
+		//matrixToGL(mHwUniforms->mProjectionMatrix, activeShader->cur->ProjectionMatrix_index);
+		activeShader->cur->muProjectionMatrix.Set(&mHwUniforms->mProjectionMatrix);
+		activeShader->cur->muViewMatrix.Set(&mHwUniforms->mViewMatrix);
+		activeShader->cur->muNormalViewMatrix.Set(&mHwUniforms->mNormalViewMatrix);
+
+		//matrixToGL(mHwUniforms->mViewMatrix, activeShader->cur->ViewMatrix_index);
+		//matrixToGL(mHwUniforms->mNormalViewMatrix, activeShader->cur->NormalViewMatrix_index);
 
 		activeShader->cur->muCameraPos.Set(&mHwUniforms->mCameraPos.X);
 		activeShader->cur->muClipLine.Set(&mHwUniforms->mClipLine.X);
@@ -139,7 +142,7 @@ bool FGLRenderState::ApplyShader()
 		activeShader->cur->muViewHeight.Set(mHwUniforms->mViewHeight);
 		activeShader->cur->muClipHeight.Set(mHwUniforms->mClipHeight);
 		activeShader->cur->muClipHeightDirection.Set(mHwUniforms->mClipHeightDirection);
-		activeShader->cur->muShadowmapFilter.Set(mHwUniforms->mShadowmapFilter);
+		//activeShader->cur->muShadowmapFilter.Set(mHwUniforms->mShadowmapFilter);
 	}
 
 	glVertexAttrib4fv(VATTR_COLOR, &mStreamData.uVertexColor.X);
@@ -150,7 +153,7 @@ bool FGLRenderState::ApplyShader()
 
 	int f = mTextureModeFlags;
 	if (!mBrightmapEnabled) f &= ~(TEXF_Brightmap | TEXF_Glowmap);
-	activeShader->cur->muTextureMode.Set((mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode) | f);
+	//activeShader->cur->muTextureMode.Set((mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode) | f);
 	activeShader->cur->muLightParms.Set(mLightParms);
 	activeShader->cur->muFogColor.Set(mStreamData.uFogColor);
 	activeShader->cur->muObjectColor.Set(mStreamData.uObjectColor);
@@ -235,7 +238,7 @@ bool FGLRenderState::ApplyShader()
 		}
 	}
 
-	activeShader->cur->muLightIndex.Set(index);
+	//activeShader->cur->muLightIndex.Set(index);
 	return true;
 }
 

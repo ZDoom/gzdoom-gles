@@ -244,8 +244,8 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 
 	FString i_data = R"(
 		// these settings are actually pointless but there seem to be some old ATI drivers that fail to compile the shader without setting the precision here.
-		precision highp int;
-		precision highp float;
+		precision mediump int;
+		precision mediump float;
 
 		// This must match the HWViewpointUniforms struct
 
@@ -563,10 +563,13 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		shaderData->hFragProg = 0;
 	}
 
-	
-	shaderData->ProjectionMatrix_index = glGetUniformLocation(shaderData->hShader, "ProjectionMatrix");
-	shaderData->ViewMatrix_index = glGetUniformLocation(shaderData->hShader, "ViewMatrix");
-	shaderData->NormalViewMatrix_index = glGetUniformLocation(shaderData->hShader, "NormalViewMatrix");
+	shaderData->muProjectionMatrix.Init(shaderData->hShader, "ProjectionMatrix");
+	shaderData->muViewMatrix.Init(shaderData->hShader, "ViewMatrix");
+	shaderData->muNormalViewMatrix.Init(shaderData->hShader, "NormalViewMatrix");
+
+	//shaderData->ProjectionMatrix_index = glGetUniformLocation(shaderData->hShader, "ProjectionMatrix");
+	//shaderData->ViewMatrix_index = glGetUniformLocation(shaderData->hShader, "ViewMatrix");
+	//shaderData->NormalViewMatrix_index = glGetUniformLocation(shaderData->hShader, "NormalViewMatrix");
 
 	shaderData->muCameraPos.Init(shaderData->hShader, "uCameraPos");
 	shaderData->muClipLine.Init(shaderData->hShader, "uClipLine");
@@ -734,7 +737,7 @@ FShaderManager::~FShaderManager()
 
 void FShaderManager::SetActiveShader(FShader::ShaderVariantData *sh)
 {
-	//if (mActiveShader != sh)
+	if (mActiveShader != sh)
 	{
 		glUseProgram(sh!= NULL? sh->GetHandle() : 0);
 		mActiveShader = sh;

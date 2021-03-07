@@ -227,6 +227,28 @@ public:
 	}
 };
 
+class FBufferedUniformMat4fv
+{
+	VSMatrix mBuffer;
+	int mIndex;
+
+public:
+	void Init(GLuint hShader, const GLchar* name)
+	{
+		mIndex = glGetUniformLocation(hShader, name);
+		mBuffer = 0;
+	}
+
+	void Set(const VSMatrix* newvalue)
+	{
+		if (memcmp(newvalue, &mBuffer, sizeof(mBuffer)))
+		{
+			mBuffer = *newvalue;
+			glUniformMatrix4fv(mIndex, 1, false, (float*)newvalue);
+		}
+	}
+};
+
 class FShader
 {
 	friend class FShaderCollection;
@@ -249,9 +271,13 @@ public: class ShaderVariantData
 		unsigned int hVertProg = 0;
 		unsigned int hFragProg = 0;
 
-		int ProjectionMatrix_index = 0;
-		int ViewMatrix_index = 0;
-		int NormalViewMatrix_index = 0;
+		//int ProjectionMatrix_index = 0;
+		//int ViewMatrix_index = 0;
+		//int NormalViewMatrix_index = 0;
+
+		FBufferedUniformMat4fv muProjectionMatrix;
+		FBufferedUniformMat4fv muViewMatrix;
+		FBufferedUniformMat4fv muNormalViewMatrix;
 
 		FUniform4f muCameraPos;
 		FUniform4f muClipLine;

@@ -101,11 +101,6 @@ void main()
 	#endif
 	
 
-
-	#ifdef VULKAN_COORDINATE_SYSTEM
-	gl_Position.z = (gl_Position.z + gl_Position.w) / 2.0;
-	#endif
-
 	if (uClipHeightDirection != 0.0) // clip planes used for reflective flats
 	{
 		ClipDistance0 = (worldcoord.y - uClipHeight) * uClipHeightDirection;
@@ -129,16 +124,9 @@ void main()
 		ClipDistance4 = 1.0;
 	}
 
-#ifdef NO_CLIPDISTANCE_SUPPORT
 	ClipDistanceA = vec4(ClipDistance0, ClipDistance1, ClipDistance2, ClipDistance3);
 	ClipDistanceB = vec4(ClipDistance4, 0.0, 0.0, 0.0);
-#else
-	gl_ClipDistance[0] = ClipDistance0;
-	gl_ClipDistance[1] = ClipDistance1;
-	gl_ClipDistance[2] = ClipDistance2;
-	gl_ClipDistance[3] = ClipDistance3;
-	gl_ClipDistance[4] = ClipDistance4;
-#endif
+
 
 	//gl_PointSize = 1.0;
 
