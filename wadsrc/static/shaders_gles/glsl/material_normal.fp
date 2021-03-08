@@ -42,43 +42,42 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 	vec4 dynlight = uDynLightColor;
 	vec3 normal = material.Normal;
 
-	if (uLightIndex >= 0)
-	{
-		ivec4 lightRange = ivec4(lights[uLightIndex]) + ivec4(uLightIndex + 1);
-		if (lightRange.z > lightRange.x)
-		{
-			// modulated lights
-			for(int i=lightRange.x; i<lightRange.y; i+=4)
-			{
-				dynlight.rgb += lightContribution(i, normal);
-			}
+#if (DEF_DYNAMIC_LIGHTS == 1)
+	
+	ivec4 lightRange = ivec4(lights[uLightIndex]) + ivec4(uLightIndex + 1);
 
-			// subtractive lights
-			for(int i=lightRange.y; i<lightRange.z; i+=4) 
-			{
-				dynlight.rgb -= lightContribution(i, normal);
-			}
+	//if (lightRange.z > lightRange.x)
+	{
+		// modulated lights
+		for(int i=lightRange.x; i<lightRange.y; i+=4)
+		{
+			dynlight.rgb += lightContribution(i, normal);
+		}
+
+		// subtractive lights
+		for(int i=lightRange.y; i<lightRange.z; i+=4) 
+		{
+			dynlight.rgb -= lightContribution(i, normal);
 		}
 	}
-
+	
 	vec3 frag = material.Base.rgb * clamp(color + desaturate(dynlight).rgb, 0.0, 1.4);
-
-	if (uLightIndex >= 0)
+	
+	//if (lightRange.w > lightRange.z)
 	{
-		ivec4 lightRange = ivec4(lights[uLightIndex]) + ivec4(uLightIndex + 1);
-		if (lightRange.w > lightRange.z)
-		{
-			vec4 addlight = vec4(0.0,0.0,0.0,0.0);
+		vec4 addlight = vec4(0.0,0.0,0.0,0.0);
 				
-			// additive lights
-			for(int i=lightRange.z; i<lightRange.w; i+=4)
-			{
-				addlight.rgb += lightContribution(i, normal);
-			}
-
-			frag = clamp(frag + desaturate(addlight).rgb, 0.0, 1.0);
+		// additive lights
+		for(int i=lightRange.z; i<lightRange.w; i+=4)
+		{
+			addlight.rgb += lightContribution(i, normal);
 		}
+
+		frag = clamp(frag + desaturate(addlight).rgb, 0.0, 1.0);
 	}
  
 	return frag;
+#else
+	return  material.Base.rgb * clamp(color, 0.0, 1.4);
+#endif
 }

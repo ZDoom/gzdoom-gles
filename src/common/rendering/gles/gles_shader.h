@@ -353,7 +353,7 @@ public:
 
 	void LoadVariant();
 
-	uint32_t CreateShaderTag(int textureMode, int texf, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog, bool doDesaturate)
+	uint32_t CreateShaderTag(int textureMode, int texf, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog, bool doDesaturate, bool dynLights)
 	{
 		uint32_t tag = 0;
 		tag |= (textureMode & 0x7);
@@ -368,12 +368,13 @@ public:
 		tag |= (colouredFog & 1) << 10;
 
 		tag |= (doDesaturate & 1) << 11;
-		
+
+		tag |= (dynLights & 1) << 12;
 
 		return tag;
 	}
 
-	bool Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog, bool doDesaturate);
+	bool Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog, bool doDesaturate, bool dynLights);
 
 	
 };
