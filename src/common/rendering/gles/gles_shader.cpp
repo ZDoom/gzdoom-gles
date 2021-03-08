@@ -312,7 +312,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		uniform mat4 TextureMatrix;
 
 		// light buffers
-		uniform vec4 lights[32];
+		uniform vec4 lights[128];
 		
 
 		// textures
@@ -333,25 +333,9 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		uniform float timer;
 
 		// material types
-		#if defined(SPECULAR)
-		#define normaltexture texture2
-		#define speculartexture texture3
-		#define brighttexture texture4
-		#define detailtexture texture5
-		#define glowtexture texture6
-		#elif defined(PBR)
-		#define normaltexture texture2
-		#define metallictexture texture3
-		#define roughnesstexture texture4
-		#define aotexture texture5
-		#define brighttexture texture6
-		#define detailtexture texture7
-		#define glowtexture texture8
-		#else
 		#define brighttexture texture2
 		#define detailtexture texture3
 		#define glowtexture texture4
-		#endif
 
 	)";
 	
