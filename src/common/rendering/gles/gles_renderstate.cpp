@@ -108,6 +108,8 @@ bool FGLRenderState::ApplyShader()
 			fogset = -gl_fogmode;
 		}
 	}
+	
+
 
 	if (mSpecialEffect > EFF_NONE)
 	{
@@ -150,7 +152,10 @@ bool FGLRenderState::ApplyShader()
 		bool doDesaturate = false;
 		doDesaturate = mStreamData.uDesaturationFactor != 0;
 
-		activeShader->Bind(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog, doDesaturate);
+		bool dynLights = false;
+		dynLights = (mLightIndex >= 0);
+
+		activeShader->Bind(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog, doDesaturate, dynLights);
 	}
 
 	
@@ -255,25 +260,14 @@ bool FGLRenderState::ApplyShader()
 		matrixToGL(identityMatrix, activeShader->cur->normalmodelmatrix_index);
 	}
 
-	int index = mLightIndex;
-	// Mess alert for crappy AncientGL!
-	if (!screen->mLights->GetBufferType() && index >= 0)
+	if (mLightIndex >= 0)
 	{
-		/*
-		size_t start, size;
-		index = screen->mLights->GetBinding(index, &start, &size);
 
-		if (start != mLastMappedLightIndex)
-		{
-			mLastMappedLightIndex = start;
-			static_cast<GLDataBuffer*>(screen->mLights->GetBuffer())->BindRange(nullptr, start, size);
-		}
-		*/
 		float* ptr = ((float*)screen->mLights->GetBuffer()->Memory());
-		ptr += ((int64_t)index * 4);
+		ptr += ((int64_t)mLightIndex * 4);
 		float array[64];
 		memcpy(array, ptr, 4 * 64);
-		
+
 		glUniform4fv(activeShader->cur->lights_index, 64, ptr);
 
 		activeShader->cur->muLightIndex.Set(0);
