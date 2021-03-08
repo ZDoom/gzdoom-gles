@@ -260,6 +260,10 @@ float spotLightAttenuation(vec4 lightpos, vec3 spotdir, float lightCosInnerAngle
 	return smoothstep(lightCosOuterAngle, lightCosInnerAngle, cosDir);
 }
 
+vec3 ApplyNormalMap(vec2 texcoord)
+{
+	return normalize(vWorldNormal.xyz);
+}
 
 //===========================================================================
 //
@@ -270,6 +274,7 @@ float spotLightAttenuation(vec4 lightpos, vec3 spotdir, float lightCosInnerAngle
 void SetMaterialProps(inout Material material, vec2 texCoord)
 {
 	material.Base = getTexel(texCoord.st);
+	material.Normal = ApplyNormalMap(texCoord.st);
 
 	#if (DEF_TEXTURE_FLAGS & 0x1)
 		material.Bright = texture2D(brighttexture, texCoord.st);
@@ -389,7 +394,7 @@ vec4 applyFog(vec4 frag, float fogfactor)
 void main()
 {
 
-	if (ClipDistanceA.x < 0.0 || ClipDistanceA.y < 0.0 || ClipDistanceA.z < 0.0 || ClipDistanceA.w < 0.0 || ClipDistanceB.x < 0.0) discard;
+	//if (ClipDistanceA.x < 0.0 || ClipDistanceA.y < 0.0 || ClipDistanceA.z < 0.0 || ClipDistanceA.w < 0.0 || ClipDistanceB.x < 0.0) discard;
 
 #ifndef LEGACY_USER_SHADER
 	Material material;

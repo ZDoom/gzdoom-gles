@@ -24,6 +24,8 @@ vec3 lightContribution(int i, vec3 normal)
 		attenuation *= clamp(dotprod, 0.0, 1.0);
 	}
 
+	
+
 	if (attenuation > 0.0) // Skip shadow map test if possible
 	{
 		attenuation *= shadowAttenuation(lightpos, lightcolor.a);
@@ -52,7 +54,7 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 			}
 
 			// subtractive lights
-			for(int i=lightRange.y; i<lightRange.z; i+=4)
+			for(int i=lightRange.y; i<lightRange.z; i+=4) 
 			{
 				dynlight.rgb -= lightContribution(i, normal);
 			}
@@ -77,6 +79,6 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 			frag = clamp(frag + desaturate(addlight).rgb, 0.0, 1.0);
 		}
 	}
-
+ 
 	return frag;
 }

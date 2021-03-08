@@ -36,6 +36,7 @@
 #include "gles_hwtexture.h"
 #include "gles_buffers.h"
 #include "hw_clock.h"
+#include "printf.h"
 #include "hwrenderer/data/hw_viewpointbuffer.h"
 
 namespace OpenGLESRenderer
@@ -258,6 +259,7 @@ bool FGLRenderState::ApplyShader()
 	// Mess alert for crappy AncientGL!
 	if (!screen->mLights->GetBufferType() && index >= 0)
 	{
+		/*
 		size_t start, size;
 		index = screen->mLights->GetBinding(index, &start, &size);
 
@@ -266,9 +268,17 @@ bool FGLRenderState::ApplyShader()
 			mLastMappedLightIndex = start;
 			static_cast<GLDataBuffer*>(screen->mLights->GetBuffer())->BindRange(nullptr, start, size);
 		}
-	}
+		*/
+		float* ptr = ((float*)screen->mLights->GetBuffer()->Memory());
+		ptr += ((int64_t)index * 4);
+		float array[64];
+		memcpy(array, ptr, 4 * 64);
+		
+		glUniform4fv(activeShader->cur->lights_index, 64, ptr);
 
-	//activeShader->cur->muLightIndex.Set(index);
+		activeShader->cur->muLightIndex.Set(0);
+	}
+	
 	return true;
 }
 
