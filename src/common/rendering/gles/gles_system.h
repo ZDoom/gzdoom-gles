@@ -39,6 +39,8 @@
 // This is the number of vec4s make up the light data
 #define LIGHT_VEC4_NUM 4
 
+//#define NO_RENDER_BUFFER
+
 namespace OpenGLESRenderer
 {
 	struct RenderContextGLES

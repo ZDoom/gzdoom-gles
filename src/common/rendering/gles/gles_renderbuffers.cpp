@@ -404,7 +404,9 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::BindCurrentFB()
 	{
+#ifndef NO_RENDER_BUFFER
 		mSceneFB.Bind();
+#endif
 	}
 
 	//==========================================================================
