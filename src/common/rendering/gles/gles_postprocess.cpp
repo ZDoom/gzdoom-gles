@@ -53,7 +53,9 @@ void FGLRenderer::RenderScreenQuad()
 
 void FGLRenderer::PostProcessScene(int fixedcm, float flash, const std::function<void()> &afterBloomDrawEndScene2D)
 {
+#ifndef NO_RENDER_BUFFER
 	mBuffers->BindCurrentFB();
+#endif
 	if (afterBloomDrawEndScene2D) afterBloomDrawEndScene2D();
 }
 
@@ -78,11 +80,15 @@ void FGLRenderer::Flush()
 
 void FGLRenderer::CopyToBackbuffer(const IntRect *bounds, bool applyGamma)
 {
+#ifdef NO_RENDER_BUFFER
+	mBuffers->BindOutputFB();
+#endif
 	screen->Draw2D();	// draw all pending 2D stuff before copying the buffer
 	twod->Clear();
 
 	FGLPostProcessState savedState;
 	savedState.SaveTextureBindings(2);
+
 	mBuffers->BindOutputFB();
 
 	IntRect box;
@@ -97,7 +103,9 @@ void FGLRenderer::CopyToBackbuffer(const IntRect *bounds, bool applyGamma)
 	}
 
 	mBuffers->BindCurrentTexture(0);
+#ifndef NO_RENDER_BUFFER
 	DrawPresentTexture(box, applyGamma);
+#endif
 }
 
 void FGLRenderer::DrawPresentTexture(const IntRect &box, bool applyGamma)

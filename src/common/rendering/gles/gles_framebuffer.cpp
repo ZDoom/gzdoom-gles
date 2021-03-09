@@ -346,7 +346,9 @@ void OpenGLFrameBuffer::NextEye(int eyecount)
 
 void OpenGLFrameBuffer::SetSceneRenderTarget(bool useSSAO)
 {
+#ifndef NO_RENDER_BUFFER
 	GLRenderer->mBuffers->BindSceneFB(useSSAO);
+#endif
 }
 
 
