@@ -743,10 +743,10 @@ void FShaderManager::SetActiveShader(FShader::ShaderVariantData *sh)
 	}
 }
 
-FShader *FShaderManager::BindEffect(int effect, EPassType passType)
+FShader *FShaderManager::BindEffect(int effect, EPassType passType, ShaderFlavourData &flavour)
 {
 	if (passType < mPassShaders.Size())
-		return mPassShaders[passType]->BindEffect(effect);
+		return mPassShaders[passType]->BindEffect(effect, flavour);
 	else
 		return nullptr;
 }
@@ -879,11 +879,10 @@ int FShaderCollection::Find(const char * shn)
 //
 //==========================================================================
 
-FShader *FShaderCollection::BindEffect(int effect)
+FShader *FShaderCollection::BindEffect(int effect, ShaderFlavourData& flavour)
 {
 	if (effect >= 0 && effect < MAX_EFFECTS && mEffectShaders[effect] != NULL)
 	{
-		ShaderFlavourData flavour;
 		mEffectShaders[effect]->Bind(flavour);
 		return mEffectShaders[effect];
 	}

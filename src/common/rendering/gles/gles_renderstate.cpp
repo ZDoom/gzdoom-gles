@@ -128,53 +128,53 @@ bool FGLRenderState::ApplyShader()
 		addLights = (int(lightPtr[3]) - int(lightPtr[2])) / LIGHT_VEC4_NUM;
 	}
 
+	ShaderFlavourData flavour;
+
+	flavour.textureMode = (mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode);
+
+	flavour.texFlags = mTextureModeFlags; if (!mBrightmapEnabled) flavour.texFlags &= ~(TEXF_Brightmap | TEXF_Glowmap);
+	flavour.texFlags >>= 16; //Move flags to start of word
+
+	flavour.blendFlags = (int)(mStreamData.uTextureAddColor.a + 0.01);
+
+	flavour.twoDFog = false;
+	flavour.fogEnabled = false;
+	flavour.fogEquationRadial = false;
+	flavour.colouredFog = false;
+
+	if (mFogEnabled)
+	{
+		if (mFogEnabled == 2)
+		{
+			flavour.twoDFog = true;
+		}
+		else if (gl_fogmode)
+		{
+			flavour.fogEnabled = true;
+
+			if (gl_fogmode == 2)
+				flavour.fogEquationRadial = true;
+
+			if ((GetFogColor() & 0xffffff) != 0)
+				flavour.colouredFog = true;
+		}
+	}
+
+	flavour.doDesaturate = mStreamData.uDesaturationFactor != 0;
+	flavour.useULightLevel = (mLightParms[3] >= 0); //#define uLightLevel uLightAttr.a
+
+	// Yes create shaders for all combinations of active lights to avoid more branches
+	flavour.dynLightsMod = (modLights > 0);
+	flavour.dynLightsSub = (subLights > 0);
+	flavour.dynLightsAdd = (addLights > 0);
+
 	if (mSpecialEffect > EFF_NONE)
 	{
-		activeShader = GLRenderer->mShaderManager->BindEffect(mSpecialEffect, mPassType);
+		activeShader = GLRenderer->mShaderManager->BindEffect(mSpecialEffect, mPassType, flavour);
 	}
 	else
 	{
 		activeShader = GLRenderer->mShaderManager->Get(mTextureEnabled ? mEffectState : SHADER_NoTexture, mAlphaThreshold >= 0.f, mPassType);
-
-		ShaderFlavourData flavour;
-
-		flavour.textureMode = (mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode);
-		
-		flavour.texFlags = mTextureModeFlags; if (!mBrightmapEnabled) flavour.texFlags &= ~(TEXF_Brightmap | TEXF_Glowmap);
-		flavour.texFlags >>= 16; //Move flags to start of word
-
-		flavour.blendFlags = (int)(mStreamData.uTextureAddColor.a + 0.01);
-
-		flavour.twoDFog = false;
-		flavour.fogEnabled = false;
-		flavour.fogEquationRadial = false;
-		flavour.colouredFog = false;
-
-		if (mFogEnabled)
-		{
-			if (mFogEnabled == 2)
-			{
-				flavour.twoDFog = true;
-			}
-			else if(gl_fogmode)
-			{
-				flavour.fogEnabled = true;
-
-				if (gl_fogmode == 2)
-					flavour.fogEquationRadial = true;
-
-				if ((GetFogColor() & 0xffffff) != 0)
-					flavour.colouredFog = true;
-			}
-		}
-
-		flavour.doDesaturate = mStreamData.uDesaturationFactor != 0;
-		flavour.useULightLevel = (mLightParms[3] >= 0); //#define uLightLevel uLightAttr.a
-
-		// Yes create shaders for all combinations of active lights to avoid more branches
-		flavour.dynLightsMod = (modLights > 0);
-		flavour.dynLightsSub = (subLights > 0);
-		flavour.dynLightsAdd = (addLights > 0);
 
 		activeShader->Bind(flavour);
 	}
