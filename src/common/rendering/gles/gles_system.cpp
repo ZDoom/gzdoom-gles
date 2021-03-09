@@ -103,6 +103,8 @@ namespace OpenGLESRenderer
 		gles.max_texturesize = 1024 * 4;
 		gles.modelstring = (char*)"MODEL";
 		gles.vendorstring = (char*)"EMILES";
+		gles.maxlights = 32;
+		gles.numlightvectors = (gles.maxlights * 4) + 1; // maxlights lights, + size vector at the beginning
 	}
 
 }

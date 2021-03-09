@@ -36,6 +36,9 @@
 	#include <OpenGL/OpenGL.h>
 #endif
 
+// This is the number of vec4s make up the light data
+#define LIGHT_VEC4_NUM 4
+
 namespace OpenGLESRenderer
 {
 	struct RenderContextGLES
@@ -44,6 +47,8 @@ namespace OpenGLESRenderer
 		unsigned int maxuniforms;
 		unsigned int maxuniformblock;
 		unsigned int uniformblockalignment;
+		unsigned int maxlights;
+		unsigned int numlightvectors;
 		float glslversion;
 		int max_texturesize;
 		char* vendorstring;

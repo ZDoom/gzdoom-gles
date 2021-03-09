@@ -247,8 +247,9 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		precision mediump int;
 		precision mediump float;
 
-		// This must match the HWViewpointUniforms struct
-
+		// light buffers
+		uniform vec4 lights[MAXIMUM_LIGHT_VECTORS];
+		
 		uniform	mat4 ProjectionMatrix;
 		uniform	mat4 ViewMatrix;
 		uniform	mat4 NormalViewMatrix;
@@ -311,9 +312,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		uniform mat4 NormalModelMatrix;
 		uniform mat4 TextureMatrix;
 
-		// light buffers
-		uniform vec4 lights[128];
-		
+	
 
 		// textures
 		uniform sampler2D tex;
@@ -646,9 +645,9 @@ FShader::~FShader()
 //
 //==========================================================================
 
-bool FShader::Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog, bool doDesaturate, bool dynLights)
+bool FShader::Bind(ShaderFlavourData& flavour)
 {
-	uint32_t tag = CreateShaderTag(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog, doDesaturate, dynLights);
+	uint32_t tag = CreateShaderTag(flavour);
 
 
 	cur = variants[tag];
@@ -656,16 +655,20 @@ bool FShader::Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, 
 	if (!cur)
 	{
 		FString variantConfig = "\n";
-		variantConfig.AppendFormat("#define DEF_TEXTURE_MODE %d\n", textureMode);
-		variantConfig.AppendFormat("#define DEF_TEXTURE_FLAGS %d\n", texFlags);
-		variantConfig.AppendFormat("#define DEF_BLEND_FLAGS %d\n", blendFlags);
-		variantConfig.AppendFormat("#define DEF_FOG_2D %d\n", twoDFog);
-		variantConfig.AppendFormat("#define DEF_FOG_ENABLED %d\n", fogEnabled);
-		variantConfig.AppendFormat("#define DEF_FOG_RADIAL %d\n", fogEquationRadial);
-		variantConfig.AppendFormat("#define DEF_FOG_COLOURED %d\n", colouredFog);
+
+		variantConfig.AppendFormat("#define MAXIMUM_LIGHT_VECTORS %d\n", gles.numlightvectors);
+		variantConfig.AppendFormat("#define DEF_TEXTURE_MODE %d\n", flavour.textureMode);
+		variantConfig.AppendFormat("#define DEF_TEXTURE_FLAGS %d\n", flavour.texFlags);
+		variantConfig.AppendFormat("#define DEF_BLEND_FLAGS %d\n", flavour.blendFlags);
+		variantConfig.AppendFormat("#define DEF_FOG_2D %d\n", flavour.twoDFog);
+		variantConfig.AppendFormat("#define DEF_FOG_ENABLED %d\n", flavour.fogEnabled);
+		variantConfig.AppendFormat("#define DEF_FOG_RADIAL %d\n", flavour.fogEquationRadial);
+		variantConfig.AppendFormat("#define DEF_FOG_COLOURED %d\n", flavour.colouredFog);
 		
-		variantConfig.AppendFormat("#define DEF_DO_DESATURATE %d\n", doDesaturate);
-		variantConfig.AppendFormat("#define DEF_DYNAMIC_LIGHTS %d\n", dynLights);
+		variantConfig.AppendFormat("#define DEF_DO_DESATURATE %d\n", flavour.doDesaturate);
+		variantConfig.AppendFormat("#define DEF_DYNAMIC_LIGHTS_MOD %d\n", flavour.dynLightsMod);
+		variantConfig.AppendFormat("#define DEF_DYNAMIC_LIGHTS_SUB %d\n", flavour.dynLightsSub);
+		variantConfig.AppendFormat("#define DEF_DYNAMIC_LIGHTS_ADD %d\n", flavour.dynLightsAdd);
 
 		Printf("Shader: %s", variantConfig.GetChars());
 
@@ -879,7 +882,8 @@ FShader *FShaderCollection::BindEffect(int effect)
 {
 	if (effect >= 0 && effect < MAX_EFFECTS && mEffectShaders[effect] != NULL)
 	{
-		mEffectShaders[effect]->Bind(0,0,0,0,0,0,0,0,0);
+		ShaderFlavourData flavour;
+		mEffectShaders[effect]->Bind(flavour);
 		return mEffectShaders[effect];
 	}
 	return NULL;

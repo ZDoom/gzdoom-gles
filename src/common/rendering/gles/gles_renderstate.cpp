@@ -109,7 +109,24 @@ bool FGLRenderState::ApplyShader()
 		}
 	}
 	
+	// Need to calc light data now in order to select correct shader
+	float* lightPtr = NULL;
+	int modLights = 0;
+	int subLights = 0;
+	int addLights = 0;
 
+	if (mLightIndex >= 0)
+	{
+		lightPtr = ((float*)screen->mLights->GetBuffer()->Memory());
+		lightPtr += ((int64_t)mLightIndex * 4);
+		//float array[64];
+		//memcpy(array, ptr, 4 * 64);
+
+		// Calculate how much light data there is to upload, this is stored in the first 4 floats
+		modLights = int(lightPtr[1]) / LIGHT_VEC4_NUM;
+		subLights = (int(lightPtr[2]) - int(lightPtr[1])) / LIGHT_VEC4_NUM;
+		addLights = (int(lightPtr[3]) - int(lightPtr[2])) / LIGHT_VEC4_NUM;
+	}
 
 	if (mSpecialEffect > EFF_NONE)
 	{
@@ -119,43 +136,46 @@ bool FGLRenderState::ApplyShader()
 	{
 		activeShader = GLRenderer->mShaderManager->Get(mTextureEnabled ? mEffectState : SHADER_NoTexture, mAlphaThreshold >= 0.f, mPassType);
 
-		int textureMode = (mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode);
+		ShaderFlavourData flavour;
+
+		flavour.textureMode = (mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode);
 		
-		int texFlags = mTextureModeFlags; if (!mBrightmapEnabled) texFlags &= ~(TEXF_Brightmap | TEXF_Glowmap);
-		texFlags >>= 16; //Move flags to start of word
+		flavour.texFlags = mTextureModeFlags; if (!mBrightmapEnabled) flavour.texFlags &= ~(TEXF_Brightmap | TEXF_Glowmap);
+		flavour.texFlags >>= 16; //Move flags to start of word
 
-		int blendFlags = (int)(mStreamData.uTextureAddColor.a + 0.01);
+		flavour.blendFlags = (int)(mStreamData.uTextureAddColor.a + 0.01);
 
-		bool twoDFog = false;
-		bool fogEnabled = false;
-		bool fogEquationRadial = false;
-		bool colouredFog = false;
+		flavour.twoDFog = false;
+		flavour.fogEnabled = false;
+		flavour.fogEquationRadial = false;
+		flavour.colouredFog = false;
 
 		if (mFogEnabled)
 		{
 			if (mFogEnabled == 2)
 			{
-				twoDFog = true;
+				flavour.twoDFog = true;
 			}
 			else if(gl_fogmode)
 			{
-				fogEnabled = true;
+				flavour.fogEnabled = true;
 
 				if (gl_fogmode == 2)
-					fogEquationRadial = true;
+					flavour.fogEquationRadial = true;
 
 				if ((GetFogColor() & 0xffffff) != 0)
-					colouredFog = true;
+					flavour.colouredFog = true;
 			}
 		}
 
-		bool doDesaturate = false;
-		doDesaturate = mStreamData.uDesaturationFactor != 0;
+		flavour.doDesaturate = mStreamData.uDesaturationFactor != 0;
 
-		bool dynLights = false;
-		dynLights = (mLightIndex >= 0);
+		// Yes create shaders for all combinations of active lights to avoid more branches
+		flavour.dynLightsMod = (modLights > 0);
+		flavour.dynLightsSub = (subLights > 0);
+		flavour.dynLightsAdd = (addLights > 0);
 
-		activeShader->Bind(textureMode, texFlags, blendFlags, twoDFog, fogEnabled, fogEquationRadial, colouredFog, doDesaturate, dynLights);
+		activeShader->Bind(flavour);
 	}
 
 	
@@ -260,15 +280,20 @@ bool FGLRenderState::ApplyShader()
 		matrixToGL(identityMatrix, activeShader->cur->normalmodelmatrix_index);
 	}
 
+	// Upload the light data
 	if (mLightIndex >= 0)
 	{
+		int totalLights = modLights + subLights + addLights;
 
-		float* ptr = ((float*)screen->mLights->GetBuffer()->Memory());
-		ptr += ((int64_t)mLightIndex * 4);
-		float array[64];
-		memcpy(array, ptr, 4 * 64);
+		// Calculate the total number of vec4s we need
+		int totalVectors = totalLights * LIGHT_VEC4_NUM + 1;
+		
+		// TODO!!! If there are too many lights we need to remove some of the lights and modify the data
+		// At the moment the shader will just try to read off the end of the array...
+		if (totalVectors > gles.numlightvectors)
+			totalVectors = gles.numlightvectors;
 
-		glUniform4fv(activeShader->cur->lights_index, 64, ptr);
+		glUniform4fv(activeShader->cur->lights_index, totalVectors, lightPtr);
 
 		activeShader->cur->muLightIndex.Set(0);
 	}
