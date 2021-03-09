@@ -169,6 +169,7 @@ bool FGLRenderState::ApplyShader()
 		}
 
 		flavour.doDesaturate = mStreamData.uDesaturationFactor != 0;
+		flavour.useULightLevel = (mLightParms[3] >= 0); //#define uLightLevel uLightAttr.a
 
 		// Yes create shaders for all combinations of active lights to avoid more branches
 		flavour.dynLightsMod = (modLights > 0);

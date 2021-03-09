@@ -263,6 +263,7 @@ public:
 	bool dynLightsMod;
 	bool dynLightsSub;
 	bool dynLightsAdd;
+	bool useULightLevel;
 };
 
 class FShader
@@ -391,6 +392,7 @@ public:
 		tag |= (flavour.dynLightsMod & 1) << 12;
 		tag |= (flavour.dynLightsSub & 1) << 13;
 		tag |= (flavour.dynLightsAdd & 1) << 14;
+		tag |= (flavour.useULightLevel & 1) << 15;
 
 		return tag;
 	}

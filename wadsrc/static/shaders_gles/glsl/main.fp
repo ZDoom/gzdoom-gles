@@ -313,12 +313,12 @@ vec4 getLightColor(Material material, float fogdist, float fogfactor)
 {
 	vec4 color = vColor;
 	
-	if (uLightLevel >= 0.0)
+#if (DEF_USE_U_LIGHT_LEVEL == 1)
 	{
 		float newlightlevel = 1.0 - R_DoomLightingEquation(uLightLevel);
 		color.rgb *= newlightlevel;
 	}
-	else
+#else
 	{
 
 		#if (DEF_FOG_ENABLED == 1) && (DEF_FOG_COLOURED == 0)
@@ -336,7 +336,7 @@ vec4 getLightColor(Material material, float fogdist, float fogfactor)
 		}
 		#endif
 	}
-	
+#endif	
 	//
 	// handle glowing walls
 	//
