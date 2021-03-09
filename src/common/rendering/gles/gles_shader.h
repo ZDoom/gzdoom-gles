@@ -371,8 +371,6 @@ public:
 	void LoadVariant();
 
 
-
-
 	uint32_t CreateShaderTag(ShaderFlavourData &flavour)
 	{
 		uint32_t tag = 0;
@@ -413,7 +411,7 @@ public:
 	FShaderManager();
 	~FShaderManager();
 
-	FShader *BindEffect(int effect, EPassType passType);
+	FShader *BindEffect(int effect, EPassType passType, ShaderFlavourData& flavour);
 	FShader *Get(unsigned int eff, bool alphateston, EPassType passType);
 
 	void SetActiveShader(FShader::ShaderVariantData *sh);
@@ -439,7 +437,7 @@ public:
 	~FShaderCollection();
 	FShader *Compile(const char *ShaderName, const char *ShaderPath, const char *LightModePath, const char *shaderdefines, bool usediscard, EPassType passType);
 	int Find(const char *mame);
-	FShader *BindEffect(int effect);
+	FShader *BindEffect(int effect, ShaderFlavourData& flavour);
 
 	FShader *Get(unsigned int eff, bool alphateston)
 	{
