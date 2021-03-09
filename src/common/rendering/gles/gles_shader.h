@@ -249,6 +249,22 @@ public:
 	}
 };
 
+class ShaderFlavourData
+{
+public:
+	int textureMode;
+	int texFlags;
+	int blendFlags;
+	bool twoDFog;
+	bool fogEnabled;
+	bool fogEquationRadial;
+	bool colouredFog;
+	bool doDesaturate;
+	bool dynLightsMod;
+	bool dynLightsSub;
+	bool dynLightsAdd;
+};
+
 class FShader
 {
 	friend class FShaderCollection;
@@ -353,28 +369,33 @@ public:
 
 	void LoadVariant();
 
-	uint32_t CreateShaderTag(int textureMode, int texf, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog, bool doDesaturate, bool dynLights)
+
+
+
+	uint32_t CreateShaderTag(ShaderFlavourData &flavour)
 	{
 		uint32_t tag = 0;
-		tag |= (textureMode & 0x7);
+		tag |= (flavour.textureMode & 0x7);
 		
-		tag |= (texf & 7) << 3;
+		tag |= (flavour.texFlags & 7) << 3;
 		
-		tag |= (blendFlags & 7) << 6;
+		tag |= (flavour.blendFlags & 7) << 6;
 
-		tag |= (twoDFog & 1) << 7;
-		tag |= (fogEnabled & 1) << 8;
-		tag |= (fogEquationRadial & 1) << 9;
-		tag |= (colouredFog & 1) << 10;
+		tag |= (flavour.twoDFog & 1) << 7;
+		tag |= (flavour.fogEnabled & 1) << 8;
+		tag |= (flavour.fogEquationRadial & 1) << 9;
+		tag |= (flavour.colouredFog & 1) << 10;
 
-		tag |= (doDesaturate & 1) << 11;
+		tag |= (flavour.doDesaturate & 1) << 11;
 
-		tag |= (dynLights & 1) << 12;
+		tag |= (flavour.dynLightsMod & 1) << 12;
+		tag |= (flavour.dynLightsSub & 1) << 13;
+		tag |= (flavour.dynLightsAdd & 1) << 14;
 
 		return tag;
 	}
 
-	bool Bind(int textureMode, int texFlags, int blendFlags, bool twoDFog, bool fogEnabled, bool fogEquationRadial, bool colouredFog, bool doDesaturate, bool dynLights);
+	bool Bind(ShaderFlavourData& flavour);
 
 	
 };

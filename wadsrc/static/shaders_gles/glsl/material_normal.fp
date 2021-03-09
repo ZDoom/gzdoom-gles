@@ -42,29 +42,27 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 	vec4 dynlight = uDynLightColor;
 	vec3 normal = material.Normal;
 
-#if (DEF_DYNAMIC_LIGHTS == 1)
-	
 	ivec4 lightRange = ivec4(lights[uLightIndex]) + ivec4(uLightIndex + 1);
 
-	//if (lightRange.z > lightRange.x)
+#if (DEF_DYNAMIC_LIGHTS_MOD == 1)
+	// modulated lights
+	for(int i=lightRange.x; i<lightRange.y; i+=4)
 	{
-		// modulated lights
-		for(int i=lightRange.x; i<lightRange.y; i+=4)
-		{
-			dynlight.rgb += lightContribution(i, normal);
-		}
-
-		// subtractive lights
-		for(int i=lightRange.y; i<lightRange.z; i+=4) 
-		{
-			dynlight.rgb -= lightContribution(i, normal);
-		}
+		dynlight.rgb += lightContribution(i, normal);
 	}
+#endif
+
+#if (DEF_DYNAMIC_LIGHTS_SUB == 1)
+	// subtractive lights
+	for(int i=lightRange.y; i<lightRange.z; i+=4) 
+	{
+		dynlight.rgb -= lightContribution(i, normal);
+	}
+#endif
 	
 	vec3 frag = material.Base.rgb * clamp(color + desaturate(dynlight).rgb, 0.0, 1.4);
 	
-	//if (lightRange.w > lightRange.z)
-	{
+#if (DEF_DYNAMIC_LIGHTS_ADD == 1)
 		vec4 addlight = vec4(0.0,0.0,0.0,0.0);
 				
 		// additive lights
@@ -74,10 +72,7 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 		}
 
 		frag = clamp(frag + desaturate(addlight).rgb, 0.0, 1.0);
-	}
+#endif
  
 	return frag;
-#else
-	return  material.Base.rgb * clamp(color, 0.0, 1.4);
-#endif
 }
