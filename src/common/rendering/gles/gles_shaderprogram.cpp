@@ -236,8 +236,8 @@ FString FShaderProgram::PatchShader(ShaderType type, const FString &code, const 
 
 	patchedCode.AppendFormat("#version %d\n", 100); // Set to GLES2 
 
-	patchedCode << "precision mediump int;\n";
-	patchedCode << "precision mediump float;\n";
+	patchedCode << "precision highp int;\n";
+	patchedCode << "precision highp float;\n";
 
 	if (defines)
 		patchedCode << defines;

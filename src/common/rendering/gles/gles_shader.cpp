@@ -247,8 +247,8 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 
 	FString i_data = R"(
 		// these settings are actually pointless but there seem to be some old ATI drivers that fail to compile the shader without setting the precision here.
-		precision mediump int;
-		precision mediump float;
+		precision highp int;
+		precision highp float;
 
 		// light buffers
 		uniform vec4 lights[MAXIMUM_LIGHT_VECTORS];
