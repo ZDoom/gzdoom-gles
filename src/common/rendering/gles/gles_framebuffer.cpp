@@ -62,6 +62,7 @@ EXTERN_CVAR (Bool, vid_vsync)
 EXTERN_CVAR(Bool, r_drawvoxels)
 EXTERN_CVAR(Int, gl_tonemap)
 EXTERN_CVAR(Bool, cl_capfps)
+EXTERN_CVAR(Bool, gl_customshader)
 
 void Draw2D(F2DDrawer *drawer, FRenderState &state);
 
@@ -117,6 +118,8 @@ OpenGLFrameBuffer::~OpenGLFrameBuffer()
 void OpenGLFrameBuffer::InitializeState()
 {
 	static bool first=true;
+
+	gl_customshader = false;
 
 	InitGLES();
 

@@ -229,12 +229,15 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	FString vert_prog_lump = vert_prog_lump_;
 	FString frag_prog_lump = frag_prog_lump_;
 	FString	proc_prog_lump = proc_prog_lump_;
+	FString light_fragprog = light_fragprog_;
 
 	vert_prog_lump.Substitute("shaders/", "shaders_gles/");
 	frag_prog_lump.Substitute("shaders/", "shaders_gles/");
 	proc_prog_lump.Substitute("shaders/", "shaders_gles/");
-	
-	FString light_fragprog = light_fragprog_;
+	light_fragprog.Substitute("shaders/", "shaders_gles/");
+
+	//light_fragprog.Substitute("material_pbr", "material_normal");
+
 	if(light_fragprog.Len())
 		light_fragprog = "shaders_gles/glsl/material_normal.fp"; // NOTE: Always use normal material for now, ignore others
 
@@ -332,9 +335,27 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		uniform float timer;
 
 		// material types
+		#if defined(SPECULAR)
+		#define normaltexture texture2
+		#define speculartexture texture3
+		#define brighttexture texture4
+		#define detailtexture texture5
+		#define glowtexture texture6
+		#elif defined(PBR)
+		#define normaltexture texture2
+		#define metallictexture texture3
+		#define roughnesstexture texture4
+		#define aotexture texture5
+		#define brighttexture texture6
+		#define detailtexture texture7
+		#define glowtexture texture8
+		#else
 		#define brighttexture texture2
 		#define detailtexture texture3
 		#define glowtexture texture4
+		#endif
+
+
 
 	)";
 	
@@ -671,7 +692,7 @@ bool FShader::Bind(ShaderFlavourData& flavour)
 		variantConfig.AppendFormat("#define DEF_DYNAMIC_LIGHTS_SUB %d\n", flavour.dynLightsSub);
 		variantConfig.AppendFormat("#define DEF_DYNAMIC_LIGHTS_ADD %d\n", flavour.dynLightsAdd);
 
-		Printf("Shader: %s", variantConfig.GetChars());
+		Printf("Shader: %s, %08x %s", mFragProg2.GetChars(), tag, variantConfig.GetChars());
 
 		Load(mName.GetChars(), mVertProg, mFragProg, mFragProg2, mLightProg, mDefinesBase + variantConfig);
 
@@ -807,6 +828,7 @@ void FShaderCollection::CompileShaders(EPassType passType)
 		}
 	}
 
+#if 0
 	for(unsigned i = 0; i < usershaders.Size(); i++)
 	{
 		FString name = ExtractFileBase(usershaders[i].shader);
@@ -814,6 +836,7 @@ void FShaderCollection::CompileShaders(EPassType passType)
 		FShader *shc = Compile(name, usershaders[i].shader, defaultshaders[usershaders[i].shaderType].lightfunc, defines, true, passType);
 		mMaterialShaders.Push(shc);
 	}
+#endif
 
 	for(int i=0;i<MAX_EFFECTS;i++)
 	{
