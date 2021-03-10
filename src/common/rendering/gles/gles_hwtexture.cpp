@@ -146,8 +146,16 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 		glGenerateMipmap(GL_TEXTURE_2D);
 		mipmapped = true;
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	if (mipmapped)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	}
+	else
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
 
 	if (texunit > 0) glActiveTexture(GL_TEXTURE0);
 	else if (texunit == -1) glBindTexture(GL_TEXTURE_2D, textureBinding);
