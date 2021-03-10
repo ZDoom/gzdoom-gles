@@ -336,6 +336,8 @@ static void UpdatePlaneVertices(FFlatVertexBuffer *fvb, sector_t* sec, int plane
 		if (plane == sector_t::floor && sec->transdoor) vt->z -= 1;
 		mapvt->z = vt->z;
 	}
+	
+	fvb->mVertexBuffer->Upload(startvt * sizeof(FFlatVertex), countvt * sizeof(FFlatVertex));
 }
 
 //==========================================================================
