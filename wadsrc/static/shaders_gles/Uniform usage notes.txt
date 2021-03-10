@@ -1,9 +1,16 @@
 How can I remove the alpha test discard?
 
 
+MISSING:
+All post processing gone
+Present shader missing dither
+Shadow maps gone
+HDR modes gone
+Materials gone
+gl_satformula does not do anything (remove an 'if' in shader)
 
-
-
+Broken to be fixed:
+Texture filtering modes, currently fixed to linear mipmap
 
 
 
