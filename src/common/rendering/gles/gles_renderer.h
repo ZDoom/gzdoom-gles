@@ -45,6 +45,7 @@ public:
 	int mMirrorCount = 0;
 	int mPlaneMirrorCount = 0;
 	FShaderManager *mShaderManager = nullptr;
+	FSamplerManager* mSamplerManager = nullptr;
 	unsigned int mFBID = 0;
 	unsigned int mStencilValue = 0;
 

@@ -41,6 +41,7 @@
 
 #include "gles_framebuffer.h"
 #include "gles_renderer.h"
+#include "gles_samplers.h"
 #include "gles_renderbuffers.h"
 #include "hw_clock.h"
 #include "hw_vrmodes.h"
@@ -274,7 +275,7 @@ void OpenGLFrameBuffer::SetVSync(bool vsync)
 
 void OpenGLFrameBuffer::SetTextureFilterMode()
 {
-	//if (GLRenderer != nullptr && GLRenderer->mSamplerManager != nullptr) GLRenderer->mSamplerManager->SetTextureFilterMode();
+	if (GLRenderer != nullptr && GLRenderer->mSamplerManager != nullptr) GLRenderer->mSamplerManager->SetTextureFilterMode();
 }
 
 IHardwareTexture *OpenGLFrameBuffer::CreateHardwareTexture(int numchannels) 
