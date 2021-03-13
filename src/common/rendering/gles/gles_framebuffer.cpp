@@ -64,6 +64,7 @@ EXTERN_CVAR(Bool, r_drawvoxels)
 EXTERN_CVAR(Int, gl_tonemap)
 EXTERN_CVAR(Bool, cl_capfps)
 EXTERN_CVAR(Bool, gl_customshader)
+EXTERN_CVAR(Int, gl_pipeline_depth);
 
 void Draw2D(F2DDrawer *drawer, FRenderState &state);
 
@@ -121,6 +122,8 @@ void OpenGLFrameBuffer::InitializeState()
 	static bool first=true;
 
 	gl_customshader = false;
+
+	mPipelineNbr = gl_pipeline_depth;
 
 	InitGLES();
 
