@@ -45,6 +45,7 @@
 #include "gles_renderer.h"
 #include "gles_hwtexture.h"
 #include "gles_renderstate.h"
+#include "gles_samplers.h"
 #include "gles_renderbuffers.h"
 #include "gles_shaderprogram.h"
 #include "flatvertices.h"
@@ -87,6 +88,7 @@ void FGLRenderer::Initialize(int width, int height)
 	mOldFBID = 0;
 
 	mShaderManager = new FShaderManager;
+	mSamplerManager = new FSamplerManager;
 }
 
 FGLRenderer::~FGLRenderer() 

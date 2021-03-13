@@ -40,6 +40,7 @@
 
 #include "hw_cvars.h"
 #include "gles_renderer.h"
+#include "gles_samplers.h"
 #include "gles_renderstate.h"
 #include "gles_hwtexture.h"
 
@@ -146,17 +147,7 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 		glGenerateMipmap(GL_TEXTURE_2D);
 		mipmapped = true;
 	}
-	if (mipmapped)
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-	}
-	else
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	}
-
+	
 	if (texunit > 0) glActiveTexture(GL_TEXTURE0);
 	else if (texunit == -1) glBindTexture(GL_TEXTURE_2D, textureBinding);
 	return glTexID;
@@ -300,7 +291,7 @@ bool FHardwareTexture::BindOrCreate(FTexture *tex, int texunit, int clampmode, i
 		}
 	}
 	if (forcenofilter && clampmode <= CLAMP_XY) clampmode += CLAMP_NOFILTER - CLAMP_NONE;
-	//GLRenderer->mSamplerManager->Bind(texunit, clampmode, 255);
+	GLRenderer->mSamplerManager->Bind(texunit, clampmode, 255);
 	return true;
 }
 
