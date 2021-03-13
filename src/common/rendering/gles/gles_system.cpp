@@ -36,7 +36,7 @@ static void* LinuxProcAddress(const char* name)
 	return ret;
 }
 
-#else
+#elif defined _WIN32
 
 #include <windows.h>
 

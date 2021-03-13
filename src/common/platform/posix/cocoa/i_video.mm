@@ -53,7 +53,7 @@
 #include "version.h"
 #include "printf.h"
 
-#include "gl_framebuffer.h"
+#include "gles_framebuffer.h"
 #ifdef HAVE_VULKAN
 #include "vulkan/system/vk_framebuffer.h"
 #endif
@@ -462,7 +462,7 @@ public:
 
 		if (fb == nullptr)
 		{
-			fb = new OpenGLRenderer::OpenGLFrameBuffer(0, vid_fullscreen);
+			fb = new OpenGLESRenderer::OpenGLFrameBuffer(0, vid_fullscreen);
 		}
 
 		fb->SetWindow(ms_window);
