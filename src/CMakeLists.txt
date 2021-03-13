@@ -798,6 +798,7 @@ set (GLES_SOURCES
 	common/rendering/gles/gles_hwtexture.cpp
 	common/rendering/gles/gles_shader.cpp
 	common/rendering/gles/gles_shaderprogram.cpp
+	common/rendering/gles/gles_samplers.cpp
 	common/rendering/gles/glad/src/glad.c
 )
 
