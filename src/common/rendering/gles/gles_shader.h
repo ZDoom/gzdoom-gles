@@ -264,6 +264,9 @@ public:
 	bool dynLightsSub;
 	bool dynLightsAdd;
 	bool useULightLevel;
+	bool useObjectColor2;
+	bool useGlowTopColor;
+	bool useGlowBottomColor;
 };
 
 class FShader
@@ -391,6 +394,9 @@ public:
 		tag |= (flavour.dynLightsSub & 1) << 13;
 		tag |= (flavour.dynLightsAdd & 1) << 14;
 		tag |= (flavour.useULightLevel & 1) << 15;
+		tag |= (flavour.useObjectColor2 & 1) << 16;
+		tag |= (flavour.useGlowTopColor & 1) << 17;
+		tag |= (flavour.useGlowBottomColor & 1) << 18;
 
 		return tag;
 	}
