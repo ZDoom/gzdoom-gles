@@ -207,9 +207,14 @@ vec4 getTexel(vec2 st)
 
 	// Apply the Doom64 style material colors on top of everything from the texture modification settings.
 	// This may be a bit redundant in terms of features but the data comes from different sources so this is unavoidable.
+	
 	texel.rgb += uAddColor.rgb;
-	if (uObjectColor2.a == 0.0) texel *= uObjectColor;
-	else texel *= mix(uObjectColor, uObjectColor2, gradientdist.z);
+
+#if (DEF_USE_OBJECT_COLOR_2 == 1)
+	texel *= mix(uObjectColor, uObjectColor2, gradientdist.z);
+#else
+	texel *= uObjectColor;
+#endif
 
 	// Last but not least apply the desaturation from the sector's light.
 	return desaturate(texel);
@@ -340,17 +345,26 @@ vec4 getLightColor(Material material, float fogdist, float fogfactor)
 		#endif
 	}
 #endif	
+
+
 	//
 	// handle glowing walls
 	//
-	if (uGlowTopColor.a > 0.0 && glowdist.x < uGlowTopColor.a)
+#if (DEF_USE_GLOW_TOP_COLOR)	
+	if (glowdist.x < uGlowTopColor.a)
 	{
 		color.rgb += desaturate(uGlowTopColor * (1.0 - glowdist.x / uGlowTopColor.a)).rgb;
 	}
-	if (uGlowBottomColor.a > 0.0 && glowdist.y < uGlowBottomColor.a)
+#endif
+
+
+#if (DEF_USE_GLOW_BOTTOM_COLOR)	
+	if (glowdist.y < uGlowBottomColor.a)
 	{
 		color.rgb += desaturate(uGlowBottomColor * (1.0 - glowdist.y / uGlowBottomColor.a)).rgb;
 	}
+#endif
+
 	color = min(color, 1.0);
 
 	// these cannot be safely applied by the legacy format where the implementation cannot guarantee that the values are set.

@@ -90,24 +90,6 @@ void FGLRenderState::Reset()
 bool FGLRenderState::ApplyShader()
 {
 	static const float nulvec[] = { 0.f, 0.f, 0.f, 0.f };
-
-	int fogset = 0;
-
-	if (mFogEnabled)
-	{
-		if (mFogEnabled == 2)
-		{
-			fogset = -3;	// 2D rendering with 'foggy' overlay.
-		}
-		else if ((GetFogColor() & 0xffffff) == 0)
-		{
-			fogset = gl_fogmode;
-		}
-		else
-		{
-			fogset = -gl_fogmode;
-		}
-	}
 	
 	// Need to calc light data now in order to select correct shader
 	float* lightPtr = NULL;
@@ -167,6 +149,11 @@ bool FGLRenderState::ApplyShader()
 	flavour.dynLightsMod = (modLights > 0);
 	flavour.dynLightsSub = (subLights > 0);
 	flavour.dynLightsAdd = (addLights > 0);
+
+	flavour.useObjectColor2 = (mStreamData.uObjectColor2.a > 0);
+	flavour.useGlowTopColor = mGlowEnabled && (mStreamData.uGlowTopColor[3] > 0);
+	flavour.useGlowBottomColor = mGlowEnabled && (mStreamData.uGlowBottomColor[3] > 0);
+
 
 	if (mSpecialEffect > EFF_NONE)
 	{
