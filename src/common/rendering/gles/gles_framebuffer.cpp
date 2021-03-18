@@ -66,6 +66,8 @@ EXTERN_CVAR(Bool, cl_capfps)
 EXTERN_CVAR(Bool, gl_customshader)
 EXTERN_CVAR(Int, gl_pipeline_depth);
 
+EXTERN_CVAR(Bool, gl_sort_textures);
+
 void Draw2D(F2DDrawer *drawer, FRenderState &state);
 
 extern bool vid_hdr_active;
@@ -124,6 +126,8 @@ void OpenGLFrameBuffer::InitializeState()
 	gl_customshader = false;
 
 	mPipelineNbr = gl_pipeline_depth;
+
+	gl_sort_textures = true; // Faster
 
 	InitGLES();
 
