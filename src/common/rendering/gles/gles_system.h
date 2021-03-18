@@ -30,6 +30,10 @@
 #else
 	#include "gl_load/gl_load.h"
 	#define GL_DEPTH24_STENCIL8_OES GL_DEPTH24_STENCIL8
+	//#define glClearDepthf glClearDepth
+	#define GL_WRITE_ONLY_OES GL_WRITE_ONLY
+	#define glUnmapBufferOES glUnmapBuffer
+	#define glMapBufferOES glMapBuffer
 #endif
 
 #if defined(__APPLE__)

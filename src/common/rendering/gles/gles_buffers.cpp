@@ -74,7 +74,7 @@ GLBuffer::~GLBuffer()
 		if (gles.useMappedBuffers)
 		{
 			glBindBuffer(mUseType, mBufferId);
-			glUnmapBuffer(mUseType);
+			glUnmapBufferOES(mUseType);
 		}
 		glBindBuffer(mUseType, 0);
 		glDeleteBuffers(1, &mBufferId);
@@ -151,7 +151,7 @@ void GLBuffer::Map()
 	if (!isData && gles.useMappedBuffers)
 	{
 		Bind();
-		map = (FFlatVertex*)glMapBuffer(mUseType, GL_WRITE_ONLY);
+		map = (FFlatVertex*)glMapBufferOES(mUseType, GL_WRITE_ONLY_OES);
 	}
 	else
 	{
@@ -165,7 +165,7 @@ void GLBuffer::Unmap()
 	if (!isData && gles.useMappedBuffers)
 	{
 		Bind();
-		glUnmapBuffer(mUseType);
+		glUnmapBufferOES(mUseType);
 		InvalidateBufferState();
 	}
 }
@@ -176,7 +176,7 @@ void *GLBuffer::Lock(unsigned int size)
 	SetData(size, nullptr, true);
 	if (!isData && gles.useMappedBuffers)
 	{
-		return glMapBuffer(mUseType, GL_WRITE_ONLY);
+		return glMapBufferOES(mUseType, GL_WRITE_ONLY_OES);
 	}
 	else
 	{
@@ -191,7 +191,7 @@ void GLBuffer::Unlock()
 		if (gles.useMappedBuffers)
 		{
 			Bind();
-			glUnmapBuffer(mUseType);
+			glUnmapBufferOES(mUseType);
 			InvalidateBufferState();
 		}
 		else

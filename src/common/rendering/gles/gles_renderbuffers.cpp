@@ -341,10 +341,7 @@ namespace OpenGLESRenderer
 		glGetFloatv(GL_DEPTH_CLEAR_VALUE, &depthValue);
 		glDisable(GL_SCISSOR_TEST);
 		glClearColor(0.0, 0.0, 0.0, 0.0);
-		if (glClearDepthf)
-			glClearDepthf(0.0f);
-		else
-			glClearDepth(0.0f);
+		glClearDepthf(0.0f);
 		glClearStencil(0);
 		GLenum flags = GL_COLOR_BUFFER_BIT;
 		if (stencil)
@@ -353,10 +350,7 @@ namespace OpenGLESRenderer
 			flags |= GL_DEPTH_BUFFER_BIT;
 		glClear(flags);
 		glClearStencil(stencilValue);
-		if (glClearDepthf)
-			glClearDepthf(depthValue);
-		else
-			glClearDepth(depthValue);
+		glClearDepthf(depthValue);
 		if (scissorEnabled)
 			glEnable(GL_SCISSOR_TEST);
 	}
