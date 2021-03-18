@@ -134,12 +134,15 @@ private:
 	int mSceneWidth = 0;
 	int mSceneHeight = 0;
 
+	static const int NBR_BUFF = 1;
+
+	int mBuffPos = 0;
 
 	// Buffers for the scene
-	PPGLTexture mSceneDepthStencilTex;
-	PPGLTexture mSceneTex;
-	PPGLRenderBuffer mSceneDepthStencilBuf;
-	PPGLFrameBuffer mSceneFB;
+	PPGLTexture mSceneDepthStencilTex[NBR_BUFF];
+	PPGLTexture mSceneTex[NBR_BUFF];
+	PPGLRenderBuffer mSceneDepthStencilBuf[NBR_BUFF];
+	PPGLFrameBuffer mSceneFB[NBR_BUFF];
 	bool mSceneUsesTextures = false;
 
 	PPGLTexture mDitherTexture;
