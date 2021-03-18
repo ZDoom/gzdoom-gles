@@ -97,6 +97,7 @@ namespace OpenGLESRenderer
 #endif
 	
 		gles.flags = 0;
+		gles.useMappedBuffers = false;
 		gles.glslversion = 3.31;
 		gles.maxuniforms = 1024 * 16;
 		gles.maxuniformblock = 1024 * 16;

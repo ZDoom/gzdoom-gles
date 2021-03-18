@@ -51,6 +51,7 @@ namespace OpenGLESRenderer
 		unsigned int uniformblockalignment;
 		unsigned int maxlights;
 		unsigned int numlightvectors;
+		bool useMappedBuffers;
 		float glslversion;
 		int max_texturesize;
 		char* vendorstring;

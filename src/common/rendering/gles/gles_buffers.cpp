@@ -71,9 +71,17 @@ GLBuffer::~GLBuffer()
 {
 	if (mBufferId != 0)
 	{
-		glBindBuffer(mUseType, mBufferId);
+		if (gles.useMappedBuffers)
+		{
+			glBindBuffer(mUseType, mBufferId);
+			glUnmapBuffer(mUseType);
+		}
+		glBindBuffer(mUseType, 0);
 		glDeleteBuffers(1, &mBufferId);
 	}
+	
+	if (memory)
+		delete[] memory;
 }
 
 void GLBuffer::Bind()
@@ -87,20 +95,30 @@ void GLBuffer::Bind()
 
 void GLBuffer::SetData(size_t size, const void* data, bool staticdata)
 {
-	if (memory)
-		delete[] memory;
+	if (isData || !gles.useMappedBuffers)
+	{
+		if (memory)
+			delete[] memory;
 
-	memory = (char*)(new uint64_t[size/8 + 16]);
+		memory = (char*)(new uint64_t[size / 8 + 16]);
 
-	if (data)
-		memcpy(memory, data, size);
-
-	map = memory;
+		if (data)
+			memcpy(memory, data, size);
+	}
 
 	if (!isData)
 	{
 		Bind();
-		glBufferData(mUseType, size, memory, staticdata ? GL_STATIC_DRAW : GL_STREAM_DRAW);
+		glBufferData(mUseType, size, data, staticdata ? GL_STATIC_DRAW : GL_STREAM_DRAW);
+	}
+
+	if (!isData && gles.useMappedBuffers)
+	{
+		map = 0;
+	}
+	else
+	{
+		map = memory;
 	}
 
 	buffersize = size;
@@ -121,36 +139,67 @@ void GLBuffer::SetSubData(size_t offset, size_t size, const void *data)
 
 void GLBuffer::Upload(size_t start, size_t size)
 {
-	Bind();
-	glBufferSubData(mUseType, start, size, memory + start);
+	if (!gles.useMappedBuffers)
+	{
+		Bind();
+		glBufferSubData(mUseType, start, size, memory + start);
+	}
 }
 
 void GLBuffer::Map()
 {
-	map = memory;
+	if (!isData && gles.useMappedBuffers)
+	{
+		Bind();
+		map = (FFlatVertex*)glMapBuffer(mUseType, GL_WRITE_ONLY);
+	}
+	else
+	{
+		map = memory;
+	}
 	InvalidateBufferState();
 }
 
 void GLBuffer::Unmap()
 {
-
+	if (!isData && gles.useMappedBuffers)
+	{
+		Bind();
+		glUnmapBuffer(mUseType);
+		InvalidateBufferState();
+	}
 }
 
 void *GLBuffer::Lock(unsigned int size)
 {
 	// This initializes this buffer as a static object with no data.
 	SetData(size, nullptr, true);
-
-	return map;
+	if (!isData && gles.useMappedBuffers)
+	{
+		return glMapBuffer(mUseType, GL_WRITE_ONLY);
+	}
+	else
+	{
+		return map;
+	}
 }
 
 void GLBuffer::Unlock()
 {
 	if (!isData)
 	{
-		Bind();
-		glBufferData(mUseType, buffersize, map, GL_STATIC_DRAW);
-		InvalidateBufferState();
+		if (gles.useMappedBuffers)
+		{
+			Bind();
+			glUnmapBuffer(mUseType);
+			InvalidateBufferState();
+		}
+		else
+		{
+			Bind();
+			glBufferData(mUseType, buffersize, map, GL_STATIC_DRAW);
+			InvalidateBufferState();
+		}
 	}
 }
 
