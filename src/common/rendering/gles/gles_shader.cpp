@@ -50,6 +50,21 @@
 namespace OpenGLESRenderer
 {
 
+CVAR(Int, gles_glsl_precision, 2, 0); // 0 = low, 1 = medium, 2 = high
+
+FString GetGLSLPrecision()
+{
+	FString str = "precision highp int;\n \
+		           precision highp float;\n";
+
+	if (gles_glsl_precision == 0)
+		str.Substitute("highp", "lowp");
+	else if (gles_glsl_precision == 1)
+		str.Substitute("highp", "mediump");
+
+	return str;
+}
+
 struct ProgramBinary
 {
 	uint32_t format;
@@ -245,8 +260,10 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	static char buffer[10000];
 	FString error;
 
-	FString i_data = R"(
-		// these settings are actually pointless but there seem to be some old ATI drivers that fail to compile the shader without setting the precision here.
+	FString i_data = GetGLSLPrecision();
+
+	i_data += R"(
+	
 		precision highp int;
 		precision highp float;
 

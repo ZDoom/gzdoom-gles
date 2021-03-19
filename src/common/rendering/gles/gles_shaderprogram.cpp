@@ -30,6 +30,8 @@
 namespace OpenGLESRenderer
 {
 
+FString GetGLSLPrecision();
+
 bool IsShaderCacheActive();
 TArray<uint8_t> LoadCachedProgramBinary(const FString &vertex, const FString &fragment, uint32_t &binaryFormat);
 void SaveCachedProgramBinary(const FString &vertex, const FString &fragment, const TArray<uint8_t> &binary, uint32_t binaryFormat);
@@ -236,8 +238,8 @@ FString FShaderProgram::PatchShader(ShaderType type, const FString &code, const 
 
 	patchedCode.AppendFormat("#version %d\n", 100); // Set to GLES2 
 
-	patchedCode << "precision highp int;\n";
-	patchedCode << "precision highp float;\n";
+	patchedCode += GetGLSLPrecision();
+
 
 	if (defines)
 		patchedCode << defines;
