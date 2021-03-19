@@ -344,7 +344,7 @@ void FGLRenderState::ApplyState()
 
 void FGLRenderState::ApplyBuffers()
 {
-	//if (mVertexBuffer != mCurrentVertexBuffer || mVertexOffsets[0] != mCurrentVertexOffsets[0] || mVertexOffsets[1] != mCurrentVertexOffsets[1])
+	if (mVertexBuffer != mCurrentVertexBuffer || mVertexOffsets[0] != mCurrentVertexOffsets[0] || mVertexOffsets[1] != mCurrentVertexOffsets[1])
 	{
 		assert(mVertexBuffer != nullptr);
 		static_cast<GLVertexBuffer*>(mVertexBuffer)->Bind(mVertexOffsets);
@@ -352,7 +352,7 @@ void FGLRenderState::ApplyBuffers()
 		mCurrentVertexOffsets[0] = mVertexOffsets[0];
 		mCurrentVertexOffsets[1] = mVertexOffsets[1];
 	}
-	//if (mIndexBuffer != mCurrentIndexBuffer)
+	if (mIndexBuffer != mCurrentIndexBuffer)
 	{
 		if (mIndexBuffer) static_cast<GLIndexBuffer*>(mIndexBuffer)->Bind();
 		mCurrentIndexBuffer = mIndexBuffer;
@@ -457,13 +457,13 @@ void FGLRenderState::ApplyBlendMode()
 	}
 
 	// Checks must be disabled until all draw code has been converted.
-	//if (srcblend != stSrcBlend || dstblend != stDstBlend)
+	if (srcblend != stSrcBlend || dstblend != stDstBlend)
 	{
 		stSrcBlend = srcblend;
 		stDstBlend = dstblend;
 		glBlendFunc(srcblend, dstblend);
 	}
-	//if (blendequation != stBlendEquation)
+	if (blendequation != stBlendEquation)
 	{
 		stBlendEquation = blendequation;
 		glBlendEquation(blendequation);
@@ -481,10 +481,10 @@ static int dt2gl[] = { GL_POINTS, GL_LINES, GL_TRIANGLES, GL_TRIANGLE_FAN, GL_TR
 
 void FGLRenderState::Draw(int dt, int index, int count, bool apply)
 {
-	if (apply)
-	{
-		Apply();
-	}
+		if (apply)
+		{
+			Apply();
+		}
 	drawcalls.Clock();
 	glDrawArrays(dt2gl[dt], index, count);
 	drawcalls.Unclock();
@@ -574,10 +574,8 @@ void FGLRenderState::Clear(int targets)
 	if (targets & CT_Depth)
 	{
 		gltarget |= GL_DEPTH_BUFFER_BIT;
-		if (glClearDepthf)
-			glClearDepthf(1);
-		else
-			glClearDepth(1);
+
+		glClearDepthf(1);
 	}
 	if (targets & CT_Stencil)
 	{
@@ -628,6 +626,11 @@ void FGLRenderState::EnableMultisampling(bool on)
 void FGLRenderState::EnableLineSmooth(bool on)
 {
 
+}
+
+void FGLRenderState::SetSpecialColormap(int cm)
+{
+	colorMapSpecial = cm;
 }
 
 //==========================================================================
