@@ -77,7 +77,6 @@ namespace OpenGLESRenderer
 
 #if USE_GLES2
 
-
 		if (!gladLoadGLES2Loader(&LoadGLES2Proc))
 		{
 			exit(-1);
@@ -103,7 +102,7 @@ namespace OpenGLESRenderer
 	
 		gles.flags = 0;
 		gles.useMappedBuffers = true;
-		gles.glslversion = 3.31;
+		gles.glslversion = 1.0;
 		gles.maxuniforms = 1024 * 16;
 		gles.maxuniformblock = 1024 * 16;
 		gles.uniformblockalignment = 256;

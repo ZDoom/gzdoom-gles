@@ -128,7 +128,7 @@ void OpenGLFrameBuffer::InitializeState()
 	mPipelineNbr = gl_pipeline_depth;
 
 	gl_sort_textures = true; // Faster
-
+	
 	InitGLES();
 
 	// Move some state to the framebuffer object for easier access.

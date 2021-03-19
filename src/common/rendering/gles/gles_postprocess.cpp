@@ -56,11 +56,7 @@ void FGLRenderer::PostProcessScene(int fixedcm, float flash, const std::function
 #ifndef NO_RENDER_BUFFER
 	mBuffers->BindCurrentFB();
 #endif
-	gl_RenderState.SetSpecialColormap(fixedcm);
-
 	if (afterBloomDrawEndScene2D) afterBloomDrawEndScene2D();
-
-	gl_RenderState.SetSpecialColormap(0);
 }
 
 

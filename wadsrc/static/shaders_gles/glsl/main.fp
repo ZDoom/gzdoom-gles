@@ -428,7 +428,7 @@ void main()
 	Material material = ProcessMaterial();
 #endif
 	vec4 frag = material.Base;
-	
+
 #ifndef NO_ALPHATEST
 	if (frag.a <= uAlphaThreshold) discard;
 #endif
@@ -487,6 +487,18 @@ void main()
 	}
 	#endif  // (DEF_2D_FOG == 0)
 	
+#if (DEF_USE_COLOR_MAP == 1) // This mostly works but doesn't look great because of the blending.
+	{
+		frag.rgb = clamp(pow(frag.rgb, vec3(uFixedColormapStart.a)), 0.0, 1.0);
+		if (uFixedColormapRange.a == 0.0)
+		{
+			float gray = (frag.r * 0.3 + frag.g * 0.56 + frag.b * 0.14);	
+			vec4 cm = uFixedColormapStart + gray * uFixedColormapRange;
+			frag.rgb = clamp(cm.rgb, 0.0, 1.0);
+		} 
+	}
+#endif
+
 	gl_FragColor = frag;
 
 	//gl_FragColor = vec4(0.8, 0.2, 0.5, 1);

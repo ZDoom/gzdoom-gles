@@ -37,6 +37,8 @@
 #include "gles_buffers.h"
 #include "hw_clock.h"
 #include "printf.h"
+#include "colormaps.h"
+
 #include "hwrenderer/data/hw_viewpointbuffer.h"
 
 namespace OpenGLESRenderer
@@ -153,7 +155,8 @@ bool FGLRenderState::ApplyShader()
 	flavour.useObjectColor2 = (mStreamData.uObjectColor2.a > 0);
 	flavour.useGlowTopColor = mGlowEnabled && (mStreamData.uGlowTopColor[3] > 0);
 	flavour.useGlowBottomColor = mGlowEnabled && (mStreamData.uGlowBottomColor[3] > 0);
-
+	
+	flavour.useColorMap = (mColorMapSpecial >= CM_FIRSTSPECIALCOLORMAP) || (mColorMapFlash != 1);
 
 	if (mSpecialEffect > EFF_NONE)
 	{
@@ -216,6 +219,23 @@ bool FGLRenderState::ApplyShader()
 #ifdef NPOT_EMULATION
 	activeShader->muNpotEmulation.Set(&mStreamData.uNpotEmulation.X);
 #endif
+	if (flavour.useColorMap)
+	{
+		if (mColorMapSpecial < CM_FIRSTSPECIALCOLORMAP || mColorMapSpecial >= CM_MAXCOLORMAP)
+		{
+			activeShader->cur->muFixedColormapStart.Set( 0,0,0, mColorMapFlash );
+			activeShader->cur->muFixedColormapRange.Set( 0,0,0, 1.f );
+		}
+		else
+		{
+			FSpecialColormap* scm = &SpecialColormaps[mColorMapSpecial - CM_FIRSTSPECIALCOLORMAP];
+
+			//uniforms.MapStart = { scm->ColorizeStart[0], scm->ColorizeStart[1], scm->ColorizeStart[2], flash };
+			activeShader->cur->muFixedColormapStart.Set( scm->ColorizeStart[0], scm->ColorizeStart[1], scm->ColorizeStart[2], mColorMapFlash );
+			activeShader->cur->muFixedColormapRange.Set( scm->ColorizeEnd[0] - scm->ColorizeStart[0],
+				scm->ColorizeEnd[1] - scm->ColorizeStart[1], scm->ColorizeEnd[2] - scm->ColorizeStart[2], 0.f );
+		}
+	}
 
 	if (mGlowEnabled || activeShader->cur->currentglowstate)
 	{
@@ -628,10 +648,6 @@ void FGLRenderState::EnableLineSmooth(bool on)
 
 }
 
-void FGLRenderState::SetSpecialColormap(int cm)
-{
-	colorMapSpecial = cm;
-}
 
 //==========================================================================
 //

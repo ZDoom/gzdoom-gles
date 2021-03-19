@@ -73,8 +73,6 @@ class FGLRenderState final : public FRenderState
 
 	HWViewpointUniforms* mHwUniforms = nullptr;
 
-
-	int colorMapSpecial = 0;
 public:
 
 	FGLRenderState()
@@ -144,7 +142,6 @@ public:
 	void EnableMultisampling(bool on) override;
 	void EnableLineSmooth(bool on) override;
 
-	void SetSpecialColormap(int cm);
 	void ApplyViewport(void* data);
 };
 

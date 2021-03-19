@@ -267,6 +267,7 @@ public:
 	bool useObjectColor2;
 	bool useGlowTopColor;
 	bool useGlowBottomColor;
+	bool useColorMap;
 };
 
 class FShader
@@ -338,6 +339,9 @@ public: class ShaderVariantData
 		FBufferedUniform2f muSpecularMaterial;
 		FBufferedUniform1f muTimer;
 
+		FUniform4f muFixedColormapStart;
+		FUniform4f muFixedColormapRange;
+
 
 		int lights_index = 0;
 		int modelmatrix_index = 0;
@@ -397,6 +401,7 @@ public:
 		tag |= (flavour.useObjectColor2 & 1) << 16;
 		tag |= (flavour.useGlowTopColor & 1) << 17;
 		tag |= (flavour.useGlowBottomColor & 1) << 18;
+		tag |= (flavour.useColorMap & 1) << 19;
 
 		return tag;
 	}

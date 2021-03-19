@@ -332,7 +332,6 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		uniform mat4 NormalModelMatrix;
 		uniform mat4 TextureMatrix;
 
-		
 		uniform vec4 uFixedColormapStart;
 		uniform vec4 uFixedColormapRange;
 
@@ -634,6 +633,9 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	shaderData->muTextureBlendColor.Init(shaderData->hShader, "uTextureBlendColor");
 	shaderData->muTimer.Init(shaderData->hShader, "timer");
 
+	shaderData->muFixedColormapStart.Init(shaderData->hShader, "uFixedColormapStart");
+	shaderData->muFixedColormapRange.Init(shaderData->hShader, "uFixedColormapRange");
+
 	shaderData->lights_index = glGetUniformLocation(shaderData->hShader, "lights");
 	shaderData->modelmatrix_index = glGetUniformLocation(shaderData->hShader, "ModelMatrix");
 	shaderData->texturematrix_index = glGetUniformLocation(shaderData->hShader, "TextureMatrix");
@@ -715,8 +717,9 @@ bool FShader::Bind(ShaderFlavourData& flavour)
 		variantConfig.AppendFormat("#define DEF_USE_OBJECT_COLOR_2 %d\n", flavour.useObjectColor2);
 		variantConfig.AppendFormat("#define DEF_USE_GLOW_TOP_COLOR %d\n", flavour.useGlowTopColor);
 		variantConfig.AppendFormat("#define DEF_USE_GLOW_BOTTOM_COLOR %d\n", flavour.useGlowBottomColor);
-
-
+		
+		variantConfig.AppendFormat("#define DEF_USE_COLOR_MAP %d\n", flavour.useColorMap);
+		
 
 		Printf("Shader: %s, %08x %s", mFragProg2.GetChars(), tag, variantConfig.GetChars());
 
