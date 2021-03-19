@@ -2,11 +2,14 @@
 
 #include "gles_system.h"
 
+#if USE_GLES2
 
+PFNGLMAPBUFFERRANGEEXTPROC glMapBufferRange = NULL;
+PFNGLUNMAPBUFFEROESPROC glUnmapBuffer = NULL;
 #ifdef __ANDROID__
 #include <dlfcn.h>
 
-static void* LinuxProcAddress(const char* name)
+static void* LoadGLES2Proc(const char* name)
 {
 	static void *glesLib = NULL;
 
@@ -43,7 +46,7 @@ static void* LinuxProcAddress(const char* name)
 static HMODULE opengl32dll;
 static PROC(WINAPI* getprocaddress)(LPCSTR name);
 
-static void* WinGetProcAddressGLES(const char* name)
+static void* LoadGLES2Proc(const char* name)
 {
 
 	HINSTANCE hGetProcIDDLL = LoadLibraryA("libGLESv2.dll");
@@ -63,24 +66,26 @@ static void* WinGetProcAddressGLES(const char* name)
 
 #endif
 
+#endif // USE_GLES2
+
 namespace OpenGLESRenderer
 {
 	RenderContextGLES gles;
 
 	void InitGLES()
 	{
+
 #if USE_GLES2
-#ifdef __ANDROID__
-		if (!gladLoadGLES2Loader(&LinuxProcAddress))
+
+
+		if (!gladLoadGLES2Loader(&LoadGLES2Proc))
 		{
 			exit(-1);
 		}
-#else
-		if (!gladLoadGLES2Loader(&WinGetProcAddressGLES))
-		{
-			exit(-1);
-		}
-#endif
+
+		glMapBufferRange = (PFNGLMAPBUFFERRANGEEXTPROC)LoadGLES2Proc("glMapBufferRange");
+		glUnmapBuffer = (PFNGLUNMAPBUFFEROESPROC)LoadGLES2Proc("glUnmapBuffer");
+
 #else
 		static bool first = true;
 
@@ -97,7 +102,7 @@ namespace OpenGLESRenderer
 #endif
 	
 		gles.flags = 0;
-		gles.useMappedBuffers = false;
+		gles.useMappedBuffers = true;
 		gles.glslversion = 3.31;
 		gles.maxuniforms = 1024 * 16;
 		gles.maxuniformblock = 1024 * 16;

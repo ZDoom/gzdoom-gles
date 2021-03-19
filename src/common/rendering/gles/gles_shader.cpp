@@ -315,7 +315,9 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		uniform mat4 NormalModelMatrix;
 		uniform mat4 TextureMatrix;
 
-	
+		
+		uniform vec4 uFixedColormapStart;
+		uniform vec4 uFixedColormapRange;
 
 		// textures
 		uniform sampler2D tex;
@@ -764,7 +766,7 @@ FShaderManager::~FShaderManager()
 
 void FShaderManager::SetActiveShader(FShader::ShaderVariantData *sh)
 {
-	//if (mActiveShader != sh)
+	if (mActiveShader != sh)
 	{
 		glUseProgram(sh!= NULL? sh->GetHandle() : 0);
 		mActiveShader = sh;

@@ -149,7 +149,7 @@ namespace OpenGLESRenderer
 		ClearScene();
 		for (int n = 0; n < NBR_BUFF; n++)
 		{
-			mSceneDepthStencilBuf[n] = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8_OES, width, height);
+			mSceneDepthStencilBuf[n] = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8, width, height);
 			mSceneFB[n] = CreateFrameBuffer("SceneFB", mSceneTex[n], mSceneDepthStencilBuf[n]);
 		}
 	}

@@ -222,7 +222,7 @@ int FHardwareTexture::GetDepthBuffer(int width, int height)
 	{
 		glGenRenderbuffers(1, &glDepthID);
 		glBindRenderbuffer(GL_RENDERBUFFER, glDepthID);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, 
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 
 			GetTexDimension(width), GetTexDimension(height));
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
