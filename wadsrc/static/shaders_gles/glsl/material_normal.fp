@@ -50,11 +50,9 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 	vec4 dynlight = uDynLightColor;
 	vec3 normal = material.Normal;
 
-	ivec4 lightRange = ivec4(lights[uLightIndex]) + ivec4(uLightIndex + 1);
-
 #if (DEF_DYNAMIC_LIGHTS_MOD == 1)
 	// modulated lights
-	for(int i=lightRange.x; i<lightRange.y; i+=4)
+	for(int i=uLightRange.x; i<uLightRange.y; i+=4)
 	{
 		dynlight.rgb += lightContribution(i, normal);
 	}
@@ -62,7 +60,7 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 
 #if (DEF_DYNAMIC_LIGHTS_SUB == 1)
 	// subtractive lights
-	for(int i=lightRange.y; i<lightRange.z; i+=4) 
+	for(int i=uLightRange.y; i<uLightRange.z; i+=4) 
 	{
 		dynlight.rgb -= lightContribution(i, normal);
 	}
@@ -74,7 +72,7 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 		vec4 addlight = vec4(0.0,0.0,0.0,0.0);
 				
 		// additive lights
-		for(int i=lightRange.z; i<lightRange.w; i+=4)
+		for(int i=uLightRange.z; i<uLightRange.w; i+=4)
 		{
 			addlight.rgb += lightContribution(i, normal);
 		}

@@ -316,7 +316,7 @@ public: class ShaderVariantData
 		FBufferedUniform1i muTextureMode;
 		FBufferedUniform4f muLightParms;
 		FBufferedUniform2f muClipSplit;
-		FBufferedUniform1i muLightIndex;
+		FBufferedUniform4i muLightRange;
 		FBufferedUniformPE muFogColor;
 		FBufferedUniform4f muDynLightColor;
 		FBufferedUniformPE muObjectColor;

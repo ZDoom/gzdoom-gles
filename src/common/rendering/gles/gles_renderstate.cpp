@@ -110,6 +110,9 @@ bool FGLRenderState::ApplyShader()
 		modLights = int(lightPtr[1]) / LIGHT_VEC4_NUM;
 		subLights = (int(lightPtr[2]) - int(lightPtr[1])) / LIGHT_VEC4_NUM;
 		addLights = (int(lightPtr[3]) - int(lightPtr[2])) / LIGHT_VEC4_NUM;
+
+		// Skip passed the first 4 floats so the upload below only contains light data
+		lightPtr += 4;
 	}
 
 	ShaderFlavourData flavour;
@@ -208,7 +211,6 @@ bool FGLRenderState::ApplyShader()
 	activeShader->cur->muInterpolationFactor.Set(mStreamData.uInterpolationFactor);
 	activeShader->cur->muTimer.Set((double)(screen->FrameTime - firstFrame) * (double)mShaderTimer / 1000.);
 	activeShader->cur->muAlphaThreshold.Set(mAlphaThreshold);
-	activeShader->cur->muLightIndex.Set(-1);
 	activeShader->cur->muClipSplit.Set(mClipSplit);
 	activeShader->cur->muSpecularMaterial.Set(mGlossiness, mSpecularLevel);
 	activeShader->cur->muAddColor.Set(mStreamData.uAddColor);
@@ -294,7 +296,7 @@ bool FGLRenderState::ApplyShader()
 		int totalLights = modLights + subLights + addLights;
 
 		// Calculate the total number of vec4s we need
-		int totalVectors = totalLights * LIGHT_VEC4_NUM + 1;
+		int totalVectors = totalLights * LIGHT_VEC4_NUM;
 		
 		// TODO!!! If there are too many lights we need to remove some of the lights and modify the data
 		// At the moment the shader will just try to read off the end of the array...
@@ -303,7 +305,8 @@ bool FGLRenderState::ApplyShader()
 
 		glUniform4fv(activeShader->cur->lights_index, totalVectors, lightPtr);
 
-		activeShader->cur->muLightIndex.Set(0);
+		int range[4] = { 0, modLights * LIGHT_VEC4_NUM, subLights * LIGHT_VEC4_NUM, addLights * LIGHT_VEC4_NUM };
+		activeShader->cur->muLightRange.Set(range);
 	}
 	
 	return true;

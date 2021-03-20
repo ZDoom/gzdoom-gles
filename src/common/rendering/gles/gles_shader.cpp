@@ -322,7 +322,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		//uniform int uFogEnabled;
 
 		// dynamic lights
-		uniform int uLightIndex;
+		uniform ivec4 uLightRange;
 
 		// Blinn glossiness and specular level
 		uniform vec2 uSpecularMaterial;
@@ -610,7 +610,7 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	shaderData->muTextureMode.Init(shaderData->hShader, "uTextureMode");
 	shaderData->muLightParms.Init(shaderData->hShader, "uLightAttr");
 	shaderData->muClipSplit.Init(shaderData->hShader, "uClipSplit");
-	shaderData->muLightIndex.Init(shaderData->hShader, "uLightIndex");
+	shaderData->muLightRange.Init(shaderData->hShader, "uLightRange");
 	shaderData->muFogColor.Init(shaderData->hShader, "uFogColor");
 	shaderData->muDynLightColor.Init(shaderData->hShader, "uDynLightColor");
 	shaderData->muObjectColor.Init(shaderData->hShader, "uObjectColor");
