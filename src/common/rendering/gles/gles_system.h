@@ -28,18 +28,20 @@
 #if (USE_GLES2)
 	#include "glad/glad.h"
 
+// Below are used extensions for GLES
 typedef void* (APIENTRYP PFNGLMAPBUFFERRANGEEXTPROC)(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 GLAPI PFNGLMAPBUFFERRANGEEXTPROC glMapBufferRange;
 
 typedef GLboolean(APIENTRYP PFNGLUNMAPBUFFEROESPROC)(GLenum target);
 GLAPI PFNGLUNMAPBUFFEROESPROC glUnmapBuffer;
 
-#define GL_DEPTH24_STENCIL8 0x88F0
-#define GL_MAP_PERSISTENT_BIT 0x0040
-#define GL_MAP_READ_BIT 0x0001
-#define GL_MAP_WRITE_BIT 0x0002
-#define GL_MAP_UNSYNCHRONIZED_BIT 0x0020
-#define GL_MAP_INVALIDATE_BUFFER_BIT 0x0008
+#define GL_DEPTH24_STENCIL8               0x88F0
+#define GL_MAP_PERSISTENT_BIT             0x0040
+#define GL_MAP_READ_BIT                   0x0001
+#define GL_MAP_WRITE_BIT                  0x0002
+#define GL_MAP_UNSYNCHRONIZED_BIT         0x0020
+#define GL_MAP_INVALIDATE_BUFFER_BIT      0x0008
+#define GL_BGRA                           0x80E1
 
 #else
 	#include "gl_load/gl_load.h"

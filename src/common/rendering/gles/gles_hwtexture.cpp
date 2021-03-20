@@ -129,7 +129,6 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 
 	int sourcetype;
 
-#define GL_BGRA                           0x80E1
 
 #if USE_GLES2
 	sourcetype = GL_BGRA;
