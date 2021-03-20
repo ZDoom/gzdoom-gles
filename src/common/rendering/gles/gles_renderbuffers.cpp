@@ -62,11 +62,8 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::ClearScene()
 	{
-		for (int n = 0; n < NBR_BUFF; n++)
-		{
-			DeleteFrameBuffer(mSceneFB[n]);
-			DeleteRenderBuffer(mSceneDepthStencilBuf[n]);
-		}
+		DeleteFrameBuffer(mSceneFB);
+		DeleteRenderBuffer(mSceneDepthStencilBuf);
 	}
 
 	void FGLRenderBuffers::DeleteTexture(PPGLTexture& tex)
@@ -101,9 +98,6 @@ namespace OpenGLESRenderer
 	{
 		if (width <= 0 || height <= 0)
 			I_FatalError("Requested invalid render buffer sizes: screen = %dx%d", width, height);
-
-		mBuffPos++;
-		mBuffPos = mBuffPos % NBR_BUFF;
 
 		GLint activeTex;
 		GLint textureBinding;
@@ -147,11 +141,8 @@ namespace OpenGLESRenderer
 	void FGLRenderBuffers::CreateScene(int width, int height)
 	{
 		ClearScene();
-		for (int n = 0; n < NBR_BUFF; n++)
-		{
-			mSceneDepthStencilBuf[n] = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8, width, height);
-			mSceneFB[n] = CreateFrameBuffer("SceneFB", mSceneTex[n], mSceneDepthStencilBuf[n]);
-		}
+		mSceneDepthStencilBuf = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8, width, height);
+		mSceneFB= CreateFrameBuffer("SceneFB", mSceneTex, mSceneDepthStencilBuf);
 	}
 
 	//==========================================================================
@@ -162,10 +153,7 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::CreatePipeline(int width, int height)
 	{
-		for (int n = 0; n < NBR_BUFF; n++)
-		{
-			mSceneTex[n] = Create2DTexture("PipelineTexture", GL_RGBA, width, height);
-		}
+		mSceneTex = Create2DTexture("PipelineTexture", GL_RGBA, width, height);
 	}
 
 	
@@ -387,7 +375,7 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::BindSceneFB(bool sceneData)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, mSceneFB[mBuffPos].handle);
+		glBindFramebuffer(GL_FRAMEBUFFER, mSceneFB.handle);
 	}
 
 	//==========================================================================
@@ -398,7 +386,7 @@ namespace OpenGLESRenderer
 
 	void FGLRenderBuffers::BindCurrentTexture(int index, int filter, int wrap)
 	{
-		mSceneTex[mBuffPos].Bind(index, filter, wrap);
+		mSceneTex.Bind(index, filter, wrap);
 	}
 
 	//==========================================================================
@@ -410,7 +398,7 @@ namespace OpenGLESRenderer
 	void FGLRenderBuffers::BindCurrentFB()
 	{
 #ifndef NO_RENDER_BUFFER
-		mSceneFB[mBuffPos].Bind();
+		mSceneFB.Bind();
 #endif
 	}
 
