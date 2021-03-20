@@ -64,6 +64,7 @@ namespace OpenGLESRenderer
 	{
 		DeleteFrameBuffer(mSceneFB);
 		DeleteRenderBuffer(mSceneDepthStencilBuf);
+		DeleteRenderBuffer(mSceneStencilBuf);
 	}
 
 	void FGLRenderBuffers::DeleteTexture(PPGLTexture& tex)
@@ -141,8 +142,14 @@ namespace OpenGLESRenderer
 	void FGLRenderBuffers::CreateScene(int width, int height)
 	{
 		ClearScene();
-		mSceneDepthStencilBuf = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8, width, height);
-		mSceneFB= CreateFrameBuffer("SceneFB", mSceneTex, mSceneDepthStencilBuf);
+		if(gles.depthStencilAvailable)
+			mSceneDepthStencilBuf = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH24_STENCIL8, width, height);
+		else
+		{
+			mSceneDepthStencilBuf = CreateRenderBuffer("SceneDepthStencil", GL_DEPTH_COMPONENT16, width, height);
+			mSceneStencilBuf = CreateRenderBuffer("SceneStencil", GL_STENCIL_INDEX8, width, height);
+		}
+		mSceneFB= CreateFrameBuffer("SceneFB", mSceneTex, mSceneDepthStencilBuf, mSceneStencilBuf);
 	}
 
 	//==========================================================================
@@ -240,7 +247,7 @@ namespace OpenGLESRenderer
 		return fb;
 	}
 
-	PPGLFrameBuffer FGLRenderBuffers::CreateFrameBuffer(const char* name, PPGLTexture colorbuffer, PPGLRenderBuffer depthstencil)
+	PPGLFrameBuffer FGLRenderBuffers::CreateFrameBuffer(const char* name, PPGLTexture colorbuffer, PPGLRenderBuffer depthstencil, PPGLRenderBuffer stencil)
 	{
 		PPGLFrameBuffer fb;
 		glGenFramebuffers(1, &fb.handle);
@@ -248,13 +255,13 @@ namespace OpenGLESRenderer
 		
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer.handle, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, gles.depthStencilAvailable ? depthstencil.handle : stencil.handle);
 		if (CheckFrameBufferCompleteness())
 			ClearFrameBuffer(true, true);
 		return fb;
 	}
 
-	PPGLFrameBuffer FGLRenderBuffers::CreateFrameBuffer(const char* name, PPGLRenderBuffer colorbuffer, PPGLRenderBuffer depthstencil)
+	PPGLFrameBuffer FGLRenderBuffers::CreateFrameBuffer(const char* name, PPGLRenderBuffer colorbuffer, PPGLRenderBuffer depthstencil, PPGLRenderBuffer stencil)
 	{
 		PPGLFrameBuffer fb;
 		glGenFramebuffers(1, &fb.handle);
@@ -262,13 +269,13 @@ namespace OpenGLESRenderer
 	
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorbuffer.handle);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, gles.depthStencilAvailable ? depthstencil.handle : stencil.handle);
 		if (CheckFrameBufferCompleteness())
 			ClearFrameBuffer(true, true);
 		return fb;
 	}
 
-	PPGLFrameBuffer FGLRenderBuffers::CreateFrameBuffer(const char* name, PPGLTexture colorbuffer0, PPGLTexture colorbuffer1, PPGLTexture colorbuffer2, PPGLTexture depthstencil)
+	PPGLFrameBuffer FGLRenderBuffers::CreateFrameBuffer(const char* name, PPGLTexture colorbuffer0, PPGLTexture colorbuffer1, PPGLTexture colorbuffer2, PPGLTexture depthstencil, PPGLRenderBuffer stencil)
 	{
 		PPGLFrameBuffer fb;
 		glGenFramebuffers(1, &fb.handle);
@@ -276,7 +283,7 @@ namespace OpenGLESRenderer
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer0.handle, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthstencil.handle);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, gles.depthStencilAvailable ? depthstencil.handle : stencil.handle);
 	
 		if (CheckFrameBufferCompleteness())
 			ClearFrameBuffer(true, true);
@@ -297,18 +304,17 @@ namespace OpenGLESRenderer
 
 		bool FailedCreate = true;
 
-		if (gl_debug_level > 0)
+
+		FString error = "glCheckFramebufferStatus failed: ";
+		switch (result)
 		{
-			FString error = "glCheckFramebufferStatus failed: ";
-			switch (result)
-			{
-			default: error.AppendFormat("error code %d", (int)result); break;
-			case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: error << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT"; break;
-			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: error << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"; break;
-			case GL_FRAMEBUFFER_UNSUPPORTED: error << "GL_FRAMEBUFFER_UNSUPPORTED"; break;
-			}
-			Printf("%s\n", error.GetChars());
+		default: error.AppendFormat("error code %d", (int)result); break;
+		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: error << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT"; break;
+		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: error << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"; break;
+		case GL_FRAMEBUFFER_UNSUPPORTED: error << "GL_FRAMEBUFFER_UNSUPPORTED"; break;
 		}
+		Printf("%s\n", error.GetChars());
+	
 
 		return false;
 	}

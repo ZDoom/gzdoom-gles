@@ -102,6 +102,7 @@ namespace OpenGLESRenderer
 	
 		gles.flags = 0;
 		gles.useMappedBuffers = true;
+		gles.depthStencilAvailable = true;
 		gles.glslversion = 1.0;
 		gles.maxuniforms = 1024 * 16;
 		gles.maxuniformblock = 1024 * 16;

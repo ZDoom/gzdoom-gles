@@ -120,9 +120,9 @@ private:
 	PPGLTexture Create2DTexture(const char *name, GLuint format, int width, int height, const void *data = nullptr);
 	PPGLRenderBuffer CreateRenderBuffer(const char *name, GLuint format, int width, int height);
 	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLTexture colorbuffer);
-	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLTexture colorbuffer, PPGLRenderBuffer depthstencil);
-	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLRenderBuffer colorbuffer, PPGLRenderBuffer depthstencil);
-	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLTexture colorbuffer0, PPGLTexture colorbuffer1, PPGLTexture colorbuffer2, PPGLTexture depthstencil);
+	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLTexture colorbuffer, PPGLRenderBuffer depthstencil, PPGLRenderBuffer stencil);
+	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLRenderBuffer colorbuffer, PPGLRenderBuffer depthstencil, PPGLRenderBuffer stencil);
+	PPGLFrameBuffer CreateFrameBuffer(const char *name, PPGLTexture colorbuffer0, PPGLTexture colorbuffer1, PPGLTexture colorbuffer2, PPGLTexture depthstencil, PPGLRenderBuffer stencil);
 	bool CheckFrameBufferCompleteness();
 	void ClearFrameBuffer(bool stencil, bool depth);
 	void DeleteTexture(PPGLTexture &handle);
@@ -138,6 +138,7 @@ private:
 	PPGLTexture mSceneDepthStencilTex;
 	PPGLTexture mSceneTex;
 	PPGLRenderBuffer mSceneDepthStencilBuf;
+	PPGLRenderBuffer mSceneStencilBuf; // This is only use when combined depth-stencil is not avaliable
 	PPGLFrameBuffer mSceneFB;
 	bool mSceneUsesTextures = false;
 
