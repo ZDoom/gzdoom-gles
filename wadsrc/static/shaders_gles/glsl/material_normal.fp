@@ -45,6 +45,9 @@ vec3 lightContribution(int i, vec3 normal)
 */
 }
 
+#define INSANLEY_OLD_GLSL  1
+
+
 vec3 ProcessMaterialLight(Material material, vec3 color)
 {
 	vec4 dynlight = uDynLightColor;
@@ -52,32 +55,72 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 
 #if (DEF_DYNAMIC_LIGHTS_MOD == 1)
 	// modulated lights
-	for(int i=uLightRange.x; i<uLightRange.y; i+=4)
-	{
-		dynlight.rgb += lightContribution(i, normal);
-	}
+	#if (INSANLEY_OLD_GLSL == 1)
+
+		for(int i = 0; i < 8; i++)
+		{
+			if(i == ((uLightRange.y - uLightRange.x) / 4))
+				break;
+
+			dynlight.rgb += lightContribution(i * 4, normal);
+		}
+
+	#else
+
+		for(int i=uLightRange.x; i<uLightRange.y; i+=4)
+		{
+			dynlight.rgb += lightContribution(i, normal);
+		}
+
+	#endif
 #endif
 
 #if (DEF_DYNAMIC_LIGHTS_SUB == 1)
 	// subtractive lights
-	for(int i=uLightRange.y; i<uLightRange.z; i+=4) 
-	{
-		dynlight.rgb -= lightContribution(i, normal);
-	}
+	#if (INSANLEY_OLD_GLSL == 1)
+		for(int i = 0; i < 4; i++)
+		{
+			if(i == ((uLightRange.z - uLightRange.y) / 4))
+				break;
+
+			dynlight.rgb -= lightContribution(uLightRange.y + (i * 4), normal);
+		}
+	#else
+
+		for(int i=uLightRange.y; i<uLightRange.z; i+=4) 
+		{
+			dynlight.rgb -= lightContribution(i, normal);
+		}
+
+	#endif
 #endif
 	
 	vec3 frag = material.Base.rgb * clamp(color + desaturate(dynlight).rgb, 0.0, 1.4);
 	
 #if (DEF_DYNAMIC_LIGHTS_ADD == 1)
-		vec4 addlight = vec4(0.0,0.0,0.0,0.0);
+	vec4 addlight = vec4(0.0,0.0,0.0,0.0);
 				
-		// additive lights
+	// additive lights
+	#if (INSANLEY_OLD_GLSL == 1)
+
+		for(int i = 0; i < 4; i++)
+		{
+			if(i == ((uLightRange.w - uLightRange.z) / 4))
+				break;
+
+			addlight.rgb += lightContribution(uLightRange.z + (i * 4), normal);
+		}
+
+	#else
+
 		for(int i=uLightRange.z; i<uLightRange.w; i+=4)
 		{
 			addlight.rgb += lightContribution(i, normal);
 		}
 
-		frag = clamp(frag + desaturate(addlight).rgb, 0.0, 1.0);
+	#endif
+
+	frag = clamp(frag + desaturate(addlight).rgb, 0.0, 1.0);
 #endif
  
 	return frag;
