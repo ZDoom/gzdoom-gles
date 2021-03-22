@@ -45,7 +45,9 @@ vec3 lightContribution(int i, vec3 normal)
 */
 }
 
-#define INSANLEY_OLD_GLSL  1
+// Some very old GLES2 hardward does not allow non-constants in a for-loop expression because it can not unroll it.
+// However they do allow 'break' and use stupid hack
+#define INSANLEY_OLD_GLSL  0
 
 
 vec3 ProcessMaterialLight(Material material, vec3 color)
@@ -57,7 +59,7 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 	// modulated lights
 	#if (INSANLEY_OLD_GLSL == 1)
 
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 8; i++) // Max 8 lights
 		{
 			if(i == ((uLightRange.y - uLightRange.x) / 4))
 				break;
@@ -78,13 +80,15 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 #if (DEF_DYNAMIC_LIGHTS_SUB == 1)
 	// subtractive lights
 	#if (INSANLEY_OLD_GLSL == 1)
-		for(int i = 0; i < 4; i++)
+
+		for(int i = 0; i < 4; i++) // Max 4 lights
 		{
 			if(i == ((uLightRange.z - uLightRange.y) / 4))
 				break;
 
 			dynlight.rgb -= lightContribution(uLightRange.y + (i * 4), normal);
 		}
+
 	#else
 
 		for(int i=uLightRange.y; i<uLightRange.z; i+=4) 
@@ -103,7 +107,7 @@ vec3 ProcessMaterialLight(Material material, vec3 color)
 	// additive lights
 	#if (INSANLEY_OLD_GLSL == 1)
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 4; i++) // Max 4 lights
 		{
 			if(i == ((uLightRange.w - uLightRange.z) / 4))
 				break;
