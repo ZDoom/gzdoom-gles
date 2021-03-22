@@ -66,6 +66,7 @@ namespace OpenGLESRenderer
 		unsigned int numlightvectors;
 		bool useMappedBuffers;
 		bool depthStencilAvailable;
+		bool npotAvailable;
 		int max_texturesize;
 		char* vendorstring;
 		char* modelstring;

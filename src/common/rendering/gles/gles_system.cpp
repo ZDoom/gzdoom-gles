@@ -1,6 +1,10 @@
 
 
 #include "gles_system.h"
+#include "tarray.h"
+#include "doomtype.h"
+#include "v_video.h"
+
 
 #if USE_GLES2
 
@@ -68,6 +72,41 @@ static void* LoadGLES2Proc(const char* name)
 
 #endif // USE_GLES2
 
+static TArray<FString>  m_Extensions;
+
+
+static void CollectExtensions()
+{
+	const char* supported = (char*)glGetString(GL_EXTENSIONS);
+
+	if (nullptr != supported)
+	{
+		char* extensions = new char[strlen(supported) + 1];
+		strcpy(extensions, supported);
+
+		char* extension = strtok(extensions, " ");
+
+		while (extension)
+		{
+			m_Extensions.Push(FString(extension));
+			extension = strtok(nullptr, " ");
+		}
+
+		delete[] extensions;
+	}
+}
+
+
+static bool CheckExtension(const char* ext)
+{
+	for (unsigned int i = 0; i < m_Extensions.Size(); ++i)
+	{
+		if (m_Extensions[i].CompareNoCase(ext) == 0) return true;
+	}
+
+	return false;
+}
+
 namespace OpenGLESRenderer
 {
 	RenderContextGLES gles;
@@ -99,15 +138,38 @@ namespace OpenGLESRenderer
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 #endif
-	
-		gles.flags = 0;
-		gles.useMappedBuffers = true;
-		gles.depthStencilAvailable = true;
+		CollectExtensions();
+
+		Printf("GL_VENDOR: %s\n", glGetString(GL_VENDOR));
+		Printf("GL_RENDERER: %s\n", glGetString(GL_RENDERER));
+		Printf("GL_VERSION: %s\n", glGetString(GL_VERSION));
+		Printf("GL_SHADING_LANGUAGE_VERSION: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+		Printf("GL_EXTENSIONS:\n");
+		for (unsigned i = 0; i < m_Extensions.Size(); i++)
+		{
+			Printf(" %s\n", m_Extensions[i].GetChars());
+		}
+
+
+		gles.flags = RFL_NO_CLIP_PLANES;
+
+#if USE_GLES2
+		gles.useMappedBuffers = false;
+		gles.depthStencilAvailable = CheckExtension("GL_OES_packed_depth_stencil");
+		gles.npotAvailable = CheckExtension("GL_OES_texture_npot");
 		gles.maxuniforms = 1024 * 16;
 		gles.max_texturesize = 1024 * 4;
+		gles.maxlights = 32; // TODO, calcualte this
+#else
+		gles.useMappedBuffers = true;
+		gles.depthStencilAvailable = true;
+		gles.npotAvailable = true;
+		gles.maxuniforms = 1024 * 16;
+		gles.max_texturesize = 1024 * 4;
+		gles.maxlights = 32; // TODO, calcualte this
+#endif
 		gles.modelstring = (char*)glGetString(GL_RENDERER);
 		gles.vendorstring = (char*)glGetString(GL_VENDOR);
-		gles.maxlights = 32; // TODO, calcualte this
 		gles.numlightvectors = (gles.maxlights * LIGHT_VEC4_NUM);
 	}
 

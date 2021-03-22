@@ -124,6 +124,8 @@ unsigned int FHardwareTexture::CreateTexture(unsigned char * buffer, int w, int 
 				buffer=scaledbuffer;
 			}
 		}
+
+
 	}
 	// store the physical size.
 
