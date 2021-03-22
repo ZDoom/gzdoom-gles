@@ -62,13 +62,10 @@ namespace OpenGLESRenderer
 	{
 		unsigned int flags;
 		unsigned int maxuniforms;
-		unsigned int maxuniformblock;
-		unsigned int uniformblockalignment;
 		unsigned int maxlights;
 		unsigned int numlightvectors;
 		bool useMappedBuffers;
 		bool depthStencilAvailable;
-		float glslversion;
 		int max_texturesize;
 		char* vendorstring;
 		char* modelstring;

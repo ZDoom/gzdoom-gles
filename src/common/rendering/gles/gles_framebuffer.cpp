@@ -133,9 +133,6 @@ void OpenGLFrameBuffer::InitializeState()
 
 	// Move some state to the framebuffer object for easier access.
 	hwcaps = gles.flags;
-	glslversion = gles.glslversion;
-	uniformblockalignment = gles.uniformblockalignment;
-	maxuniformblock = gles.maxuniformblock;
 	vendorstring = gles.vendorstring;
 
 	Printf("GL_VENDOR: %s\n", glGetString(GL_VENDOR));
@@ -143,6 +140,7 @@ void OpenGLFrameBuffer::InitializeState()
 	Printf("GL_VERSION: %s\n", glGetString(GL_VERSION));
 	Printf("GL_SHADING_LANGUAGE_VERSION: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	Printf(PRINT_LOG, "GL_EXTENSIONS:");
+	Printf("%s\n", glGetString(GL_EXTENSIONS));
 
 	glDepthFunc(GL_LESS);
 

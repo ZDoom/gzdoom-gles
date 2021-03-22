@@ -721,7 +721,7 @@ bool FShader::Bind(ShaderFlavourData& flavour)
 		variantConfig.AppendFormat("#define DEF_USE_COLOR_MAP %d\n", flavour.useColorMap);
 		
 
-		Printf("Shader: %s, %08x %s", mFragProg2.GetChars(), tag, variantConfig.GetChars());
+		// Printf("Shader: %s, %08x %s", mFragProg2.GetChars(), tag, variantConfig.GetChars());
 
 		Load(mName.GetChars(), mVertProg, mFragProg, mFragProg2, mLightProg, mDefinesBase + variantConfig);
 

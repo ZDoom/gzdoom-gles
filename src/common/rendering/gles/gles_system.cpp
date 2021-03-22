@@ -103,13 +103,10 @@ namespace OpenGLESRenderer
 		gles.flags = 0;
 		gles.useMappedBuffers = true;
 		gles.depthStencilAvailable = true;
-		gles.glslversion = 1.0;
 		gles.maxuniforms = 1024 * 16;
-		gles.maxuniformblock = 1024 * 16;
-		gles.uniformblockalignment = 256;
 		gles.max_texturesize = 1024 * 4;
-		gles.modelstring = (char*)"MODEL";
-		gles.vendorstring = (char*)"EMILES";
+		gles.modelstring = (char*)glGetString(GL_RENDERER);
+		gles.vendorstring = (char*)glGetString(GL_VENDOR);
 		gles.maxlights = 32; // TODO, calcualte this
 		gles.numlightvectors = (gles.maxlights * LIGHT_VEC4_NUM);
 	}
