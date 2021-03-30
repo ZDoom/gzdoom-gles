@@ -699,7 +699,7 @@ bool FShader::Bind(ShaderFlavourData& flavour)
 
 
 
-		Printf("Shader: %s, %08x %s", mFragProg2.GetChars(), tag, variantConfig.GetChars());
+		DPrintf(DMSG_SPAMMY, "Shader: %s, %08x %s", mFragProg2.GetChars(), tag, variantConfig.GetChars());
 
 		Load(mName.GetChars(), mVertProg, mFragProg, mFragProg2, mLightProg, mDefinesBase + variantConfig);
 
