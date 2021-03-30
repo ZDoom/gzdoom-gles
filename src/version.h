@@ -88,7 +88,7 @@ const char *GetVersionString();
 // This is so that derivates can use the same savegame versions without worrying about engine compatibility
 #define GAMESIG "LZDOOM"
 #define BASEWAD "lzdoom.pk3"
-#define OPTIONALWAD "game_support.pk3"
+#define OPTIONALWAD "lzdoom_game_support.pk3"
 
 // More stuff that needs to be different for derivatives.
 #define GAMENAME "LZDoom"
