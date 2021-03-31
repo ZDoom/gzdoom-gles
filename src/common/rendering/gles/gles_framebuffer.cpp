@@ -123,12 +123,12 @@ void OpenGLFrameBuffer::InitializeState()
 {
 	static bool first=true;
 
-	gl_customshader = false;
+	gl_customshader = false; // Unlikely work git GLSL v1.00
+	gl_sort_textures = true; // Faster
 
 	mPipelineNbr = gl_pipeline_depth;
 
-	gl_sort_textures = true; // Faster
-	
+
 	InitGLES();
 
 	// Move some state to the framebuffer object for easier access.

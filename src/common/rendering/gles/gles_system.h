@@ -67,6 +67,7 @@ namespace OpenGLESRenderer
 		bool useMappedBuffers;
 		bool depthStencilAvailable;
 		bool npotAvailable;
+		bool forceGLSLv100;
 		int max_texturesize;
 		char* vendorstring;
 		char* modelstring;

@@ -719,6 +719,9 @@ bool FShader::Bind(ShaderFlavourData& flavour)
 		variantConfig.AppendFormat("#define DEF_USE_GLOW_BOTTOM_COLOR %d\n", flavour.useGlowBottomColor);
 		
 		variantConfig.AppendFormat("#define DEF_USE_COLOR_MAP %d\n", flavour.useColorMap);
+
+		variantConfig.AppendFormat("#define USE_GLSL_V100 %d\n", gles.forceGLSLv100);
+
 		
 
 		// Printf("Shader: %s, %08x %s", mFragProg2.GetChars(), tag, variantConfig.GetChars());

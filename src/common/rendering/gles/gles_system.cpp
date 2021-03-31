@@ -157,6 +157,7 @@ namespace OpenGLESRenderer
 		gles.useMappedBuffers = false;
 		gles.depthStencilAvailable = CheckExtension("GL_OES_packed_depth_stencil");
 		gles.npotAvailable = CheckExtension("GL_OES_texture_npot");
+		gles.forceGLSLv100 = true;
 		gles.maxuniforms = 1024 * 16;
 		gles.max_texturesize = 1024 * 4;
 		gles.maxlights = 32; // TODO, calcualte this
@@ -164,6 +165,8 @@ namespace OpenGLESRenderer
 		gles.useMappedBuffers = true;
 		gles.depthStencilAvailable = true;
 		gles.npotAvailable = true;
+		gles.forceGLSLv100 = false;
+
 		gles.maxuniforms = 1024 * 16;
 		gles.max_texturesize = 1024 * 4;
 		gles.maxlights = 32; // TODO, calcualte this
