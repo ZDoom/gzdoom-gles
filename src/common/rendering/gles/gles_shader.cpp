@@ -263,9 +263,6 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	FString i_data = GetGLSLPrecision();
 
 	i_data += R"(
-	
-		precision highp int;
-		precision highp float;
 
 		// light buffers
 		uniform vec4 lights[MAXIMUM_LIGHT_VECTORS];
