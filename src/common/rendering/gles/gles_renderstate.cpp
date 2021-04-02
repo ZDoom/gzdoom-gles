@@ -307,8 +307,8 @@ bool FGLRenderState::ApplyShader()
 
 		int range[4] = { 0, 
 			modLights * LIGHT_VEC4_NUM, 
-			modLights + subLights * LIGHT_VEC4_NUM, 
-			modLights + subLights + addLights * LIGHT_VEC4_NUM };
+			(modLights + subLights) * LIGHT_VEC4_NUM, 
+			(modLights + subLights + addLights) * LIGHT_VEC4_NUM };
 
 		activeShader->cur->muLightRange.Set(range);
 	}
