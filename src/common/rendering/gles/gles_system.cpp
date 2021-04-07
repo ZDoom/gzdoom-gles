@@ -5,6 +5,11 @@
 #include "doomtype.h"
 #include "v_video.h"
 
+CVAR(Bool, gles_use_mapped_buffer, false, 0);
+CVAR(Bool, gles_force_glsl_v100, false, 0);
+
+
+
 
 #if USE_GLES2
 
@@ -154,23 +159,24 @@ namespace OpenGLESRenderer
 		gles.flags = RFL_NO_CLIP_PLANES;
 
 #if USE_GLES2
-		gles.useMappedBuffers = false;
+		
 		gles.depthStencilAvailable = CheckExtension("GL_OES_packed_depth_stencil");
 		gles.npotAvailable = CheckExtension("GL_OES_texture_npot");
-		gles.forceGLSLv100 = true;
-		gles.maxuniforms = 1024 * 16;
-		gles.max_texturesize = 1024 * 4;
-		gles.maxlights = 32; // TODO, calcualte this
-#else
-		gles.useMappedBuffers = true;
-		gles.depthStencilAvailable = true;
-		gles.npotAvailable = true;
-		gles.forceGLSLv100 = false;
 
 		gles.maxuniforms = 1024 * 16;
 		gles.max_texturesize = 1024 * 4;
 		gles.maxlights = 32; // TODO, calcualte this
+#else
+		gles.depthStencilAvailable = true;
+		gles.npotAvailable = true;
+	
+		gles.maxuniforms = 1024 * 16;
+		gles.max_texturesize = 1024 * 4;
+		gles.maxlights = 32; // TODO, calcualte this
 #endif
+		gles.useMappedBuffers = gles_use_mapped_buffer;
+		gles.forceGLSLv100 = gles_force_glsl_v100;
+
 		gles.modelstring = (char*)glGetString(GL_RENDERER);
 		gles.vendorstring = (char*)glGetString(GL_VENDOR);
 		gles.numlightvectors = (gles.maxlights * LIGHT_VEC4_NUM);
