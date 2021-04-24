@@ -44,7 +44,6 @@
 #include "version.h"
 #include "printf.h"
 #include "win32glvideo.h"
-#include "win32glesvideo.h"
 #ifdef HAVE_SOFTPOLY
 #include "win32polyvideo.h"
 #endif
@@ -157,7 +156,6 @@ void I_InitGraphics ()
 #endif
 	{
 		Video = new Win32GLVideo();
-		//Video = new Win32GLESVideo();
 	}
 
 #ifdef HAVE_SOFTPOLY

@@ -49,8 +49,9 @@
 #include "gl_system.h"
 
 #include "gl_renderer.h"
+#include "gl_framebuffer.h"
 #include "gles_framebuffer.h"
-
+ 
 #ifdef HAVE_VULKAN
 #include "vulkan/system/vk_framebuffer.h"
 #endif
@@ -470,7 +471,10 @@ DFrameBuffer *SDLVideo::CreateFrameBuffer ()
 #endif
 	if (fb == nullptr)
 	{
-		fb = new OpenGLESRenderer::OpenGLFrameBuffer(0, vid_fullscreen);
+	  	if( Args->CheckParm ("-gles2_renderer") )
+			fb = new OpenGLESRenderer::OpenGLFrameBuffer(0, vid_fullscreen);
+		else
+			fb = new OpenGLRenderer::OpenGLFrameBuffer(0, vid_fullscreen);
 	}
 
 	return fb;

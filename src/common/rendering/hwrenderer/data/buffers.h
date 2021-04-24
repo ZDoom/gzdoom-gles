@@ -5,6 +5,8 @@
 
 class FRenderState;
 
+#define HW_MAX_PIPELINE_BUFFERS 8
+
 // The low level code needs to know which attributes exist.
 // OpenGL needs to change the state of all of them per buffer binding.
 // VAOs are mostly useless for this because they lump buffer and binding state together which the model code does not want.

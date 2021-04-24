@@ -50,7 +50,7 @@ public:
 	int mPipelinePos = 0;
 
 	IVertexBuffer* mVertexBuffer;
-	IVertexBuffer *mVertexBufferPipeline[MAX_PIPELINE_BUFFERS];
+	IVertexBuffer *mVertexBufferPipeline[HW_MAX_PIPELINE_BUFFERS];
 	IIndexBuffer *mIndexBuffer;
 
 	

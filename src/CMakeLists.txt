@@ -433,7 +433,6 @@ set( PLAT_WIN32_SOURCES
 	common/platform/win32/base_sysfb.cpp
 	common/platform/win32/win32basevideo.cpp
 	common/platform/win32/win32glvideo.cpp
-	common/platform/win32/win32glesvideo.cpp
 	common/platform/win32/win32polyvideo.cpp)
 
 if (HAVE_VULKAN)
