@@ -56,6 +56,8 @@ GLAPI PFNGLUNMAPBUFFEROESPROC glUnmapBuffer;
 
 //#define NO_RENDER_BUFFER
 
+//#define NPOT_EMULATION
+
 namespace OpenGLESRenderer
 {
 	struct RenderContextGLES

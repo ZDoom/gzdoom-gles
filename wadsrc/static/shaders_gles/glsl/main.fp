@@ -281,6 +281,17 @@ vec3 ApplyNormalMap(vec2 texcoord)
 
 void SetMaterialProps(inout Material material, vec2 texCoord)
 {
+
+#ifdef NPOT_EMULATION
+
+#if (DEF_NPOT_EMULATION == 1)
+		float period = floor(texCoord.t / uNpotEmulation.y);
+		texCoord.s += uNpotEmulation.x * floor(mod(texCoord.t, uNpotEmulation.y));
+		texCoord.t = period + mod(texCoord.t, uNpotEmulation.y);
+#endif
+
+#endif
+
 	material.Base = getTexel(texCoord.st);
 	material.Normal = ApplyNormalMap(texCoord.st);
 

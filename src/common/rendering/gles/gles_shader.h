@@ -268,6 +268,9 @@ public:
 	bool useGlowTopColor;
 	bool useGlowBottomColor;
 	bool useColorMap;
+#ifdef NPOT_EMULATION
+	bool npotEmulation;
+#endif
 };
 
 class FShader
@@ -338,7 +341,9 @@ public: class ShaderVariantData
 		FBufferedUniform1f muAlphaThreshold;
 		FBufferedUniform2f muSpecularMaterial;
 		FBufferedUniform1f muTimer;
-
+#ifdef NPOT_EMULATION
+		FBufferedUniform2f muNpotEmulation;
+#endif
 		FUniform4f muFixedColormapStart;
 		FUniform4f muFixedColormapRange;
 
@@ -402,7 +407,9 @@ public:
 		tag |= (flavour.useGlowTopColor & 1) << 17;
 		tag |= (flavour.useGlowBottomColor & 1) << 18;
 		tag |= (flavour.useColorMap & 1) << 19;
-
+#ifdef NPOT_EMULATION
+		tag |= (flavour.npotEmulation & 1) << 20;
+#endif
 		return tag;
 	}
 

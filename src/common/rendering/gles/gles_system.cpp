@@ -2,13 +2,11 @@
 
 #include "gles_system.h"
 #include "tarray.h"
-#include "doomtype.h"
 #include "v_video.h"
+#include "printf.h"
 
 CVAR(Bool, gles_use_mapped_buffer, false, 0);
 CVAR(Bool, gles_force_glsl_v100, false, 0);
-
-
 
 
 #if USE_GLES2

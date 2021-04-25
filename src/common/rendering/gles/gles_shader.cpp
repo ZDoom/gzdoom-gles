@@ -369,11 +369,11 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		#define detailtexture texture3
 		#define glowtexture texture4
 		#endif
-
-
-
 	)";
 	
+#ifdef NPOT_EMULATION
+	i_data += "#define NPOT_EMULATION\nuniform vec2 uNpotEmulation;\n";
+#endif
 
 	int vp_lump = fileSystem.CheckNumForFullName(vert_prog_lump, 0);
 	if (vp_lump == -1) I_Error("Unable to load '%s'", vert_prog_lump.GetChars());
@@ -719,7 +719,9 @@ bool FShader::Bind(ShaderFlavourData& flavour)
 
 		variantConfig.AppendFormat("#define USE_GLSL_V100 %d\n", gles.forceGLSLv100);
 
-		
+#ifdef NPOT_EMULATION
+		variantConfig.AppendFormat("#define DEF_NPOT_EMULATION %d\n", flavour.npotEmulation);
+#endif
 
 		// Printf("Shader: %s, %08x %s", mFragProg2.GetChars(), tag, variantConfig.GetChars());
 

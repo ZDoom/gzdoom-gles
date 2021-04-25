@@ -161,6 +161,10 @@ bool FGLRenderState::ApplyShader()
 	
 	flavour.useColorMap = (mColorMapSpecial >= CM_FIRSTSPECIALCOLORMAP) || (mColorMapFlash != 1);
 
+#ifdef NPOT_EMULATION
+	flavour.npotEmulation = (mStreamData.uNpotEmulation.Y != 0);
+#endif
+
 	if (mSpecialEffect > EFF_NONE)
 	{
 		activeShader = GLRenderer->mShaderManager->BindEffect(mSpecialEffect, mPassType, flavour);
@@ -219,8 +223,9 @@ bool FGLRenderState::ApplyShader()
 	activeShader->cur->muTextureBlendColor.Set(mStreamData.uTextureBlendColor);
 	activeShader->cur->muDetailParms.Set(&mStreamData.uDetailParms.X);
 #ifdef NPOT_EMULATION
-	activeShader->muNpotEmulation.Set(&mStreamData.uNpotEmulation.X);
+	activeShader->cur->muNpotEmulation.Set(&mStreamData.uNpotEmulation.X);
 #endif
+
 	if (flavour.useColorMap)
 	{
 		if (mColorMapSpecial < CM_FIRSTSPECIALCOLORMAP || mColorMapSpecial >= CM_MAXCOLORMAP)
