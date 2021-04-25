@@ -161,6 +161,9 @@ bool FGLRenderState::ApplyShader()
 	
 	flavour.useColorMap = (mColorMapSpecial >= CM_FIRSTSPECIALCOLORMAP) || (mColorMapFlash != 1);
 
+	flavour.buildLighting = (mHwUniforms->mPalLightLevels >> 16) == 5; // Build engine mode
+	flavour.bandedSwLight = !!(mHwUniforms->mPalLightLevels & 0xFF);
+
 #ifdef NPOT_EMULATION
 	flavour.npotEmulation = (mStreamData.uNpotEmulation.Y != 0);
 #endif

@@ -268,6 +268,10 @@ public:
 	bool useGlowTopColor;
 	bool useGlowBottomColor;
 	bool useColorMap;
+
+	bool buildLighting;
+	bool bandedSwLight;
+
 #ifdef NPOT_EMULATION
 	bool npotEmulation;
 #endif
@@ -407,8 +411,11 @@ public:
 		tag |= (flavour.useGlowTopColor & 1) << 17;
 		tag |= (flavour.useGlowBottomColor & 1) << 18;
 		tag |= (flavour.useColorMap & 1) << 19;
+		tag |= (flavour.buildLighting & 1) << 20;
+		tag |= (flavour.bandedSwLight & 1) << 21;
+
 #ifdef NPOT_EMULATION
-		tag |= (flavour.npotEmulation & 1) << 20;
+		tag |= (flavour.npotEmulation & 1) << 22;
 #endif
 		return tag;
 	}

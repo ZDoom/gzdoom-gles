@@ -231,7 +231,7 @@ vec4 getTexel(vec2 st)
 
 #define DOOMLIGHTFACTOR 232.0
 
-float R_DoomLightingEquation(float light)
+float R_DoomLightingEquation_OLD(float light)
 {
 	// z is the depth in view space, positive going into the screen
 	float z = pixelpos.w;
@@ -253,6 +253,57 @@ float R_DoomLightingEquation(float light)
 	return clamp(index, min_L, 1.0) / 32.0;
 }
 
+
+//===========================================================================
+//
+// zdoom colormap equation
+//
+//===========================================================================
+float R_ZDoomColormap(float light, float z)
+{
+	float L = light * 255.0;
+	float vis = min(uGlobVis / z, 24.0 / 32.0);
+	float shade = 2.0 - (L + 12.0) / 128.0;
+	float lightscale = shade - vis;
+	return lightscale * 31.0;
+}
+
+//===========================================================================
+//
+// Doom software lighting equation
+//
+//===========================================================================
+float R_DoomLightingEquation(float light)
+{
+	// z is the depth in view space, positive going into the screen
+	float z;
+
+#if (DEF_FOG_RADIAL == 1)
+		z = distance(pixelpos.xyz, uCameraPos.xyz);
+#else
+		z = pixelpos.w;
+#endif
+	
+#if (DEF_BUILD_LIGHTING == 1) // gl_lightmode 5: Build software lighting emulation.
+	{
+		// This is a lot more primitive than Doom's lighting...
+		float numShades = 32.0;
+		float curshade = (1.0 - light) * (numShades - 1.0);
+		float visibility = max(uGlobVis * uLightFactor * z, 0.0);
+		float shade = clamp((curshade + visibility), 0.0, numShades - 1.0);
+		return clamp(shade * uLightDist, 0.0, 1.0);
+	}
+#endif
+
+	float colormap = R_ZDoomColormap(light, z); // ONLY Software mode, vanilla not yet working
+
+#if (DEF_BANDED_SW_LIGHTING == 1) 
+		colormap = floor(colormap) + 0.5;
+#endif
+
+	// Result is the normalized colormap index (0 bright .. 1 dark)
+	return clamp(colormap, 0.0, 31.0) / 32.0;
+}
 
 
 float shadowAttenuation(vec4 lightpos, float lightcolorA)

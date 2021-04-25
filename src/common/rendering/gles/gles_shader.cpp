@@ -716,6 +716,8 @@ bool FShader::Bind(ShaderFlavourData& flavour)
 		variantConfig.AppendFormat("#define DEF_USE_GLOW_BOTTOM_COLOR %d\n", flavour.useGlowBottomColor);
 		
 		variantConfig.AppendFormat("#define DEF_USE_COLOR_MAP %d\n", flavour.useColorMap);
+		variantConfig.AppendFormat("#define DEF_BUILD_LIGHTING %d\n", flavour.buildLighting);
+		variantConfig.AppendFormat("#define DEF_BANDED_SW_LIGHTING %d\n", flavour.bandedSwLight);
 
 		variantConfig.AppendFormat("#define USE_GLSL_V100 %d\n", gles.forceGLSLv100);
 
