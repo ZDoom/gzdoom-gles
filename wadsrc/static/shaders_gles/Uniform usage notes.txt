@@ -46,17 +46,16 @@ uTextureMode
 uPalLightLevels
 
 0xFF = 
- 31 0r 0 or 1
+ 32 0r 0 or 1
 
-0xF0 = 
+0xFF00 = 
 gl_fogmode :	
 (USES 2)
 	0, "$OPTVAL_OFF"
 	1, "$OPTVAL_STANDARD"
 	2, "$OPTVAL_RADIAL"
 
-
-0xF00 = 
+0xFF0000
 gl_lightmode:
 (USES 16, 5)
 	0, "$OPTVAL_STANDARD"
@@ -68,6 +67,9 @@ gl_lightmode:
 	8, "$OPTVAL_SOFTWARE"
 	16, "$OPTVAL_VANILLA"
 	
+
+
+
 	
 uTextureAddColor.a -> blendflags
 0x7 = 

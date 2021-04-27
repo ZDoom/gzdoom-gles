@@ -288,51 +288,7 @@ void FPresentShader::Bind()
 	mShader->Bind();
 }
 
-/////////////////////////////////////////////////////////////////////////////
 
-void FPresent3DCheckerShader::Bind()
-{
-	if (!mShader)
-	{
-		Init("shaders/pp/present_checker3d.fp", "shaders_gles/pp/presentChecker3d");
-	}
-	mShader->Bind();
-}
 
-void FPresent3DColumnShader::Bind()
-{
-	if (!mShader)
-	{
-		Init("shaders/pp/present_column3d.fp", "shaders_gles/pp/presentColumn3d");
-	}
-	mShader->Bind();
-}
-
-void FPresent3DRowShader::Bind()
-{
-	if (!mShader)
-	{
-		Init("shaders/pp/present_row3d.fp", "shaders_gles/pp/presentRow3d");
-	}
-	mShader->Bind();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void FShadowMapShader::Bind()
-{
-	if (!mShader)
-	{
-		FString prolog = Uniforms.CreateDeclaration("Uniforms", ShadowMapUniforms::Desc());
-
-		mShader.reset(new FShaderProgram());
-		mShader->Compile(FShaderProgram::Vertex, "shaders_gles/pp/screenquad.vp", "", 430);
-		mShader->Compile(FShaderProgram::Fragment, "shaders_gles/pp/shadowmap.fp", prolog, 430);
-		mShader->Link("shaders/glsl/shadowmap");
-		mShader->SetUniformBufferLocation(Uniforms.BindingPoint(), "Uniforms");
-		Uniforms.Init();
-	}
-	mShader->Bind();
-}
 
 }

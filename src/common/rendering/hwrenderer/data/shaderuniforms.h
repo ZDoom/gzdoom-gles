@@ -164,8 +164,6 @@ private:
 	ShaderUniforms &operator=(const ShaderUniforms &) = delete;
 
     IDataBuffer *mBuffer = nullptr;
-	
-
 };
 
 

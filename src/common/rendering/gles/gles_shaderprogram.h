@@ -71,33 +71,5 @@ public:
 
 };
 
-class FPresent3DCheckerShader : public FPresentShaderBase
-{
-public:
-	void Bind() override;
-};
-
-class FPresent3DColumnShader : public FPresentShaderBase
-{
-public:
-	void Bind() override;
-};
-
-class FPresent3DRowShader : public FPresentShaderBase
-{
-public:
-	void Bind() override;
-};
-
-class FShadowMapShader
-{
-public:
-	void Bind();
-
-	ShaderUniforms<ShadowMapUniforms, POSTPROCESS_BINDINGPOINT> Uniforms;
-
-private:
-	std::unique_ptr<FShaderProgram> mShader;
-};
 
 }
