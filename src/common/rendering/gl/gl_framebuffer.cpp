@@ -260,10 +260,13 @@ void OpenGLFrameBuffer::Swap()
 	Finish.Reset();
 	Finish.Clock();
 	//if (swapbefore) glFinish();
-	screen->mVertexData->DropSync();
+	mVertexData->DropSync();
 
 	FPSLimit();
 	SwapBuffers();
+
+	mVertexData->NextPipelineBuffer();
+	mVertexData->WaitSync();
 
 	//if (!swapbefore) glFinish();
 	Finish.Unclock();

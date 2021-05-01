@@ -104,6 +104,10 @@ public:
 	{
 		mCurIndex = mIndex;
 		
+	}
+
+	void NextPipelineBuffer()
+	{
 		mPipelinePos++;
 		mPipelinePos %= mPipelineNbr;
 

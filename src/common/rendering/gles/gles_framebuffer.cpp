@@ -247,6 +247,8 @@ void OpenGLFrameBuffer::Swap()
 
 	FPSLimit();
 	SwapBuffers();
+	
+	mVertexData->NextPipelineBuffer();
 
 	Finish.Unclock();
 	camtexcount = 0;

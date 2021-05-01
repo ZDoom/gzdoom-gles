@@ -303,13 +303,8 @@ sector_t* RenderView(player_t* player)
 {
 	auto RenderState = screen->RenderState();
 
-	// Reset BEFORE SetVertexBuffer so it sets the correct buffer
-	screen->mVertexData->Reset();
-	
-	// Wait  (if necessary) for the buffer to be free to use
-	screen->mVertexData->WaitSync();
-
 	RenderState->SetVertexBuffer(screen->mVertexData);
+	screen->mVertexData->Reset();
 
 	sector_t* retsec;
 	if (!V_IsHardwareRenderer())
