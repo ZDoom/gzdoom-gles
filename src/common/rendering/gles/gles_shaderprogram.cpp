@@ -261,7 +261,7 @@ FString FShaderProgram::PatchShader(ShaderType type, const FString &code, const 
 
 void FPresentShaderBase::Init(const char * vtx_shader_name, const char * program_name)
 {
-	FString prolog = Uniforms.CreateDeclaration("Uniforms", PresentUniforms::Desc(), true);
+	FString prolog = Uniforms.CreateDeclaration("Uniforms", PresentUniforms::Desc());
 
 	mShader.reset(new FShaderProgram());
 	mShader->Compile(FShaderProgram::Vertex, "shaders_gles/pp/screenquad.vp", prolog, 330);
@@ -270,12 +270,14 @@ void FPresentShaderBase::Init(const char * vtx_shader_name, const char * program
 	mShader->Bind();
 	Uniforms.Init();
 
+	Uniforms.UniformLocation.resize(Uniforms.mFields.size());
+
 	for (int n = 0; n < Uniforms.mFields.size(); n++)
 	{
 		int index = -1;
 		UniformFieldDesc desc = Uniforms.mFields[n];
 		index = glGetUniformLocation(mShader->mProgram, desc.Name);
-		Uniforms.mFields[n].UniformLocation = index;
+		Uniforms.UniformLocation[n] = index;
 	}
 }
 
@@ -287,8 +289,5 @@ void FPresentShader::Bind()
 	}
 	mShader->Bind();
 }
-
-
-
 
 }

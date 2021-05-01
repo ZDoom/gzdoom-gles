@@ -163,16 +163,17 @@ void FGLRenderer::DrawPresentTexture(const IntRect &box, bool applyGamma)
 	{
 		int index = -1;
 		UniformFieldDesc desc = mPresentShader->Uniforms.mFields[n];
+		int loc = mPresentShader->Uniforms.UniformLocation[n];
 		switch (desc.Type)
 		{
 		case UniformType::Int:
-			glUniform1i(desc.UniformLocation, *((GLint*)(((char*)(&mPresentShader->Uniforms)) + desc.Offset)));
+			glUniform1i(loc, *((GLint*)(((char*)(&mPresentShader->Uniforms)) + desc.Offset)));
 			break;
 		case UniformType::Float:
-			glUniform1f(desc.UniformLocation, *((GLfloat*)(((char*)(&mPresentShader->Uniforms)) + desc.Offset)));
+			glUniform1f(loc, *((GLfloat*)(((char*)(&mPresentShader->Uniforms)) + desc.Offset)));
 			break;
 		case UniformType::Vec2:
-			glUniform2fv(desc.UniformLocation,1, ((GLfloat*)(((char*)(&mPresentShader->Uniforms)) + desc.Offset)));
+			glUniform2fv(loc,1 , ((GLfloat*)(((char*)(&mPresentShader->Uniforms)) + desc.Offset)));
 			break;
 		}
 	}

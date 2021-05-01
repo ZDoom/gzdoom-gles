@@ -40,47 +40,33 @@ public:
 	const char *Name;
 	UniformType Type;
 	std::size_t Offset;
-	int UniformLocation = -1; // Only used when uniform buffers aren't used
 };
 
 class UniformBlockDecl
 {
 public:
-	static FString Create(const char *name, const std::vector<UniformFieldDesc> &fields, int bindingpoint, bool noUniformBuffer = false)
+	static FString Create(const char *name, const std::vector<UniformFieldDesc> &fields, int bindingpoint)
 	{
 		FString decl;
-
-		if (noUniformBuffer == false)
+		FString layout;
+		if (bindingpoint == -1)
 		{
-			FString layout;
-			if (bindingpoint == -1)
-			{
-				layout = "push_constant";
-			}
-			else if (screen->glslversion < 4.20)
-			{
-				layout = "std140";
-			}
-			else
-			{
-				layout.Format("std140, binding = %d", bindingpoint);
-			}
-			decl.Format("layout(%s) uniform %s\n{\n", layout.GetChars(), name);
-			for (size_t i = 0; i < fields.size(); i++)
-			{
-				decl.AppendFormat("\t%s %s;\n", GetTypeStr(fields[i].Type), fields[i].Name);
-			}
-			decl += "};\n";
+			layout = "push_constant";
 		}
-		else // Not using buffer
+		else if (screen->glslversion < 4.20)
 		{
-			decl += "\n";
-			for (size_t i = 0; i < fields.size(); i++)
-			{
-				decl.AppendFormat("\tuniform %s %s;\n", GetTypeStr(fields[i].Type), fields[i].Name);
-			}
-			decl += "\n";
+			layout = "std140";
 		}
+		else
+		{
+			layout.Format("std140, binding = %d", bindingpoint);
+		}
+		decl.Format("layout(%s) uniform %s\n{\n", layout.GetChars(), name);
+		for (size_t i = 0; i < fields.size(); i++)
+		{
+			decl.AppendFormat("\t%s %s;\n", GetTypeStr(fields[i].Type), fields[i].Name);
+		}
+		decl += "};\n";
 
 		return decl;
 	}
@@ -128,12 +114,12 @@ public:
 		return bindingpoint;
 	}
 
-	FString CreateDeclaration(const char *name, const std::vector<UniformFieldDesc> &fields, bool noUniformBuffer = false)
+	FString CreateDeclaration(const char *name, const std::vector<UniformFieldDesc> &fields)
 	{
 		mFields = fields;
-		return UniformBlockDecl::Create(name, fields, bindingpoint, noUniformBuffer);
+		return UniformBlockDecl::Create(name, fields, bindingpoint);
 	}
-	
+
 	void Init()
 	{
 		if (mBuffer == nullptr)
@@ -145,25 +131,24 @@ public:
 		if (mBuffer != nullptr)
 			mBuffer->SetData(sizeof(T), &Values);
 	}
-	
+
 	IDataBuffer* GetBuffer() const
 	{
 		// OpenGL needs to mess around with this in ways that should not be part of the interface.
 		return mBuffer;
 	}
-	
+
 	T *operator->() { return &Values; }
 	const T *operator->() const { return &Values; }
 
 	T Values;
-
-	std::vector<UniformFieldDesc> mFields;
 
 private:
 	ShaderUniforms(const ShaderUniforms &) = delete;
 	ShaderUniforms &operator=(const ShaderUniforms &) = delete;
 
     IDataBuffer *mBuffer = nullptr;
+	std::vector<UniformFieldDesc> mFields;
 };
 
 

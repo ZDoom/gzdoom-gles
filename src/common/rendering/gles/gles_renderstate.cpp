@@ -37,7 +37,6 @@
 #include "gles_buffers.h"
 #include "hw_clock.h"
 #include "printf.h"
-#include "colormaps.h"
 
 #include "hwrenderer/data/hw_viewpointbuffer.h"
 
