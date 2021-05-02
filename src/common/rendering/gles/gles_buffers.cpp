@@ -142,7 +142,9 @@ void GLBuffer::Upload(size_t start, size_t size)
 	if (!gles.useMappedBuffers)
 	{
 		Bind();
-		glBufferSubData(mUseType, start, size, memory + start);
+		
+		if(size)
+			glBufferSubData(mUseType, start, size, memory + start);
 	}
 }
 

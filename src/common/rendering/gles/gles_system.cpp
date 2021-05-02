@@ -156,6 +156,12 @@ namespace OpenGLESRenderer
 
 		gles.flags = RFL_NO_CLIP_PLANES;
 
+		gles.useMappedBuffers = gles_use_mapped_buffer;
+		gles.forceGLSLv100 = gles_force_glsl_v100;
+
+		gles.modelstring = (char*)glGetString(GL_RENDERER);
+		gles.vendorstring = (char*)glGetString(GL_VENDOR);
+	
 #if USE_GLES2
 		
 		gles.depthStencilAvailable = CheckExtension("GL_OES_packed_depth_stencil");
@@ -167,17 +173,14 @@ namespace OpenGLESRenderer
 #else
 		gles.depthStencilAvailable = true;
 		gles.npotAvailable = true;
-	
+		gles.useMappedBuffers = true;
+
 		gles.maxuniforms = 1024 * 16;
 		gles.max_texturesize = 1024 * 4;
 		gles.maxlights = 32; // TODO, calcualte this
 #endif
-		gles.useMappedBuffers = gles_use_mapped_buffer;
-		gles.forceGLSLv100 = gles_force_glsl_v100;
-
-		gles.modelstring = (char*)glGetString(GL_RENDERER);
-		gles.vendorstring = (char*)glGetString(GL_VENDOR);
+		
 		gles.numlightvectors = (gles.maxlights * LIGHT_VEC4_NUM);
-	}
 
+	}
 }
