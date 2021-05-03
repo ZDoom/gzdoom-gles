@@ -2,7 +2,6 @@
 #ifndef _HW__VERTEXBUFFER_H
 #define _HW__VERTEXBUFFER_H
 
-#include "doomdef.h"
 #include "tarray.h"
 #include "hwrenderer/data/buffers.h"
 #include <atomic>
