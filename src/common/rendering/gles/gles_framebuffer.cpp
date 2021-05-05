@@ -123,11 +123,7 @@ void OpenGLFrameBuffer::InitializeState()
 {
 	static bool first=true;
 
-	gl_customshader = false; // Unlikely work with GLSL v1.00
-	gl_sort_textures = true; // Faster
-
 	mPipelineNbr = gl_pipeline_depth;
-
 
 	InitGLES();
 
@@ -249,6 +245,8 @@ void OpenGLFrameBuffer::Swap()
 	SwapBuffers();
 	
 	mVertexData->NextPipelineBuffer();
+
+	RenderState()->SetVertexBuffer(screen->mVertexData); // Needed for Raze because it does not reset it
 
 	Finish.Unclock();
 	camtexcount = 0;

@@ -629,7 +629,9 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 	shaderData->muTextureModulateColor.Init(shaderData->hShader, "uTextureModulateColor");
 	shaderData->muTextureBlendColor.Init(shaderData->hShader, "uTextureBlendColor");
 	shaderData->muTimer.Init(shaderData->hShader, "timer");
-
+#ifdef NPOT_EMULATION
+	shaderData->muNpotEmulation.Init(shaderData->hShader, "uNpotEmulation");
+#endif
 	shaderData->muFixedColormapStart.Init(shaderData->hShader, "uFixedColormapStart");
 	shaderData->muFixedColormapRange.Init(shaderData->hShader, "uFixedColormapRange");
 
