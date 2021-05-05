@@ -279,17 +279,17 @@ float R_DoomLightingEquation(float light)
 	float z;
 
 #if (DEF_FOG_RADIAL == 1)
-		z = distance(pixelpos.xyz, uCameraPos.xyz);
+	z = distance(pixelpos.xyz, uCameraPos.xyz);
 #else
-		z = pixelpos.w;
+	z = pixelpos.w;
 #endif
-	
+
 #if (DEF_BUILD_LIGHTING == 1) // gl_lightmode 5: Build software lighting emulation.
 	{
 		// This is a lot more primitive than Doom's lighting...
-		float numShades = 32.0;
+		float numShades = float(uPalLightLevels);
 		float curshade = (1.0 - light) * (numShades - 1.0);
-		float visibility = max(uGlobVis * uLightFactor * z, 0.0);
+		float visibility = max(uGlobVis * uLightFactor * abs(z), 0.0);
 		float shade = clamp((curshade + visibility), 0.0, numShades - 1.0);
 		return clamp(shade * uLightDist, 0.0, 1.0);
 	}
@@ -298,7 +298,7 @@ float R_DoomLightingEquation(float light)
 	float colormap = R_ZDoomColormap(light, z); // ONLY Software mode, vanilla not yet working
 
 #if (DEF_BANDED_SW_LIGHTING == 1) 
-		colormap = floor(colormap) + 0.5;
+	colormap = floor(colormap) + 0.5;
 #endif
 
 	// Result is the normalized colormap index (0 bright .. 1 dark)

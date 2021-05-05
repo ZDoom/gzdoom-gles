@@ -128,6 +128,12 @@ bool FGLRenderState::ApplyShader()
 	flavour.fogEquationRadial = false;
 	flavour.colouredFog = false;
 
+	flavour.fogEquationRadial = (gl_fogmode == 2);
+	
+	flavour.twoDFog = false;
+	flavour.fogEnabled = false;
+	flavour.colouredFog = false;
+
 	if (mFogEnabled)
 	{
 		if (mFogEnabled == 2)
@@ -137,9 +143,6 @@ bool FGLRenderState::ApplyShader()
 		else if (gl_fogmode)
 		{
 			flavour.fogEnabled = true;
-
-			if (gl_fogmode == 2)
-				flavour.fogEquationRadial = true;
 
 			if ((GetFogColor() & 0xffffff) != 0)
 				flavour.colouredFog = true;
@@ -194,7 +197,7 @@ bool FGLRenderState::ApplyShader()
 
 		activeShader->cur->muGlobVis.Set(mHwUniforms->mGlobVis);
 
-		activeShader->cur->muPalLightLevels.Set(mHwUniforms->mPalLightLevels);
+		activeShader->cur->muPalLightLevels.Set(mHwUniforms->mPalLightLevels & 0xFF); // JUST pass the pal levels, clear the top bits
 		activeShader->cur->muViewHeight.Set(mHwUniforms->mViewHeight);
 		activeShader->cur->muClipHeight.Set(mHwUniforms->mClipHeight);
 		activeShader->cur->muClipHeightDirection.Set(mHwUniforms->mClipHeightDirection);
