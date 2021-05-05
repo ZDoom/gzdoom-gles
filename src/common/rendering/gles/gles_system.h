@@ -63,7 +63,6 @@ namespace OpenGLESRenderer
 	struct RenderContextGLES
 	{
 		unsigned int flags;
-		unsigned int maxuniforms;
 		unsigned int maxlights;
 		unsigned int numlightvectors;
 		bool useMappedBuffers;

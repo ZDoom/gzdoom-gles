@@ -110,6 +110,17 @@ bool FGLRenderState::ApplyShader()
 		subLights = (int(lightPtr[2]) - int(lightPtr[1])) / LIGHT_VEC4_NUM;
 		addLights = (int(lightPtr[3]) - int(lightPtr[2])) / LIGHT_VEC4_NUM;
 
+		// Here we limit the number of lights, but dont' change the light data so priority has to be mod, sub then add
+		if (modLights > gles.maxlights)
+			modLights = gles.maxlights;
+
+		if (modLights + subLights > gles.maxlights)
+			subLights = gles.maxlights - modLights;
+
+		if (modLights + subLights + addLights > gles.maxlights)
+			addLights = gles.maxlights - modLights - subLights;
+
+
 		// Skip passed the first 4 floats so the upload below only contains light data
 		lightPtr += 4;
 	}

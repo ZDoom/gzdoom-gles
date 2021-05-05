@@ -169,15 +169,13 @@ namespace OpenGLESRenderer
 		gles.depthStencilAvailable = CheckExtension("GL_OES_packed_depth_stencil");
 		gles.npotAvailable = CheckExtension("GL_OES_texture_npot");
 
-		gles.maxuniforms = 1024 * 16;
-		gles.max_texturesize = 1024 * 4;
+		gles.max_texturesize = 1024 * 2;
 #else
 		gles.depthStencilAvailable = true;
 		gles.npotAvailable = true;
 		gles.useMappedBuffers = true;
 
-		gles.maxuniforms = 1024 * 16;
-		gles.max_texturesize = 1024 * 4;
+		gles.max_texturesize = 1024 * 2;
 #endif
 		
 		gles.numlightvectors = (gles.maxlights * LIGHT_VEC4_NUM);
