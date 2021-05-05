@@ -7,6 +7,7 @@
 
 CVAR(Bool, gles_use_mapped_buffer, false, 0);
 CVAR(Bool, gles_force_glsl_v100, false, 0);
+CVAR(Int, gles_max_lights_per_surface, 32, 0);
 
 
 #if USE_GLES2
@@ -158,6 +159,7 @@ namespace OpenGLESRenderer
 
 		gles.useMappedBuffers = gles_use_mapped_buffer;
 		gles.forceGLSLv100 = gles_force_glsl_v100;
+		gles.maxlights = gles_max_lights_per_surface;
 
 		gles.modelstring = (char*)glGetString(GL_RENDERER);
 		gles.vendorstring = (char*)glGetString(GL_VENDOR);
@@ -169,7 +171,6 @@ namespace OpenGLESRenderer
 
 		gles.maxuniforms = 1024 * 16;
 		gles.max_texturesize = 1024 * 4;
-		gles.maxlights = 32; // TODO, calcualte this
 #else
 		gles.depthStencilAvailable = true;
 		gles.npotAvailable = true;
@@ -177,10 +178,8 @@ namespace OpenGLESRenderer
 
 		gles.maxuniforms = 1024 * 16;
 		gles.max_texturesize = 1024 * 4;
-		gles.maxlights = 32; // TODO, calcualte this
 #endif
 		
 		gles.numlightvectors = (gles.maxlights * LIGHT_VEC4_NUM);
-
 	}
 }
