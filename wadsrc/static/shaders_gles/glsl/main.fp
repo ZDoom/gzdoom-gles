@@ -285,14 +285,12 @@ float R_DoomLightingEquation(float light)
 #endif
 
 #if (DEF_BUILD_LIGHTING == 1) // gl_lightmode 5: Build software lighting emulation.
-	{
-		// This is a lot more primitive than Doom's lighting...
-		float numShades = float(uPalLightLevels);
-		float curshade = (1.0 - light) * (numShades - 1.0);
-		float visibility = max(uGlobVis * uLightFactor * abs(z), 0.0);
-		float shade = clamp((curshade + visibility), 0.0, numShades - 1.0);
-		return clamp(shade * uLightDist, 0.0, 1.0);
-	}
+	// This is a lot more primitive than Doom's lighting...
+	float numShades = float(uPalLightLevels);
+	float curshade = (1.0 - light) * (numShades - 1.0);
+	float visibility = max(uGlobVis * uLightFactor * abs(z), 0.0);
+	float shade = clamp((curshade + visibility), 0.0, numShades - 1.0);
+	return clamp(shade * uLightDist, 0.0, 1.0);
 #endif
 
 	float colormap = R_ZDoomColormap(light, z); // ONLY Software mode, vanilla not yet working
