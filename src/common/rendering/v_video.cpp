@@ -94,6 +94,9 @@ CUSTOM_CVAR(Int, vid_preferbackend, 0, CVAR_ARCHIVE | CVAR_GLOBALCONFIG | CVAR_N
 
 	switch(self)
 	{
+	case 3:
+		Printf("Selecting OpenGLES 2.0 backend...\n");
+		break;
 	case 2:
 		Printf("Selecting SoftPoly backend...\n");
 		break;
