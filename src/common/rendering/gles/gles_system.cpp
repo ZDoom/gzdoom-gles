@@ -167,18 +167,20 @@ namespace OpenGLESRenderer
 	
 		gl_customshader = false;
 
-#if USE_GLES2
+		GLint maxTextureSize[1];
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, maxTextureSize);
+
+		gles.max_texturesize = maxTextureSize[0];
 		
+		Printf("GL_MAX_TEXTURE_SIZE: %d\n", gles.max_texturesize);
+
+#if USE_GLES2
 		gles.depthStencilAvailable = CheckExtension("GL_OES_packed_depth_stencil");
 		gles.npotAvailable = CheckExtension("GL_OES_texture_npot");
-
-		gles.max_texturesize = 1024 * 2;
 #else
 		gles.depthStencilAvailable = true;
 		gles.npotAvailable = true;
 		gles.useMappedBuffers = true;
-
-		gles.max_texturesize = 1024 * 2;
 #endif
 		
 		gles.numlightvectors = (gles.maxlights * LIGHT_VEC4_NUM);
