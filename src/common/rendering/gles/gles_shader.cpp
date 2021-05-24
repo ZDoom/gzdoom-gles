@@ -690,10 +690,9 @@ bool FShader::Bind(ShaderFlavourData& flavour)
 {
 	uint32_t tag = CreateShaderTag(flavour);
 
+	auto pos = variants.find(tag);
 
-	cur = variants[tag];
-
-	if (!cur)
+	if (pos == variants.end())
 	{
 		FString variantConfig = "\n";
 
@@ -731,7 +730,14 @@ bool FShader::Bind(ShaderFlavourData& flavour)
 
 		Load(mName.GetChars(), mVertProg, mFragProg, mFragProg2, mLightProg, mDefinesBase + variantConfig);
 
-		variants[tag] = cur;
+		if (variants.insert(std::make_pair(tag, cur)).second == false)
+		{
+			Printf("ERROR INSERTING");
+		}
+	}
+	else
+	{
+		cur = pos->second;
 	}
 
 	GLRenderer->mShaderManager->SetActiveShader(this->cur);

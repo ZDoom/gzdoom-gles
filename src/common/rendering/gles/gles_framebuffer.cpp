@@ -63,7 +63,6 @@ EXTERN_CVAR (Bool, vid_vsync)
 EXTERN_CVAR(Bool, r_drawvoxels)
 EXTERN_CVAR(Int, gl_tonemap)
 EXTERN_CVAR(Bool, cl_capfps)
-EXTERN_CVAR(Bool, gl_customshader)
 EXTERN_CVAR(Int, gl_pipeline_depth);
 
 EXTERN_CVAR(Bool, gl_sort_textures);
