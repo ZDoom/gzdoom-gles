@@ -128,6 +128,9 @@ bool FGLRenderState::ApplyShader()
 	ShaderFlavourData flavour;
 
 	flavour.textureMode = (mTextureMode == TM_NORMAL && mTempTM == TM_OPAQUE ? TM_OPAQUE : mTextureMode);
+	
+	if (flavour.textureMode == -1)
+		flavour.textureMode = 0;
 
 	flavour.texFlags = mTextureModeFlags; if (!mBrightmapEnabled) flavour.texFlags &= ~(TEXF_Brightmap | TEXF_Glowmap);
 	flavour.texFlags >>= 16; //Move flags to start of word

@@ -8,6 +8,7 @@
 CVAR(Bool, gles_use_mapped_buffer, false, 0);
 CVAR(Bool, gles_force_glsl_v100, false, 0);
 CVAR(Int, gles_max_lights_per_surface, 32, 0);
+CVAR(Bool, gl_customshader, true, 0)
 
 
 #if USE_GLES2
@@ -164,6 +165,8 @@ namespace OpenGLESRenderer
 		gles.modelstring = (char*)glGetString(GL_RENDERER);
 		gles.vendorstring = (char*)glGetString(GL_VENDOR);
 	
+		gl_customshader = false;
+
 #if USE_GLES2
 		
 		gles.depthStencilAvailable = CheckExtension("GL_OES_packed_depth_stencil");
