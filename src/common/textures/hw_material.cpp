@@ -29,7 +29,8 @@
 #include "c_cvars.h"
 #include "v_video.h"
 
-EXTERN_CVAR(Bool, gl_customshader)
+
+CVAR(Bool, gl_customshader, true, 0);
 
 
 static IHardwareTexture* (*layercallback)(int layer, int translation);
