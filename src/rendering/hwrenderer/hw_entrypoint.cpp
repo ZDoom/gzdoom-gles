@@ -159,6 +159,9 @@ sector_t* RenderViewpoint(FRenderViewpoint& mainvp, AActor* camera, IntRect* bou
 
 		di->ProcessScene(toscreen);
 
+		// Reset colormap so 2D drawing isn't affected
+		RenderState.SetSpecialColormap(CM_DEFAULT, 1);
+
 		if (mainview)
 		{
 			PostProcess.Clock();
