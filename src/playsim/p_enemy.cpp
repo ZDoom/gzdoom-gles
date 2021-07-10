@@ -260,7 +260,7 @@ void P_NoiseAlert (AActor *emitter, AActor *target, bool splash, double maxdist)
 //
 //----------------------------------------------------------------------------
 
-bool AActor::CheckMeleeRange ()
+bool AActor::CheckMeleeRange (double range)
 {
 	AActor *pl = target;
 
@@ -270,8 +270,9 @@ bool AActor::CheckMeleeRange ()
 		return false;
 				
 	dist = Distance2D (pl);
+	if (range < 0) range = meleerange;
 
-	if (dist >= meleerange + pl->radius)
+	if (dist >= range + pl->radius)
 		return false;
 
 	// [RH] If moving toward goal, then we've reached it.
@@ -300,7 +301,8 @@ bool AActor::CheckMeleeRange ()
 DEFINE_ACTION_FUNCTION(AActor, CheckMeleeRange)
 {
 	PARAM_SELF_PROLOGUE(AActor);
-	ACTION_RETURN_INT(self->CheckMeleeRange());
+	PARAM_FLOAT(range);
+	ACTION_RETURN_INT(self->CheckMeleeRange(range));
 }
 
 //=============================================================================
@@ -443,7 +445,7 @@ int P_Move (AActor *actor)
 	// want to yank them to the ground here as Doom did, since that makes
 	// it difficult to thrust them vertically in a reasonable manner.
 	// [GZ] Let jumping actors jump.
-	if (!((actor->flags & MF_NOGRAVITY) || (actor->flags6 & MF6_CANJUMP))
+	if (!((actor->flags & MF_NOGRAVITY) || CanJump(actor))
 		&& actor->Z() > actor->floorz && !(actor->flags2 & MF2_ONMOBJ))
 	{
 		return false;
@@ -556,7 +558,7 @@ int P_Move (AActor *actor)
 	// to the floor if it is within MaxStepHeight, presuming that it is
 	// actually walking down a step.
 	if (try_ok &&
-		!((actor->flags & MF_NOGRAVITY) || (actor->flags6 & MF6_CANJUMP))
+		!((actor->flags & MF_NOGRAVITY) || CanJump(actor))
 			&& actor->Z() > actor->floorz && !(actor->flags2 & MF2_ONMOBJ))
 	{
 		if (actor->Z() <= actor->floorz + actor->MaxStepHeight)
@@ -583,7 +585,7 @@ int P_Move (AActor *actor)
 
 	if (!try_ok)
 	{
-		if (((actor->flags6 & MF6_CANJUMP)||(actor->flags & MF_FLOAT)) && tm.floatok)
+		if ((CanJump(actor) || (actor->flags & MF_FLOAT)) && tm.floatok)
 		{ // must adjust height
 			double savedz = actor->Z();
 
@@ -594,7 +596,7 @@ int P_Move (AActor *actor)
 
 
 			// [RH] Check to make sure there's nothing in the way of the float
-			if (P_TestMobjZ (actor))
+			if (P_TestMobjZ(actor))
 			{
 				actor->flags |= MF_INFLOAT;
 				return true;
@@ -1846,7 +1848,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_Look)
 	}
 	else if (self->SeeSound)
 	{
-		if (self->flags2 & MF2_BOSS)
+		if ((self->flags2 & MF2_BOSS) || (self->flags8 & MF8_FULLVOLSEE))
 		{ // full volume
 			S_Sound (self, CHAN_VOICE, 0, self->SeeSound, 1, ATTN_NONE);
 		}
@@ -1962,7 +1964,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_LookEx)
 				}
 
 				// Let the self wander around aimlessly looking for a fight
-                if (!(self->flags & MF_INCHASE))
+                if (!(self->flags7 & MF7_INCHASE))
                 {
                     if (seestate)
                     {
@@ -2038,7 +2040,7 @@ DEFINE_ACTION_FUNCTION(AActor, A_LookEx)
 		}
 	}
 
-	if (self->target && !(self->flags & MF_INCHASE))
+	if (self->target && !(self->flags7 & MF7_INCHASE))
 	{
         if (!(flags & LOF_NOJUMP))
         {
@@ -2202,15 +2204,14 @@ nosee:
 
 void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missilestate, bool playactive, bool nightmarefast, bool dontmove, int flags)
 {
-
 	if (actor->flags5 & MF5_INCONVERSATION)
 		return;
 
-	if (actor->flags & MF_INCHASE)
+	if (actor->flags7 & MF7_INCHASE)
 	{
 		return;
 	}
-	actor->flags |= MF_INCHASE;
+	actor->flags7 |= MF7_INCHASE;
 
 	// [RH] Andy Baker's stealth monsters
 	if (actor->flags & MF_STEALTH)
@@ -2323,7 +2324,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 		}
 		if (P_LookForPlayers (actor, true, NULL) && actor->target != actor->goal)
 		{ // got a new target
-			actor->flags &= ~MF_INCHASE;
+			actor->flags7 &= ~MF7_INCHASE;
 			return;
 		}
 		if (actor->target == NULL)
@@ -2334,14 +2335,14 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 				if (actor->target == NULL)
 				{
 					if (!dontmove) A_Wander(actor);
-					actor->flags &= ~MF_INCHASE;
+					actor->flags7 &= ~MF7_INCHASE;
 					return;
 				}
 			}
 			else
 			{
 				actor->SetIdle();
-				actor->flags &= ~MF_INCHASE;
+				actor->flags7 &= ~MF7_INCHASE;
 				return;
 			}
 		}
@@ -2360,7 +2361,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 		//over and over again.
 		if (flags & CHF_STOPIFBLOCKED)
 			actor->movecount = pr_trywalk() & 15;
-		actor->flags &= ~MF_INCHASE;
+		actor->flags7 &= ~MF7_INCHASE;
 		return;
 	}
 	
@@ -2408,7 +2409,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 				actor->flags4 |= MF4_INCOMBAT;
 				actor->SetIdle();
 			}
-			actor->flags &= ~MF_INCHASE;
+			actor->flags7 &= ~MF7_INCHASE;
 			actor->goal = newgoal;
 			return;
 		}
@@ -2459,7 +2460,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 				S_Sound (actor, CHAN_WEAPON, 0, actor->AttackSound, 1, ATTN_NORM);
 
 			actor->SetState (meleestate);
-			actor->flags &= ~MF_INCHASE;
+			actor->flags7 &= ~MF7_INCHASE;
 			return;
 		}
 		
@@ -2477,7 +2478,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 			actor->SetState (missilestate);
 			actor->flags |= MF_JUSTATTACKED;
 			actor->flags4 |= MF4_INCOMBAT;
-			actor->flags &= ~MF_INCHASE;
+			actor->flags7 &= ~MF7_INCHASE;
 			return;
 		}
 	}
@@ -2503,7 +2504,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 		}
 		if (gotNew && actor->target != oldtarget)
 		{
-			actor->flags &= ~MF_INCHASE;
+			actor->flags7 &= ~MF7_INCHASE;
 			return; 	// got a new target
 		}
 	}
@@ -2553,7 +2554,7 @@ void A_DoChase (AActor *actor, bool fastchase, FState *meleestate, FState *missi
 		actor->PlayActiveSound ();
 	}
 
-	actor->flags &= ~MF_INCHASE;
+	actor->flags7 &= ~MF7_INCHASE;
 }
 
 //==========================================================================
@@ -2616,7 +2617,7 @@ bool P_CanResurrect(AActor *raiser, AActor *thing)
 //
 //==========================================================================
 
-bool P_CheckForResurrection(AActor *self, bool usevilestates)
+bool P_CheckForResurrection(AActor* self, bool usevilestates, FState* state = nullptr, FSoundID sound = 0)
 {
 	const AActor *info;
 	AActor *temp;
@@ -2702,8 +2703,8 @@ bool P_CheckForResurrection(AActor *self, bool usevilestates)
 				self->target = temp;
 
 				// Make the state the monster enters customizable.
-				FState * state = self->FindState(NAME_Heal);
-				if (state != NULL)
+				if (state == nullptr) state = self->FindState(NAME_Heal);
+				if (state != nullptr)
 				{
 					self->SetState(state);
 				}
@@ -2711,13 +2712,14 @@ bool P_CheckForResurrection(AActor *self, bool usevilestates)
 				{
 					// For Dehacked compatibility this has to use the Arch Vile's
 					// heal state as a default if the actor doesn't define one itself.
-					PClassActor *archvile = PClass::FindActor("Archvile");
+					PClassActor *archvile = PClass::FindActor(NAME_Archvile);
 					if (archvile != NULL)
 					{
 						self->SetState(archvile->FindState(NAME_Heal));
 					}
 				}
-				S_Sound(corpsehit, CHAN_BODY, 0, "vile/raise", 1, ATTN_IDLE);
+				if (sound == 0) sound = "vile/raise";
+				S_Sound(corpsehit, CHAN_BODY, 0, sound, 1, ATTN_IDLE);
 				info = corpsehit->GetDefault();
 
 				if (GetTranslationType(corpsehit->Translation) == TRANSLATION_Blood)
@@ -3082,7 +3084,12 @@ void A_BossDeath(AActor *self)
 	FName mytype = self->GetClass()->TypeName;
 
 	// Ugh...
-	FName type = self->GetClass()->GetReplacee(self->Level)->TypeName;
+	auto replacee = self->GetClass()->GetReplacee(self->Level);
+	FName type = replacee->TypeName;
+	int flags8 = self->flags8;
+	
+	if (type != mytype) flags8 |= ((AActor*)replacee->Defaults)->flags8;
+	
 	
 	// Do generic special death actions first
 	bool checked = false;
@@ -3119,24 +3126,30 @@ void A_BossDeath(AActor *self)
 	// [RH] These all depend on the presence of level flags now
 	//		rather than being hard-coded to specific levels/episodes.
 
-	if ((Level->flags & (LEVEL_MAP07SPECIAL|
+	if (((Level->flags & (LEVEL_MAP07SPECIAL|
 						LEVEL_BRUISERSPECIAL|
 						LEVEL_CYBORGSPECIAL|
 						LEVEL_SPIDERSPECIAL|
 						LEVEL_HEADSPECIAL|
 						LEVEL_MINOTAURSPECIAL|
-						LEVEL_SORCERER2SPECIAL)) == 0)
+						LEVEL_SORCERER2SPECIAL)) == 0) &&
+		((Level->flags3 & (LEVEL3_E1M8SPECIAL | LEVEL3_E2M8SPECIAL | LEVEL3_E3M8SPECIAL | LEVEL3_E4M8SPECIAL | LEVEL3_E4M6SPECIAL)) == 0))
 		return;
 
 	if ((Level->i_compatflags & COMPATF_ANYBOSSDEATH) || ( // [GZ] Added for UAC_DEAD
-		((Level->flags & LEVEL_MAP07SPECIAL) && (type == NAME_Fatso || type == NAME_Arachnotron)) ||
+		((Level->flags & LEVEL_MAP07SPECIAL) && (flags8 & (MF8_MAP07BOSS1|MF8_MAP07BOSS2))) ||
 		((Level->flags & LEVEL_BRUISERSPECIAL) && (type == NAME_BaronOfHell)) ||
 		((Level->flags & LEVEL_CYBORGSPECIAL) && (type == NAME_Cyberdemon)) ||
 		((Level->flags & LEVEL_SPIDERSPECIAL) && (type == NAME_SpiderMastermind)) ||
 		((Level->flags & LEVEL_HEADSPECIAL) && (type == NAME_Ironlich)) ||
 		((Level->flags & LEVEL_MINOTAURSPECIAL) && (type == NAME_Minotaur)) ||
-		((Level->flags & LEVEL_SORCERER2SPECIAL) && (type == NAME_Sorcerer2))
-	   ))
+		((Level->flags & LEVEL_SORCERER2SPECIAL) && (type == NAME_Sorcerer2)) ||
+		((Level->flags3 & LEVEL3_E1M8SPECIAL) && (flags8 & MF8_E1M8BOSS)) ||
+		((Level->flags3 & LEVEL3_E2M8SPECIAL) && (flags8 & MF8_E2M8BOSS)) ||
+		((Level->flags3 & LEVEL3_E3M8SPECIAL) && (flags8 & MF8_E3M8BOSS)) ||
+		((Level->flags3 & LEVEL3_E4M8SPECIAL) && (flags8 & MF8_E4M8BOSS)) ||
+		((Level->flags3 & LEVEL3_E4M6SPECIAL) && (flags8 & MF8_E4M6BOSS))
+		))
 		;
 	else
 		return;
@@ -3153,16 +3166,21 @@ void A_BossDeath(AActor *self)
 	}
 	if (Level->flags & LEVEL_MAP07SPECIAL)
 	{
+		// samereplacement will only be considered if both Fatso and Arachnotron are flagged as MAP07 bosses and the current monster maps to one of them.
 		PClassActor * fatso = PClass::FindActor(NAME_Fatso);
 		PClassActor * arachnotron = PClass::FindActor(NAME_Arachnotron);
-		bool samereplacement = (type == NAME_Fatso || type == NAME_Arachnotron) && fatso && arachnotron && fatso->GetReplacement(Level) == arachnotron->GetReplacement(Level);
+		bool samereplacement = (type == NAME_Fatso || type == NAME_Arachnotron) && 
+			fatso && arachnotron && 
+			(GetDefaultByType(fatso)->flags8 & MF8_MAP07BOSS1) && 
+			(GetDefaultByType(arachnotron)->flags8 & MF8_MAP07BOSS2) &&
+			fatso->GetReplacement(Level) == arachnotron->GetReplacement(Level);
 
-		if (type == NAME_Fatso || samereplacement)
+		if ((flags8 & MF8_MAP07BOSS1) || samereplacement)
 		{
 			Level->EV_DoFloor (DFloor::floorLowerToLowest, NULL, 666, 1., 0, -1, 0, false);
 		}
 		
-		if (type == NAME_Arachnotron || samereplacement)
+		if ((flags8 & MF8_MAP07BOSS2) || samereplacement)
 		{
 			Level->EV_DoFloor (DFloor::floorRaiseByTexture, NULL, 667, 1., 0, -1, 0, false);
 		}

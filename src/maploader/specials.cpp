@@ -449,7 +449,7 @@ void MapLoader::SpawnSkybox(AActor *origin)
 static void SetupSectorDamage(sector_t *sector, int damage, int interval, int leakchance, FName type, int flags)
 {
 	// Only set if damage is not yet initialized. This ensures that UDMF takes precedence over sector specials.
-	if (sector->damageamount == 0)
+	if (sector->damageamount == 0 && !(sector->Flags & (SECF_EXIT1|SECF_EXIT2)))
 	{
 		sector->damageamount = damage;
 		sector->damageinterval = MAX(1, interval);
@@ -484,17 +484,43 @@ void MapLoader::InitSectorSpecial(sector_t *sector, int special)
 	{
 		sector->Flags |= SECF_PUSH;
 	}
-	if ((sector->special & DAMAGE_MASK) == 0x100)
+	if (sector->special & KILL_MONSTERS_MASK)
 	{
-		SetupSectorDamage(sector, 5, 32, 0, NAME_Fire, 0);
+		sector->Flags |= SECF_KILLMONSTERS;
 	}
-	else if ((sector->special & DAMAGE_MASK) == 0x200)
+	if (!(sector->special & DEATH_MASK))
 	{
-		SetupSectorDamage(sector, 10, 32, 0, NAME_Slime, 0);
+		if ((sector->special & DAMAGE_MASK) == 0x100)
+		{
+			SetupSectorDamage(sector, 5, 32, 0, NAME_Fire, 0);
+		}
+		else if ((sector->special & DAMAGE_MASK) == 0x200)
+		{
+			SetupSectorDamage(sector, 10, 32, 0, NAME_Slime, 0);
+		}
+		else if ((sector->special & DAMAGE_MASK) == 0x300)
+		{
+			SetupSectorDamage(sector, 20, 32, 5, NAME_Slime, 0);
+		}
 	}
-	else if ((sector->special & DAMAGE_MASK) == 0x300)
+	else
 	{
-		SetupSectorDamage(sector, 20, 32, 5, NAME_Slime, 0);
+		if ((sector->special & DAMAGE_MASK) == 0x100)
+		{
+			SetupSectorDamage(sector, TELEFRAG_DAMAGE, 0, 0, NAME_InstantDeath, 0);
+		}
+		else if ((sector->special & DAMAGE_MASK) == 0x200)
+		{
+			sector->Flags |= SECF_EXIT1;
+		}
+		else if ((sector->special & DAMAGE_MASK) == 0x300)
+		{
+			sector->Flags |= SECF_EXIT2;
+		}
+		else // 0
+		{
+			SetupSectorDamage(sector, TELEFRAG_DAMAGE-1, 0, 0, NAME_InstantDeath, 0);
+		}
 	}
 	sector->special &= 0xff;
 
@@ -1346,11 +1372,34 @@ void MapLoader::SpawnScrollers()
 		}
 
 		case Scroll_Texture_Offsets:
+		{
+			double divider = max(1, l->args[3]);
 			// killough 3/2/98: scroll according to sidedef offsets
-			side = Level->lines[i].sidedef[0];
-			Level->CreateThinker<DScroller>(EScroll::sc_side, -side->GetTextureXOffset(side_t::mid),
-				side->GetTextureYOffset(side_t::mid), nullptr, nullptr, side, accel, SCROLLTYPE(l->args[0]));
+			side = l->sidedef[0];
+			if (l->args[2] & 3)
+			{
+				// if 1, then displacement
+				// if 2, then accelerative (also if 3)
+				control = l->sidedef[0]->sector;
+				if (l->args[2] & 2)
+					accel = 1;
+			}
+			double dx = -side->GetTextureXOffset(side_t::mid) / divider;
+			double dy = side->GetTextureYOffset(side_t::mid) / divider;
+			if (l->args[1] == 0)
+			{
+				Level->CreateThinker<DScroller>(EScroll::sc_side, dx, dy, control, nullptr, side, accel, SCROLLTYPE(l->args[0]));
+			}
+			else
+			{
+				auto it = Level->GetLineIdIterator(l->args[1]);
+				while (int ln = it.Next())
+				{
+					Level->CreateThinker<DScroller>(EScroll::sc_side, dx, dy, control, nullptr, Level->lines[ln].sidedef[0], accel, SCROLLTYPE(l->args[0]));
+				}
+			}
 			break;
+		}
 
 		case Scroll_Texture_Left:
 			l->special = special;	// Restore the special, for compat_useblocking's benefit.
