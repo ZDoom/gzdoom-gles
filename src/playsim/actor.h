@@ -421,6 +421,7 @@ enum ActorFlag8
 	MF8_E4M6BOSS		= 0x00200000,	// MBF21 boss death.
 	MF8_MAP07BOSS1		= 0x00400000,	// MBF21 boss death.
 	MF8_MAP07BOSS2		= 0x00800000,	// MBF21 boss death.
+	MF8_AVOIDHAZARDS	= 0x01000000,	// MBF AI enhancement.
 };
 
 // --- mobj.renderflags ---
@@ -686,17 +687,11 @@ public:
 
 	FDropItem *GetDropItems() const;
 
-	// Return true if the monster should use a missile attack, false for melee
-	bool SuggestMissileAttack (double dist);
-
 	// Adjusts the angle for deflection/reflection of incoming missiles
 	// Returns true if the missile should be allowed to explode anyway
 	bool AdjustReflectionAngle (AActor *thing, DAngle &angle);
 	int AbsorbDamage(int damage, FName dmgtype, AActor *inflictor, AActor *source, int flags);
 	void AlterWeaponSprite(visstyle_t *vis);
-
-	// Returns true if this actor is within melee range of its target
-	bool CheckMeleeRange(double range = -1);
 
 	bool CheckNoDelay();
 

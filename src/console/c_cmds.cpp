@@ -361,7 +361,18 @@ CCMD (changemap)
 	if (argv.argc() > 1)
 	{
 		const char *mapname = argv[1];
-		if (!strcmp(mapname, "*")) mapname = primaryLevel->MapName.GetChars();
+		if (!strcmp(mapname, "*"))
+		{
+			mapname = primaryLevel->MapName.GetChars();
+		}
+		else if (!strcmp(mapname, "+") && primaryLevel->NextMap.Len() > 0 && primaryLevel->NextMap.Compare("enDSeQ", 6))
+		{
+			mapname = primaryLevel->NextMap.GetChars();
+		}
+		else if (!strcmp(mapname, "+$") && primaryLevel->NextSecretMap.Len() > 0 && primaryLevel->NextSecretMap.Compare("enDSeQ", 6))
+		{
+			mapname = primaryLevel->NextSecretMap.GetChars();
+		}
 
 		try
 		{
@@ -1103,7 +1114,7 @@ CCMD(idmus)
 	FString map;
 	int l;
 
-	if (!nomusic)
+	if (MusicEnabled())
 	{
 		if (argv.argc() > 1)
 		{

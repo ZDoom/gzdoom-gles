@@ -903,6 +903,7 @@ static void End2DAndUpdate()
 	twod->End();
 	CheckBench();
 	screen->Update();
+	twod->OnFrameDone();
 }
 
 //==========================================================================
@@ -1910,10 +1911,10 @@ static FString ParseGameInfo(TArray<FString> &pwads, const char *fn, const char 
 		else if (!nextKey.CompareNoCase("STARTUPCOLORS"))
 		{
 			sc.MustGetString();
-			GameStartupInfo.FgColor = V_GetColor(NULL, sc);
+			GameStartupInfo.FgColor = V_GetColor(sc);
 			sc.MustGetStringName(",");
 			sc.MustGetString();
-			GameStartupInfo.BkColor = V_GetColor(NULL, sc);
+			GameStartupInfo.BkColor = V_GetColor(sc);
 		}
 		else if (!nextKey.CompareNoCase("STARTUPTYPE"))
 		{
@@ -2121,8 +2122,8 @@ static void AddAutoloadFiles(const char *autoname)
 		// Add common (global) wads
 		D_AddConfigFiles(allwads, "Global.Autoload", "*.wad", GameConfig);
 
-		long len;
-		int lastpos = -1;
+		ptrdiff_t len;
+		ptrdiff_t lastpos = -1;
 
 		while ((len = LumpFilterIWAD.IndexOf('.', lastpos+1)) > 0)
 		{
@@ -3043,6 +3044,11 @@ static void GC_MarkGameRoots()
 	GC::Mark(NextToThink);
 }
 
+static void System_ToggleFullConsole()
+{
+	gameaction = ga_fullconsole;
+}
+
 bool  CheckSkipGameOptionBlock(const char* str);
 
 //==========================================================================
@@ -3091,6 +3097,10 @@ static int D_DoomMain_Internal (void)
 		nullptr,
 		CheckSkipGameOptionBlock,
 		System_ConsoleToggled,
+		nullptr, 
+		nullptr,
+		System_ToggleFullConsole,
+		nullptr,
 	};
 
 	
@@ -3736,7 +3746,6 @@ void D_Cleanup()
 	FreeSBarInfoScript();
 	
 	// clean up game state
-	ST_Clear();
 	D_ErrorCleanup ();
 	P_Shutdown();
 	

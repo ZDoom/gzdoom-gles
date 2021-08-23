@@ -209,6 +209,7 @@ ListMenu "EpisodeMenu"
 	{
 		Position 48, 63
 		StaticPatch 54, 38, "M_EPISOD", 0 , "$MNU_EPISODE"
+		linespacing 16
 	}
 	IfGame(Strife)
 	{
@@ -234,6 +235,7 @@ ListMenu "SkillMenu"
 	IfGame(Doom, Chex)
 	{
 		StaticPatch 96, 14, "M_NEWG", 0, "$MNU_NEWGAME"
+		linespacing 16
 	}
 	IfGame(Strife)
 	{
@@ -945,6 +947,8 @@ OptionMenu "VideoOptions" protected
 	Slider "$DSPLYMNU_BRIGHTNESS",				"vid_brightness",				-0.8,0.8, 0.05,2
 	Slider "$DSPLYMNU_CONTRAST",				"vid_contrast",	   				0.1, 3.0, 0.1
 	Slider "$DSPLYMNU_SATURATION",				"vid_saturation",  				-3.0, 3.0, 0.25, 2
+	StaticText " "
+	Slider "$DSPLYMNU_FOV",						"fov",							75.0, 120.0, 0.1, 1
 	StaticText " "
 	Option "$DSPLYMNU_SPRITESHADOW",			"r_actorspriteshadow", "SpriteShadowModes"
 	Option "$DSPLYMNU_CUSTOMINVERTMAP",			"cl_customizeinvulmap", "OnOff"
