@@ -654,13 +654,16 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 
 FShader::~FShader()
 {
-	/*
-	glDeleteProgram(hShader);
-	if (hVertProg != 0)
-		glDeleteShader(hVertProg);
-	if (hFragProg != 0)
-		glDeleteShader(hFragProg);
-	*/
+	std::map<uint32_t, ShaderVariantData*>::iterator it = variants.begin();
+
+	while (it != variants.end())
+	{
+		glDeleteProgram(it->second->hShader);
+		if (it->second->hVertProg != 0)
+			glDeleteShader(it->second->hVertProg);
+		if (it->second->hFragProg != 0)
+			glDeleteShader(it->second->hFragProg);
+	}
 }
 
 
