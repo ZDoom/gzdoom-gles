@@ -633,11 +633,11 @@ bool FShader::Load(const char * name, const char * vert_prog_lump_, const char *
 		char stringbuf[20];
 		mysnprintf(stringbuf, 20, "texture%d", i);
 		int tempindex = glGetUniformLocation(shaderData->hShader, stringbuf);
-		if (tempindex > 0) glUniform1i(tempindex, i - 1);
+		if (tempindex >= 0) glUniform1i(tempindex, i - 1);
 	}
 
 	int shadowmapindex = glGetUniformLocation(shaderData->hShader, "ShadowMap");
-	if (shadowmapindex > 0) glUniform1i(shadowmapindex, 16);
+	if (shadowmapindex >= 0) glUniform1i(shadowmapindex, 16);
 
 	glUseProgram(0);
 
