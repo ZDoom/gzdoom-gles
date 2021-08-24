@@ -663,6 +663,7 @@ FShader::~FShader()
 			glDeleteShader(it->second->hVertProg);
 		if (it->second->hFragProg != 0)
 			glDeleteShader(it->second->hFragProg);
+		it++;
 	}
 }
 
