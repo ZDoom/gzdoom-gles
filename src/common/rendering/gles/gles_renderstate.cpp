@@ -139,6 +139,7 @@ bool FGLRenderState::ApplyShader()
 				flavour.hasSpotLight = true;
 				break;
 			}
+			findSpotsPtr += LIGHT_VEC4_NUM * 4;
 		}
 	}
 
