@@ -1,3 +1,7 @@
+This repo is forked from https://github.com/coelckers/gzdoom
+
+* This repo is historical - all of its contents have been merged with GZDoom in GZDoom version 4.7.0. The branch "oldmaster" contains the old commit history. This will be archived.
+
 # Welcome to GZDoom!
 
 [![Build Status](https://github.com/coelckers/gzdoom/workflows/Continuous%20Integration/badge.svg)](https://github.com/coelckers/gzdoom/actions?query=workflow%3A%22Continuous+Integration%22)
